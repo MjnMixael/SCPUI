@@ -1046,6 +1046,114 @@ function OptionsController:initialize_prefs_options()
 	
 end
 
+function OptionsController:RemoveSelectedIP()
+	if self.selectedIP then
+		local ip_el = self.document:GetElementById("ipaddress_list")
+		for _, child in ipairs(ip_el.child_nodes) do
+			if child.id == self.selectedIP.id then
+				ip_el:RemoveChild(child)
+				break
+			end
+		end
+	end
+end
+
+function OptionsController:IsDuplicateIP(id)
+	local ip_el = self.document:GetElementById("ipaddress_list")
+	for _, child in ipairs(ip_el.child_nodes) do
+		if child.id == id then
+			return true
+		end
+	end
+	
+	return false
+end
+
+function OptionsController:AddSelectedIP()
+	if string.len(self.submittedIP) > 0 then
+		--if not self:IsDuplicateIP(self.submittedIP) then
+			if opt.verifyIPAddress(self.submittedIP) then
+				local ip_el = self.document:GetElementById("ipaddress_list")
+				ip_el:AppendChild(self:CreateIPItem(self.submittedIP))
+			else
+				local builder      = dialogs.new()
+				builder:title(ba.XSTR("Invalid IP", -1))
+				builder:text(ba.XSTR("Ip string is invalid!", 386))
+				builder:escape(false)
+				builder:button(dialogs.BUTTON_TYPE_POSITIVE, ba.XSTR("Ok", -1), true, string.sub(ba.XSTR("Ok", -1), 1, 1))
+				builder:show(self.document.context):continueWith(function() end)
+			end
+		--[[else
+			local builder      = dialogs.new()
+			builder:title(ba.XSTR("Duplicate IP", -1))
+			builder:text(ba.XSTR("IP Address already listed!", -1))
+			builder:escape(false)
+			builder:button(dialogs.BUTTON_TYPE_POSITIVE, ba.XSTR("Ok", -1), true, string.sub(ba.XSTR("Ok", -1), 1, 1))
+			builder:show(self.document.context):continueWith(function() end)
+		end]]--
+	end
+	
+	self.ip_input_id:SetAttribute("value", "")
+	self.submittedIP = ""
+end
+
+function OptionsController:IPInputChange(event)
+	--remove all whitespace
+	local stringValue = event.parameters.value:gsub("^%s*(.-)%s*$", "%1")
+	
+	--If RETURN was not pressed then make sure the input is a number with no spaces. Else save the value, clear the field, and continue.
+	if event.parameters.linebreak ~= 1 then
+		local lastCharacter = string.sub(stringValue, -1)
+		if type(tonumber(lastCharacter)) == "number" or lastCharacter == "." then
+			self.ip_input_id:SetAttribute("value", stringValue)
+		else
+			--remove the trailing character because it was not valid
+			stringValue = stringValue:sub(1, -2)
+			self.ip_input_id:SetAttribute("value", stringValue)
+		end
+		
+		self.submittedIP = self.ip_input_id:GetAttribute("value")
+	else
+		self:AddSelectedIP()
+	end
+end
+
+function OptionsController:SelectIP(el)
+	if self.selectedIP then
+		self.selectedIP:SetPseudoClass("checked", false)
+	end
+	self.selectedIP = el
+	self.selectedIP:SetPseudoClass("checked", true)
+end
+
+function OptionsController:CreateIPItem(entry)
+
+	local li_el = self.document:CreateElement("li")
+
+	li_el.inner_rml = entry
+	li_el.id = entry
+
+	li_el:SetClass("ipaddress_list_element", true)
+	li_el:SetClass("button_1", true)
+	li_el:AddEventListener("click", function(_, _, _)
+		self:SelectIP(li_el)
+	end)
+
+	return li_el
+end
+
+function OptionsController:initialize_multi_options()
+	local ips = opt.readIPAddressTable()
+	self.submittedIP = ""
+	self.ip_input_id = self.document:GetElementById("add_ip_field")
+	
+	local ip_el = self.document:GetElementById("ipaddress_list")
+	
+	for i = 1, #ips do
+		ip_el:AppendChild(self:CreateIPItem(ips[i]))
+	end
+end
+
 function OptionsController:AddOptionTooltip(option, parent)
 	if option == nil or parent == nil then
 		return
@@ -1138,6 +1246,8 @@ function OptionsController:initialize(document)
 	
 	self:initialize_prefs_options()
 	
+	self:initialize_multi_options()
+	
 	if ScpuiSystem.hideMulti == true then
 		self.document:GetElementById("multi_btn"):SetClass("hidden", true)
 	end
@@ -1159,7 +1269,16 @@ function OptionsController:acceptChanges(state)
     file:write(json.encode(ScpuiOptionValues))
     file:close()
 
+	--Persist base options
     local unchanged = opt.persistChanges()
+	
+	--Save the IP table
+	local ip_el = self.document:GetElementById("ipaddress_list")
+	local ip_tbl = {}
+	for _, child in ipairs(ip_el.child_nodes) do
+		table.insert(ip_tbl, child.inner_rml)
+	end
+	opt.writeIPAddressTable(ip_tbl)
 	
 	ui.OptionsMenu.savePlayerData()
 

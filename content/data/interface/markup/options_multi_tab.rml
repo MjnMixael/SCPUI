@@ -1,31 +1,25 @@
 <body>
-<div class="options_column_40">
+<div id=multi_column_1 class="options_column_40">
     <div class="btn_panel_general">
         <div id="large_panel_text" class="ops_left_header">
             <p>XSTR("IP Address", -1)</p>
         </div>
-        <div id=ipaddress_arrows_wrapper>
-            <div id="ipaddress_arrows">
-                <div id=arrow_cont>
-                    <button id="up_arrow_btn" class="arrow button_1">
-                        <div id="up_arrow_img" class="arrow button_img">
-                            <img src="arrow-up.png" class="psuedo_img"></img>
-                        </div>
-                    </button>
-                </div>
-                <div id=arrow_cont>
-                    <button id="down_arrow_btn" class="arrow button_1">
-                        <div id="down_arrow_img" class="arrow button_img">
-                            <img src="arrow-down.png" class="psuedo_img"></img>
-                        </div>
-                    </button>
-                </div>
-            </div>
-        </div>
+		<ul id=ipaddress_list>
+		</ul>
         <div id=ipaddress_controls_wrapper>
             <div id="ipaddress_controls">
+				<div id=add_remove_cont>
+                    <button id="remove_btn" class="controls button_1" onclick="controller:RemoveSelectedIP()">
+                        <div id="remove_img" class="controls button_img">
+                            <img src="exit.png" class="psuedo_img"></img>
+                        </div>
+                        <div class="neg button_text">
+                            <p>XSTR("Del", -1)</p>
+                        </div>
+                    </button>
+                </div>
                 <div id=add_remove_cont>
-                    <button id="add_btn" class="controls button_1">
+                    <button id="add_btn" class="controls button_1" onclick="controller:AddSelectedIP()">
                         <div id="add_img" class="controls button_img">
                             <img src="star.png" class="psuedo_img"></img>
                         </div>
@@ -34,16 +28,7 @@
                         </div>
                     </button>
                 </div>
-                <div id=add_remove_cont>
-                    <button id="remove_btn" class="controls button_1">
-                        <div id="remove_img" class="controls button_img">
-                            <img src="exit.png" class="psuedo_img"></img>
-                        </div>
-                        <div class="neg button_text">
-                            <p>XSTR("Remove", -1)</p>
-                        </div>
-                    </button>
-                </div>
+				<input id="add_ip_field" type="text" size="15" maxlength="50" onchange="controller:IPInputChange(event)"></input>
             </div>
         </div>
         <img src="ops-panel-gen-l.png"></img>
@@ -90,7 +75,7 @@
         <img src="ops-panel-gen-l.png"></img>
     </div>
 </div>
-<div class="options_column_20">
+<div id=multi_column_2 class="options_column_20">
     <div class="btn_panel_vert_tall object_update"> <!--This begins all the rml for the preset selector-->
         <div id="vert_tall_panel_text">
             <p id="object_update_title">XSTR("Object Update", -1)</p>
@@ -196,7 +181,7 @@
         <img src="ops-panel-vert-l.png"></img>
     </div>
 </div>
-<div class="options_column_40 panel_right">
+<div id=multi_column_3 class="options_column_40 panel_right hidden">
     <div class="btn_panel_horz horz_right">
         <div id="horz_panel_text" class="ops_left_header">
             <p id="binary_title">XSTR("Voice Transmission", -1)</p>
