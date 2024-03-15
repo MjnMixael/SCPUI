@@ -1,0 +1,62 @@
+<rml>
+	<head>
+		<title>PXO</title>
+		<link type="text/rcss" href="default.rcss"/>
+		<link type="text/rcss" href="fontsizes.rcss"/>
+		<link type="text/rcss" href="common.rcss"/>
+		<link type="text/rcss" href="scrollbars.rcss"/>
+		<link type="text/rcss" href="multi_pxo.rcss"/>
+		<link type="text/rcss" href="custom.rcss"/>
+		<script>
+			controller = require("multi_pxo")()
+		</script>
+	</head>
+	<body id=main_background onload="controller:initialize(document)" onkeydown="controller:global_keydown(element, event)" onunload="controller = nil">
+		<div id=banner_div>
+		</div>
+		<div id=players_div>
+			<ul id=players_list_ul>
+			</ul>
+		</div>
+		<div id=channels_div>
+			<ul id=channels_list_ul>
+			</ul>
+		</div>
+		<div id=chat_window>
+		</div>
+		<input id=chat_input type="text" maxlength="512" onblur="controller:InputFocusLost()"
+				onchange="controller:InputChange(event)"></input>
+		<div id=submit_cont>
+			<button id="submit_btn" class="submit button_1" onclick="controller:SubmitPressed()">
+				<span id="submit_img" class="submit button_img">
+					<img src="select.png" class="psuedo_img"></img>
+				</span>
+				<span class="pos button_text_special">
+					<p>XSTR("Submit", -1)</p>
+				</span>
+			</button>
+		</div>
+		<div id=status_text>
+		</div>
+		<div id=motd_text>
+		</div>
+		<div id=bottom_panel_wrapper>
+			<div id=bottom_panel_a>
+				<div id=a_panel_wrapper>
+					<div id=accept_cont>
+						<button id="fv_accept_btn" class="accept button_1" onclick="controller:accept_pressed(element)">
+							<span id="accept_img" class="accept button_img">
+								<img src="select.png" class="psuedo_img"></img>
+							</span>
+							<span class="neg button_text_top">
+								<p>Exit</p>
+							</span>
+						</button>
+					</div>
+				</div>
+				<img src="bottom-panel-a.png"></img>
+			</div>
+		</div>
+	</body>
+
+</rml>

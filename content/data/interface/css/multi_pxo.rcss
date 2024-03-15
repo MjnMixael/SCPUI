@@ -1,0 +1,244 @@
+body
+{
+	z-index: bottom;
+	z-index: -1;
+}
+
+.below p
+{
+	padding-top:8%;
+}
+
+.list_element
+{
+	display: block;
+	color: #7b7b7b;
+	width: 90%;
+}
+.list_element:hover
+{
+	color: #abbbab;
+}
+.list_element:checked
+{
+	color: #6f92f5;
+
+}
+
+.list_element:active
+{
+	color: #a5b6e6;
+
+}
+
+#banner_div
+{
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+div#banner_div img
+{
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+#players_div
+{
+	width: 20%;
+	height: 60%;
+	position: absolute;
+	top: 10%;
+	left: 5%;
+}
+
+#channels_div
+{
+	width: 30%;
+	height: 10%;
+	position: absolute;
+	top: 20%;
+	left: 60%;
+}
+
+.channel_name
+{
+	width: 79%;
+	display: inline-block;
+}
+
+.channel_players
+{
+	width: 15%;
+	display: inline-block;
+}
+
+.channel_games
+{
+	width: 5%;
+	display: inline-block;
+}
+
+#chat_window
+{
+	width: 50%;
+	height: 50%;
+	position: absolute;
+	top: 30%;
+	left: 40%;
+}
+
+#chat_input
+{
+	position:absolute;
+	bottom: 20%;
+	left: 40%;
+	height: 5%;
+	width: 50%;
+	/*font-size: 1em;*/
+	background-decorator: image;
+	background-image: input-box.png;
+	border-width: 1px;
+	border-color: #676767;
+	line-height: 0.9em;
+}
+
+#status_text
+{
+	width: 40%;
+	position: absolute;
+	bottom: 0;
+	left: 30%;
+	text-align: center;
+}
+
+#motd_text
+{
+	width: 22%;
+	height: 22%;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	text-align: center;
+}
+
+/*Submit Button*/
+
+div#submit_cont
+{
+	position:absolute;
+	bottom: 20%;
+	left: 92%;
+	width: 2%;
+	height: 5%;
+
+}
+
+.submit
+{
+	display: block;
+	width: 100%;
+	height: 100%;
+	
+}
+
+#submit_img
+{
+	background-decorator: image;
+	background-image: select.png;
+	
+}
+button#submit_btn:hover #submit_img
+{
+	background-decorator: image;
+	background-image: select-pos-h.png;
+}
+
+button#submit_btn:active #submit_img
+{
+	background-decorator: image;
+	background-image: select-pos-o.png;
+}
+
+.button_text_special
+{
+	text-align: center;
+}
+
+.button_text_special p
+{
+	display: block;
+	margin-top: 40%;
+	margin-left: -25%;
+	position: absolute;
+	/*font-size: 0.9em;*/
+}
+
+/*Bottom Panel Elements*/
+
+div#bottom_panel_wrapper
+{
+	width: 15%;
+	height: auto;
+	overflow: hidden;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+}
+
+div#bottom_panel_a
+{
+	width: 66%;
+	height: auto;
+	position: relative;
+	float: right;
+}
+
+div#bottom_panel_a img
+{
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+/*Accept Button*/
+
+div#a_panel_wrapper
+{
+	position: absolute;
+	bottom: 0;
+}
+
+div#accept_cont
+{
+	width: 100%;
+	height: auto;
+
+}
+
+.accept
+{
+	display: block;
+	width: 100%;
+	height: auto;
+
+}
+
+#accept_img
+{
+	background-decorator: image;
+	background-image: select.png;
+}
+button#fv_accept_btn:hover #accept_img
+{
+	background-decorator: image;
+	background-image: select-neg-h.png;
+}
+
+button#fv_accept_btn:active #accept_img
+{
+	background-decorator: image;
+	background-image: select-neg-o.png;
+}
