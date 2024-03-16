@@ -1060,6 +1060,32 @@ div#round_mute_cont
 	background-image: round.png;
 }
 
+button#local_btn:hover #round_img
+{
+	background-decorator: image;
+	background-image: round-h.png;
+}
+
+button#local_btn:active #round_img,
+button#local_btn:checked #round_img
+{
+	background-decorator: image;
+	background-image: round-o.png;
+}
+
+button#pxo_btn:hover #round_img
+{
+	background-decorator: image;
+	background-image: round-h.png;
+}
+
+button#pxo_btn:active #round_img,
+button#pxo_btn:checked #round_img
+{
+	background-decorator: image;
+	background-image: round-o.png;
+}
+
 button#round_btn:hover #round_img
 {
 	background-decorator: image;

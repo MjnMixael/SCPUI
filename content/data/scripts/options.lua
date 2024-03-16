@@ -1093,7 +1093,7 @@ function OptionsController:AddSelectedIP()
 		end]]--
 	end
 	
-	self.ip_input_id:SetAttribute("value", "")
+	self.ip_input_el:SetAttribute("value", "")
 	self.submittedIP = ""
 end
 
@@ -1105,14 +1105,14 @@ function OptionsController:IPInputChange(event)
 	if event.parameters.linebreak ~= 1 then
 		local lastCharacter = string.sub(stringValue, -1)
 		if type(tonumber(lastCharacter)) == "number" or lastCharacter == "." then
-			self.ip_input_id:SetAttribute("value", stringValue)
+			self.ip_input_el:SetAttribute("value", stringValue)
 		else
 			--remove the trailing character because it was not valid
 			stringValue = stringValue:sub(1, -2)
-			self.ip_input_id:SetAttribute("value", stringValue)
+			self.ip_input_el:SetAttribute("value", stringValue)
 		end
 		
-		self.submittedIP = self.ip_input_id:GetAttribute("value")
+		self.submittedIP = self.ip_input_el:GetAttribute("value")
 	else
 		self:AddSelectedIP()
 	end
@@ -1142,15 +1142,122 @@ function OptionsController:CreateIPItem(entry)
 	return li_el
 end
 
+function OptionsController:togglePXO(toggle)
+	local loc_el = self.document:GetElementById("local_btn")
+	local pxo_el = self.document:GetElementById("pxo_btn")
+	local loc_vals = self.local_opt:getValidValues()
+	local pxo_vals = self.pxo_opt:getValidValues()
+	
+	if toggle then
+		loc_el:SetPseudoClass("checked", false)
+		pxo_el:SetPseudoClass("checked", true)
+		self.local_opt.Value = loc_vals[1]
+		self.pxo_opt.Value = loc_vals[2]
+	else
+		loc_el:SetPseudoClass("checked", true)
+		pxo_el:SetPseudoClass("checked", false)
+		self.local_opt.Value = loc_vals[2]
+		self.pxo_opt.Value = loc_vals[1]
+	end
+end
+
+function OptionsController:LoginChanged()
+	self.login_changed = true
+end
+
+function OptionsController:PassChanged()
+	self.pass_changed = true
+end
+
+function OptionsController:SquadChanged()
+	self.squad_changed = true
+end
+
 function OptionsController:initialize_multi_options()
+	
+	--Handle the IP Address list
 	local ips = opt.readIPAddressTable()
 	self.submittedIP = ""
-	self.ip_input_id = self.document:GetElementById("add_ip_field")
+	self.ip_input_el = self.document:GetElementById("add_ip_field")
 	
 	local ip_el = self.document:GetElementById("ipaddress_list")
 	
 	for i = 1, #ips do
 		ip_el:AppendChild(self:CreateIPItem(ips[i]))
+	end
+	
+	local ip_opt = {
+		Key = "ipaddress_list",
+		Description = "IP Addresses to watch or something. I dunno. Mjn Fix this."
+	}
+	
+	self:AddOptionTooltip(ip_opt, self.ip_input_el)
+	
+	--Handle the login info
+	self.document:GetElementById("login_field"):SetAttribute("value", opt.MultiLogin)
+	self.document:GetElementById("squad_field"):SetAttribute("value", opt.MultiSquad)
+	if opt.MultiPassword then
+		self.document:GetElementById("pass_field"):SetAttribute("value", "******")
+	end
+	
+	self.login_changed = false
+	self.pass_changed = false
+	self.squad_changed = false
+	
+	local login_opt = {
+		Key = "login_info",
+		Description = "Your PXO multiplayer username"
+	}
+	
+	local pass_opt = {
+		Key = "password_info",
+		Description = "Your PXO multiplayer password"
+	}
+	
+	local squad_opt = {
+		Key = "squad_info",
+		Description = "Your PXO multiplayer squadron name"
+	}
+	
+	self:AddOptionTooltip(login_opt, self.document:GetElementById("login_field"))
+	self:AddOptionTooltip(pass_opt, self.document:GetElementById("pass_field"))
+	self:AddOptionTooltip(squad_opt, self.document:GetElementById("squad_field"))
+	
+	--Handle the rest of the options
+	for _, option in ipairs(self.category_options.multi) do
+		if option.Key == "Multi.LocalBroadcast" then
+			self.local_opt = option
+			local btn_el = self.document:GetElementById("local_btn")
+			btn_el:AddEventListener("click", function()
+				if option.Value.Display == "Off" then
+					self:togglePXO(false)
+				end
+			end)
+			if option.Value.Display == "On" then
+				btn_el:SetPseudoClass("checked", true)
+			else
+				btn_el:SetPseudoClass("checked", false)
+			end
+			self:AddOptionTooltip(option, btn_el)
+		elseif option.Key == "Multi.TogglePXO" then
+			self.pxo_opt = option
+			local btn_el = self.document:GetElementById("pxo_btn")
+			btn_el:AddEventListener("click", function()
+				if option.Value.Display == "Off" then
+					self:togglePXO(true)
+				end
+			end)
+			if option.Value.Display == "On" then
+				self.document:GetElementById("pxo_btn"):SetPseudoClass("checked", true)
+			else
+				self.document:GetElementById("pxo_btn"):SetPseudoClass("checked", false)
+			end
+			self:AddOptionTooltip(option, btn_el)
+		elseif option.Key == "Multi.TransferMissions" then
+			opt_el = self:createOptionElement(option, "multi_column_2")
+		elseif option.Key == "Multi.FlushCache" then
+			opt_el = self:createOptionElement(option, "multi_column_2")
+		end
 	end
 end
 
@@ -1236,6 +1343,8 @@ function OptionsController:initialize(document)
             table.insert(self.category_options.detail, v)
 		elseif category == "Other" then
             table.insert(self.category_options.prefs, v)
+		elseif category == "Multi" then
+			table.insert(self.category_options.multi, v)
         end
     end
     ba.print("Done.\n")
@@ -1279,6 +1388,17 @@ function OptionsController:acceptChanges(state)
 		table.insert(ip_tbl, child.inner_rml)
 	end
 	opt.writeIPAddressTable(ip_tbl)
+	
+	--Save the login info
+	if self.login_changed == true then
+		opt.MultiLogin = self.document:GetElementById("login_field"):GetAttribute("value")
+	end
+	if self.pass_changed == true then
+		opt.MultiPassword = self.document:GetElementById("pass_field"):GetAttribute("value")
+	end
+	if self.squad_changed == true then
+		opt.MultiSquad = self.document:GetElementById("squad_field"):GetAttribute("value")
+	end
 	
 	ui.OptionsMenu.savePlayerData()
 

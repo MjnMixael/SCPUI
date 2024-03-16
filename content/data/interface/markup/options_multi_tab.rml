@@ -40,7 +40,7 @@
         <div id=network_select_wrapper>
             <div id="network_select">
                 <div id=round_server_cont>
-                    <button id="round_btn" class="round button_1">
+                    <button id="local_btn" class="round button_1">
                         <div id="round_img" class="round button_img">
                             <img src="round.png" class="psuedo_img"></img>
                         </div>
@@ -50,7 +50,7 @@
                     </button>
                 </div>
                 <div id=round_server_cont>
-                    <button id="round_btn" class="round button_1">
+                    <button id="pxo_btn" class="round button_1">
                         <div id="round_img" class="round button_img">
                             <img src="round.png" class="psuedo_img"></img>
                         </div>
@@ -63,123 +63,20 @@
         </div>
         <div id=login_creds_wrapper>
             <div class="login_entry_wrapper">
-                <span>XSTR("Login", -1)</span><input id="login_field" type="text" size=20 maxlength=50></input>
+                <span>XSTR("Login", -1)</span><input id="login_field" type="text" size="20" maxlength="50" onchange="controller:LoginChanged()"></input>
             </div>
             <div class="login_entry_wrapper">
-                <span>XSTR("Pass", -1)</span><input id="login_field" type="password" size=20 maxlength=50></input>
+                <span>XSTR("Pass", -1)</span><input id="pass_field" type="password" size="20" maxlength="50" onchange="controller:PassChanged()"></input>
             </div>
             <div class="login_entry_wrapper">
-                <span>XSTR("Squad", -1)</span><input id="login_field" type="text" size=20 maxlength=50></input>
+                <span>XSTR("Squad", -1)</span><input id="squad_field" type="text" size="20" maxlength="50" onchange="controller:SquadChanged()"></input>
             </div>
         </div>
         <img src="ops-panel-gen-l.png"></img>
     </div>
 </div>
+    
 <div id=multi_column_2 class="options_column_20">
-    <div class="btn_panel_vert_tall object_update"> <!--This begins all the rml for the preset selector-->
-        <div id="vert_tall_panel_text">
-            <p id="object_update_title">XSTR("Object Update", -1)</p>
-        </div>
-        <div id=vert_tall_panel_wrapper>
-            <div id=bullet_choice_cont>
-                <button id="bullet_r_btn" class="bullet button_1">
-                    <div id="bullet_r_img" class="bullet button_img">
-                        <img src="bullet-r.png" class="psuedo_img"></img>
-                    </div>
-                    <div class="pos button_text_right">
-                        <p>XSTR("Low", -1)</p>
-                    </div>
-                </button>
-            </div>
-            <div id=bullet_choice_cont>
-                <button id="bullet_r_btn" class="bullet button_1">
-                    <div id="bullet_r_img" class="bullet button_img">
-                        <img src="bullet-r.png" class="psuedo_img"></img>
-                    </div>
-                    <div class="pos button_text_right">
-                        <p>XSTR("Medium", -1)</p>
-                    </div>
-                </button>
-            </div>
-            <div id=bullet_choice_cont>
-                <button id="bullet_r_btn" class="bullet button_1">
-                    <div id="bullet_r_img" class="bullet button_img">
-                        <img src="bullet-r.png" class="psuedo_img"></img>
-                    </div>
-                    <div class="pos button_text_right">
-                        <p>XSTR("High", -1)</p>
-                    </div>
-                </button>
-            </div>
-            <div id=bullet_choice_cont>
-                <button id="bullet_r_btn" class="bullet button_1">
-                    <div id="bullet_r_img" class="bullet button_img">
-                        <img src="bullet-r.png" class="psuedo_img"></img>
-                    </div>
-                    <div class="pos button_text_right">
-                        <p>XSTR("Very High", -1)</p>
-                    </div>
-                </button>
-            </div>
-        </div>
-        <img src="ops-panel-vert-tall-l.png"></img>
-    </div>
-    <div class="btn_panel_horz">
-        <div id="horz_panel_text" class="ops_left_header">
-            <p id="binary_title">XSTR("Pilot / Squad Images", -1)</p>
-        </div>
-        <div id=horz_panel_wrapper>
-            <div id=round_option_cont>
-                <button id="round_btn" class="round button_1">
-                    <div id="round_img" class="round button_img">
-                        <img src="round.png" class="psuedo_img"></img>
-                    </div>
-                    <div class="pos button_text_left">
-                        <p>XSTR("No", -1)</p>
-                    </div>
-                </button>
-            </div>
-            <div id=round_option_cont>
-                <button id="round_btn" class="round button_1">
-                    <div id="round_img" class="round button_img">
-                        <img src="round.png" class="psuedo_img"></img>
-                    </div>
-                    <div class="pos button_text_left">
-                        <p>XSTR("Yes", -1)</p>
-                    </div>
-                </button>
-            </div>
-        </div>
-        <img src="ops-panel-horz.png"></img>
-    </div>
-    <div class="btn_panel_vert">
-        <div id="vert_panel_text">
-            <p id="preset_title">XSTR("Transfer Missions", -1)</p>
-        </div>
-        <div id=vert_panel_wrapper>
-            <div id=bullet_choice_cont>
-                <button id="bullet_r_btn" class="bullet button_1">
-                    <div id="bullet_r_img" class="bullet button_img">
-                        <img src="bullet-r.png" class="psuedo_img"></img>
-                    </div>
-                    <div class="pos button_text_right">
-                        <p>/multidata</p>
-                    </div>
-                </button>
-            </div>
-            <div id=bullet_choice_cont>
-                <button id="bullet_r_btn" class="bullet button_1">
-                    <div id="bullet_r_img" class="bullet button_img">
-                        <img src="bullet-r.png" class="psuedo_img"></img>
-                    </div>
-                    <div class="pos button_text_right">
-                        <p>/missions</p>
-                    </div>
-                </button>
-            </div>
-        </div>
-        <img src="ops-panel-vert-l.png"></img>
-    </div>
 </div>
 <div id=multi_column_3 class="options_column_40 panel_right hidden">
     <div class="btn_panel_horz horz_right">
