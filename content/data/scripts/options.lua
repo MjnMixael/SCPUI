@@ -1071,7 +1071,7 @@ end
 
 function OptionsController:AddSelectedIP()
 	if string.len(self.submittedIP) > 0 then
-		--if not self:IsDuplicateIP(self.submittedIP) then
+		if not self:IsDuplicateIP(self.submittedIP) then
 			if opt.verifyIPAddress(self.submittedIP) then
 				local ip_el = self.document:GetElementById("ipaddress_list")
 				ip_el:AppendChild(self:CreateIPItem(self.submittedIP))
@@ -1083,14 +1083,14 @@ function OptionsController:AddSelectedIP()
 				builder:button(dialogs.BUTTON_TYPE_POSITIVE, ba.XSTR("Ok", -1), true, string.sub(ba.XSTR("Ok", -1), 1, 1))
 				builder:show(self.document.context):continueWith(function() end)
 			end
-		--[[else
+		else
 			local builder      = dialogs.new()
 			builder:title(ba.XSTR("Duplicate IP", -1))
 			builder:text(ba.XSTR("IP Address already listed!", -1))
 			builder:escape(false)
 			builder:button(dialogs.BUTTON_TYPE_POSITIVE, ba.XSTR("Ok", -1), true, string.sub(ba.XSTR("Ok", -1), 1, 1))
 			builder:show(self.document.context):continueWith(function() end)
-		end]]--
+		end
 	end
 	
 	self.ip_input_el:SetAttribute("value", "")
@@ -1191,7 +1191,7 @@ function OptionsController:initialize_multi_options()
 		Description = "IP Addresses to watch or something. I dunno. Mjn Fix this."
 	}
 	
-	self:AddOptionTooltip(ip_opt, self.ip_input_el)
+	self:AddOptionTooltip(ip_opt, self.document:GetElementById("ipaddress_list"))
 	
 	--Handle the login info
 	self.document:GetElementById("login_field"):SetAttribute("value", opt.MultiLogin)
@@ -1219,38 +1219,38 @@ function OptionsController:initialize_multi_options()
 		Description = "Your PXO multiplayer squadron name"
 	}
 	
-	self:AddOptionTooltip(login_opt, self.document:GetElementById("login_field"))
-	self:AddOptionTooltip(pass_opt, self.document:GetElementById("pass_field"))
-	self:AddOptionTooltip(squad_opt, self.document:GetElementById("squad_field"))
+	self:AddOptionTooltip(login_opt, self.document:GetElementById("login_field").parent_node)
+	self:AddOptionTooltip(pass_opt, self.document:GetElementById("pass_field").parent_node)
+	self:AddOptionTooltip(squad_opt, self.document:GetElementById("squad_field").parent_node)
 	
 	--Handle the rest of the options
 	for _, option in ipairs(self.category_options.multi) do
+		local opt_el = nil
 		if option.Key == "Multi.LocalBroadcast" then
 			self.local_opt = option
-			local btn_el = self.document:GetElementById("local_btn")
-			btn_el:AddEventListener("click", function()
+			opt_el = self.document:GetElementById("local_btn")
+			opt_el:AddEventListener("click", function()
 				if option.Value.Display == "Off" then
 					self:togglePXO(false)
 				end
 			end)
 			if option.Value.Display == "On" then
-				btn_el:SetPseudoClass("checked", true)
+				opt_el:SetPseudoClass("checked", true)
 			else
-				btn_el:SetPseudoClass("checked", false)
+				opt_el:SetPseudoClass("checked", false)
 			end
-			self:AddOptionTooltip(option, btn_el)
 		elseif option.Key == "Multi.TogglePXO" then
 			self.pxo_opt = option
-			local btn_el = self.document:GetElementById("pxo_btn")
-			btn_el:AddEventListener("click", function()
+			opt_el = self.document:GetElementById("pxo_btn")
+			opt_el:AddEventListener("click", function()
 				if option.Value.Display == "Off" then
 					self:togglePXO(true)
 				end
 			end)
 			if option.Value.Display == "On" then
-				self.document:GetElementById("pxo_btn"):SetPseudoClass("checked", true)
+				opt_el:SetPseudoClass("checked", true)
 			else
-				self.document:GetElementById("pxo_btn"):SetPseudoClass("checked", false)
+				opt_el:SetPseudoClass("checked", false)
 			end
 			self:AddOptionTooltip(option, btn_el)
 		elseif option.Key == "Multi.TransferMissions" then
@@ -1258,6 +1258,13 @@ function OptionsController:initialize_multi_options()
 		elseif option.Key == "Multi.FlushCache" then
 			opt_el = self:createOptionElement(option, "multi_column_2")
 		end
+		
+		self:AddOptionTooltip(option, opt_el)
+	end
+	
+	--Double check that both Local & PXO are not selected
+	if self.local_opt.Value.Display == "On" and self.pxo_opt.Value.Display == "On" then
+		self:togglePXO(true)
 	end
 end
 

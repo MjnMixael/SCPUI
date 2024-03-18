@@ -35,7 +35,7 @@
       "dependencies": [
         {
           "id": "FSO",
-          "version": ">=24.1.0-20240314",
+          "version": ">=24.1.0-20240318",
           "packages": []
         },
         {
@@ -57,7 +57,7 @@
       "name": "journal_ui",
       "notes": "Adds the optional Journal FV UI screen",
       "status": "optional",
-      "dependencies": [],
+      "dependencies": null,
       "environment": null,
       "folder": "journal_ui",
       "is_vp": false,
