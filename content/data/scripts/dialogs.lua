@@ -47,7 +47,11 @@ local function initialize_buttons(document, properties, finish_func)
 		button:SetClass("button_1", true)
 		button:SetClass("button_img", true)
         button:AddEventListener("click", function(_, _, _)
-            if finish_func then finish_func(v.value) end
+			local val = v.value
+			if properties.input_choice then
+				val = document:GetElementById("dialog_input"):GetAttribute("value")
+			end
+            if finish_func then finish_func(val) end
             document:Close()
         end)
 		    local button_text_id = button_id .. '_text'
@@ -87,6 +91,7 @@ local function show_dialog(context, properties, finish_func, reject, abortCBTabl
         dialog_doc:GetElementById("text_container"):AppendChild(input_el)
         input_el.type = "text"
         input_el.maxlength = 32
+		input_el.id = "dialog_input"
         
         input_el:AddEventListener("change", function(event, _, _)
             if event.parameters.linebreak == 1 then
@@ -131,7 +136,11 @@ local function show_dialog(context, properties, finish_func, reject, abortCBTabl
 			if properties.buttons[i].keypress ~= nil then
 				thisKey = string.upper(properties.buttons[i].keypress)
 				if event.parameters.key_identifier == rocket.key_identifier[thisKey] then
-					finish_func(properties.buttons[i].value)
+					local val = properties.buttons[i].value
+					if properties.input_choice then
+						val = dialog_doc:GetElementById("dialog_input"):GetAttribute("value")
+					end
+					finish_func(val)
 					ScpuiSystem:CloseDialog()
 				end
 			end
