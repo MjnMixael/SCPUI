@@ -13,7 +13,7 @@ end
 function ScpuiSystem:initCustomOptions()
 	local utils = require('utils')
 
-	if cf.fileExists('options.tbl') then
+	if cf.fileExists('options.tbl', '', true) then
 		self:parseOptions('options.tbl')
 	end
 

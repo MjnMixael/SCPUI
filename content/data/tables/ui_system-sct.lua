@@ -52,7 +52,7 @@ end
 ScpuiSystem.context = rocket:CreateContext("menuui", Vector2i.new(gr.getCenterWidth(), gr.getCenterHeight()));
 
 function ScpuiSystem:init()
-	if cf.fileExists("scpui.tbl") then
+	if cf.fileExists("scpui.tbl", "", true) then
         self:parseTable("scpui.tbl")
     end
     for _, v in ipairs(cf.listFiles("data/tables", "*-ui.tbm")) do
