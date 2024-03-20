@@ -3,6 +3,7 @@ local topics = require("ui_topics")
 local class = require("class")
 local async_util = require("async_util")
 local utils = require("utils")
+local dialogs = require("dialogs")
 
 local PXOController = class(AbstractBriefingController)
 
@@ -31,8 +32,13 @@ function PXOController:initialize(document)
 	self.banner_el = self.document:GetElementById("banner_div")
 	
 	self.input_id = self.document:GetElementById("chat_input")
+	self.motd = ""
 	
-	ui.MultiPXO.initPXO()
+	if not ScpuiSystem.MultiReady then
+		ui.MultiPXO.initPXO()
+	end
+	
+	ScpuiSystem.MultiReady = true
 	
 	self:updateLists()
 	
@@ -57,6 +63,28 @@ function PXOController:joinChannel(entry)
 			return
 		end
 	end
+end
+
+function PXOController:joinPublicPressed()
+	if self.selectedChannel then
+		self:joinChannel(self.selectedChannel)
+	end
+end
+
+function PXOController:joinPrivatePressed()
+	self.promptControl = 2
+
+	local text = "Enter the name of the private channel to join"
+	local title = "Join Private Channel"
+	local buttons = {}
+	buttons[1] = {
+		b_type = dialogs.BUTTON_TYPE_POSITIVE,
+		b_text = ba.XSTR("Okay", -1),
+		b_value = "",
+		b_keypress = string.sub(ba.XSTR("Okay", -1), 1, 1)
+	}
+	
+	self:Show(text, title, true, buttons)
 end
 
 function PXOController:CreateChannelEntry(entry)
@@ -151,6 +179,32 @@ function PXOController:getChannelIndexByName(name)
 	return -1
 end
 
+function PXOController:WebRankPressed()
+	ba.warning("Need to setup getting the PXO urls from FSO through the API! Tell Mjn!")
+end
+
+function PXOController:PilotInfoPressed()
+	if self.selectedPlayer then
+		self:GetPlayerStats(self.selectedPlayer.Name)
+	end
+end
+
+function PXOController:FindPilotPressed()
+	self.promptControl = 4
+
+	local text = "Enter the name of the player to search for."
+	local title = "Search for player"
+	local buttons = {}
+	buttons[1] = {
+		b_type = dialogs.BUTTON_TYPE_POSITIVE,
+		b_text = ba.XSTR("Okay", -1),
+		b_value = "",
+		b_keypress = string.sub(ba.XSTR("Okay", -1), 1, 1)
+	}
+	
+	self:Show(text, title, true, buttons)
+end
+
 function PXOController:SelectPlayer(player)
 	if self.selectedPlayer ~= nil then
 		self.document:GetElementById(self.selectedPlayer.key):SetPseudoClass("checked", false)
@@ -161,18 +215,57 @@ end
 
 function PXOController:GetPlayerChannel(player_name)
 	local response, channel = ui.MultiPXO.getPlayerChannel(player_name)
-	--ba.warning(channel)
+	
+	self.promptControl = 5
+
+	local text = response
+	local title = "Search for player"
+	local buttons = {}
+	
+	--If we have a channel then offer the option to join
+	if channel ~= "" then
+		self.foundChannel = channel
+		text = text .. "<br></br>Join channel?"
+		buttons[1] = {
+			b_type = dialogs.BUTTON_TYPE_POSITIVE,
+			b_text = ba.XSTR("Yes", -1),
+			b_value = true,
+			b_keypress = string.sub(ba.XSTR("Yes", -1), 1, 1)
+		}
+		buttons[2] = {
+			b_type = dialogs.BUTTON_TYPE_NEGATIVE,
+			b_text = ba.XSTR("No", -1),
+			b_value = false,
+			b_keypress = string.sub(ba.XSTR("No", -1), 1, 1)
+		}
+	else
+		buttons[1] = {
+			b_type = dialogs.BUTTON_TYPE_POSITIVE,
+			b_text = ba.XSTR("Okay", -1),
+			b_value = false,
+			b_keypress = string.sub(ba.XSTR("Okay", -1), 1, 1)
+		}
+	end
+	
+	self:Show(text, title, false, buttons)
 end
 
 function PXOController:GetPlayerStats(player_name)
 	local stats = ui.MultiPXO.getPlayerStats(player_name)
-	ba.warning(stats.Score)
-end
-
-function PXOController:ShowPlayerStats(player)
-	self:SelectPlayer(player)
 	
-	self:GetPlayerChannel(player.Name)
+	self.promptControl = 3
+
+	local text = self:initialize_stats_text(stats)
+	local title = player_name .. "'s stats"
+	local buttons = {}
+	buttons[1] = {
+		b_type = dialogs.BUTTON_TYPE_POSITIVE,
+		b_text = ba.XSTR("Okay", -1),
+		b_value = "",
+		b_keypress = string.sub(ba.XSTR("Okay", -1), 1, 1)
+	}
+	
+	self:Show(text, title, false, buttons)
 end
 
 function PXOController:CreatePlayerEntry(entry)
@@ -187,7 +280,7 @@ function PXOController:CreatePlayerEntry(entry)
 		self:SelectPlayer(entry)
 	end)
 	li_el:AddEventListener("dblclick", function(_, _, _)
-		self:ShowPlayerStats(entry)
+		self:GetPlayerStats(entry.Name)
 	end)
 	entry.key = li_el.id
 	
@@ -251,10 +344,141 @@ end
 
 function PXOController:exit()
 	ui.MultiPXO.closePXO()
+	ScpuiSystem.MultiReady = false
 	ba.postGameEvent(ba.GameEvents["GS_EVENT_MAIN_MENU"])
 end
 
+function PXOController:dialog_response(response)
+	local path = self.promptControl
+	self.promptControl = nil
+	if path == 1 then --MOTD
+		--Do nothing!
+	elseif path == 2 then --Join Private Channel
+		if response and response ~= "" then
+			ui.MultiPXO.joinPrivateChannel(response)
+		end
+	elseif path == 3 then --Show Player Stats
+		--Do nothing!
+	elseif path == 4 then --Find player
+		if response and response ~= "" then
+			self:GetPlayerChannel(response)
+		end
+	elseif path == 5 then --Find player response
+		if response == true then
+			self:joinChannel(self.foundChannel)
+		end
+		self.foundChannel = nil
+	end
+end
+
+function PXOController:Show(text, title, input, buttons)
+	--Create a simple dialog box with the text and title
+
+	currentDialog = true
+	
+	local dialog = dialogs.new()
+		dialog:title(title)
+		dialog:text(text)
+		dialog:input(input)
+		for i = 1, #buttons do
+			dialog:button(buttons[i].b_type, buttons[i].b_text, buttons[i].b_value, buttons[i].b_keypress)
+		end
+		dialog:escape("")
+		dialog:show(self.document.context)
+		:continueWith(function(response)
+			self:dialog_response(response)
+    end)
+	-- Route input to our context until the user dismisses the dialog box.
+	ui.enableInput(self.document.context)
+end
+
+function PXOController:motd_pressed()
+
+	self.promptControl = 1
+
+	local text = self.motd
+	local title = "Message of the Day"
+	local buttons = {}
+	buttons[1] = {
+		b_type = dialogs.BUTTON_TYPE_POSITIVE,
+		b_text = ba.XSTR("Okay", -1),
+		b_value = "",
+		b_keypress = string.sub(ba.XSTR("Okay", -1), 1, 1)
+	}
+	
+	self:Show(text, title, false, buttons)
+
+end
+
+function PXOController:add_heading_element(text)
+	self.playerStats = self.playerStats .. "<span style=\"width: 49%; float: left; text-align: right;\">" .. text .. "</span><br></br>"
+end
+
+function PXOController:add_value_element(text, value)
+	self.playerStats = self.playerStats .. "<br></br><span style=\"width: 50%; float: left; text-align: right;\">" .. text .. "</span>"
+	self.playerStats = self.playerStats .. "<br></br><span style=\"width: 49%; float: right; padding-left: 1%;\">" .. value .. "</span>"
+end
+
+function PXOController:add_empty_line()
+    self.playerStats = self.playerStats .. "<br></br>"
+end
+
+function PXOController:initialize_stats_text(stats)
+    self.playerStats  = ""
+
+    self:add_heading_element("All Time Stats")
+    self:add_value_element("Primary weapon shots:", stats.PrimaryShotsFired)
+    self:add_value_element("Primary weapon hits:", stats.PrimaryShotsHit)
+    self:add_value_element("Primary friendly hits:", stats.PrimaryFriendlyHit)
+    self:add_value_element("Primary hit %:",
+                           utils.compute_percentage(stats.PrimaryShotsHit, stats.PrimaryShotsFired))
+    self:add_value_element("Primary friendly hit %:",
+                           utils.compute_percentage(stats.PrimaryFriendlyHit, stats.PrimaryShotsFired))
+    self:add_empty_line()
+
+    self:add_value_element("Secondary weapon shots:", stats.SecondaryShotsFired)
+    self:add_value_element("Secondary weapon hits:", stats.SecondaryShotsHit)
+    self:add_value_element("Secondary friendly hits:", stats.SecondaryFriendlyHit)
+    self:add_value_element("Secondary hit %:",
+                           utils.compute_percentage(stats.SecondaryShotsHit, stats.SecondaryShotsFired))
+    self:add_value_element("Secondary friendly hit %:",
+                           utils.compute_percentage(stats.SecondaryFriendlyHit, stats.SecondaryShotsFired))
+    self:add_empty_line()
+
+    self:add_value_element("Total kills:", stats.TotalKills)
+    self:add_value_element("Assists:", stats.Assists)
+    self:add_empty_line()
+
+    self:add_value_element("Current Score:", stats.Score)
+    self:add_empty_line()
+    self:add_empty_line()
+
+    self:add_heading_element("Kills by Ship Type")
+    local score_from_kills = 0
+    for i = 1, #tb.ShipClasses do
+        local ship_cls = tb.ShipClasses[i]
+        local kills    = stats:getShipclassKills(ship_cls)
+
+        if kills > 0 then
+            local name = topics.ships.name:send(ship_cls)
+            score_from_kills = score_from_kills + kills * ship_cls.Score
+            self:add_value_element(name .. ":", kills)
+        end
+    end
+    self:add_value_element("Score from kills only:", score_from_kills)
+	
+	return self.playerStats
+end
+
 function PXOController:accept_pressed()
+	ba.postGameEvent(ba.GameEvents["GS_EVENT_MULTI_JOIN_GAME"])
+end
+
+function PXOController:help_pressed()
+	ba.postGameEvent(ba.GameEvents["GS_EVENT_PXO_HELP"])
+end
+
+function PXOController:exit_pressed()
 	self:exit()
 end
 
@@ -353,8 +577,7 @@ function PXOController:updateLists()
 	self.document:GetElementById("status_text").inner_rml = ui.MultiPXO.StatusText
 	local motd = ui.MultiPXO.MotdText
 	--Replace new lines with break tags
-	motd = motd:gsub("\n","<br></br>")
-	self.document:GetElementById("motd_text").inner_rml = motd
+	self.motd = motd:gsub("\n","<br></br>")
 	
 	if self.banner ~= ui.MultiPXO.bannerFilename then
 		self.banner = ui.MultiPXO.bannerFilename

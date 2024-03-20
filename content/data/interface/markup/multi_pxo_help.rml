@@ -12,7 +12,10 @@
 		</script>
 	</head>
 	<body id=main_background onload="controller:initialize(document)" onkeydown="controller:global_keydown(element, event)" onunload="controller = nil">
-		<div id=help_div>
+		<div id=help_wrapper>
+			<div id=help_div>
+			</div>
+			<img src="fiction-window.png"></img>
 		</div>
 		<div id=bottom_panel_wrapper>
 			<div id=bottom_panel_a>

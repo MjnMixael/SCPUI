@@ -14,47 +14,153 @@
 	<body id=main_background onload="controller:initialize(document)" onkeydown="controller:global_keydown(element, event)" onunload="controller = nil">
 		<div id=banner_div>
 		</div>
-		<div id=players_div>
-			<ul id=players_list_ul>
-			</ul>
+		<div id=players_wrapper>
+			<div id=players_div>
+				<ul id=players_list_ul>
+				</ul>
+			</div>
+			<div id=player_btns_wrapper>
+				<div id=web_rank_cont>
+					<button id="web_rank_btn" class="web_rank button_1" onclick="controller:WebRankPressed()">
+						<span id="web_rank_img" class="web_rank button_img">
+							<img src="target.png" class="psuedo_img"></img>
+						</span>
+						<span class="pos button_text_bottom">
+							<p>XSTR("Web Ranking", -1)</p>
+						</span>
+					</button>
+				</div>
+				<div id=pilot_info_cont>
+					<button id="pilot_info_btn" class="pilot_info button_1" onclick="controller:PilotInfoPressed()">
+						<span id="pilot_info_img" class="pilot_info button_img">
+							<img src="create-pilot.png" class="psuedo_img"></img>
+						</span>
+						<span class="pos button_text_bottom">
+							<p>XSTR("Pilot Info", -1)</p>
+						</span>
+					</button>
+				</div>
+				<div id=find_pilot_cont>
+					<button id="find_pilot_btn" class="find_pilot button_1" onclick="controller:FindPilotPressed()">
+						<span id="find_pilot_img" class="find_pilot button_img">
+							<img src="detail.png" class="psuedo_img"></img>
+						</span>
+						<span class="pos button_text_bottom">
+							<p>XSTR("Find Pilot", -1)</p>
+						</span>
+					</button>
+				</div>
+				<img src="ops-panel-horz.png"></img>
+			</div>
+			<img src="tech-room-list-window-l.png"></img>
 		</div>
-		<div id=channels_div>
-			<ul id=channels_list_ul>
-			</ul>
+		<div id=channels_wrapper>
+			<div id=channels_div>
+				<ul id=channels_list_ul>
+				</ul>
+			</div>
+			<div id=join_public_cont>
+				<button id="join_public_btn" class="join_public button_1" onclick="controller:joinPublicPressed()">
+					<span id="join_public_img" class="join_public button_img">
+						<img src="select.png" class="psuedo_img"></img>
+					</span>
+					<span class="pos button_text_join">
+						<p>XSTR("Join Channel", -1)</p>
+					</span>
+				</button>
+			</div>
+			<div id=join_private_cont>
+				<button id="join_private_btn" class="join_private button_1" onclick="controller:joinPrivatePressed()">
+					<span id="join_private_img" class="join_private button_img">
+						<img src="select.png" class="psuedo_img"></img>
+					</span>
+					<span class="pos button_text_join">
+						<p>XSTR("Join Private", -1)</p>
+					</span>
+				</button>
+			</div>
+			<img src="tech-room-text-window.png"></img>
 		</div>
-		<div id=chat_window>
-		</div>
-		<input id=chat_input type="text" maxlength="512" onblur="controller:InputFocusLost()"
+		<div id=chat_wrapper>
+			<div id=chat_window>
+			</div>
+			<input id=chat_input type="text" maxlength="512" onblur="controller:InputFocusLost()"
 				onchange="controller:InputChange(event)"></input>
-		<div id=submit_cont>
-			<button id="submit_btn" class="submit button_1" onclick="controller:SubmitPressed()">
-				<span id="submit_img" class="submit button_img">
-					<img src="select.png" class="psuedo_img"></img>
-				</span>
-				<span class="pos button_text_special">
-					<p>XSTR("Submit", -1)</p>
-				</span>
-			</button>
+			<div id=submit_btn_wrapper>
+				<div id=submit_cont>
+					<button id="submit_btn" class="submit button_1" onclick="controller:SubmitPressed()">
+						<span id="submit_img" class="submit button_img">
+							<img src="select.png" class="psuedo_img"></img>
+						</span>
+						<span class="pos button_text_special">
+							<p>XSTR("Submit", -1)</p>
+						</span>
+					</button>
+				</div>
+				<img src="ops-panel-horz.png"></img>
+			</div>
+			<img src="fiction-window.png"></img>
 		</div>
 		<div id=status_text>
 		</div>
-		<div id=motd_text>
+		<div id=motd_btn_wrapper>
+			<div id=motd_cont>
+				<button id="motd_btn" class="motd button_1" onclick="controller:motd_pressed(element)">
+					<span id="motd_img" class="motd button_img">
+						<img src="star.png" class="psuedo_img"></img>
+					</span>
+					<span class="pos button_text_top">
+						<p>XSTR("MOTD", -1)</p>
+					</span>
+				</button>
+			</div>
+			<img src="bottom-panel-b.png"></img>
 		</div>
 		<div id=bottom_panel_wrapper>
 			<div id=bottom_panel_a>
 				<div id=a_panel_wrapper>
 					<div id=accept_cont>
-						<button id="fv_accept_btn" class="accept button_1" onclick="controller:accept_pressed(element)">
+						<button id="accept_btn" class="accept button_1" onclick="controller:accept_pressed(element)">
 							<span id="accept_img" class="accept button_img">
 								<img src="select.png" class="psuedo_img"></img>
 							</span>
 							<span class="neg button_text_top">
-								<p>Exit</p>
+								<p>XSTR("Accept", -1)</p>
 							</span>
 						</button>
 					</div>
 				</div>
 				<img src="bottom-panel-a.png"></img>
+			</div>
+			<div id=bottom_panel_b>
+				<div id=b_panel_wrapper>
+					<div id=help_cont>
+						<button id="help_btn" class="help button_1" onclick="controller:help_pressed()">
+							<span id="help_img" class="help button_img">
+								<img src="help.png" class="psuedo_img"></img>
+							</span>
+							<span class="pos button_text_top">
+								<p>XSTR("Help", -1)</p>
+							</span>
+						</button>
+					</div>
+				</div>
+				<img src="bottom-panel-b.png"></img>
+			</div>
+			<div id=bottom_panel_c>
+				<div id=c_panel_wrapper>
+					<div id=exit_cont>
+						<button id="exit_btn" class="exit button_1" onclick="controller:exit_pressed()">
+							<span id="exit_img" class="exit button_img">
+								<img src="exit.png" class="psuedo_img"></img>
+							</span>
+							<span class="pos button_text_top">
+								<p>XSTR("Exit", -1)</p>
+							</span>
+						</button>
+					</div>
+				</div>
+				<img src="bottom-panel-e.png"></img>
 			</div>
 		</div>
 	</body>
