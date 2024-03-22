@@ -471,6 +471,8 @@ function PXOController:initialize_stats_text(stats)
 end
 
 function PXOController:accept_pressed()
+	ui.MultiPXO.closePXO()
+	ScpuiSystem.MultiReady = false
 	ba.postGameEvent(ba.GameEvents["GS_EVENT_MULTI_JOIN_GAME"])
 end
 
@@ -485,10 +487,6 @@ end
 function PXOController:global_keydown(_, event)
     if event.parameters.key_identifier == rocket.key_identifier.ESCAPE then
        self:exit()
-    elseif event.parameters.key_identifier == rocket.key_identifier.S then --TESTING!
-		if event.parameters.shift_key == 1 then
-			ui.MultiPXO.joinPrivateChannel("test")
-		end
 	end
 end
 
