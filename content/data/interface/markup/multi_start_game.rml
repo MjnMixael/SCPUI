@@ -1,0 +1,73 @@
+<rml>
+	<head>
+		<title>Join Game</title>
+		<link type="text/rcss" href="default.rcss"/>
+		<link type="text/rcss" href="fontsizes.rcss"/>
+		<link type="text/rcss" href="common.rcss"/>
+		<link type="text/rcss" href="scrollbars.rcss"/>
+		<link type="text/rcss" href="multi_start_game.rcss"/>
+		<link type="text/rcss" href="custom.rcss"/>
+		<script>
+			controller = require("multi_start_game")()
+		</script>
+	</head>
+	<body id=main_background onload="controller:initialize(document)" onkeydown="controller:global_keydown(element, event)" onunload="controller = nil">
+		<div id=games_list_wrapper>
+			<div id=games_list>
+				<ul id=games_list_ul>
+				</ul>
+			</div>
+			<img src="fiction-window.png"></img>
+		</div>
+		<div id=status_text>
+		</div>
+		<div id=common_text_wrapper>
+			<div id=common_text>
+			</div>
+			<img src="credits-text-window.png"></img>
+		</div>
+		<div id=bottom_panel_wrapper>
+			<div id=bottom_panel_a>
+				<div id=a_panel_wrapper>
+					<div id=accept_cont>
+						<button id="accept_btn" class="accept button_1" onclick="controller:join_pressed(element)">
+							<span id="accept_img" class="accept button_img">
+								<img src="select.png" class="psuedo_img"></img>
+							</span>
+							<span class="neg button_text_top">
+								<p>XSTR("Join", -1)</p>
+							</span>
+						</button>
+					</div>
+				</div>
+				<img src="bottom-panel-a.png"></img>
+			</div>
+			<div id=bottom_panel_b>
+				<div id=b_panel_wrapper>
+					<div id=help_cont>
+						<button id="help_btn" class="help button_1" onclick="controller:help_pressed()">
+							<span id="help_img" class="help button_img">
+								<img src="help.png" class="psuedo_img"></img>
+							</span>
+							<span class="pos button_text_left">
+								<p>XSTR("Help", -1)</p>
+							</span>
+						</button>
+					</div>
+					<div id=options_cont>
+						<button id="options_btn" class="options button_1" onclick="controller:options_pressed()">
+							<span id="options_img" class="options button_img">
+								<img src="diamonds.png" class="psuedo_img"></img>
+							</span>
+							<span class="pos button_text_left">
+								<p>XSTR("Options", -1)</p>
+							</span>
+						</button>
+					</div>
+				</div>
+				<img src="bottom-panel-b.png"></img>
+			</div>
+		</div>
+	</body>
+
+</rml>

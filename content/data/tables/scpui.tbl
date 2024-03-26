@@ -86,6 +86,9 @@ $State: GS_STATE_PXO_HELP
 $State: GS_STATE_MULTI_JOIN_GAME
 	+Markup: data/interface/markup/multi_join_game.rml
 
+$State: GS_STATE_MULTI_START_GAME
+	+Markup: data/interface/markup/multi_start_game.rml
+
 #Background Replacement
 
 ;$Campaign Background:
