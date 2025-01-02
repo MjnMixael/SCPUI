@@ -97,7 +97,7 @@ end
 
 function ScpuiSystem:getFontPixelSize(val)
 	local vmin = math.min(gr.getScreenWidth(), gr.getScreenHeight())
-	local size = vmin * 0.012 --Gets rougly 12px font on 1080p
+	local size = vmin * ScpuiSystem.font_resolution_multiplier
 	-- Lua has no math.round(); math.floor(x + 0.5) is the idiomatic replacement.
 	local pixelSize = math.floor(size + 0.5)
 	

@@ -12,6 +12,7 @@ local renderCategory = engine.createTracingCategory("RenderRocket", true)
 
 ScpuiSystem = {
 	active = true,
+	font_resolution_multiplier = 0.012, --Gets roughly 12px font on 1080p
 	numFontSizes = 40,
 	replacements = {},
 	backgrounds = {},
