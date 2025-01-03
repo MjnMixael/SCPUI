@@ -9,27 +9,27 @@
 active_game = {}
 --- @class active_game
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
---- @field Status? string The status of the game The status
---- @field Type? string The type of the game The type
---- @field Speed? string The speed of the game The speed
---- @field Standalone? boolean Whether or not the game is standalone True for standalone, false otherwise
---- @field Campaign? boolean Whether or not the game is campaign True for campaign, false otherwise
---- @field Server? string The server name of the game The server
---- @field Mission? string The mission name of the game The mission
---- @field Ping? number The ping average of the game The ping
---- @field Players? number The number of players in the game The number of players
+--- @field Status? string The status The status of the game
+--- @field Type? string The type The type of the game
+--- @field Speed? string The speed The speed of the game
+--- @field Standalone? boolean True for standalone, false otherwise Whether or not the game is standalone
+--- @field Campaign? boolean True for campaign, false otherwise Whether or not the game is campaign
+--- @field Server? string The server The server name of the game
+--- @field Mission? string The mission The mission name of the game
+--- @field Ping? number The ping The ping average of the game
+--- @field Players? number The number of players The number of players in the game
 --- @field setSelected fun(self: self): nil Sets the specified game as the selected game to possibly join. Must be used before sendJoinRequest will work.
 
 -- ai_helper object: A helper object to access functions for ship manipulation during AI phase
 ai_helper = {}
 --- @class ai_helper
---- @field Ship? ship The ship this AI runs for The ship, or invalid ship if the handle is invalid
---- @field Pitch? number The pitch thrust rate for the ship this frame, -1 to 1 The pitch rate, or 0 if the handle is invalid
---- @field Bank? number The bank thrust rate for the ship this frame, -1 to 1 The bank rate, or 0 if the handle is invalid
---- @field Heading? number The heading thrust rate for the ship this frame, -1 to 1 The heading rate, or 0 if the handle is invalid
---- @field ForwardThrust? number The forward thrust rate for the ship this frame, -1 to 1 The forward thrust rate, or 0 if the handle is invalid
---- @field VerticalThrust? number The vertical thrust rate for the ship this frame, -1 to 1 The vertical thrust rate, or 0 if the handle is invalid
---- @field SidewaysThrust? number The sideways thrust rate for the ship this frame, -1 to 1 The sideways thrust rate, or 0 if the handle is invalid
+--- @field Ship? ship The ship, or invalid ship if the handle is invalid The ship this AI runs for
+--- @field Pitch? number The pitch rate, or 0 if the handle is invalid The pitch thrust rate for the ship this frame, -1 to 1
+--- @field Bank? number The bank rate, or 0 if the handle is invalid The bank thrust rate for the ship this frame, -1 to 1
+--- @field Heading? number The heading rate, or 0 if the handle is invalid The heading thrust rate for the ship this frame, -1 to 1
+--- @field ForwardThrust? number The forward thrust rate, or 0 if the handle is invalid The forward thrust rate for the ship this frame, -1 to 1
+--- @field VerticalThrust? number The vertical thrust rate, or 0 if the handle is invalid The vertical thrust rate for the ship this frame, -1 to 1
+--- @field SidewaysThrust? number The sideways thrust rate, or 0 if the handle is invalid The sideways thrust rate for the ship this frame, -1 to 1
 --- @field turnTowardsPoint fun(self: self, target: vector, respectDifficulty?: boolean, turnrateModifier?: vector, bank?: number): nil turns the ship towards the specified point during this frame
 --- @field turnTowardsOrientation fun(self: self, target: orientation, respectDifficulty?: boolean, turnrateModifier?: vector): nil turns the ship towards the specified orientation during this frame
 
@@ -43,7 +43,7 @@ animation_handle = {}
 -- asteroid object: Asteroid handle
 asteroid = {}
 --- @class asteroid
---- @field Target? object Asteroid target object; may be object derivative, such as ship. Target object, or invalid handle if asteroid handle is invalid
+--- @field Target? object Target object, or invalid handle if asteroid handle is invalid Asteroid target object; may be object derivative, such as ship.
 --- @field kill fun(self: self, killer?: ship, hitpos?: vector): boolean Kills the asteroid. Set "killer" to designate a specific ship as having been the killer, and "hitpos" to specify the world position of the hit location; if nil, the asteroid center is used.
 
 -- audio_stream object: An audio stream handle
@@ -63,11 +63,11 @@ audio_stream = {}
 background_element = {}
 --- @class background_element
 --- @field isValid fun(self: self): boolean Determines if this handle is valid
---- @field Orientation? orientation Backround element orientation (treating the angles as correctly calculated) Orientation, or null orientation if handle is invalid
---- @field DivX? number Division X Division X, or 0 if handle is invalid
---- @field DivY? number Division Y Division Y, or 0 if handle is invalid
---- @field ScaleX? number Scale X Scale X, or 0 if handle is invalid
---- @field ScaleY? number Scale Y Scale Y, or 0 if handle is invalid
+--- @field Orientation? orientation Orientation, or null orientation if handle is invalid Backround element orientation (treating the angles as correctly calculated)
+--- @field DivX? number Division X, or 0 if handle is invalid Division X
+--- @field DivY? number Division Y, or 0 if handle is invalid Division Y
+--- @field ScaleX? number Scale X, or 0 if handle is invalid Scale X
+--- @field ScaleY? number Scale Y, or 0 if handle is invalid Scale Y
 --- @field setDiv fun(self: self, param2: number, param3: number): boolean Sets Division X and Division Y at the same time.  For Bitmaps this avoids a double recalculation of the vertex buffer, if both values need to be set.  For all background elements this also avoids fetching and setting the data twice.
 --- @field setScale fun(self: self, param2: number, param3: number): boolean Sets Scale X and Scale Y at the same time.  For Bitmaps this avoids a double recalculation of the vertex buffer, if both values need to be set.  For all background elements this also avoids fetching and setting the data twice.
 --- @field setScaleAndDiv fun(self: self, param2: number, param3: number, param4: number, param5: number): boolean Sets Scale X, Scale Y, Division X, and Division Y at the same time.  For Bitmaps this avoids a quadruple recalculation of the vertex buffer, if all four values need to be set.  For all background elements this also avoids fetching and setting the data four times.
@@ -75,14 +75,14 @@ background_element = {}
 -- beam object: Beam handle
 beam = {}
 --- @class beam
---- @field Class? weaponclass Weapon's class Weapon class, or invalid weaponclass handle if beam handle is invalid
---- @field LastShot? vector End point of the beam vector or null vector if beam handle is not valid
---- @field LastStart? vector Start point of the beam vector or null vector if beam handle is not valid
---- @field Target? object Target of beam. Value may also be a deriviative of the 'object' class, such as 'ship'. Beam target, or invalid object handle if beam handle is invalid
---- @field TargetSubsystem? subsystem Subsystem that beam is targeting. Target subsystem, or invalid subsystem handle if beam handle is invalid
---- @field ParentShip? object Parent of the beam. Beam parent, or invalid object handle if beam handle is invalid
---- @field ParentSubsystem? subsystem Subsystem that beam is fired from. Parent subsystem, or invalid subsystem handle if beam handle is invalid
---- @field Team? team Beam's team Beam team, or invalid team handle if beam handle is invalid
+--- @field Class? weaponclass Weapon class, or invalid weaponclass handle if beam handle is invalid Weapon's class
+--- @field LastShot? vector vector or null vector if beam handle is not valid End point of the beam
+--- @field LastStart? vector vector or null vector if beam handle is not valid Start point of the beam
+--- @field Target? object Beam target, or invalid object handle if beam handle is invalid Target of beam. Value may also be a deriviative of the 'object' class, such as 'ship'.
+--- @field TargetSubsystem? subsystem Target subsystem, or invalid subsystem handle if beam handle is invalid Subsystem that beam is targeting.
+--- @field ParentShip? object Beam parent, or invalid object handle if beam handle is invalid Parent of the beam.
+--- @field ParentSubsystem? subsystem Parent subsystem, or invalid subsystem handle if beam handle is invalid Subsystem that beam is fired from.
+--- @field Team? team Beam team, or invalid team handle if beam handle is invalid Beam's team
 --- @field getCollisionCount fun(self: self): number Get the number of collisions in frame.
 --- @field getCollisionPosition fun(self: self, param2: number): vector Get the position of the defined collision.
 --- @field getCollisionInformation fun(self: self, param2: number): collision_info Get the collision information of the specified collision
@@ -99,10 +99,10 @@ briefing = {}
 -- briefing_stage object: Briefing stage handle
 briefing_stage = {}
 --- @class briefing_stage
---- @field Text? string The text of the stage The text
---- @field AudioFilename? string The filename of the audio file to play The file name
---- @field hasForwardCut? boolean If the stage has a forward cut flag true if the stage is set to cut to the next stage, false otherwise
---- @field hasBackwardCut? boolean If the stage has a backward cut flag true if the stage is set to cut to the previous stage, false otherwise
+--- @field Text? string The text The text of the stage
+--- @field AudioFilename? string The file name The filename of the audio file to play
+--- @field hasForwardCut? boolean true if the stage is set to cut to the next stage, false otherwise If the stage has a forward cut flag
+--- @field hasBackwardCut? boolean true if the stage is set to cut to the previous stage, false otherwise If the stage has a backward cut flag
 
 -- bytearray object: An array of binary data
 bytearray = {}
@@ -112,14 +112,14 @@ bytearray = {}
 camera = {}
 --- @class camera
 --- @field isValid fun(self: self): boolean True if valid, false or nil if not
---- @field Name? string New camera name Camera name
---- @field FOV? number New camera FOV (in radians) Camera FOV (in radians)
---- @field Orientation? orientation New camera orientation Camera orientation
---- @field Position? vector New camera position Camera position
---- @field Self? object New mount object Camera object
---- @field SelfSubsystem? subsystem New mount object subsystem Subsystem that the camera is mounted on
---- @field Target? object New target object Camera target object
---- @field TargetSubsystem? subsystem New target subsystem Subsystem that the camera is pointed at
+--- @field Name? string Camera name New camera name
+--- @field FOV? number Camera FOV (in radians) New camera FOV (in radians)
+--- @field Orientation? orientation Camera orientation New camera orientation
+--- @field Position? vector Camera position New camera position
+--- @field Self? object Camera object New mount object
+--- @field SelfSubsystem? subsystem Subsystem that the camera is mounted on New mount object subsystem
+--- @field Target? object Camera target object New target object
+--- @field TargetSubsystem? subsystem Subsystem that the camera is pointed at New target subsystem
 --- @field setFOV fun(self: self, FOV?: number, ZoomTime?: number, ZoomAccelerationTime?: number, ZoomDecelerationTime?: number): boolean Sets camera FOV<br>FOV is the final field of view, in radians, of the camera.<br>Zoom Time is the total time to take zooming in or out.<br>Acceleration Time is the total time it should take the camera to get up to full zoom speed.<br>Deceleration Time is the total time it should take the camera to slow down from full zoom speed.
 --- @field setOrientation fun(self: self, WorldOrientation?: orientation, RotationTime?: number, AccelerationTime?: number, DecelerationTime?: number): boolean Sets camera orientation and velocity data.<br>Orientation is the final orientation for the camera, after it has finished moving. If not specified, the camera will simply stop at its current orientation.<br>Rotation time (seconds) is how long total, including acceleration, the camera should take to rotate. If it is not specified, the camera will jump to the specified orientation.<br>Acceleration time (seconds) is how long it should take the camera to get 'up to speed'. If not specified, the camera will instantly start moving.<br>Deceleration time (seconds) is how long it should take the camera to slow down. If not specified, the camera will instantly stop moving.
 --- @field setPosition fun(self: self, Position?: vector, TranslationTime?: number, AccelerationTime?: number, DecelerationTime?: number): boolean Sets camera position and velocity data.<br>Position is the final position for the camera. If not specified, the camera will simply stop at its current position.<br>Translation time (seconds) is how long total, including acceleration, the camera should take to move. If it is not specified, the camera will jump to the specified position.<br>Acceleration time (seconds) is how long it should take the camera to get 'up to speed'. If not specified, the camera will instantly start moving.<br>Deceleration time (seconds) is how long it should take the camera to slow down. If not specified, the camera will instantly stop moving.
@@ -131,9 +131,9 @@ cmd_briefing = {}
 -- cmd_briefing_stage object: Command briefing stage handle
 cmd_briefing_stage = {}
 --- @class cmd_briefing_stage
---- @field Text? string The text of the stage The text
---- @field AniFilename? string The filename of the animation to play The file name
---- @field AudioFilename? string The filename of the audio file to play The file name
+--- @field Text? string The text The text of the stage
+--- @field AniFilename? string The file name The filename of the animation to play
+--- @field AudioFilename? string The file name The filename of the audio file to play
 
 -- cockpitdisplays object: Array of cockpit display information
 cockpitdisplays = {}
@@ -143,7 +143,7 @@ cockpitdisplays = {}
 -- collision_info object: Information about a collision
 collision_info = {}
 --- @class collision_info
---- @field Model? model The model this collision info is about The model, or an invalid model if the handle is not valid
+--- @field Model? model The model, or an invalid model if the handle is not valid The model this collision info is about
 --- @field getCollisionSubmodel fun(self: self): submodel The submodel where the collision occurred, if applicable
 --- @field getCollisionDistance fun(self: self): number The distance to the closest collision point
 --- @field getCollisionPoint fun(self: self, localVal?: boolean): vector The collision point of this information (local to the object if boolean is set to <i>true</i>)
@@ -153,24 +153,24 @@ collision_info = {}
 -- color object: A color value
 color = {}
 --- @class color
---- @field Red? number The 'red' value of the color in the range from 0 to 255 The 'red' value
---- @field Green? number The 'green' value of the color in the range from 0 to 255 The 'green' value
---- @field Blue? number The 'blue' value of the color in the range from 0 to 255 The 'blue' value
---- @field Alpha? number The 'alpha' or opacity value of the color in the range from 0 to 255. 0 is totally transparent, 255 is completely opaque. The 'alpha' value
+--- @field Red? number The 'red' value The 'red' value of the color in the range from 0 to 255
+--- @field Green? number The 'green' value The 'green' value of the color in the range from 0 to 255
+--- @field Blue? number The 'blue' value The 'blue' value of the color in the range from 0 to 255
+--- @field Alpha? number The 'alpha' value The 'alpha' or opacity value of the color in the range from 0 to 255. 0 is totally transparent, 255 is completely opaque.
 
 -- control object: Control handle
 control = {}
 --- @class control
---- @field Name? string The name of the control The name
---- @field Bindings? table<number, string> Gets a table of bindings for the control The keys table
+--- @field Name? string The name The name of the control
+--- @field Bindings? table<number, string> The keys table Gets a table of bindings for the control
 --- @field isBindInverted fun(self: self, Bind: number): boolean Returns if the selected bind is inverted. Number is 1 for first bind 2 for second.
---- @field Shifted? boolean Returns whether or not the keybind is Shifted True if shifted, false otherwise.
---- @field Alted? boolean Returns whether or not the keybind is Alted True if alted, false otherwise.
---- @field Tab? number The tab the control belongs in. 0 = Target Tab, 1 = Ship Tab, 2 = Weapon Tab, 3 = Computer Tab The tab number
---- @field Disabled? boolean Whether or not the control is disabled and should be hidden. True for disabled, false otherwise
---- @field IsAxis? boolean Whether or not the bound control is an axis control. True for axis, false otherwise
---- @field IsModifier? boolean Whether or not the bound control is a modifier. True for modifier, false otherwise
---- @field Conflicted? boolean Whether or not the bound control has a conflict. Returns the conflict string if true, nil otherwise
+--- @field Shifted? boolean True if shifted, false otherwise. Returns whether or not the keybind is Shifted
+--- @field Alted? boolean True if alted, false otherwise. Returns whether or not the keybind is Alted
+--- @field Tab? number The tab number The tab the control belongs in. 0 = Target Tab, 1 = Ship Tab, 2 = Weapon Tab, 3 = Computer Tab
+--- @field Disabled? boolean True for disabled, false otherwise Whether or not the control is disabled and should be hidden.
+--- @field IsAxis? boolean True for axis, false otherwise Whether or not the bound control is an axis control.
+--- @field IsModifier? boolean True for modifier, false otherwise Whether or not the bound control is a modifier.
+--- @field Conflicted? boolean Returns the conflict string if true, nil otherwise Whether or not the bound control has a conflict.
 --- @field detectKeypress fun(self: self, Item: number): number Waits for a keypress to use as a keybind. Binds the key if found. Will need to disable UI input if enabled first. Should run On Frame. Item is first bind (1) or second bind (2)
 --- @field clearBind fun(self: self, Item: number): boolean Clears the control binding. Item is all controls (1), first control (2), or second control (3)
 --- @field clearConflicts fun(self: self): boolean Clears all binds that conflict with the selected bind index.
@@ -181,33 +181,33 @@ control = {}
 -- control_info object: control info handle
 control_info = {}
 --- @class control_info
---- @field Pitch? number Pitch of the player ship Pitch
---- @field Heading? number Heading of the player ship Heading
---- @field Bank? number Bank of the player ship Bank
---- @field Vertical? number Vertical control of the player ship Vertical control
---- @field Sideways? number Sideways control of the player ship Sideways control
---- @field Forward? number Forward control of the player ship Forward
---- @field ForwardCruise? number Forward control of the player ship Forward
---- @field PrimaryCount? number Number of primary weapons that will fire Number of weapons to fire, or 0 if handle is invalid
---- @field SecondaryCount? number Number of secondary weapons that will fire Number of weapons to fire, or 0 if handle is invalid
---- @field CountermeasureCount? number Number of countermeasures that will launch Number of countermeasures to launch, or 0 if handle is invalid
+--- @field Pitch? number Pitch Pitch of the player ship
+--- @field Heading? number Heading Heading of the player ship
+--- @field Bank? number Bank Bank of the player ship
+--- @field Vertical? number Vertical control Vertical control of the player ship
+--- @field Sideways? number Sideways control Sideways control of the player ship
+--- @field Forward? number Forward Forward control of the player ship
+--- @field ForwardCruise? number Forward Forward control of the player ship
+--- @field PrimaryCount? number Number of weapons to fire, or 0 if handle is invalid Number of primary weapons that will fire
+--- @field SecondaryCount? number Number of weapons to fire, or 0 if handle is invalid Number of secondary weapons that will fire
+--- @field CountermeasureCount? number Number of countermeasures to launch, or 0 if handle is invalid Number of countermeasures that will launch
 --- @field clearLuaButtonInfo fun(self: self): nil Clears the lua button control info
 --- @field getButtonInfo fun(self: self): number, number, number, number Access the four bitfields containing the button info
 --- @field accessButtonInfo fun(self: self, param2: number, param3: number, param4: number, param5: number): number, number, number, number Access the four bitfields containing the button info
 --- @field useButtonControl fun(self: self, param2: number, param3: string): nil Adds the defined button control to lua button control data, if number is -1 it tries to use the string
 --- @field getButtonControlName fun(self: self, param2: number): string Gives the name of the command corresponding with the given number
 --- @field getButtonControlNumber fun(self: self, param2: string): number Gives the number of the command corresponding with the given string
---- @field AllButtonPolling? boolean Toggles the all button polling for lua If the all button polling is enabled or not
+--- @field AllButtonPolling? boolean If the all button polling is enabled or not Toggles the all button polling for lua
 --- @field pollAllButtons fun(self: self): number, number, number, number Access the four bitfields containing the button info
 
 -- cutscene_info object: Tech Room cutscene handle
 cutscene_info = {}
 --- @class cutscene_info
---- @field Name? string The name of the cutscene The cutscene name
---- @field Filename? string The filename of the cutscene The cutscene filename
+--- @field Name? string The cutscene name The name of the cutscene
+--- @field Filename? string The cutscene filename The filename of the cutscene
 --- @field Description? string The cutscene description The cutscene description
---- @field isVisible? boolean If the cutscene should be visible by default true if visible, false if not visible
---- @field CustomData? table Gets the custom data table for this cutscene The cutscene's custom data table
+--- @field isVisible? boolean true if visible, false if not visible If the cutscene should be visible by default
+--- @field CustomData? table The cutscene's custom data table Gets the custom data table for this cutscene
 --- @field hasCustomData fun(self: self): boolean Detects whether the cutscene has any custom data
 --- @field isValid fun(self: self): boolean Detects whether cutscene is valid
 
@@ -218,18 +218,18 @@ debriefing = {}
 -- debriefing_stage object: Debriefing stage handle
 debriefing_stage = {}
 --- @class debriefing_stage
---- @field Text? string The text of the stage The text
---- @field AudioFilename? string The filename of the audio file to play The file name
---- @field Recommendation? string The recommendation text of the stage The recommendation text
+--- @field Text? string The text The text of the stage
+--- @field AudioFilename? string The file name The filename of the audio file to play
+--- @field Recommendation? string The recommendation text The recommendation text of the stage
 --- @field checkVisible fun(self: self): boolean Evaluates the stage formula and returns the result. Could potentially have side effects if the stage formula has a 'perform-actions' or similar operator. Note that the standard UI evaluates the formula exactly once per stage on debriefing initialization.
 
 -- debris object: Debris handle
 debris = {}
 --- @class debris
---- @field IsHull? boolean Whether or not debris is a piece of hull Whether debris is a hull fragment, or false if handle is invalid
---- @field OriginClass? shipclass The shipclass of the ship this debris originates from The shipclass of the ship that created this debris
---- @field DoNotExpire? boolean Whether the debris should expire.  Normally, debris does not expire if it is from ships destroyed before mission or from ships that are more than 50 meters in radius. True if flag is set, false if flag is not set and nil on error
---- @field LifeLeft? number The time this debris piece will last.  When this is 0 (and DoNotExpire is false) the debris will explode. The amount of time, in seconds, the debris will last
+--- @field IsHull? boolean Whether debris is a hull fragment, or false if handle is invalid Whether or not debris is a piece of hull
+--- @field OriginClass? shipclass The shipclass of the ship that created this debris The shipclass of the ship this debris originates from
+--- @field DoNotExpire? boolean True if flag is set, false if flag is not set and nil on error Whether the debris should expire.  Normally, debris does not expire if it is from ships destroyed before mission or from ships that are more than 50 meters in radius.
+--- @field LifeLeft? number The amount of time, in seconds, the debris will last The time this debris piece will last.  When this is 0 (and DoNotExpire is false) the debris will explode.
 --- @field getDebrisRadius fun(self: self): number The radius of this debris piece
 --- @field isValid fun(self: self): boolean Return if this debris handle is valid
 --- @field isGeneric fun(self: self): boolean Return if this debris is the generic debris model, not a model subobject
@@ -240,7 +240,7 @@ debris = {}
 decaldefinition = {}
 --- @class decaldefinition
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
---- @field Name? string Decal definition name Decal definition name, or empty string if handle is invalid
+--- @field Name? string Decal definition name, or empty string if handle is invalid Decal definition name
 --- @field create fun(self: self, width: number, height: number, minLifetime: number, maxLifetime: number, host: object, submodel: submodel, local_pos?: vector, local_orient?: orientation): nil Creates a decal with the specified parameters.  A negative value for either lifetime will result in a perpetual decal.  The position and orientation are in the frame-of-reference of the submodel.
 
 -- default_primary object: weapon index
@@ -295,7 +295,7 @@ dockingbays = {}
 dogfight_scores = {}
 --- @class dogfight_scores
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
---- @field Callsign? string Gets the callsign for the player who's scores these are the callsign or nil if invalid
+--- @field Callsign? string the callsign or nil if invalid Gets the callsign for the player who's scores these are
 --- @field getKillsOnPlayer fun(self: self, param2: net_player): boolean Detects whether handle is valid
 
 -- enumeration object: Enumeration object
@@ -303,8 +303,8 @@ enumeration = {}
 --- @class enumeration
 --- @operator add(enumeration): enumeration # Calculates the logical OR of the two enums. Only applicable for certain bitfield enums (OS_*, DC_*, ...)
 --- @operator mul(enumeration): enumeration # Calculates the logical AND of the two enums. Only applicable for certain bitfield enums (OS_*, DC_*, ...)
---- @field IntValue? number Internal value of the enum.  Probably not useful unless this enum is a bitfield or corresponds to a #define somewhere else in the source code. Integer (index) value of the enum
---- @field Value? number Internal bitfield value of the enum. -1 if the enum is not a bitfield Integer value of the enum
+--- @field IntValue? number Integer (index) value of the enum DEPRECATED 23.0.0: Deprecated in favor of Value --  Internal value of the enum.  Probably not useful unless this enum is a bitfield or corresponds to a #define somewhere else in the source code.
+--- @field Value? number Integer value of the enum Internal bitfield value of the enum. -1 if the enum is not a bitfield
 
 -- event object: Mission event handle
 event = {}
@@ -312,10 +312,10 @@ event = {}
 --- @field Name? string Mission event name
 --- @field DirectiveText? string Directive text
 --- @field DirectiveKeypressText? string Raw directive keypress text, as seen in FRED.
---- @field Interval? number Time for event to repeat (in seconds) Repeat time, or 0 if invalid handle
---- @field ObjectCount? number Number of objects left for event Repeat count, or 0 if invalid handle
---- @field RepeatCount? number Event repeat count Repeat count, or 0 if invalid handle
---- @field Score? number Event score Event score, or 0 if invalid handle
+--- @field Interval? number Repeat time, or 0 if invalid handle Time for event to repeat (in seconds)
+--- @field ObjectCount? number Repeat count, or 0 if invalid handle Number of objects left for event
+--- @field RepeatCount? number Repeat count, or 0 if invalid handle Event repeat count
+--- @field Score? number Event score, or 0 if invalid handle Event score
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
 
 -- execution_context object: An execution context for asynchronous operations
@@ -333,10 +333,10 @@ executor = {}
 -- eyepoint object: Eyepoint handle
 eyepoint = {}
 --- @class eyepoint
---- @field Normal? vector Eyepoint normal Eyepoint normal, or null vector if handle is invalid
---- @field Position? vector Eyepoint location (Local vector) Eyepoint location, or null vector if handle is invalid
+--- @field Normal? vector Eyepoint normal, or null vector if handle is invalid Eyepoint normal
+--- @field Position? vector Eyepoint location, or null vector if handle is invalid Eyepoint location (Local vector)
 --- @field isValid fun(self: self): boolean Detect whether this handle is valid
---- @field IsValid fun(self: self): boolean Detect whether this handle is valid
+--- @field IsValid fun(self: self): boolean DEPRECATED 24.0.0: IsValid is named with the incorrect case. Use isValid instead. --  Detect whether this handle is valid
 
 -- eyepoints object: Array of model eye points
 eyepoints = {}
@@ -346,9 +346,9 @@ eyepoints = {}
 -- fiction_viewer_stage object: Fiction Viewer stage handle
 fiction_viewer_stage = {}
 --- @class fiction_viewer_stage
---- @field TextFile? string The text file of the stage The text filename
---- @field FontFile? string The font file of the stage The font filename
---- @field VoiceFile? string The voice file of the stage The voice filename
+--- @field TextFile? string The text filename The text file of the stage
+--- @field FontFile? string The font filename The font file of the stage
+--- @field VoiceFile? string The voice filename The voice file of the stage
 
 -- file object: File handle
 file = {}
@@ -367,20 +367,20 @@ file = {}
 -- fireball object: Fireball handle
 fireball = {}
 --- @class fireball
---- @field Class? fireballclass Fireball's class Fireball class, or invalid fireballclass handle if fireball handle is invalid
---- @field RenderType? enumeration Fireball's render type Fireball rendertype, or handle to invalid enum if fireball handle is invalid or a bad enum was given
---- @field TimeElapsed? number Time this fireball exists in seconds Time this fireball exists or 0 if fireball handle is invalid
---- @field TotalTime? number Total lifetime of the fireball's animation in seconds Total lifetime of the fireball's animation or 0 if fireball handle is invalid
+--- @field Class? fireballclass Fireball class, or invalid fireballclass handle if fireball handle is invalid Fireball's class
+--- @field RenderType? enumeration Fireball rendertype, or handle to invalid enum if fireball handle is invalid or a bad enum was given Fireball's render type
+--- @field TimeElapsed? number Time this fireball exists or 0 if fireball handle is invalid Time this fireball exists in seconds
+--- @field TotalTime? number Total lifetime of the fireball's animation or 0 if fireball handle is invalid Total lifetime of the fireball's animation in seconds
 --- @field isWarp fun(self: self): boolean Checks if the fireball is a warp effect.
 --- @field vanish fun(self: self): boolean Vanishes this fireball from the mission.
 
 -- fireballclass object: Fireball class handle
 fireballclass = {}
 --- @class fireballclass
---- @field UniqueID? string Fireball class name Fireball class unique id, or empty string if handle is invalid
---- @field Filename? string Fireball class animation filename (LOD 0) Filename, or empty string if handle is invalid
---- @field NumberFrames? number Amount of frames the animation has (LOD 0) Amount of frames, or -1 if handle is invalid
---- @field FPS? number The FPS with which this fireball's animation is played (LOD 0) FPS, or -1 if handle is invalid
+--- @field UniqueID? string Fireball class unique id, or empty string if handle is invalid Fireball class name
+--- @field Filename? string Filename, or empty string if handle is invalid Fireball class animation filename (LOD 0)
+--- @field NumberFrames? number Amount of frames, or -1 if handle is invalid Amount of frames the animation has (LOD 0)
+--- @field FPS? number FPS, or -1 if handle is invalid The FPS with which this fireball's animation is played (LOD 0)
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
 --- @field getTableIndex fun(self: self): number Gets the index value of the fireball class
 
@@ -389,39 +389,39 @@ font = {}
 --- @class font
 --- @field Filename? string Name of font (including extension)<br><b>Important:</b>This variable is deprecated. Use <i>Name</i> instead.
 --- @field Name? string Name of font (including extension)
---- @field Height? number Height of font (in pixels) Font height, or 0 if the handle is invalid
---- @field TopOffset? number The offset this font has from the baseline of textdrawing downwards. (in pixels) Font top offset, or 0 if the handle is invalid
---- @field BottomOffset? number The space (in pixels) this font skips downwards after drawing a line of text Font bottom offset, or 0 if the handle is invalid
+--- @field Height? number Font height, or 0 if the handle is invalid Height of font (in pixels)
+--- @field TopOffset? number Font top offset, or 0 if the handle is invalid The offset this font has from the baseline of textdrawing downwards. (in pixels)
+--- @field BottomOffset? number Font bottom offset, or 0 if the handle is invalid The space (in pixels) this font skips downwards after drawing a line of text
 --- @field isValid fun(self: self): boolean True if valid, false or nil if not
 
 -- gameevent object: Game event
 gameevent = {}
 --- @class gameevent
---- @field Name? string Game event name Game event name, or empty string if handle is invalid
+--- @field Name? string Game event name, or empty string if handle is invalid Game event name
 
 -- gamestate object: Game state
 gamestate = {}
 --- @class gamestate
---- @field Name? string Game state name Game state name, or empty string if handle is invalid
+--- @field Name? string Game state name, or empty string if handle is invalid Game state name
 
 -- gauge_config object: Gauge config handle
 gauge_config = {}
 --- @class gauge_config
---- @field Name? string The name of this gauge The name
---- @field CurrentColor? color Gets the current color of the gauge. If setting the color, gauges that use IFF for color cannot be set. The gauge color or nil if the gauge is invalid
---- @field ShowGaugeFlag? boolean Gets the current status of the show gauge flag. True if on, false if otherwise
---- @field PopupGaugeFlag? boolean Gets the current status of the popup gauge flag. True if on, false otherwise
---- @field CanPopup? boolean Gets whether or not the gauge can have the popup flag. True if can popup, false otherwise
---- @field UsesIffForColor? boolean Gets whether or not the gauge uses IFF for color. True if uses IFF, false otherwise
+--- @field Name? string The name The name of this gauge
+--- @field CurrentColor? color The gauge color or nil if the gauge is invalid Gets the current color of the gauge. If setting the color, gauges that use IFF for color cannot be set.
+--- @field ShowGaugeFlag? boolean True if on, false if otherwise Gets the current status of the show gauge flag.
+--- @field PopupGaugeFlag? boolean True if on, false otherwise Gets the current status of the popup gauge flag.
+--- @field CanPopup? boolean True if can popup, false otherwise Gets whether or not the gauge can have the popup flag.
+--- @field UsesIffForColor? boolean True if uses IFF, false otherwise Gets whether or not the gauge uses IFF for color.
 --- @field setSelected fun(self: self, param2: boolean): nil Sets if the gauge is the currently selected gauge for drawing as selected.
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
 
 -- glowpoint object: A model glowpoint
 glowpoint = {}
 --- @class glowpoint
---- @field Position? vector The (local) vector to the position of the glowpoint The local vector to the glowpoint or nil if invalid
---- @field Normal? vector The normal of the glowpoint The normal of the glowpoint or nil if invalid
---- @field Radius? number The radius of the glowpoint The radius of the glowpoint or -1 if invalid
+--- @field Position? vector The local vector to the glowpoint or nil if invalid The (local) vector to the position of the glowpoint
+--- @field Normal? vector The normal of the glowpoint or nil if invalid The normal of the glowpoint
+--- @field Radius? number The radius of the glowpoint or -1 if invalid The radius of the glowpoint
 --- @field isValid fun(self: self): boolean Returns whether this handle is valid or not
 
 -- glowpointbank object: A model glow point bank
@@ -438,18 +438,18 @@ glowpointbanks = {}
 help_section = {}
 --- @class help_section
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
---- @field Title? string The title of the help section The title
---- @field Header? string The header of the help section The header
---- @field Keys? table<number, string> Gets a table of keys in the help section The keys table
---- @field Texts? table<number, string> Gets a table of texts in the help section The texts table
+--- @field Title? string The title The title of the help section
+--- @field Header? string The header The header of the help section
+--- @field Keys? table<number, string> The keys table Gets a table of keys in the help section
+--- @field Texts? table<number, string> The texts table Gets a table of texts in the help section
 
 -- hotkey_ship object: Hotkey handle
 hotkey_ship = {}
 --- @class hotkey_ship
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
---- @field Text? string The text of this hotkey line The text
---- @field Type? enumeration The type of this hotkey line: HOTKEY_LINE_NONE, HOTKEY_LINE_HEADING, HOTKEY_LINE_WING, HOTKEY_LINE_SHIP, or HOTKEY_LINE_SUBSHIP. The type
---- @field Keys? table<number, boolean> Gets a table of hotkeys set to the ship in the order from F5 - F12 The hotkeys table
+--- @field Text? string The text The text of this hotkey line
+--- @field Type? enumeration The type The type of this hotkey line: HOTKEY_LINE_NONE, HOTKEY_LINE_HEADING, HOTKEY_LINE_WING, HOTKEY_LINE_SHIP, or HOTKEY_LINE_SUBSHIP.
+--- @field Keys? table<number, boolean> The hotkeys table Gets a table of hotkeys set to the ship in the order from F5 - F12
 --- @field addHotkey fun(self: self, Key: number): nil Adds a hotkey to the to the ship in the list. 1-8 correspond to F5-F12. Returns nothing.
 --- @field removeHotkey fun(self: self, Key: number): nil Removes a hotkey from the ship in the list. 1-8 correspond to F5-F12. Returns nothing.
 --- @field clearHotkeys fun(self: self): nil Clears all hotkeys from the ship in the list. Returns nothing.
@@ -457,7 +457,7 @@ hotkey_ship = {}
 -- hud_preset object: Hud preset handle
 hud_preset = {}
 --- @class hud_preset
---- @field Name? string The name of this preset The name
+--- @field Name? string The name The name of this preset
 --- @field deletePreset fun(self: self): nil Deletes the preset file
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
 
@@ -465,10 +465,10 @@ hud_preset = {}
 HudGauge = {}
 --- @class HudGauge
 --- @field isCustom fun(self: self): boolean Custom HUD Gauge status
---- @field Name? string Custom HUD Gauge name Custom HUD Gauge name, or nil if this is a default gauge or the handle is invalid
---- @field Text? string Custom HUD Gauge text Custom HUD Gauge text, or nil if this is a default gauge or the handle is invalid
---- @field ConfigType? string The config type (such as "LEAD_INDICATOR") of this HUD Gauge HUD Gauge config type, or nil if this gauge does not have a config type (custom gauges and some default gauges do not) or if the handle is invalid
---- @field ObjectType? string The object type (such as "Lead indicator") of this HUD Gauge HUD Gauge object type, or nil if this gauge does not have an object type or if the handle is invalid
+--- @field Name? string Custom HUD Gauge name, or nil if this is a default gauge or the handle is invalid Custom HUD Gauge name
+--- @field Text? string Custom HUD Gauge text, or nil if this is a default gauge or the handle is invalid Custom HUD Gauge text
+--- @field ConfigType? string HUD Gauge config type, or nil if this gauge does not have a config type (custom gauges and some default gauges do not) or if the handle is invalid The config type (such as "LEAD_INDICATOR") of this HUD Gauge
+--- @field ObjectType? string HUD Gauge object type, or nil if this gauge does not have an object type or if the handle is invalid The object type (such as "Lead indicator") of this HUD Gauge
 --- @field getBaseResolution fun(self: self): number, number Returns the base width and base height (which may be different from the screen width and height) used by the specified HUD gauge.
 --- @field getAspectQuotient fun(self: self): number Returns the aspect quotient (ratio between the current aspect ratio and the HUD's native aspect ratio) used by the specified HUD gauge.
 --- @field getPosition fun(self: self): number, number Returns the position of the specified HUD gauge.
@@ -479,7 +479,7 @@ HudGauge = {}
 --- @field isHiRes fun(self: self): boolean Returns whether this is a hi-res HUD gauge, determined by whether the +Filename property is prefaced with "2_".  Not all gauges have such a filename.
 --- @field getColor fun(self: self): number, number, number, number Returns the current color used by this HUD gauge.
 --- @field setColor fun(self: self, param2: number, param3: number, param4: number, param5?: number): nil Sets the current color used by this HUD gauge.  Numbers must be 0-255 in red/green/blue/alpha components; alpha is optional.
---- @field RenderFunction? fun(gauge_handle: HudGaugeDrawFunctions) For scripted HUD gauges, the function that will be called for rendering the HUD gauge Render function or nil if no action is set or handle is invalid
+--- @field RenderFunction? fun(gauge_handle: HudGaugeDrawFunctions) Render function or nil if no action is set or handle is invalid For scripted HUD gauges, the function that will be called for rendering the HUD gauge
 
 -- HudGaugeDrawFunctions object: Handle to the rendering functions used for HUD gauges. Do not keep a reference to this since these are only useful inside the rendering callback of a HUD gauge.
 HudGaugeDrawFunctions = {}
@@ -493,11 +493,11 @@ HudGaugeDrawFunctions = {}
 -- intel_entry object: Intel entry handle
 intel_entry = {}
 --- @class intel_entry
---- @field Name? string Intel entry name Intel entry name, or an empty string if handle is invalid
---- @field Description? string Intel entry description Description, or empty string if handle is invalid
---- @field AnimFilename? string Intel entry animation filename Filename, or empty string if handle is invalid
---- @field InTechDatabase? boolean Gets or sets whether this intel entry is visible in the tech room True or false
---- @field CustomData? table Gets the custom data table for this entry The entry's custom data table
+--- @field Name? string Intel entry name, or an empty string if handle is invalid Intel entry name
+--- @field Description? string Description, or empty string if handle is invalid Intel entry description
+--- @field AnimFilename? string Filename, or empty string if handle is invalid Intel entry animation filename
+--- @field InTechDatabase? boolean True or false Gets or sets whether this intel entry is visible in the tech room
+--- @field CustomData? table The entry's custom data table Gets the custom data table for this entry
 --- @field hasCustomData fun(self: self): boolean Detects whether the entry has any custom data
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
 --- @field getIntelEntryIndex fun(self: self): number Gets the index value of the intel entry
@@ -505,7 +505,7 @@ intel_entry = {}
 -- keybinding object: Key Binding
 keybinding = {}
 --- @class keybinding
---- @field Name? string Key binding name Key binding name, or empty string if handle is invalid
+--- @field Name? string Key binding name, or empty string if handle is invalid Key binding name
 --- @field getInputName fun(self: self, primaryBinding?: boolean): string The name of the bound input
 --- @field lock fun(self: self, lock: boolean): nil Locks this control binding when true, disables if false. Persistent between missions.
 --- @field isLocked fun(self: self): boolean If this control is locked
@@ -519,9 +519,9 @@ loadout_amount = {}
 -- loadout_ship object: Loadout handle
 loadout_ship = {}
 --- @class loadout_ship
---- @field ShipClassIndex? number The index of the Ship Class. When setting the ship class this will also set the weapons to empty slots. Use .Weapons and .Amounts to set those afterwards. Set to -1 to empty the slot and be sure to set the slot to empty using Loadout_Wings[slot].isFilled. The index or nil if handle is invalid
---- @field Weapons? loadout_weapon Array of weapons in the loadout slot The weapons array or nil if handle is invalid
---- @field Amounts? loadout_amount Array of weapon amounts in the loadout slot The weapon amounts array or nil if handle is invalid
+--- @field ShipClassIndex? number The index or nil if handle is invalid The index of the Ship Class. When setting the ship class this will also set the weapons to empty slots. Use .Weapons and .Amounts to set those afterwards. Set to -1 to empty the slot and be sure to set the slot to empty using Loadout_Wings[slot].isFilled.
+--- @field Weapons? loadout_weapon The weapons array or nil if handle is invalid Array of weapons in the loadout slot
+--- @field Amounts? loadout_amount The weapon amounts array or nil if handle is invalid Array of weapon amounts in the loadout slot
 
 -- loadout_weapon object: Loadout handle
 loadout_weapon = {}
@@ -530,51 +530,51 @@ loadout_weapon = {}
 -- loadout_wing object: Loadout handle
 loadout_wing = {}
 --- @class loadout_wing
---- @field Name? string The name of the wing The wing
+--- @field Name? string The wing The name of the wing
 
 -- loadout_wing_slot object: Loadout wing slot handle
 loadout_wing_slot = {}
 --- @class loadout_wing_slot
---- @field isShipLocked? boolean If the slot's ship is locked The slot ship status
---- @field isWeaponLocked? boolean If the slot's weapons are locked The slot weapon status
---- @field isDisabled? boolean If the slot is not used in the current mission or disabled for the current player in multi The slot disabled status
---- @field isFilled? boolean If the slot is empty or filled. true if filled, false if empty The slot filled status
---- @field isPlayer? boolean If the slot is a player ship The slot player status
---- @field isPlayerAllowed? boolean If the slot is allowed to have player ship. In single player this is functionally the same as isPlayer. The slot player allowed status
---- @field ShipClassIndex? number The index of the ship class assigned to the slot The ship class index
---- @field Callsign? string The callsign of the ship slot. In multiplayer this may be the player's callsign. the callsign
+--- @field isShipLocked? boolean The slot ship status If the slot's ship is locked
+--- @field isWeaponLocked? boolean The slot weapon status If the slot's weapons are locked
+--- @field isDisabled? boolean The slot disabled status If the slot is not used in the current mission or disabled for the current player in multi
+--- @field isFilled? boolean The slot filled status If the slot is empty or filled. true if filled, false if empty
+--- @field isPlayer? boolean The slot player status If the slot is a player ship
+--- @field isPlayerAllowed? boolean The slot player allowed status If the slot is allowed to have player ship. In single player this is functionally the same as isPlayer.
+--- @field ShipClassIndex? number The ship class index The index of the ship class assigned to the slot
+--- @field Callsign? string the callsign The callsign of the ship slot. In multiplayer this may be the player's callsign.
 
 -- log_entry object: Log Entry handle
 log_entry = {}
 --- @class log_entry
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
---- @field Timestamp? string The timestamp of the log entry The timestamp
---- @field paddedTimestamp? string The timestamp of the log entry that accounts for timer padding The timestamp
---- @field Flags? number The flag of the log entry. 1 for Goal True, 2 for Goal Failed, 0 otherwise. The flag
---- @field ObjectiveText? string The objective text of the log entry The objective text
---- @field ObjectiveColor? color The objective color of the log entry. The objective color
---- @field SegmentTexts? table<number, string> Gets a table of segment texts in the log entry The segment texts table
---- @field SegmentColors? table<number, color> Gets a table of segment colors in the log entry. The segment colors table
+--- @field Timestamp? string The timestamp The timestamp of the log entry
+--- @field paddedTimestamp? string The timestamp The timestamp of the log entry that accounts for timer padding
+--- @field Flags? number The flag The flag of the log entry. 1 for Goal True, 2 for Goal Failed, 0 otherwise.
+--- @field ObjectiveText? string The objective text The objective text of the log entry
+--- @field ObjectiveColor? color The objective color The objective color of the log entry.
+--- @field SegmentTexts? table<number, string> The segment texts table Gets a table of segment texts in the log entry
+--- @field SegmentColors? table<number, color> The segment colors table Gets a table of segment colors in the log entry.
 
 -- loop_brief_stage object: Loop Brief stage handle
 loop_brief_stage = {}
 --- @class loop_brief_stage
---- @field Text? string The text of the stage The text
---- @field AniFilename? string The ani filename of the stage The ani filename
---- @field AudioFilename? string The audio file of the stage The audio filename
+--- @field Text? string The text The text of the stage
+--- @field AniFilename? string The ani filename The ani filename of the stage
+--- @field AudioFilename? string The audio filename The audio file of the stage
 
 -- LuaAISEXP object: Lua AI SEXP handle
 LuaAISEXP = {}
 --- @class LuaAISEXP
---- @field ActionEnter? fun(helper: ai_helper, ...: any) The action of this AI SEXP to be executed once when the AI receives this order. Return true if the AI goal is complete. The action function or nil on error
---- @field ActionFrame? fun(helper: ai_helper, ...: any) The action of this AI SEXP to be executed each frame while active. Return true if the AI goal is complete. The action function or nil on error
---- @field Achievability? fun(ship: ship, ...: any) An optional function that specifies whether the AI mode is achieveable. Return LUAAI_ACHIEVABLE if it can be achieved, LUAAI_NOT_YET_ACHIEVABLE if it can be achieved later and execution should be delayed, and LUAAI_UNACHIEVABLE if the AI mode will never be achievable and should be cancelled. Assumes LUAAI_ACHIEVABLE if not specified. The achievability function or nil on error
---- @field TargetRestrict? fun(ship: ship, arg: oswpt | nil) An optional function that specifies whether a target is a valid target for a player order. Result must be true and the player order +Target Restrict: must be fulfilled for the target to be valid. Assumes true if not specified. The target restrict function or nil on error
+--- @field ActionEnter? fun(helper: ai_helper, ...: any) The action function or nil on error The action of this AI SEXP to be executed once when the AI receives this order. Return true if the AI goal is complete.
+--- @field ActionFrame? fun(helper: ai_helper, ...: any) The action function or nil on error The action of this AI SEXP to be executed each frame while active. Return true if the AI goal is complete.
+--- @field Achievability? fun(ship: ship, ...: any) The achievability function or nil on error An optional function that specifies whether the AI mode is achieveable. Return LUAAI_ACHIEVABLE if it can be achieved, LUAAI_NOT_YET_ACHIEVABLE if it can be achieved later and execution should be delayed, and LUAAI_UNACHIEVABLE if the AI mode will never be achievable and should be cancelled. Assumes LUAAI_ACHIEVABLE if not specified.
+--- @field TargetRestrict? fun(ship: ship, arg: oswpt | nil) The target restrict function or nil on error An optional function that specifies whether a target is a valid target for a player order. Result must be true and the player order +Target Restrict: must be fulfilled for the target to be valid. Assumes true if not specified.
 
 -- LuaEnum object: Lua Enum handle
 LuaEnum = {}
 --- @class LuaEnum
---- @field Name? string The enum name The enum name or nil if handle is invalid
+--- @field Name? string The enum name or nil if handle is invalid The enum name
 --- @field addEnumItem fun(self: self, itemname: string): boolean Adds an enum item with the given string.
 --- @field removeEnumItem fun(self: self, itemname: string): boolean Removes an enum item with the given string.
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
@@ -582,26 +582,26 @@ LuaEnum = {}
 -- LuaSEXP object: Lua SEXP handle
 LuaSEXP = {}
 --- @class LuaSEXP
---- @field Action? fun(...: any) The action of this SEXP The action function or nil on error
+--- @field Action? fun(...: any) The action function or nil on error The action of this SEXP
 
 -- medal object: Medal handle
 medal = {}
 --- @class medal
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
---- @field Name? string The name of the medal The name
---- @field Bitmap? string The bitmap of the medal The bitmap
---- @field NumMods? number The number of mods of the medal The number of mods
---- @field FirstMod? number The first mod of the medal. Some start at 1, some start at 0 The first mod
---- @field KillsNeeded? number The number of kills needed to earn this badge. If not a badge, then returns 0 The number of kills needed
+--- @field Name? string The name The name of the medal
+--- @field Bitmap? string The bitmap The bitmap of the medal
+--- @field NumMods? number The number of mods The number of mods of the medal
+--- @field FirstMod? number The first mod The first mod of the medal. Some start at 1, some start at 0
+--- @field KillsNeeded? number The number of kills needed The number of kills needed to earn this badge. If not a badge, then returns 0
 --- @field isRank fun(self: self): boolean Detects whether medal is the rank medal
 
 -- message object: Handle to a mission message
 message = {}
 --- @class message
---- @field Name? string The name of the message as specified in the mission file The name or an empty string if handle is invalid
---- @field Message? string The unaltered text of the message, see getMessage() for options to replace variables<br><b>NOTE:</b> Changing the text will also change the text for messages not yet played but already in the message queue! The message or an empty string if handle is invalid
---- @field VoiceFile? soundfile The voice file of the message The voice file handle or invalid handle when not present
---- @field Persona? persona The persona of the message The persona handle or invalid handle if not present
+--- @field Name? string The name or an empty string if handle is invalid The name of the message as specified in the mission file
+--- @field Message? string The message or an empty string if handle is invalid The unaltered text of the message, see getMessage() for options to replace variables<br><b>NOTE:</b> Changing the text will also change the text for messages not yet played but already in the message queue!
+--- @field VoiceFile? soundfile The voice file handle or invalid handle when not present The voice file of the message
+--- @field Persona? persona The persona handle or invalid handle if not present The persona of the message
 --- @field getMessage fun(self: self, replaceVars?: boolean): string Gets the text of the message and optionally replaces SEXP variables with their respective values.
 --- @field isValid fun(self: self): boolean Checks if the message handle is valid
 
@@ -609,38 +609,38 @@ message = {}
 message_entry = {}
 --- @class message_entry
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
---- @field Timestamp? string The timestamp of the message entry The timestamp
---- @field paddedTimestamp? string The timestamp of the message entry that accounts for mission timer padding The timestamp
---- @field Color? color The color of the message entry. The color
---- @field Text? string The text of the message entry The text
+--- @field Timestamp? string The timestamp The timestamp of the message entry
+--- @field paddedTimestamp? string The timestamp The timestamp of the message entry that accounts for mission timer padding
+--- @field Color? color The color The color of the message entry.
+--- @field Text? string The text The text of the message entry
 
 -- mission_goal object: Mission objective handle
 mission_goal = {}
 --- @class mission_goal
---- @field Name? string The name of the goal The goal name
---- @field Message? string The message of the goal The goal message
---- @field Type? string The goal type primary, secondary, bonus, or none
+--- @field Name? string The goal name The name of the goal
+--- @field Message? string The goal message The message of the goal
+--- @field Type? string primary, secondary, bonus, or none The goal type
 --- @field Team? team The goal team The goal team
---- @field isGoalSatisfied? number The status of the goal 0 if failed, 1 if complete, 2 if incomplete
---- @field Score? number The score of the goal the score
---- @field isGoalValid? boolean The goal validity true if valid, false otherwise
+--- @field isGoalSatisfied? number 0 if failed, 1 if complete, 2 if incomplete The status of the goal
+--- @field Score? number the score The score of the goal
+--- @field isGoalValid? boolean true if valid, false otherwise The goal validity
 --- @field isValid fun(self: self): boolean Detect if the handle is valid
 
 -- model object: 3D Model (POF) handle
 model = {}
 --- @class model
---- @field Submodels? submodels Model submodels Model submodels, or an invalid submodels handle if the model handle is invalid
---- @field Textures? textures Model textures Model textures, or an invalid textures handle if the model handle is invalid
---- @field Thrusters? thrusters Model thrusters Model thrusters, or an invalid thrusters handle if the model handle is invalid
---- @field GlowPointBanks? glowpointbanks Model glow point banks Model glow point banks, or an invalid glowpointbanks handle if the model handle is invalid
---- @field Eyepoints? eyepoints Model eyepoints Array of eyepoints, or an invalid eyepoints handle if the model handle is invalid
---- @field Dockingbays? dockingbays Model docking bays Array of docking bays, or an invalid dockingbays handle if the model handle is invalid
---- @field BoundingBoxMax? vector Model bounding box maximum Model bounding box, or an empty vector if the handle is not valid
---- @field BoundingBoxMin? vector Model bounding box minimum Model bounding box, or an empty vector if the handle is not valid
---- @field Filename? string Model filename Model filename, or an empty string if the handle is not valid
---- @field Mass? number Model mass Model mass, or 0 if the model handle is invalid
---- @field MomentOfInertia? orientation Model moment of inertia Moment of Inertia matrix or identity matrix if invalid
---- @field Radius? number Model radius (Used for collision & culling detection) Model Radius or 0 if invalid
+--- @field Submodels? submodels Model submodels, or an invalid submodels handle if the model handle is invalid Model submodels
+--- @field Textures? textures Model textures, or an invalid textures handle if the model handle is invalid Model textures
+--- @field Thrusters? thrusters Model thrusters, or an invalid thrusters handle if the model handle is invalid Model thrusters
+--- @field GlowPointBanks? glowpointbanks Model glow point banks, or an invalid glowpointbanks handle if the model handle is invalid Model glow point banks
+--- @field Eyepoints? eyepoints Array of eyepoints, or an invalid eyepoints handle if the model handle is invalid Model eyepoints
+--- @field Dockingbays? dockingbays Array of docking bays, or an invalid dockingbays handle if the model handle is invalid Model docking bays
+--- @field BoundingBoxMax? vector Model bounding box, or an empty vector if the handle is not valid Model bounding box maximum
+--- @field BoundingBoxMin? vector Model bounding box, or an empty vector if the handle is not valid Model bounding box minimum
+--- @field Filename? string Model filename, or an empty string if the handle is not valid Model filename
+--- @field Mass? number Model mass, or 0 if the model handle is invalid Model mass
+--- @field MomentOfInertia? orientation Moment of Inertia matrix or identity matrix if invalid Model moment of inertia
+--- @field Radius? number Model Radius or 0 if invalid Model radius (Used for collision & culling detection)
 --- @field getDetailRoot fun(self: self, detailLevel?: number): submodel Returns the root submodel of the specified detail level - 0 for detail0, etc.
 --- @field isValid fun(self: self): boolean True if valid, false or nil if not
 
@@ -649,8 +649,8 @@ model_instance = {}
 --- @class model_instance
 --- @field getModel fun(self: self): model Returns the model used by this instance
 --- @field getObject fun(self: self): object Returns the object that this instance refers to
---- @field Textures? modelinstancetextures Gets model instance textures Model instance textures, or invalid modelinstancetextures handle if modelinstance handle is invalid
---- @field SubmodelInstances? submodel_instances Submodel instances Model submodel instances, or an invalid modelsubmodelinstances handle if the model instance handle is invalid
+--- @field Textures? modelinstancetextures Model instance textures, or invalid modelinstancetextures handle if modelinstance handle is invalid Gets model instance textures
+--- @field SubmodelInstances? submodel_instances Model submodel instances, or an invalid modelsubmodelinstances handle if the model instance handle is invalid Submodel instances
 --- @field isValid fun(self: self): boolean True if valid, false or nil if not
 
 -- modelinstancetextures object: Model instance textures handle
@@ -662,22 +662,22 @@ modelinstancetextures = {}
 modelpath = {}
 --- @class modelpath
 --- @field isValid fun(self: self): boolean Determines if the handle is valid
---- @field Name? string The name of this model path The name or empty string if handle is invalid
+--- @field Name? string The name or empty string if handle is invalid The name of this model path
 
 -- modelpathpoint object: Point in a model path
 modelpathpoint = {}
 --- @class modelpathpoint
 --- @field isValid fun(self: self): boolean Determines if the handle is valid
---- @field Position? vector The current, global position of this path point. The current position of the point.
---- @field Radius? number The radius of the path point. The radius of the point.
+--- @field Position? vector The current position of the point. The current, global position of this path point.
+--- @field Radius? number The radius of the point. The radius of the path point.
 
 -- movie_player object: A movie player instance
 movie_player = {}
 --- @class movie_player
---- @field Width? number Determines the width in pixels of this movie <b>Read-only</b> The width of the movie or -1 if handle is invalid
---- @field Height? number Determines the height in pixels of this movie <b>Read-only</b> The height of the movie or -1 if handle is invalid
---- @field FPS? number Determines the frames per second of this movie <b>Read-only</b> The FPS of the movie or -1 if handle is invalid
---- @field Duration? number Determines the duration in seconds of this movie <b>Read-only</b> The duration of the movie or -1 if handle is invalid
+--- @field Width? number The width of the movie or -1 if handle is invalid Determines the width in pixels of this movie <b>Read-only</b>
+--- @field Height? number The height of the movie or -1 if handle is invalid Determines the height in pixels of this movie <b>Read-only</b>
+--- @field FPS? number The FPS of the movie or -1 if handle is invalid Determines the frames per second of this movie <b>Read-only</b>
+--- @field Duration? number The duration of the movie or -1 if handle is invalid Determines the duration in seconds of this movie <b>Read-only</b>
 --- @field update fun(self: self, step_time: timespan): boolean Updates the current state of the movie and moves the internal timer forward by the specified time span.
 --- @field isPlaybackReady fun(self: self): boolean Determines if the player is ready to display the movie. Since the movie frames are loaded asynchronously there is a short delay between the creation of a player and when it is possible to start displaying the movie. This function can be used to determine if playback is possible at the moment.
 --- @field drawMovie fun(self: self, x1: number, y1: number, x2?: number, y2?: number): nil Draws the current frame of the movie at the specified coordinates.
@@ -688,20 +688,20 @@ movie_player = {}
 net_campaign = {}
 --- @class net_campaign
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
---- @field Name? string The name of the mission The name
---- @field Filename? string The filename of the mission The filename
---- @field Players? number The max players for the mission The max number of players
---- @field Respawn? number The mission specified respawn count The respawn count
---- @field Tracker? boolean The validity status of the mission tracker true if valid, false if invalid, nil if unknown or handle is invalid
---- @field Type? enumeration The type of mission. Can be MULTI_TYPE_COOP, MULTI_TYPE_TEAM, or MULTI_TYPE_DOGFIGHT the type
---- @field Builtin? boolean Is true if the mission is a built-in Volition mission. False otherwise builtin
+--- @field Name? string The name The name of the mission
+--- @field Filename? string The filename The filename of the mission
+--- @field Players? number The max number of players The max players for the mission
+--- @field Respawn? number The respawn count The mission specified respawn count
+--- @field Tracker? boolean true if valid, false if invalid, nil if unknown or handle is invalid The validity status of the mission tracker
+--- @field Type? enumeration the type The type of mission. Can be MULTI_TYPE_COOP, MULTI_TYPE_TEAM, or MULTI_TYPE_DOGFIGHT
+--- @field Builtin? boolean builtin Is true if the mission is a built-in Volition mission. False otherwise
 
 -- net_join_choice object: Join Choice handle
 net_join_choice = {}
 --- @class net_join_choice
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
---- @field Name? string Gets the name of the ship the name or nil if invalid
---- @field ShipIndex? string Gets the index of the ship class the index or nil if invalid
+--- @field Name? string the name or nil if invalid Gets the name of the ship
+--- @field ShipIndex? string the index or nil if invalid Gets the index of the ship class
 --- @field getPrimaryWeaponsList fun(self: self): table Gets the table of primary weapon indexes on the ship
 --- @field getSecondaryWeaponsList fun(self: self): table Gets the table of secondary weapon indexes on the ship
 --- @field getStatus fun(self: self): number Gets the status of the ship's hull and shields
@@ -711,26 +711,26 @@ net_join_choice = {}
 net_mission = {}
 --- @class net_mission
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
---- @field Name? string The name of the mission The name
---- @field Filename? string The filename of the mission The filename
---- @field Players? number The max players for the mission The max number of players
---- @field Respawn? number The mission specified respawn count The respawn count
---- @field Tracker? boolean The validity status of the mission tracker true if valid, false if invalid, nil if unknown or handle is invalid
---- @field Type? enumeration The type of mission. Can be MULTI_TYPE_COOP, MULTI_TYPE_TEAM, or MULTI_TYPE_DOGFIGHT the type
---- @field Builtin? boolean Is true if the mission is a built-in Volition mission. False otherwise builtin
+--- @field Name? string The name The name of the mission
+--- @field Filename? string The filename The filename of the mission
+--- @field Players? number The max number of players The max players for the mission
+--- @field Respawn? number The respawn count The mission specified respawn count
+--- @field Tracker? boolean true if valid, false if invalid, nil if unknown or handle is invalid The validity status of the mission tracker
+--- @field Type? enumeration the type The type of mission. Can be MULTI_TYPE_COOP, MULTI_TYPE_TEAM, or MULTI_TYPE_DOGFIGHT
+--- @field Builtin? boolean builtin Is true if the mission is a built-in Volition mission. False otherwise
 
 -- net_player object: Net Player handle
 net_player = {}
 --- @class net_player
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
---- @field Name? string The player's callsign The player callsign
---- @field Team? number The player's team as an integer The team
---- @field State? string The player's current state string The state
+--- @field Name? string The player callsign The player's callsign
+--- @field Team? number The team The player's team as an integer
+--- @field State? string The state The player's current state string
 --- @field isSelf fun(self: self): boolean Whether or not the player is the current game instance's player
---- @field Master? boolean Whether or not the player is the game master The master value
---- @field Host? boolean Whether or not the player is the game host The host value
---- @field Observer? boolean Whether or not the player is an observer The observer value
---- @field Captain? boolean Whether or not the player is the team captain The captain value
+--- @field Master? boolean The master value Whether or not the player is the game master
+--- @field Host? boolean The host value Whether or not the player is the game host
+--- @field Observer? boolean The observer value Whether or not the player is an observer
+--- @field Captain? boolean The captain value Whether or not the player is the team captain
 --- @field getStats fun(self: self): scoring_stats Gets a handle of the player stats by player name or invalid handle if the name is invalid
 --- @field kickPlayer fun(self: self): nil Kicks the player from the game
 
@@ -738,44 +738,44 @@ net_player = {}
 netgame = {}
 --- @class netgame
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
---- @field Name? string The name of the game the name
---- @field MissionFilename? string The filename of the currently selected mission the mission filename
---- @field MissionTitle? string The title of the currently selected mission the mission title
---- @field CampaignName? string The name of the currently selected campaign the campaign name
---- @field Password? string The current password for the game the password
---- @field Closed? boolean Whether or not the game is closed true for closed, false otherwise
---- @field HostModifiesShips? boolean Whether or not the only the host can modify ships true if enabled, false otherwise
---- @field Orders? enumeration Who can give orders during the game. Will be one of the MULTI_OPTION enums. Returns nil if there's an error. the option type
---- @field EndMission? enumeration Who can end the game. Will be one of the MULTI_OPTION enums. Returns nil if there's an error. the option type
---- @field SkillLevel? number The current skill level the game, 0-4 the skill level
---- @field RespawnLimit? number The current respawn limit the respawn limit
---- @field TimeLimit? number The current time limit in minutes. -1 means no limit. the time limit
---- @field KillLimit? number The current kill limit the kill limit
---- @field ObserverLimit? number The current observer limit the observer limit
---- @field Locked? boolean Whether or not the loadouts have been locked for the current team. Can be set only by the host or team captain. the locked status
---- @field Type? enumeration The current game type. Will be one of the MULTI_TYPE enums. Returns nil if there's an error. the game type
+--- @field Name? string the name The name of the game
+--- @field MissionFilename? string the mission filename The filename of the currently selected mission
+--- @field MissionTitle? string the mission title The title of the currently selected mission
+--- @field CampaignName? string the campaign name The name of the currently selected campaign
+--- @field Password? string the password The current password for the game
+--- @field Closed? boolean true for closed, false otherwise Whether or not the game is closed
+--- @field HostModifiesShips? boolean true if enabled, false otherwise Whether or not the only the host can modify ships
+--- @field Orders? enumeration the option type Who can give orders during the game. Will be one of the MULTI_OPTION enums. Returns nil if there's an error.
+--- @field EndMission? enumeration the option type Who can end the game. Will be one of the MULTI_OPTION enums. Returns nil if there's an error.
+--- @field SkillLevel? number the skill level The current skill level the game, 0-4
+--- @field RespawnLimit? number the respawn limit The current respawn limit
+--- @field TimeLimit? number the time limit The current time limit in minutes. -1 means no limit.
+--- @field KillLimit? number the kill limit The current kill limit
+--- @field ObserverLimit? number the observer limit The current observer limit
+--- @field Locked? boolean the locked status Whether or not the loadouts have been locked for the current team. Can be set only by the host or team captain.
+--- @field Type? enumeration the game type The current game type. Will be one of the MULTI_TYPE enums. Returns nil if there's an error.
 --- @field acceptOptions fun(self: self): boolean Accepts the current game options and pushes them to the the network.
 --- @field setMission fun(self: self, param2?: net_mission | net_campaign): boolean Sets the mission or campaign for the Netgame. Handles changing all netgame values and updating the server.
 
 -- object object: Object handle
 object = {}
 --- @class object
---- @field Parent? object Parent of the object. Value may also be a deriviative of the 'object' class, such as 'ship'. Parent handle, or invalid handle if object is invalid
---- @field Radius? number Radius of an object Radius, or 0 if handle is invalid
---- @field Position? vector Object world position (World vector) World position, or null vector if handle is invalid
---- @field LastPosition? vector Object world position as of last frame (World vector) World position, or null vector if handle is invalid
---- @field Orientation? orientation Object world orientation (World orientation) Orientation, or null orientation if handle is invalid
---- @field LastOrientation? orientation Object world orientation as of last frame (World orientation) Orientation, or null orientation if handle is invalid
---- @field ModelInstance? model_instance model instance used by this object Model instance, nil if this object does not have one, or invalid model instance handle if object handle is invalid
---- @field Physics? physics Physics data used to move ship between frames Physics data, or invalid physics handle if object handle is invalid
---- @field HitpointsLeft? number Hitpoints an object has left Hitpoints left, or 0 if handle is invalid
---- @field SimHitpointsLeft? number Simulated hitpoints an object has left Simulated hitpoints left, or 0 if handle is invalid
---- @field Shields? shields Shields Shields handle, or invalid shields handle if object handle is invalid
+--- @field Parent? object Parent handle, or invalid handle if object is invalid Parent of the object. Value may also be a deriviative of the 'object' class, such as 'ship'.
+--- @field Radius? number Radius, or 0 if handle is invalid Radius of an object
+--- @field Position? vector World position, or null vector if handle is invalid Object world position (World vector)
+--- @field LastPosition? vector World position, or null vector if handle is invalid Object world position as of last frame (World vector)
+--- @field Orientation? orientation Orientation, or null orientation if handle is invalid Object world orientation (World orientation)
+--- @field LastOrientation? orientation Orientation, or null orientation if handle is invalid Object world orientation as of last frame (World orientation)
+--- @field ModelInstance? model_instance Model instance, nil if this object does not have one, or invalid model instance handle if object handle is invalid model instance used by this object
+--- @field Physics? physics Physics data, or invalid physics handle if object handle is invalid Physics data used to move ship between frames
+--- @field HitpointsLeft? number Hitpoints left, or 0 if handle is invalid Hitpoints an object has left
+--- @field SimHitpointsLeft? number Simulated hitpoints left, or 0 if handle is invalid Simulated hitpoints an object has left
+--- @field Shields? shields Shields handle, or invalid shields handle if object handle is invalid Shields
 --- @field getSignature fun(self: self): number Gets the object's unique signature
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
 --- @field isExpiring fun(self: self): boolean Checks whether the object has the should-be-dead flag set, which will cause it to be deleted within one frame
 --- @field getBreedName fun(self: self): string Gets the FreeSpace type name
---- @field CollisionGroups? number Collision group data Current set of collision groups. NOTE: This is a bitfield, NOT a normal number.
+--- @field CollisionGroups? number Current set of collision groups. NOTE: This is a bitfield, NOT a normal number. Collision group data
 --- @field addToCollisionGroup fun(self: self, group: number): nil Adds this object to the specified collision group.  The group must be between 0 and 31, inclusive.
 --- @field removeFromCollisionGroup fun(self: self, group: number): nil Removes this object from the specified collision group.  The group must be between 0 and 31, inclusive.
 --- @field getfvec fun(self: self, normalize?: boolean): vector Returns the objects' current fvec.
@@ -793,13 +793,13 @@ object = {}
 -- option object: Option handle
 option = {}
 --- @class option
---- @field Title? string The title of this option (read-only) The title or nil on error
---- @field Description? string The description of this option (read-only) The description or nil on error
---- @field Key? string The configuration key of this option. This will be a unique string. (read-only) The key or nil on error
---- @field Category? string The category of this option. (read-only) The category or nil on error
---- @field Type? enumeration The type of this option. One of the OPTION_TYPE_* values. (read-only) The enum or nil on error
---- @field Value? ValueDescription The current value of this option. The current value or nil on error
---- @field Flags? table<string, boolean> Contains a list mapping a flag name to its value. Possible names are:<ul><li><b>ForceMultiValueSelection:</b> If true, a selection option with two values should be displayed the same as an option with more possible values</li><li><b>RetailBuiltinOption:</b> If true, the option is one of the original retail options</li><li><b>RangeTypeInteger:</b> If true, this range option requires an integer for the range value rather than a float</li></ul> The table of flags values.
+--- @field Title? string The title or nil on error The title of this option (read-only)
+--- @field Description? string The description or nil on error The description of this option (read-only)
+--- @field Key? string The key or nil on error The configuration key of this option. This will be a unique string. (read-only)
+--- @field Category? string The category or nil on error The category of this option. (read-only)
+--- @field Type? enumeration The enum or nil on error The type of this option. One of the OPTION_TYPE_* values. (read-only)
+--- @field Value? ValueDescription The current value or nil on error The current value of this option.
+--- @field Flags? table<string, boolean> The table of flags values. Contains a list mapping a flag name to its value. Possible names are:<ul><li><b>ForceMultiValueSelection:</b> If true, a selection option with two values should be displayed the same as an option with more possible values</li><li><b>RetailBuiltinOption:</b> If true, the option is one of the original retail options</li><li><b>RangeTypeInteger:</b> If true, this range option requires an integer for the range value rather than a float</li></ul>
 --- @field getValueFromRange fun(self: self, interpolant: number): ValueDescription Gets a value from an option range. The specified value must be between 0 and 1.
 --- @field getInterpolantFromValue fun(self: self, value: ValueDescription): number From a value description of this option, determines the range value.
 --- @field getValidValues fun(self: self): ValueDescription Gets the valid values of this option. The order or the returned values must be maintained in the UI. This is only valid for selection or boolean options.
@@ -808,11 +808,11 @@ option = {}
 -- order object: order handle
 order = {}
 --- @class order
---- @field Priority? number Priority of the given order Order priority or 0 if invalid
+--- @field Priority? number Order priority or 0 if invalid Priority of the given order
 --- @field remove fun(self: self): boolean Removes the given order from the ship's priority queue.
 --- @field getType fun(self: self): enumeration Gets the type of the order.
---- @field Target? object Target of the order. Value may also be a deriviative of the 'object' class, such as 'ship'. Target object or invalid object handle if order handle is invalid or order requires no target.
---- @field TargetSubsystem? subsystem Target subsystem of the order. Target subsystem, or invalid subsystem handle if order handle is invalid or order requires no subsystem target.
+--- @field Target? object Target object or invalid object handle if order handle is invalid or order requires no target. Target of the order. Value may also be a deriviative of the 'object' class, such as 'ship'.
+--- @field TargetSubsystem? subsystem Target subsystem, or invalid subsystem handle if order handle is invalid or order requires no subsystem target. Target subsystem of the order.
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
 
 -- orientation object: Orientation matrix object
@@ -841,93 +841,93 @@ oswpt = {}
 -- parse_object object: Handle to a parsed ship
 parse_object = {}
 --- @class parse_object
---- @field Name? string The name of the parsed ship. If possible, don't set the name but set the display name instead. The name or empty string on error
---- @field DisplayName? string The display name of the parsed ship. If the name should be shown to the user, use this since it can be translated. The display name or empty string on error
+--- @field Name? string The name or empty string on error The name of the parsed ship. If possible, don't set the name but set the display name instead.
+--- @field DisplayName? string The display name or empty string on error The display name of the parsed ship. If the name should be shown to the user, use this since it can be translated.
 --- @field isValid fun(self: self): boolean Detect whether the parsed ship handle is valid
 --- @field getBreedName fun(self: self): string Gets the FreeSpace type name
 --- @field isPlayer fun(self: self): boolean Checks whether the parsed ship is a player ship
 --- @field setFlag fun(self: self, set_it: boolean, flag_name: string): nil Sets or clears one or more flags - this function can accept an arbitrary number of flag arguments.  The flag names can be any string that the alter-ship-flag SEXP operator supports.
 --- @field getFlag fun(self: self, flag_name: string): boolean Checks whether one or more flags are set - this function can accept an arbitrary number of flag arguments.  The flag names can be any string that the alter-ship-flag SEXP operator supports.
---- @field Position? vector The position at which the parsed ship will arrive. The position of the parsed ship.
---- @field Orientation? orientation The orientation of the parsed ship. The orientation
---- @field ShipClass? shipclass The ship class of the parsed ship. The ship class
---- @field Team? team The team of the parsed ship. The team
---- @field InitialHull? number The initial hull percentage of this parsed ship. The initial hull
---- @field InitialShields? number The initial shields percentage of this parsed ship. The initial shields
---- @field MainStatus? parse_subsystem Gets the "subsystem" status of the ship itself. This is a special subsystem that represents the primary and secondary weapons and the AI class. The subsystem handle or invalid handle if there were no changes to the main status
---- @field Subsystems? parse_subsystem Get the list of subsystems of this parsed ship An array of the parse subsystems of this parsed ship
---- @field ArrivalLocation? string The ship's arrival location Arrival location, or nil if handle is invalid
---- @field DepartureLocation? string The ship's departure location Departure location, or nil if handle is invalid
---- @field ArrivalAnchor? string The ship's arrival anchor Arrival anchor, or nil if handle is invalid
---- @field DepartureAnchor? string The ship's departure anchor Departure anchor, or nil if handle is invalid
---- @field ArrivalPathMask? number The ship's arrival path mask Arrival path mask, or nil if handle is invalid
---- @field DeparturePathMask? number The ship's departure path mask Departure path mask, or nil if handle is invalid
---- @field ArrivalDelay? number The ship's arrival delay Arrival delay, or nil if handle is invalid
---- @field DepartureDelay? number The ship's departure delay Departure delay, or nil if handle is invalid
---- @field ArrivalDistance? number The ship's arrival distance Arrival distance, or nil if handle is invalid
+--- @field Position? vector The position of the parsed ship. The position at which the parsed ship will arrive.
+--- @field Orientation? orientation The orientation The orientation of the parsed ship.
+--- @field ShipClass? shipclass The ship class The ship class of the parsed ship.
+--- @field Team? team The team The team of the parsed ship.
+--- @field InitialHull? number The initial hull The initial hull percentage of this parsed ship.
+--- @field InitialShields? number The initial shields The initial shields percentage of this parsed ship.
+--- @field MainStatus? parse_subsystem The subsystem handle or invalid handle if there were no changes to the main status Gets the "subsystem" status of the ship itself. This is a special subsystem that represents the primary and secondary weapons and the AI class.
+--- @field Subsystems? parse_subsystem An array of the parse subsystems of this parsed ship Get the list of subsystems of this parsed ship
+--- @field ArrivalLocation? string Arrival location, or nil if handle is invalid The ship's arrival location
+--- @field DepartureLocation? string Departure location, or nil if handle is invalid The ship's departure location
+--- @field ArrivalAnchor? string Arrival anchor, or nil if handle is invalid The ship's arrival anchor
+--- @field DepartureAnchor? string Departure anchor, or nil if handle is invalid The ship's departure anchor
+--- @field ArrivalPathMask? number Arrival path mask, or nil if handle is invalid The ship's arrival path mask
+--- @field DeparturePathMask? number Departure path mask, or nil if handle is invalid The ship's departure path mask
+--- @field ArrivalDelay? number Arrival delay, or nil if handle is invalid The ship's arrival delay
+--- @field DepartureDelay? number Departure delay, or nil if handle is invalid The ship's departure delay
+--- @field ArrivalDistance? number Arrival distance, or nil if handle is invalid The ship's arrival distance
 --- @field isPlayerStart fun(self: self): boolean Determines if this parsed ship is a player start.
 --- @field getShip fun(self: self): ship Returns the ship that was created from this parsed ship, if it is present in the mission.  Note that parse objects are reused when a wing has multiple waves, so this will always return a ship from the most recently created wave.
 --- @field getWing fun(self: self): wing Returns the wing that this parsed ship belongs to, if any
 --- @field makeShipArrive fun(self: self): boolean Causes this parsed ship to arrive as if its arrival cue had become true.  Note that reinforcements are only marked as available, not actually created.
---- @field CollisionGroups? number Collision group data Current set of collision groups. NOTE: This is a bitfield, NOT a normal number.
+--- @field CollisionGroups? number Current set of collision groups. NOTE: This is a bitfield, NOT a normal number. Collision group data
 --- @field addToCollisionGroup fun(self: self, group: number): nil Adds this parsed ship to the specified collision group.  The group must be between 0 and 31, inclusive.
 --- @field removeFromCollisionGroup fun(self: self, group: number): nil Removes this parsed ship from the specified collision group.  The group must be between 0 and 31, inclusive.
 
 -- parse_subsystem object: Handle to a parse subsystem
 parse_subsystem = {}
 --- @class parse_subsystem
---- @field Name? string The name of the subsystem. If possible, don't set the name but set the display name instead. The name or empty string on error
---- @field Damage? number The percentage to what the subsystem is damage The percentage or negative on error
---- @field PrimaryBanks? weaponclass The overridden primary banks The primary bank weapons or nil if not changed from default
---- @field PrimaryAmmo? weaponclass The overridden primary ammunition, as a percentage of the default The primary bank ammunition percantage or nil if not changed from default
---- @field SecondaryBanks? weaponclass The overridden secondary banks The secondary bank weapons or nil if not changed from default
---- @field SecondaryAmmo? weaponclass The overridden secondary ammunition, as a percentage of the default The secondary bank ammunition percantage or nil if not changed from default
+--- @field Name? string The name or empty string on error The name of the subsystem. If possible, don't set the name but set the display name instead.
+--- @field Damage? number The percentage or negative on error The percentage to what the subsystem is damage
+--- @field PrimaryBanks? weaponclass The primary bank weapons or nil if not changed from default The overridden primary banks
+--- @field PrimaryAmmo? weaponclass The primary bank ammunition percantage or nil if not changed from default The overridden primary ammunition, as a percentage of the default
+--- @field SecondaryBanks? weaponclass The secondary bank weapons or nil if not changed from default The overridden secondary banks
+--- @field SecondaryAmmo? weaponclass The secondary bank ammunition percantage or nil if not changed from default The overridden secondary ammunition, as a percentage of the default
 
 -- particle object: Handle to a particle
 particle = {}
 --- @class particle
---- @field Position? vector The current position of the particle (world vector) The current position
---- @field Velocity? vector The current velocity of the particle (world vector) The current velocity
---- @field Age? number The time this particle already lives The current age or -1 on error
---- @field MaximumLife? number The time this particle can live The maximal life or -1 on error
---- @field Looping? boolean The looping status of the particle. If a particle loops then it will not be removed when its max_life value has been reached. Instead its animation will be reset to the start. When the particle should finally be removed then set this to false and set MaxLife to 0. The looping status
---- @field Radius? number The radius of the particle The radius or -1 on error
---- @field TracerLength? number The tracer legth of the particle The radius or -1 on error
---- @field AttachedObject? object The object this particle is attached to. If valid the position will be relative to this object and the velocity will be ignored. Attached object or invalid object handle on error
+--- @field Position? vector The current position The current position of the particle (world vector)
+--- @field Velocity? vector The current velocity The current velocity of the particle (world vector)
+--- @field Age? number The current age or -1 on error The time this particle already lives
+--- @field MaximumLife? number The maximal life or -1 on error The time this particle can live
+--- @field Looping? boolean The looping status The looping status of the particle. If a particle loops then it will not be removed when its max_life value has been reached. Instead its animation will be reset to the start. When the particle should finally be removed then set this to false and set MaxLife to 0.
+--- @field Radius? number The radius or -1 on error The radius of the particle
+--- @field TracerLength? number The radius or -1 on error The tracer legth of the particle
+--- @field AttachedObject? object Attached object or invalid object handle on error The object this particle is attached to. If valid the position will be relative to this object and the velocity will be ignored.
 --- @field isValid fun(self: self): boolean Detects whether this handle is valid
 --- @field setColor fun(self: self, r: number, g: number, b: number): nil Sets the color for a particle.  If the particle does not support color, the function does nothing.  (Currently only debug particles support color.)
 
 -- persona object: Persona handle
 persona = {}
 --- @class persona
---- @field Name? string The name of the persona The name or empty string on error
+--- @field Name? string The name or empty string on error The name of the persona
 --- @field isValid fun(self: self): boolean Detect if the handle is valid
 
 -- physics object: Physics handle
 physics = {}
 --- @class physics
---- @field AfterburnerAccelerationTime? number Afterburner acceleration time Afterburner acceleration time, or 0 if handle is invalid
---- @field AfterburnerVelocityMax? vector Afterburner max velocity (Local vector) Afterburner max velocity, or null vector if handle is invalid
---- @field BankingConstant? number Banking constant Banking constant, or 0 if handle is invalid
---- @field ForwardAccelerationTime? number Forward acceleration time Forward acceleration time, or 0 if handle is invalid
---- @field ForwardDecelerationTime? number Forward deceleration time Forward deceleration time, or 0 if handle is invalid
---- @field ForwardThrust? number Forward thrust amount (-1 - 1), used primarily for thruster graphics and does not affect any physical behavior Forward thrust, or 0 if handle is invalid
---- @field Mass? number Object mass Object mass, or 0 if handle is invalid
---- @field RotationalVelocity? vector Rotational velocity (Local vector) Rotational velocity, or null vector if handle is invalid
---- @field RotationalVelocityDamping? number Rotational damping, ie derivative of rotational speed Rotational damping, or 0 if handle is invalid
---- @field RotationalVelocityDesired? vector Desired rotational velocity Desired rotational velocity, or null vector if handle is invalid
---- @field RotationalVelocityMax? vector Maximum rotational velocity (Local vector) Maximum rotational velocity, or null vector if handle is invalid
---- @field ShockwaveShakeAmplitude? number How much shaking from shockwaves is applied to object Shockwave shake amplitude, or 0 if handle is invalid
---- @field SideThrust? number Side thrust amount (-1 - 1), used primarily for thruster graphics and does not affect any physical behavior Side thrust amount, or 0 if handle is invalid
---- @field SlideAccelerationTime? number Time to accelerate to maximum slide velocity Sliding acceleration time, or 0 if handle is invalid
---- @field SlideDecelerationTime? number Time to decelerate from maximum slide speed Sliding deceleration time, or 0 if handle is invalid
---- @field Velocity? vector Object world velocity (World vector). Setting this value may have minimal effect unless the $Fix scripted velocity game settings flag is used. Object velocity, or null vector if handle is invalid
---- @field VelocityDamping? number Damping, the natural period (1 / omega) of the dampening effects on top of the acceleration model. Called 'side_slip_time_const' in code base.  Damping, or 0 if handle is invalid
---- @field VelocityDesired? vector Desired velocity (World vector) Desired velocity, or null vector if handle is invalid
---- @field VelocityMax? vector Object max local velocity (Local vector) Maximum velocity, or null vector if handle is invalid
---- @field VerticalThrust? number Vertical thrust amount (-1 - 1), used primarily for thruster graphics and does not affect any physical behavior Vertical thrust amount, or 0 if handle is invalid
---- @field AfterburnerActive? boolean Specifies if the afterburner is active or not true if afterburner is active false otherwise
---- @field GravityConst? number Multiplier for the effect of gravity on this object Multiplier, or 0 if handle is invalid
+--- @field AfterburnerAccelerationTime? number Afterburner acceleration time, or 0 if handle is invalid Afterburner acceleration time
+--- @field AfterburnerVelocityMax? vector Afterburner max velocity, or null vector if handle is invalid Afterburner max velocity (Local vector)
+--- @field BankingConstant? number Banking constant, or 0 if handle is invalid Banking constant
+--- @field ForwardAccelerationTime? number Forward acceleration time, or 0 if handle is invalid Forward acceleration time
+--- @field ForwardDecelerationTime? number Forward deceleration time, or 0 if handle is invalid Forward deceleration time
+--- @field ForwardThrust? number Forward thrust, or 0 if handle is invalid Forward thrust amount (-1 - 1), used primarily for thruster graphics and does not affect any physical behavior
+--- @field Mass? number Object mass, or 0 if handle is invalid Object mass
+--- @field RotationalVelocity? vector Rotational velocity, or null vector if handle is invalid Rotational velocity (Local vector)
+--- @field RotationalVelocityDamping? number Rotational damping, or 0 if handle is invalid Rotational damping, ie derivative of rotational speed
+--- @field RotationalVelocityDesired? vector Desired rotational velocity, or null vector if handle is invalid Desired rotational velocity
+--- @field RotationalVelocityMax? vector Maximum rotational velocity, or null vector if handle is invalid Maximum rotational velocity (Local vector)
+--- @field ShockwaveShakeAmplitude? number Shockwave shake amplitude, or 0 if handle is invalid How much shaking from shockwaves is applied to object
+--- @field SideThrust? number Side thrust amount, or 0 if handle is invalid Side thrust amount (-1 - 1), used primarily for thruster graphics and does not affect any physical behavior
+--- @field SlideAccelerationTime? number Sliding acceleration time, or 0 if handle is invalid Time to accelerate to maximum slide velocity
+--- @field SlideDecelerationTime? number Sliding deceleration time, or 0 if handle is invalid Time to decelerate from maximum slide speed
+--- @field Velocity? vector Object velocity, or null vector if handle is invalid Object world velocity (World vector). Setting this value may have minimal effect unless the $Fix scripted velocity game settings flag is used.
+--- @field VelocityDamping? number Damping, or 0 if handle is invalid Damping, the natural period (1 / omega) of the dampening effects on top of the acceleration model. Called 'side_slip_time_const' in code base. 
+--- @field VelocityDesired? vector Desired velocity, or null vector if handle is invalid Desired velocity (World vector)
+--- @field VelocityMax? vector Maximum velocity, or null vector if handle is invalid Object max local velocity (Local vector)
+--- @field VerticalThrust? number Vertical thrust amount, or 0 if handle is invalid Vertical thrust amount (-1 - 1), used primarily for thruster graphics and does not affect any physical behavior
+--- @field AfterburnerActive? boolean true if afterburner is active false otherwise Specifies if the afterburner is active or not
+--- @field GravityConst? number Multiplier, or 0 if handle is invalid Multiplier for the effect of gravity on this object
 --- @field isValid fun(self: self): boolean True if valid, false or nil if not
 --- @field getSpeed fun(self: self): number Gets total speed as of last frame
 --- @field getForwardSpeed fun(self: self): number Gets total speed in the ship's 'forward' direction as of last frame
@@ -939,14 +939,14 @@ physics = {}
 -- player object: Player handle
 player = {}
 --- @class player
---- @field Stats? scoring_stats The scoring stats of this player (read-only) The player stats or invalid handle
---- @field ImageFilename? string The image filename of this pilot Player image filename, or empty string if handle is invalid
---- @field SingleSquadFilename? string The singleplayer squad filename of this pilot singleplayer squad image filename, or empty string if handle is invalid
---- @field MultiSquadFilename? string The multiplayer squad filename of this pilot Multiplayer squad image filename, or empty string if handle is invalid
---- @field IsMultiplayer? boolean Determines if this player is currently configured for multiplayer. true if this is a multiplayer pilot, false otherwise or if the handle is invalid
---- @field WasMultiplayer? boolean Determines if this player is currently configured for multiplayer. true if this is a multiplayer pilot, false otherwise or if the handle is invalid
---- @field AutoAdvance? boolean Determines if briefing stages should be auto advanced. true if auto advance is enabled, false otherwise or if the handle is invalid
---- @field ShowSkipPopup? boolean Determines if the skip mission popup is shown for the current mission. true if it should be shown, false otherwise or if the handle is invalid
+--- @field Stats? scoring_stats The player stats or invalid handle The scoring stats of this player (read-only)
+--- @field ImageFilename? string Player image filename, or empty string if handle is invalid The image filename of this pilot
+--- @field SingleSquadFilename? string singleplayer squad image filename, or empty string if handle is invalid The singleplayer squad filename of this pilot
+--- @field MultiSquadFilename? string Multiplayer squad image filename, or empty string if handle is invalid The multiplayer squad filename of this pilot
+--- @field IsMultiplayer? boolean true if this is a multiplayer pilot, false otherwise or if the handle is invalid Determines if this player is currently configured for multiplayer.
+--- @field WasMultiplayer? boolean true if this is a multiplayer pilot, false otherwise or if the handle is invalid Determines if this player is currently configured for multiplayer.
+--- @field AutoAdvance? boolean true if auto advance is enabled, false otherwise or if the handle is invalid Determines if briefing stages should be auto advanced.
+--- @field ShowSkipPopup? boolean true if it should be shown, false otherwise or if the handle is invalid Determines if the skip mission popup is shown for the current mission.
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
 --- @field getName fun(self: self): string Gets current player name
 --- @field getCampaignFilename fun(self: self): string Gets current player campaign filename
@@ -961,7 +961,7 @@ player = {}
 -- preset object: Control Preset handle
 preset = {}
 --- @class preset
---- @field Name? string The name of the preset The name
+--- @field Name? string The name The name of the preset
 --- @field clonePreset fun(self: self, Name: string): boolean Clones the preset into a new preset with the specified name. Sets it as the active preset
 --- @field deletePreset fun(self: self): boolean Deletes the preset file entirely. Cannot delete a currently active preset.
 
@@ -979,10 +979,10 @@ promise = {}
 pxo_channel = {}
 --- @class pxo_channel
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
---- @field Name? string The name of the channel The name
---- @field Description? string The description of the channel The description
---- @field NumPlayers? string The number of players in the channel The number of players
---- @field NumGames? string The number of games the channel The number of games
+--- @field Name? string The name The name of the channel
+--- @field Description? string The description The description of the channel
+--- @field NumPlayers? string The number of players The number of players in the channel
+--- @field NumGames? string The number of games The number of games the channel
 --- @field isCurrent fun(self: self): boolean Returns whether this is the current channel
 --- @field joinChannel fun(self: self): nil Joins the specified channel
 
@@ -990,17 +990,17 @@ pxo_channel = {}
 rank = {}
 --- @class rank
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
---- @field Name? string The name of the rank The name
---- @field AltName? string The alt name of the rank The alt name
---- @field Title? string The title of the rank The title
---- @field Bitmap? string The bitmap of the rank The bitmap
---- @field Index? number The index of the rank within the Ranks list The rank index
+--- @field Name? string The name The name of the rank
+--- @field AltName? string The alt name The alt name of the rank
+--- @field Title? string The title The title of the rank
+--- @field Bitmap? string The bitmap The bitmap of the rank
+--- @field Index? number The rank index The index of the rank within the Ranks list
 
 -- red_alert_stage object: Red Alert stage handle
 red_alert_stage = {}
 --- @class red_alert_stage
---- @field Text? string The briefing text of the stage The text string
---- @field AudioFilename? string The audio file of the stage The audio file
+--- @field Text? string The text string The briefing text of the stage
+--- @field AudioFilename? string The audio file The audio file of the stage
 
 -- rpc object: A function object for remote procedure calls
 rpc = {}
@@ -1011,44 +1011,44 @@ rpc = {}
 -- scoring_stats object: Player related scoring stats.
 scoring_stats = {}
 --- @class scoring_stats
---- @field Score? number The current score. The score value
---- @field PrimaryShotsFired? number The number of primary shots that have been fired. The score value
---- @field PrimaryShotsHit? number The number of primary shots that have hit. The score value
---- @field PrimaryFriendlyHit? number The number of primary friendly fire hits. The score value
---- @field SecondaryShotsFired? number The number of secondary shots that have been fired. The score value
---- @field SecondaryShotsHit? number The number of secondary shots that have hit. The score value
---- @field SecondaryFriendlyHit? number The number of secondary friendly fire hits. The score value
---- @field TotalKills? number The total number of kills. The score value
---- @field Assists? number The total number of assists. The score value
+--- @field Score? number The score value The current score.
+--- @field PrimaryShotsFired? number The score value The number of primary shots that have been fired.
+--- @field PrimaryShotsHit? number The score value The number of primary shots that have hit.
+--- @field PrimaryFriendlyHit? number The score value The number of primary friendly fire hits.
+--- @field SecondaryShotsFired? number The score value The number of secondary shots that have been fired.
+--- @field SecondaryShotsHit? number The score value The number of secondary shots that have hit.
+--- @field SecondaryFriendlyHit? number The score value The number of secondary friendly fire hits.
+--- @field TotalKills? number The score value The total number of kills.
+--- @field Assists? number The score value The total number of assists.
 --- @field getShipclassKills fun(self: self, class: shipclass): number Returns the number of kills of a specific ship class recorded in this statistics structure.
---- @field MissionPrimaryShotsFired? number The number of primary shots that have been fired in the current mission. The score value
---- @field MissionPrimaryShotsHit? number The number of primary shots that have hit in the current mission. The score value
---- @field MissionPrimaryFriendlyHit? number The number of primary friendly fire hits in the current mission. The score value
---- @field MissionSecondaryShotsFired? number The number of secondary shots that have been fired in the current mission. The score value
---- @field MissionSecondaryShotsHit? number The number of secondary shots that have hit in the current mission. The score value
---- @field MissionSecondaryFriendlyHit? number The number of secondary friendly fire hits in the current mission. The score value
---- @field MissionTotalKills? number The total number of kills in the current mission. The score value
---- @field MissionAssists? number The total number of assists in the current mission. The score value
+--- @field MissionPrimaryShotsFired? number The score value The number of primary shots that have been fired in the current mission.
+--- @field MissionPrimaryShotsHit? number The score value The number of primary shots that have hit in the current mission.
+--- @field MissionPrimaryFriendlyHit? number The score value The number of primary friendly fire hits in the current mission.
+--- @field MissionSecondaryShotsFired? number The score value The number of secondary shots that have been fired in the current mission.
+--- @field MissionSecondaryShotsHit? number The score value The number of secondary shots that have hit in the current mission.
+--- @field MissionSecondaryFriendlyHit? number The score value The number of secondary friendly fire hits in the current mission.
+--- @field MissionTotalKills? number The score value The total number of kills in the current mission.
+--- @field MissionAssists? number The score value The total number of assists in the current mission.
 --- @field getMissionShipclassKills fun(self: self, class: shipclass): number Returns the number of kills of a specific ship class recorded in this statistics structure for the current mission.
 --- @field setMissionShipclassKills fun(self: self, class: shipclass, kills: number): boolean Sets the number of kills of a specific ship class recorded in this statistics structure for the current mission. Returns true if successful.
---- @field Medals? table<number, number> Gets a table of medals that the player has earned. The number returned is the number of times the player has won that medal. The index position in the table is an index into Medals. The medals table
---- @field Rank? rank Returns the player's current rank The current rank
+--- @field Medals? table<number, number> The medals table Gets a table of medals that the player has earned. The number returned is the number of times the player has won that medal. The index position in the table is an index into Medals.
+--- @field Rank? rank The current rank Returns the player's current rank
 
 -- sexpvariable object: SEXP Variable handle
 sexpvariable = {}
 --- @class sexpvariable
---- @field Name? string SEXP Variable name. SEXP Variable name, or empty string if handle is invalid
---- @field Persistence? enumeration SEXP Variable persistence, uses SEXPVAR_*_PERSISTENT enumerations SEXPVAR_*_PERSISTENT enumeration, or invalid numeration if handle is invalid
---- @field Type? enumeration SEXP Variable type, uses SEXPVAR_TYPE_* enumerations SEXPVAR_TYPE_* enumeration, or invalid numeration if handle is invalid
---- @field Value? string SEXP variable value SEXP variable contents, or nil if the variable is of an invalid type or the handle is invalid
+--- @field Name? string SEXP Variable name, or empty string if handle is invalid SEXP Variable name.
+--- @field Persistence? enumeration SEXPVAR_*_PERSISTENT enumeration, or invalid numeration if handle is invalid SEXP Variable persistence, uses SEXPVAR_*_PERSISTENT enumerations
+--- @field Type? enumeration SEXPVAR_TYPE_* enumeration, or invalid numeration if handle is invalid SEXP Variable type, uses SEXPVAR_TYPE_* enumerations
+--- @field Value? string SEXP variable contents, or nil if the variable is of an invalid type or the handle is invalid SEXP variable value
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
 --- @field delete fun(self: self): boolean Deletes a SEXP Variable
 
 -- shields object: Shields handle
 shields = {}
 --- @class shields
---- @field CombinedLeft? number Total shield hitpoints left (for all segments combined) Combined shield strength, or 0 if handle is invalid
---- @field CombinedMax? number Maximum shield hitpoints (for all segments combined) Combined maximum shield strength, or 0 if handle is invalid
+--- @field CombinedLeft? number Combined shield strength, or 0 if handle is invalid Total shield hitpoints left (for all segments combined)
+--- @field CombinedMax? number Combined maximum shield strength, or 0 if handle is invalid Maximum shield hitpoints (for all segments combined)
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
 
 -- ship object: Ship handle
@@ -1056,52 +1056,52 @@ ship = {}
 --- @class ship
 --- @field setFlag fun(self: self, set_it: boolean, flag_name: string): nil Sets or clears one or more flags - this function can accept an arbitrary number of flag arguments.  The flag names can be any string that the alter-ship-flag SEXP operator supports.
 --- @field getFlag fun(self: self, flag_name: string): boolean Checks whether one or more flags are set - this function can accept an arbitrary number of flag arguments.  The flag names can be any string that the alter-ship-flag SEXP operator supports.
---- @field ShieldArmorClass? string Current Armor class of the ships' shield Armor class name, or empty string if none is set
---- @field ImpactDamageClass? string Current Impact Damage class Impact Damage class name, or empty string if none is set
---- @field ArmorClass? string Current Armor class Armor class name, or empty string if none is set
---- @field Name? string Ship name. This is the actual name of the ship. Use <i>getDisplayString</i> to get the string which should be displayed to the player. Ship name, or empty string if handle is invalid
---- @field DisplayName? string Ship display name The display name of the ship or empty if there is no display string
+--- @field ShieldArmorClass? string Armor class name, or empty string if none is set Current Armor class of the ships' shield
+--- @field ImpactDamageClass? string Impact Damage class name, or empty string if none is set Current Impact Damage class
+--- @field ArmorClass? string Armor class name, or empty string if none is set Current Armor class
+--- @field Name? string Ship name, or empty string if handle is invalid Ship name. This is the actual name of the ship. Use <i>getDisplayString</i> to get the string which should be displayed to the player.
+--- @field DisplayName? string The display name of the ship or empty if there is no display string Ship display name
 --- @field isPlayer fun(self: self): boolean Checks whether the ship is a player ship
---- @field AfterburnerFuelLeft? number Afterburner fuel left Afterburner fuel left, or 0 if handle is invalid
---- @field AfterburnerFuelMax? number Afterburner fuel capacity Afterburner fuel capacity, or 0 if handle is invalid
---- @field Class? shipclass Ship class Ship class, or invalid shipclass handle if ship handle is invalid
---- @field CountermeasuresLeft? number Number of countermeasures left Countermeasures left, or 0 if ship handle is invalid
---- @field CockpitDisplays? displays An array of the cockpit displays on this ship.<br>NOTE: Only the ship of the player has these displays handle or invalid handle on error
---- @field CountermeasureClass? weaponclass Weapon class mounted on this ship's countermeasure point Countermeasure hardpoint weapon class, or invalid weaponclass handle if no countermeasure class or ship handle is invalid
---- @field HitpointsMax? number Total hitpoints Ship maximum hitpoints, or 0 if handle is invalid
---- @field ShieldRegenRate? number Maximum percentage/100 of shield energy regenerated per second. For example, 0.02 = 2% recharge per second. Ship maximum shield regeneration rate, or 0 if handle is invalid
---- @field WeaponRegenRate? number Maximum percentage/100 of weapon energy regenerated per second. For example, 0.02 = 2% recharge per second. Ship maximum weapon regeneration rate, or 0 if handle is invalid
---- @field WeaponEnergyLeft? number Current weapon energy reserves Ship current weapon energy reserve level, or 0 if invalid
---- @field WeaponEnergyMax? number Maximum weapon energy Ship maximum weapon energy reserve level, or 0 if invalid
---- @field AutoaimFOV? number FOV of ship's autoaim, if any FOV (in degrees), or 0 if ship uses no autoaim or if handle is invalid
---- @field PrimaryTriggerDown? boolean Determines if primary trigger is pressed or not True if pressed, false if not, nil if ship handle is invalid
---- @field PrimaryBanks? weaponbanktype Array of primary weapon banks Primary weapon banks, or invalid weaponbanktype handle if ship handle is invalid
---- @field SecondaryBanks? weaponbanktype Array of secondary weapon banks Secondary weapon banks, or invalid weaponbanktype handle if ship handle is invalid
---- @field TertiaryBanks? weaponbanktype Array of tertiary weapon banks Tertiary weapon banks, or invalid weaponbanktype handle if ship handle is invalid
---- @field Target? object Target of ship. Value may also be a deriviative of the 'object' class, such as 'ship'. Target object, or invalid object handle if no target or ship handle is invalid
---- @field TargetSubsystem? subsystem Target subsystem of ship. Target subsystem, or invalid subsystem handle if no target or ship handle is invalid
---- @field Team? team Ship's team Ship team, or invalid team handle if ship handle is invalid
---- @field PersonaIndex? number Persona index The index of the persona from messages.tbl, 0 if no persona is set
---- @field Textures? modelinstancetextures Gets ship textures Ship textures, or invalid shiptextures handle if ship handle is invalid
---- @field FlagAffectedByGravity? boolean Checks for the "affected-by-gravity" flag True if flag is set, false if flag is not set and nil on error
---- @field Disabled? boolean The disabled state of this ship true if ship is disabled, false otherwise
---- @field Stealthed? boolean Stealth status of this ship true if stealthed, false otherwise or on error
---- @field HiddenFromSensors? boolean Hidden from sensors status of this ship true if invisible to hidden from sensors, false otherwise or on error
---- @field Gliding? boolean Specifies whether this ship is currently gliding or not. true if gliding, false otherwise or in case of error
---- @field EtsEngineIndex? number (SET not implemented, see EtsSetIndexes) Ships ETS Engine index value, 0 to MAX_ENERGY_INDEX
---- @field EtsShieldIndex? number (SET not implemented, see EtsSetIndexes) Ships ETS Shield index value, 0 to MAX_ENERGY_INDEX
---- @field EtsWeaponIndex? number (SET not implemented, see EtsSetIndexes) Ships ETS Weapon index value, 0 to MAX_ENERGY_INDEX
---- @field Orders? shiporders Array of ship orders Ship orders, or invalid handle if ship handle is invalid
---- @field WaypointSpeedCap? number Waypoint speed cap The limit on the ship's speed for traversing waypoints.  -1 indicates no speed cap.  0 will be returned if handle is invalid.
---- @field ArrivalLocation? string The ship's arrival location Arrival location, or nil if handle is invalid
---- @field DepartureLocation? string The ship's departure location Departure location, or nil if handle is invalid
---- @field ArrivalAnchor? string The ship's arrival anchor Arrival anchor, or nil if handle is invalid
---- @field DepartureAnchor? string The ship's departure anchor Departure anchor, or nil if handle is invalid
---- @field ArrivalPathMask? number The ship's arrival path mask Arrival path mask, or nil if handle is invalid
---- @field DeparturePathMask? number The ship's departure path mask Departure path mask, or nil if handle is invalid
---- @field ArrivalDelay? number The ship's arrival delay Arrival delay, or nil if handle is invalid
---- @field DepartureDelay? number The ship's departure delay Departure delay, or nil if handle is invalid
---- @field ArrivalDistance? number The ship's arrival distance Arrival distance, or nil if handle is invalid
+--- @field AfterburnerFuelLeft? number Afterburner fuel left, or 0 if handle is invalid Afterburner fuel left
+--- @field AfterburnerFuelMax? number Afterburner fuel capacity, or 0 if handle is invalid Afterburner fuel capacity
+--- @field Class? shipclass Ship class, or invalid shipclass handle if ship handle is invalid Ship class
+--- @field CountermeasuresLeft? number Countermeasures left, or 0 if ship handle is invalid Number of countermeasures left
+--- @field CockpitDisplays? displays displays handle or invalid handle on error An array of the cockpit displays on this ship.<br>NOTE: Only the ship of the player has these
+--- @field CountermeasureClass? weaponclass Countermeasure hardpoint weapon class, or invalid weaponclass handle if no countermeasure class or ship handle is invalid Weapon class mounted on this ship's countermeasure point
+--- @field HitpointsMax? number Ship maximum hitpoints, or 0 if handle is invalid Total hitpoints
+--- @field ShieldRegenRate? number Ship maximum shield regeneration rate, or 0 if handle is invalid Maximum percentage/100 of shield energy regenerated per second. For example, 0.02 = 2% recharge per second.
+--- @field WeaponRegenRate? number Ship maximum weapon regeneration rate, or 0 if handle is invalid Maximum percentage/100 of weapon energy regenerated per second. For example, 0.02 = 2% recharge per second.
+--- @field WeaponEnergyLeft? number Ship current weapon energy reserve level, or 0 if invalid Current weapon energy reserves
+--- @field WeaponEnergyMax? number Ship maximum weapon energy reserve level, or 0 if invalid Maximum weapon energy
+--- @field AutoaimFOV? number FOV (in degrees), or 0 if ship uses no autoaim or if handle is invalid FOV of ship's autoaim, if any
+--- @field PrimaryTriggerDown? boolean True if pressed, false if not, nil if ship handle is invalid Determines if primary trigger is pressed or not
+--- @field PrimaryBanks? weaponbanktype Primary weapon banks, or invalid weaponbanktype handle if ship handle is invalid Array of primary weapon banks
+--- @field SecondaryBanks? weaponbanktype Secondary weapon banks, or invalid weaponbanktype handle if ship handle is invalid Array of secondary weapon banks
+--- @field TertiaryBanks? weaponbanktype Tertiary weapon banks, or invalid weaponbanktype handle if ship handle is invalid Array of tertiary weapon banks
+--- @field Target? object Target object, or invalid object handle if no target or ship handle is invalid Target of ship. Value may also be a deriviative of the 'object' class, such as 'ship'.
+--- @field TargetSubsystem? subsystem Target subsystem, or invalid subsystem handle if no target or ship handle is invalid Target subsystem of ship.
+--- @field Team? team Ship team, or invalid team handle if ship handle is invalid Ship's team
+--- @field PersonaIndex? number The index of the persona from messages.tbl, 0 if no persona is set Persona index
+--- @field Textures? modelinstancetextures Ship textures, or invalid shiptextures handle if ship handle is invalid Gets ship textures
+--- @field FlagAffectedByGravity? boolean True if flag is set, false if flag is not set and nil on error Checks for the "affected-by-gravity" flag
+--- @field Disabled? boolean true if ship is disabled, false otherwise The disabled state of this ship
+--- @field Stealthed? boolean true if stealthed, false otherwise or on error Stealth status of this ship
+--- @field HiddenFromSensors? boolean true if invisible to hidden from sensors, false otherwise or on error Hidden from sensors status of this ship
+--- @field Gliding? boolean true if gliding, false otherwise or in case of error Specifies whether this ship is currently gliding or not.
+--- @field EtsEngineIndex? number Ships ETS Engine index value, 0 to MAX_ENERGY_INDEX (SET not implemented, see EtsSetIndexes)
+--- @field EtsShieldIndex? number Ships ETS Shield index value, 0 to MAX_ENERGY_INDEX (SET not implemented, see EtsSetIndexes)
+--- @field EtsWeaponIndex? number Ships ETS Weapon index value, 0 to MAX_ENERGY_INDEX (SET not implemented, see EtsSetIndexes)
+--- @field Orders? shiporders Ship orders, or invalid handle if ship handle is invalid Array of ship orders
+--- @field WaypointSpeedCap? number The limit on the ship's speed for traversing waypoints.  -1 indicates no speed cap.  0 will be returned if handle is invalid. Waypoint speed cap
+--- @field ArrivalLocation? string Arrival location, or nil if handle is invalid The ship's arrival location
+--- @field DepartureLocation? string Departure location, or nil if handle is invalid The ship's departure location
+--- @field ArrivalAnchor? string Arrival anchor, or nil if handle is invalid The ship's arrival anchor
+--- @field DepartureAnchor? string Departure anchor, or nil if handle is invalid The ship's departure anchor
+--- @field ArrivalPathMask? number Arrival path mask, or nil if handle is invalid The ship's arrival path mask
+--- @field DeparturePathMask? number Departure path mask, or nil if handle is invalid The ship's departure path mask
+--- @field ArrivalDelay? number Arrival delay, or nil if handle is invalid The ship's arrival delay
+--- @field DepartureDelay? number Departure delay, or nil if handle is invalid The ship's departure delay
+--- @field ArrivalDistance? number Arrival distance, or nil if handle is invalid The ship's arrival distance
 --- @field sendMessage fun(self: self, message: message, delay?: number, priority?: enumeration): boolean Sends a message from the given ship with the given priority.<br>If delay is specified, the message will be delayed by the specified time in seconds.
 --- @field turnTowardsPoint fun(self: self, target: vector, respectDifficulty?: boolean, turnrateModifier?: vector, bank?: number): nil turns the ship towards the specified point during this frame
 --- @field turnTowardsOrientation fun(self: self, target: orientation, respectDifficulty?: boolean, turnrateModifier?: vector): nil turns the ship towards the specified orientation during this frame
@@ -1117,11 +1117,11 @@ ship = {}
 --- @field fireCountermeasure fun(self: self): boolean Launches a countermeasure from the ship
 --- @field firePrimary fun(self: self): number Fires ship primary bank(s)
 --- @field fireSecondary fun(self: self): number Fires ship secondary bank(s)
---- @field getAnimationDoneTime fun(self: self, Type: number, Subtype: number): number Gets time that animation will be done
+--- @field getAnimationDoneTime fun(self: self, Type: number, Subtype: number): number DEPRECATED 22.0.0: To account for the new animation tables, please use getSubmodelAnimationTime() --  Gets time that animation will be done
 --- @field clearOrders fun(self: self): boolean Clears a ship's orders list
 --- @field giveOrder fun(self: self, Order: enumeration, Target?: object, TargetSubsystem?: subsystem, Priority?: number, TargetShipclass?: shipclass): boolean Uses the goal code to execute orders
 --- @field doManeuver fun(self: self, Duration: number, Heading: number, Pitch: number, Bank: number, ApplyAllRotation: boolean, Vertical: number, Sideways: number, Forward: number, ApplyAllMovement: boolean, ManeuverBitfield: number): boolean Sets ship maneuver over the defined time period
---- @field triggerAnimation fun(self: self, Type: string, Subtype?: number, Forwards?: boolean, Instant?: boolean): boolean Triggers an animation. Type is the string name of the animation type, Subtype is the subtype number, such as weapon bank #, Forwards and Instant are boolean, defaulting to true & false respectively.<br><strong>IMPORTANT: Function is in testing and should not be used with official mod releases</strong>
+--- @field triggerAnimation fun(self: self, Type: string, Subtype?: number, Forwards?: boolean, Instant?: boolean): boolean DEPRECATED 22.0.0: To account for the new animation tables, please use triggerSubmodelAnimation() --  Triggers an animation. Type is the string name of the animation type, Subtype is the subtype number, such as weapon bank #, Forwards and Instant are boolean, defaulting to true & false respectively.<br><strong>IMPORTANT: Function is in testing and should not be used with official mod releases</strong>
 --- @field triggerSubmodelAnimation fun(self: self, type: string, triggeredBy: string, forwards?: boolean, resetOnStart?: boolean, completeInstant?: boolean, pause?: boolean): boolean Triggers an animation. If used often with the same type / triggeredBy, consider using getSubmodelAnimation for performance reasons. Type is the string name of the animation type, triggeredBy is a closer specification which animation should trigger. See *-anim.tbm specifications. Forwards controls the direction of the animation. ResetOnStart will cause the animation to play from its initial state, as opposed to its current state. CompleteInstant will immediately complete the animation. Pause will instead stop the animation at the current state.
 --- @field getSubmodelAnimation fun(self: self, type: string, triggeredBy: string): animation_handle Gets an animation handle. Type is the string name of the animation type, triggeredBy is a closer specification which animation should trigger. See *-anim.tbm specifications. 
 --- @field stopLoopingSubmodelAnimation fun(self: self, type: string, triggeredBy: string): boolean Stops a currently looping animation after it has finished its current loop. If used often with the same type / triggeredBy, consider using getSubmodelAnimation for performance reasons. Type is the string name of the animation type, triggeredBy is a closer specification which animation was triggered. See *-anim.tbm specifications. 
@@ -1132,7 +1132,7 @@ ship = {}
 --- @field warpOut fun(self: self): boolean Warps ship out
 --- @field canWarp fun(self: self): boolean Checks whether ship has a working subspace drive, is allowed to use it, and is not disabled or limited by subsystem strength.
 --- @field canBayDepart fun(self: self): boolean Checks whether ship has a bay departure location and if its mother ship is present.
---- @field isWarpingIn fun(self: self): boolean Checks if ship is in stage 1 of warping in
+--- @field isWarpingIn fun(self: self): boolean DEPRECATED 24.2.0: This function's name may imply that it tests for the entire warping sequence.  To avoid confusion, it has been deprecated in favor of isWarpingStage1. --  Checks if ship is in stage 1 of warping in
 --- @field isWarpingStage1 fun(self: self): boolean Checks if ship is in stage 1 of warping in, which is the stage when the warp portal is opening but before the ship has gone through.  During this stage, the ship's radar blip is blue, while the ship itself is invisible, does not collide, and has velocity 0.
 --- @field isWarpingStage2 fun(self: self): boolean Checks if ship is in stage 2 of warping in, which is the stage when it is traversing the warp portal.  Stage 2 ends as soon as the ship is completely through the portal and does not include portal closing or ship deceleration.
 --- @field getEMP fun(self: self): number Returns the current emp effect strength acting on the object
@@ -1159,68 +1159,68 @@ ship = {}
 -- ship_registry_entry object: Ship entry handle
 ship_registry_entry = {}
 --- @class ship_registry_entry
---- @field Name? string Name of ship Ship name, or empty string if handle is invalid
+--- @field Name? string Ship name, or empty string if handle is invalid Name of ship
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
---- @field Status? enumeration Status of ship INVALID, NOT_YET_PRESENT, PRESENT, DEATH_ROLL, EXITED, or nil if handle is invalid
+--- @field Status? enumeration INVALID, NOT_YET_PRESENT, PRESENT, DEATH_ROLL, EXITED, or nil if handle is invalid Status of ship
 --- @field getParsedShip fun(self: self): parse_object Return the parsed ship associated with this ship registry entry
 --- @field getShip fun(self: self): ship Return the ship associated with this ship registry entry
 
 -- shipclass object: Ship class handle
 shipclass = {}
 --- @class shipclass
---- @field Name? string Ship class name Ship class name, or an empty string if handle is invalid
---- @field ShortName? string Ship class short name Ship short name, or empty string if handle is invalid
---- @field TypeString? string Ship class type string Type string, or empty string if handle is invalid
---- @field ManeuverabilityString? string Ship class maneuverability string Maneuverability string, or empty string if handle is invalid
---- @field ArmorString? string Ship class armor string Armor string, or empty string if handle is invalid
---- @field ManufacturerString? string Ship class manufacturer Manufacturer, or empty string if handle is invalid
---- @field LengthString? string Ship class length Length, or empty string if handle is invalid
---- @field GunMountsString? string Ship class gun mounts Gun mounts, or empty string if handle is invalid
---- @field MissileBanksString? string Ship class missile banks Missile banks, or empty string if handle is invalid
---- @field VelocityString? string Ship class velocity velocity, or empty string if handle is invalid
---- @field Description? string Ship class description Description, or empty string if handle is invalid
---- @field SelectIconFilename? string Ship class select icon filename Filename, or empty string if handle is invalid
---- @field SelectAnimFilename? string Ship class select animation filename Filename, or empty string if handle is invalid
---- @field SelectOverheadFilename? string Ship class select overhead filename Filename, or empty string if handle is invalid
---- @field TechDescription? string Ship class tech description Tech description, or empty string if handle is invalid
---- @field numPrimaryBanks? number Number of primary banks on this ship class number of banks or nil is ship handle is invalid
+--- @field Name? string Ship class name, or an empty string if handle is invalid Ship class name
+--- @field ShortName? string Ship short name, or empty string if handle is invalid Ship class short name
+--- @field TypeString? string Type string, or empty string if handle is invalid Ship class type string
+--- @field ManeuverabilityString? string Maneuverability string, or empty string if handle is invalid Ship class maneuverability string
+--- @field ArmorString? string Armor string, or empty string if handle is invalid Ship class armor string
+--- @field ManufacturerString? string Manufacturer, or empty string if handle is invalid Ship class manufacturer
+--- @field LengthString? string Length, or empty string if handle is invalid Ship class length
+--- @field GunMountsString? string Gun mounts, or empty string if handle is invalid Ship class gun mounts
+--- @field MissileBanksString? string Missile banks, or empty string if handle is invalid Ship class missile banks
+--- @field VelocityString? string velocity, or empty string if handle is invalid Ship class velocity
+--- @field Description? string Description, or empty string if handle is invalid Ship class description
+--- @field SelectIconFilename? string Filename, or empty string if handle is invalid Ship class select icon filename
+--- @field SelectAnimFilename? string Filename, or empty string if handle is invalid Ship class select animation filename
+--- @field SelectOverheadFilename? string Filename, or empty string if handle is invalid Ship class select overhead filename
+--- @field TechDescription? string Tech description, or empty string if handle is invalid Ship class tech description
+--- @field numPrimaryBanks? number number of banks or nil is ship handle is invalid Number of primary banks on this ship class
 --- @field getPrimaryBankCapacity fun(self: self, index: number): number Returns the capacity of the specified primary bank
---- @field numSecondaryBanks? number Number of secondary banks on this ship class number of banks or nil is ship handle is invalid
+--- @field numSecondaryBanks? number number of banks or nil is ship handle is invalid Number of secondary banks on this ship class
 --- @field getSecondaryBankCapacity fun(self: self, index: number): number Returns the capacity of the specified secondary bank
---- @field defaultPrimaries? default_primary Array of default primary weapons The weapons array or nil if handle is invalid
---- @field defaultSecondaries? default_secondary Array of default secondary weapons The weapons array or nil if handle is invalid
+--- @field defaultPrimaries? default_primary The weapons array or nil if handle is invalid Array of default primary weapons
+--- @field defaultSecondaries? default_secondary The weapons array or nil if handle is invalid Array of default secondary weapons
 --- @field isWeaponAllowedOnShip fun(self: self, index: number, bank?: number): boolean Gets whether or not a weapon is allowed on a ship class. Optionally check a specific bank. Banks are 1 to a maximum of 7 where the first banks are Primaries and rest are Secondaries. Exact numbering depends on the ship class being checked. Note also that this will consider dogfight weapons only if a dogfight mission has been loaded. Index is index into Weapon Classes.
---- @field AfterburnerFuelMax? number Afterburner fuel capacity Afterburner capacity, or 0 if handle is invalid
---- @field ScanTime? number Ship scan time Time required to scan, or 0 if handle is invalid. This property is read-only
---- @field CountermeasureClass? weaponclass The default countermeasure class assigned to this ship class Countermeasure hardpoint weapon class, or invalid weaponclass handle if no countermeasure class or ship handle is invalid
---- @field CountermeasuresMax? number Maximum number of countermeasures the ship can carry Countermeasure capacity, or 0 if handle is invalid
---- @field Model? model Model Ship class model, or invalid model handle if shipclass handle is invalid
---- @field CockpitModel? model Model used for first-person cockpit Cockpit model
---- @field CockpitDisplays? cockpitdisplays Gets the cockpit display information array of this ship class Array handle containing the information or invalid handle on error
---- @field HitpointsMax? number Ship class hitpoints Hitpoints, or 0 if handle is invalid
---- @field ShieldHitpointsMax? number Ship class shield hitpoints Shield hitpoints, or 0 if handle is invalid
---- @field Species? species Ship class species Ship class species, or invalid species handle if shipclass handle is invalid
---- @field Type? shiptype Ship class type Ship type, or invalid handle if shipclass handle is invalid
---- @field AltName? string Alternate name for ship class Alternate string or empty string if handle is invalid
---- @field VelocityMax? vector Ship's lateral and forward speeds Maximum velocity, or null vector if handle is invalid
---- @field VelocityDamping? number Damping, the natural period (1 / omega) of the dampening effects on top of the acceleration model.  Damping, or 0 if handle is invalid
---- @field RearVelocityMax? number The maximum rear velocity of the ship Speed, or 0 if handle is invalid
---- @field ForwardAccelerationTime? number Forward acceleration time Forward acceleration time, or 0 if handle is invalid
---- @field ForwardDecelerationTime? number Forward deceleration time Forward deceleration time, or 0 if handle is invalid
---- @field RotationTime? vector Maximum rotation time on each axis Full rotation time for each axis, or null vector if handle is invalid
---- @field RotationalVelocityDamping? number Rotational damping, ie derivative of rotational speed Rotational damping, or 0 if handle is invalid
---- @field AfterburnerAccelerationTime? number Afterburner acceleration time Afterburner acceleration time, or 0 if handle is invalid
---- @field AfterburnerVelocityMax? vector Afterburner max velocity Afterburner max velocity, or null vector if handle is invalid
---- @field AfterburnerRearVelocityMax? number Afterburner maximum rear velocity Rear velocity, or 0 if handle is invalid
---- @field Score? number The score of this ship class The score or -1 on invalid ship class
---- @field InTechDatabase? boolean Gets or sets whether this ship class is visible in the tech room True or false
---- @field AllowedInCampaign? boolean Gets or sets whether this ship class is allowed in loadouts in campaign mode True or false
---- @field PowerOutput? number Gets or sets a ship class' power output The ship class' current power output
---- @field ScanningTimeMultiplier? number Time multiplier for scans performed by this ship class Scanning time multiplier, or 0 if handle is invalid
---- @field ScanningRangeMultiplier? number Range multiplier for scans performed by this ship class Scanning range multiplier, or 0 if handle is invalid
---- @field CustomData? table Gets the custom data table for this ship class The ship class's custom data table
+--- @field AfterburnerFuelMax? number Afterburner capacity, or 0 if handle is invalid Afterburner fuel capacity
+--- @field ScanTime? number Time required to scan, or 0 if handle is invalid. This property is read-only Ship scan time
+--- @field CountermeasureClass? weaponclass Countermeasure hardpoint weapon class, or invalid weaponclass handle if no countermeasure class or ship handle is invalid The default countermeasure class assigned to this ship class
+--- @field CountermeasuresMax? number Countermeasure capacity, or 0 if handle is invalid Maximum number of countermeasures the ship can carry
+--- @field Model? model Ship class model, or invalid model handle if shipclass handle is invalid Model
+--- @field CockpitModel? model Cockpit model Model used for first-person cockpit
+--- @field CockpitDisplays? cockpitdisplays Array handle containing the information or invalid handle on error Gets the cockpit display information array of this ship class
+--- @field HitpointsMax? number Hitpoints, or 0 if handle is invalid Ship class hitpoints
+--- @field ShieldHitpointsMax? number Shield hitpoints, or 0 if handle is invalid Ship class shield hitpoints
+--- @field Species? species Ship class species, or invalid species handle if shipclass handle is invalid Ship class species
+--- @field Type? shiptype Ship type, or invalid handle if shipclass handle is invalid Ship class type
+--- @field AltName? string Alternate string or empty string if handle is invalid Alternate name for ship class
+--- @field VelocityMax? vector Maximum velocity, or null vector if handle is invalid Ship's lateral and forward speeds
+--- @field VelocityDamping? number Damping, or 0 if handle is invalid Damping, the natural period (1 / omega) of the dampening effects on top of the acceleration model. 
+--- @field RearVelocityMax? number Speed, or 0 if handle is invalid The maximum rear velocity of the ship
+--- @field ForwardAccelerationTime? number Forward acceleration time, or 0 if handle is invalid Forward acceleration time
+--- @field ForwardDecelerationTime? number Forward deceleration time, or 0 if handle is invalid Forward deceleration time
+--- @field RotationTime? vector Full rotation time for each axis, or null vector if handle is invalid Maximum rotation time on each axis
+--- @field RotationalVelocityDamping? number Rotational damping, or 0 if handle is invalid Rotational damping, ie derivative of rotational speed
+--- @field AfterburnerAccelerationTime? number Afterburner acceleration time, or 0 if handle is invalid Afterburner acceleration time
+--- @field AfterburnerVelocityMax? vector Afterburner max velocity, or null vector if handle is invalid Afterburner max velocity
+--- @field AfterburnerRearVelocityMax? number Rear velocity, or 0 if handle is invalid Afterburner maximum rear velocity
+--- @field Score? number The score or -1 on invalid ship class The score of this ship class
+--- @field InTechDatabase? boolean True or false Gets or sets whether this ship class is visible in the tech room
+--- @field AllowedInCampaign? boolean True or false Gets or sets whether this ship class is allowed in loadouts in campaign mode
+--- @field PowerOutput? number The ship class' current power output Gets or sets a ship class' power output
+--- @field ScanningTimeMultiplier? number Scanning time multiplier, or 0 if handle is invalid Time multiplier for scans performed by this ship class
+--- @field ScanningRangeMultiplier? number Scanning range multiplier, or 0 if handle is invalid Range multiplier for scans performed by this ship class
+--- @field CustomData? table The ship class's custom data table Gets the custom data table for this ship class
 --- @field hasCustomData fun(self: self): boolean Detects whether the ship class has any custom data
---- @field CustomStrings? table Gets the indexed custom string table for this ship. Each item in the table is a table with the following values: Name - the name of the custom string, Value - the value associated with the custom string, String - the custom string itself. The ship's custom data table
+--- @field CustomStrings? table The ship's custom data table Gets the indexed custom string table for this ship. Each item in the table is a table with the following values: Name - the name of the custom string, Value - the value associated with the custom string, String - the custom string itself.
 --- @field hasCustomStrings fun(self: self): boolean Detects whether the ship has any custom strings
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
 --- @field isInTechroom fun(self: self): boolean Gets whether or not the ship class is available in the techroom
@@ -1240,23 +1240,23 @@ shiporders = {}
 -- shiptype object: Ship type handle
 shiptype = {}
 --- @class shiptype
---- @field Name? string Ship type name Ship type name, or empty string if handle is invalid
+--- @field Name? string Ship type name, or empty string if handle is invalid Ship type name
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
 
 -- sim_mission object: Tech Room mission handle
 sim_mission = {}
 --- @class sim_mission
---- @field Name? string The name of the mission The name
---- @field Filename? string The filename of the mission The filename
---- @field Description? string The mission description The description
---- @field Author? string The mission author The author
---- @field isVisible? boolean If the mission should be visible by default true if visible, false if not visible
---- @field isCampaignMission? boolean If the mission is campaign or single true if campaign, false if single
+--- @field Name? string The name The name of the mission
+--- @field Filename? string The filename The filename of the mission
+--- @field Description? string The description The mission description
+--- @field Author? string The author The mission author
+--- @field isVisible? boolean true if visible, false if not visible If the mission should be visible by default
+--- @field isCampaignMission? boolean true if campaign, false if single If the mission is campaign or single
 
 -- sound object: sound instance handle
 sound = {}
 --- @class sound
---- @field Pitch? number Pitch of sound, from 100 to 100000 Pitch, or 0 if handle is invalid
+--- @field Pitch? number Pitch, or 0 if handle is invalid Pitch of sound, from 100 to 100000
 --- @field getRemainingTime fun(self: self): number The remaining time of this sound handle
 --- @field setVolume fun(self: self, param2: number, voice?: boolean): boolean Sets the volume of this sound instance. Set voice to true to use the voice channel multiplier, or false to use the effects channel multiplier
 --- @field setPanning fun(self: self, param2: number): boolean Sets the panning of this sound. Argument ranges from -1.0 for left to 1.0 for right
@@ -1278,7 +1278,7 @@ sound3D = {}
 -- soundentry object: sounds.tbl table entry handle
 soundentry = {}
 --- @class soundentry
---- @field DefaultVolume? number The default volume of this game sound. If the sound entry has a volume range then the maximum volume will be returned by this. Volume in the range from 1 to 0 or -1 on error
+--- @field DefaultVolume? number Volume in the range from 1 to 0 or -1 on error The default volume of this game sound. If the sound entry has a volume range then the maximum volume will be returned by this.
 --- @field getFilename fun(self: self): string Returns the filename of this sound. If the sound has multiple entries then the filename of the first entry will be returned.
 --- @field getDuration fun(self: self): number Returns the length of the sound in seconds. If the sound has multiple entries or a pitch range then the maximum duration of the sound will be returned.
 --- @field get3DValues fun(self: self, Position: vector, radius?: number): number, number Computes the volume and the panning of the sound when it would be played from the specified position.<br>If range is given then the volume will diminish when the listener is within that distance to the source.<br>The position of the listener is always the the current viewing position.
@@ -1288,8 +1288,8 @@ soundentry = {}
 -- soundfile object: Handle to a sound file
 soundfile = {}
 --- @class soundfile
---- @field Duration? number The duration of the sound file, in seconds The duration or -1 on error
---- @field Filename? string The filename of the file The file name or empty string on error
+--- @field Duration? number The duration or -1 on error The duration of the sound file, in seconds
+--- @field Filename? string The file name or empty string on error The filename of the file
 --- @field play fun(self: self, volume?: number, panning?: number, voice?: boolean): sound Plays the sound. If voice is true then uses the Voice channel volume, else uses the Effects channel volume.
 --- @field unload fun(self: self): boolean Unloads the audio data loaded for this sound file. This invalidates the handle on which this is called!
 --- @field isValid fun(self: self): boolean Checks if the soundfile handle is valid
@@ -1297,16 +1297,16 @@ soundfile = {}
 -- species object: Species handle
 species = {}
 --- @class species
---- @field Name? string Species name Species name, or empty string if handle is invalid
+--- @field Name? string Species name, or empty string if handle is invalid Species name
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
 
 -- streaminganim object: Streaming Animation handle
 streaminganim = {}
 --- @class streaminganim
---- @field Loop? boolean Make the streaming animation loop. Is the animation looping, or nil if anim invalid
---- @field Pause? boolean Pause the streaming animation. Is the animation paused, or nil if anim invalid
---- @field Reverse? boolean Make the streaming animation play in reverse. Is the animation playing in reverse, or nil if anim invalid
---- @field Grayscale? boolean Whether the streaming animation is drawn as grayscale multiplied by the current color (the HUD method). Boolean flag
+--- @field Loop? boolean Is the animation looping, or nil if anim invalid Make the streaming animation loop.
+--- @field Pause? boolean Is the animation paused, or nil if anim invalid Pause the streaming animation.
+--- @field Reverse? boolean Is the animation playing in reverse, or nil if anim invalid Make the streaming animation play in reverse.
+--- @field Grayscale? boolean Boolean flag Whether the streaming animation is drawn as grayscale multiplied by the current color (the HUD method).
 --- @field getFilename fun(self: self): string Get the filename of the animation
 --- @field getFrameCount fun(self: self): number Get the number of frames in the animation.
 --- @field getFrameIndex fun(self: self): number Get the current frame index of the animation
@@ -1322,10 +1322,10 @@ streaminganim = {}
 -- submodel object: Handle to a submodel
 submodel = {}
 --- @class submodel
---- @field Name? string Gets the submodel's name The name or an empty string if invalid
---- @field Index? number Gets the submodel's index The number (adjusted for lua) or -1 if invalid
---- @field Offset? vector Gets the submodel's offset from its parent submodel The offset vector or a empty vector if invalid
---- @field Radius? number Gets the submodel's radius The radius of the submodel or -1 if invalid
+--- @field Name? string The name or an empty string if invalid Gets the submodel's name
+--- @field Index? number The number (adjusted for lua) or -1 if invalid Gets the submodel's index
+--- @field Offset? vector The offset vector or a empty vector if invalid Gets the submodel's offset from its parent submodel
+--- @field Radius? number The radius of the submodel or -1 if invalid Gets the submodel's radius
 --- @field NumVertices fun(self: self): number Returns the number of vertices in the submodel's mesh
 --- @field GetVertex fun(self: self, index?: number): vector Gets the specified vertex, or a random one if no index specified
 --- @field getModel fun(self: self): model Gets the model that this submodel belongs to
@@ -1333,16 +1333,16 @@ submodel = {}
 --- @field getNextSibling fun(self: self): submodel Gets the next sibling submodel of this submodel
 --- @field getParent fun(self: self): submodel Gets the parent submodel of this submodel
 --- @field isValid fun(self: self): boolean True if valid, false or nil if not
---- @field NoCollide? boolean Whether the submodel and its children ignore collisions The flag, or error-false if invalid
---- @field NoCollideThisOnly? boolean Whether the submodel itself ignores collisions The flag, or error-false if invalid
+--- @field NoCollide? boolean The flag, or error-false if invalid Whether the submodel and its children ignore collisions
+--- @field NoCollideThisOnly? boolean The flag, or error-false if invalid Whether the submodel itself ignores collisions
 
 -- submodel_instance object: Submodel instance handle
 submodel_instance = {}
 --- @class submodel_instance
 --- @field getModelInstance fun(self: self): model_instance Gets the model instance of this submodel
 --- @field getSubmodel fun(self: self): submodel Gets the submodel of this instance
---- @field Orientation? orientation Gets or sets the submodel instance orientation Orientation, or identity orientation if handle is not valid
---- @field TranslationOffset? vector Gets or sets the translated submodel instance offset.  This is relative to the existing submodel offset to its parent; a non-translated submodel will have a TranslationOffset of zero. Offset, or zero vector if handle is not valid
+--- @field Orientation? orientation Orientation, or identity orientation if handle is not valid Gets or sets the submodel instance orientation
+--- @field TranslationOffset? vector Offset, or zero vector if handle is not valid Gets or sets the translated submodel instance offset.  This is relative to the existing submodel offset to its parent; a non-translated submodel will have a TranslationOffset of zero.
 --- @field findWorldPoint fun(self: self, param2: vector): vector Calculates the world coordinates of a point in a submodel's frame of reference
 --- @field findWorldDir fun(self: self, param2: vector): vector Calculates the world direction of a vector in a submodel's frame of reference
 --- @field findObjectPointAndOrientation fun(self: self, param2: vector, param3: orientation): vector, orientation Calculates the coordinates and orientation, in an object's frame of reference, of a point and orientation in a submodel's frame of reference
@@ -1363,36 +1363,36 @@ submodels = {}
 -- subsystem object: Ship subsystem handle
 subsystem = {}
 --- @class subsystem
---- @field ArmorClass? string Current Armor class Armor class name, or empty string if none is set
---- @field AWACSIntensity? number Subsystem AWACS intensity AWACS intensity, or 0 if handle is invalid
---- @field AWACSRadius? number Subsystem AWACS radius AWACS radius, or 0 if handle is invalid
---- @field Orientation? orientation Orientation of subobject or turret base Subsystem orientation, or identity orientation if handle is invalid
---- @field GunOrientation? orientation Orientation of turret gun Gun orientation, or null orientation if handle is invalid
---- @field TranslationOffset? vector Gets or sets the translated submodel instance offset of the subsystem or turret base.  This is relative to the existing submodel offset to its parent; a non-translated submodel will have a TranslationOffset of zero. Offset, or zero vector if handle is not valid
---- @field HitpointsLeft? number Subsystem hitpoints left Hitpoints left, or 0 if handle is invalid. Setting a value of 0 will disable it - set a value of -1 or lower to actually blow it up.
---- @field HitpointsMax? number Subsystem hitpoints max Max hitpoints, or 0 if handle is invalid
---- @field Position? vector Subsystem position with regards to main ship (Local Vector) Subsystem position, or null vector if subsystem handle is invalid
---- @field WorldPosition? vector Subsystem position in world space. This handles subsystem attached to a rotating submodel properly. Subsystem position, or null vector if subsystem handle is invalid
---- @field GunPosition? vector Subsystem gun position with regards to main ship (Local vector) Gun position, or null vector if subsystem handle is invalid
---- @field Name? string Subsystem name Subsystem name, or an empty string if handle is invalid
---- @field NameOnHUD? string Subsystem name as it would be displayed on the HUD Subsystem name on HUD, or an empty string if handle is invalid
---- @field NumFirePoints? number Number of firepoints Number of fire points, or 0 if handle is invalid
---- @field FireRateMultiplier? number Factor by which turret's rate of fire is multiplied.  This can also be set with the turret-set-rate-of-fire SEXP.  As with the SEXP, assigning a negative value will cause this to be reset to default. Firing rate multiplier, or 0 if handle is invalid
+--- @field ArmorClass? string Armor class name, or empty string if none is set Current Armor class
+--- @field AWACSIntensity? number AWACS intensity, or 0 if handle is invalid Subsystem AWACS intensity
+--- @field AWACSRadius? number AWACS radius, or 0 if handle is invalid Subsystem AWACS radius
+--- @field Orientation? orientation Subsystem orientation, or identity orientation if handle is invalid Orientation of subobject or turret base
+--- @field GunOrientation? orientation Gun orientation, or null orientation if handle is invalid Orientation of turret gun
+--- @field TranslationOffset? vector Offset, or zero vector if handle is not valid Gets or sets the translated submodel instance offset of the subsystem or turret base.  This is relative to the existing submodel offset to its parent; a non-translated submodel will have a TranslationOffset of zero.
+--- @field HitpointsLeft? number Hitpoints left, or 0 if handle is invalid. Setting a value of 0 will disable it - set a value of -1 or lower to actually blow it up. Subsystem hitpoints left
+--- @field HitpointsMax? number Max hitpoints, or 0 if handle is invalid Subsystem hitpoints max
+--- @field Position? vector Subsystem position, or null vector if subsystem handle is invalid Subsystem position with regards to main ship (Local Vector)
+--- @field WorldPosition? vector Subsystem position, or null vector if subsystem handle is invalid Subsystem position in world space. This handles subsystem attached to a rotating submodel properly.
+--- @field GunPosition? vector Gun position, or null vector if subsystem handle is invalid Subsystem gun position with regards to main ship (Local vector)
+--- @field Name? string Subsystem name, or an empty string if handle is invalid Subsystem name
+--- @field NameOnHUD? string Subsystem name on HUD, or an empty string if handle is invalid Subsystem name as it would be displayed on the HUD
+--- @field NumFirePoints? number Number of fire points, or 0 if handle is invalid Number of firepoints
+--- @field FireRateMultiplier? number Firing rate multiplier, or 0 if handle is invalid Factor by which turret's rate of fire is multiplied.  This can also be set with the turret-set-rate-of-fire SEXP.  As with the SEXP, assigning a negative value will cause this to be reset to default.
 --- @field getModelName fun(self: self): string Returns the original name of the subsystem in the model file
---- @field PrimaryBanks? weaponbanktype Array of primary weapon banks Primary banks, or invalid weaponbanktype handle if subsystem handle is invalid
---- @field SecondaryBanks? weaponbanktype Array of secondary weapon banks Secondary banks, or invalid weaponbanktype handle if subsystem handle is invalid
---- @field Target? object Object targeted by this subsystem. If used to set a new target or clear it, AI targeting will be switched off. Targeted object, or invalid object handle if subsystem handle is invalid
---- @field TurretResets? boolean Specifies whether this turrets resets after a certain time of inactivity true if turret resets, false otherwise
---- @field TurretResetDelay? number The time (in milliseconds) after that the turret resets itself Reset delay
---- @field TurnRate? number The turn rate Turnrate or -1 on error
---- @field Targetable? boolean Targetability of this subsystem true if targetable, false otherwise or on error
---- @field Radius? number The radius of this subsystem The radius or 0 on error
---- @field TurretLocked? boolean Whether the turret is locked. Setting to true locks the turret; setting to false frees it. True if turret is locked, false otherwise
---- @field TurretLockedWithTimestamp? boolean Behaves like TurretLocked, but when the turret is freed, there will be a short random delay (between 50 and 4000 milliseconds) before firing, to be consistent with SEXP behavior. True if turret is locked, false otherwise
---- @field BeamFree? boolean Whether the turret is beam-freed. Setting to true beam-frees the turret; setting to false beam-locks it. True if turret is beam-freed, false otherwise
---- @field BeamFreeWithTimestamp? boolean Behaves like BeamFree, but when the turret is freed, there will be a short random delay (between 50 and 4000 milliseconds) before firing, to be consistent with SEXP behavior. True if turret is beam-freed, false otherwise
---- @field NextFireTimestamp? number The next time the turret may attempt to fire Mission time (seconds) or -1 on error
---- @field ModelPath? modelpath The model path points belonging to this subsystem The model path of this subsystem
+--- @field PrimaryBanks? weaponbanktype Primary banks, or invalid weaponbanktype handle if subsystem handle is invalid Array of primary weapon banks
+--- @field SecondaryBanks? weaponbanktype Secondary banks, or invalid weaponbanktype handle if subsystem handle is invalid Array of secondary weapon banks
+--- @field Target? object Targeted object, or invalid object handle if subsystem handle is invalid Object targeted by this subsystem. If used to set a new target or clear it, AI targeting will be switched off.
+--- @field TurretResets? boolean true if turret resets, false otherwise Specifies whether this turrets resets after a certain time of inactivity
+--- @field TurretResetDelay? number Reset delay The time (in milliseconds) after that the turret resets itself
+--- @field TurnRate? number Turnrate or -1 on error The turn rate
+--- @field Targetable? boolean true if targetable, false otherwise or on error Targetability of this subsystem
+--- @field Radius? number The radius or 0 on error The radius of this subsystem
+--- @field TurretLocked? boolean True if turret is locked, false otherwise Whether the turret is locked. Setting to true locks the turret; setting to false frees it.
+--- @field TurretLockedWithTimestamp? boolean True if turret is locked, false otherwise Behaves like TurretLocked, but when the turret is freed, there will be a short random delay (between 50 and 4000 milliseconds) before firing, to be consistent with SEXP behavior.
+--- @field BeamFree? boolean True if turret is beam-freed, false otherwise Whether the turret is beam-freed. Setting to true beam-frees the turret; setting to false beam-locks it.
+--- @field BeamFreeWithTimestamp? boolean True if turret is beam-freed, false otherwise Behaves like BeamFree, but when the turret is freed, there will be a short random delay (between 50 and 4000 milliseconds) before firing, to be consistent with SEXP behavior.
+--- @field NextFireTimestamp? number Mission time (seconds) or -1 on error The next time the turret may attempt to fire
+--- @field ModelPath? modelpath The model path of this subsystem The model path points belonging to this subsystem
 --- @field targetingOverride fun(self: self, param2: boolean): boolean If set to true, AI targeting for this turret is switched off. If set to false, the AI will take over again.
 --- @field getModelFlag fun(self: self, flag_name: string): boolean Checks whether one or more <a href="https://wiki.hard-light.net/index.php/Subsystem#.24Flags:">model subsystem flags</a> are set - this function can accept an arbitrary number of flag arguments.  The flag names can be any string that the alter-ship-flag SEXP operator supports.
 --- @field hasFired fun(self: self): boolean Determine if a subsystem has fired
@@ -1413,7 +1413,7 @@ subsystem = {}
 -- team object: Team handle
 team = {}
 --- @class team
---- @field Name? string Team name Team name, or empty string if handle is invalid
+--- @field Name? string Team name, or empty string if handle is invalid Team name
 --- @field getColor fun(self: self, ReturnType: boolean): number, number, number, number, color Gets the IFF color of the specified Team. False to return raw rgb, true to return color object. Defaults to false.
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
 --- @field getBreedName fun(self: self): string Gets the FreeSpace type name
@@ -1465,8 +1465,8 @@ tracing_category = {}
 -- ValueDescription object: An option value that contains a displayable string and the serialized value.
 ValueDescription = {}
 --- @class ValueDescription
---- @field Display? string Value display string The display string or nil on error
---- @field Serialized? string Serialized string value of the contained value The serialized string or nil on error
+--- @field Display? string The display string or nil on error Value display string
+--- @field Serialized? string The serialized string or nil on error Serialized string value of the contained value
 
 -- vector object: Vector object
 vector = {}
@@ -1501,23 +1501,23 @@ waypoint = {}
 -- waypointlist object: waypointlist handle
 waypointlist = {}
 --- @class waypointlist
---- @field Name? string Name of WaypointList Waypointlist name, or empty string if handle is invalid
+--- @field Name? string Waypointlist name, or empty string if handle is invalid Name of WaypointList
 --- @field isValid fun(self: self): boolean Return if this waypointlist handle is valid
 
 -- weapon object: Weapon handle
 weapon = {}
 --- @class weapon
---- @field Class? weaponclass Weapon's class Weapon class, or invalid weaponclass handle if weapon handle is invalid
---- @field DestroyedByWeapon? boolean Whether weapon was destroyed by another weapon True if weapon was destroyed by another weapon, false if weapon was destroyed by another object or if weapon handle is invalid
---- @field LifeLeft? number Weapon life left (in seconds) Life left (seconds) or 0 if weapon handle is invalid
---- @field FlakDetonationRange? number Range at which flak will detonate (meters) Detonation range (meters) or 0 if weapon handle is invalid
---- @field Target? object Target of weapon. Value may also be a deriviative of the 'object' class, such as 'ship'. Weapon target, or invalid object handle if weapon handle is invalid
---- @field ParentTurret? subsystem Turret which fired this weapon. Turret subsystem handle, or an invalid handle if the weapon not fired from a turret
---- @field HomingObject? object Object that weapon will home in on. Value may also be a deriviative of the 'object' class, such as 'ship' Object that weapon is homing in on, or an invalid object handle if weapon is not homing or the weapon handle is invalid
---- @field HomingPosition? vector Position that weapon will home in on (World vector), setting this without a homing object in place will not have any effect! Homing point, or null vector if weapon handle is invalid
---- @field HomingSubsystem? subsystem Subsystem that weapon will home in on. Homing subsystem, or invalid subsystem handle if weapon is not homing or weapon handle is invalid
---- @field Team? team Weapon's team Weapon team, or invalid team handle if weapon handle is invalid
---- @field OverrideHoming? boolean Whether homing is overridden for this weapon. When homing is overridden then the engine will not update the homing position of the weapon which means that it can be handled by scripting. true if homing is overridden
+--- @field Class? weaponclass Weapon class, or invalid weaponclass handle if weapon handle is invalid Weapon's class
+--- @field DestroyedByWeapon? boolean True if weapon was destroyed by another weapon, false if weapon was destroyed by another object or if weapon handle is invalid Whether weapon was destroyed by another weapon
+--- @field LifeLeft? number Life left (seconds) or 0 if weapon handle is invalid Weapon life left (in seconds)
+--- @field FlakDetonationRange? number Detonation range (meters) or 0 if weapon handle is invalid Range at which flak will detonate (meters)
+--- @field Target? object Weapon target, or invalid object handle if weapon handle is invalid Target of weapon. Value may also be a deriviative of the 'object' class, such as 'ship'.
+--- @field ParentTurret? subsystem Turret subsystem handle, or an invalid handle if the weapon not fired from a turret Turret which fired this weapon.
+--- @field HomingObject? object Object that weapon is homing in on, or an invalid object handle if weapon is not homing or the weapon handle is invalid Object that weapon will home in on. Value may also be a deriviative of the 'object' class, such as 'ship'
+--- @field HomingPosition? vector Homing point, or null vector if weapon handle is invalid Position that weapon will home in on (World vector), setting this without a homing object in place will not have any effect!
+--- @field HomingSubsystem? subsystem Homing subsystem, or invalid subsystem handle if weapon is not homing or weapon handle is invalid Subsystem that weapon will home in on.
+--- @field Team? team Weapon team, or invalid team handle if weapon handle is invalid Weapon's team
+--- @field OverrideHoming? boolean true if homing is overridden Whether homing is overridden for this weapon. When homing is overridden then the engine will not update the homing position of the weapon which means that it can be handled by scripting.
 --- @field isArmed fun(self: self, HitTarget?: boolean): boolean Checks if the weapon is armed.
 --- @field getCollisionInformation fun(self: self): collision_info Returns the collision information for this weapon
 --- @field triggerSubmodelAnimation fun(self: self, type: string, triggeredBy: string, forwards?: boolean, resetOnStart?: boolean, completeInstant?: boolean, pause?: boolean): boolean Triggers an animation. Type is the string name of the animation type, triggeredBy is a closer specification which animation should trigger. See *-anim.tbm specifications. Forwards controls the direction of the animation. ResetOnStart will cause the animation to play from its initial state, as opposed to its current state. CompleteInstant will immediately complete the animation. Pause will instead stop the animation at the current state.
@@ -1527,76 +1527,76 @@ weapon = {}
 -- weaponbank object: Ship/subystem weapons bank handle
 weaponbank = {}
 --- @class weaponbank
---- @field WeaponClass? weaponclass Class of weapon mounted in the bank. As of FSO 21.0, also changes the maximum ammo to its proper value, which is what the support ship will rearm the ship to. Weapon class, or an invalid weaponclass handle if bank handle is invalid
---- @field AmmoLeft? number Ammo left for the current bank Ammo left, or 0 if handle is invalid
---- @field AmmoMax? number Maximum ammo for the current bank<br><b>Note:</b> Setting this value actually sets the <i>capacity</i> of the weapon bank. To set the actual maximum ammunition use <tt>AmmoMax = <amount> * class.CargoSize</tt> Ammo capacity, or 0 if handle is invalid
---- @field Armed? boolean Weapon armed status. Does not take linking into account. True if armed, false if unarmed or handle is invalid
---- @field Capacity? number The actual capacity of a weapon bank as specified in the table The capacity or -1 if handle is invalid
---- @field FOFCooldown? number The FOF cooldown value. A value of 0 means the default weapon FOF is used. A value of 1 means that the max FOF will be used The cooldown value or -1 if invalid
---- @field BurstCounter? number The burst counter for this bank. Starts at 1, counting every shot up to and including the weapon class's burst shots value before resetting to 1. The counter or -1 if handle is invalid
---- @field BurstSeed? number A random seed associated to the current burst. Changes only when a new burst starts. The seed or -1 if handle is invalid
+--- @field WeaponClass? weaponclass Weapon class, or an invalid weaponclass handle if bank handle is invalid Class of weapon mounted in the bank. As of FSO 21.0, also changes the maximum ammo to its proper value, which is what the support ship will rearm the ship to.
+--- @field AmmoLeft? number Ammo left, or 0 if handle is invalid Ammo left for the current bank
+--- @field AmmoMax? number Ammo capacity, or 0 if handle is invalid Maximum ammo for the current bank<br><b>Note:</b> Setting this value actually sets the <i>capacity</i> of the weapon bank. To set the actual maximum ammunition use <tt>AmmoMax = <amount> * class.CargoSize</tt>
+--- @field Armed? boolean True if armed, false if unarmed or handle is invalid Weapon armed status. Does not take linking into account.
+--- @field Capacity? number The capacity or -1 if handle is invalid The actual capacity of a weapon bank as specified in the table
+--- @field FOFCooldown? number The cooldown value or -1 if invalid The FOF cooldown value. A value of 0 means the default weapon FOF is used. A value of 1 means that the max FOF will be used
+--- @field BurstCounter? number The counter or -1 if handle is invalid The burst counter for this bank. Starts at 1, counting every shot up to and including the weapon class's burst shots value before resetting to 1.
+--- @field BurstSeed? number The seed or -1 if handle is invalid A random seed associated to the current burst. Changes only when a new burst starts.
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
 
 -- weaponbanktype object: Ship/subsystem weapons bank type handle
 weaponbanktype = {}
 --- @class weaponbanktype
---- @field Linked? boolean Whether bank is in linked or unlinked fire mode (Primary-only) Link status, or false if handle is invalid
---- @field DualFire? boolean Whether bank is in dual fire mode (Secondary-only) Dual fire status, or false if handle is invalid
+--- @field Linked? boolean Link status, or false if handle is invalid Whether bank is in linked or unlinked fire mode (Primary-only)
+--- @field DualFire? boolean Dual fire status, or false if handle is invalid Whether bank is in dual fire mode (Secondary-only)
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
 
 -- weaponclass object: Weapon class handle
 weaponclass = {}
 --- @class weaponclass
---- @field Name? string Weapon class name. This is the possibly untranslated name. Use tostring(class) to get the string which should be shown to the user. Weapon class name, or empty string if handle is invalid
---- @field AltName? string The alternate weapon class name. Alternate weapon class name, or empty string if handle is invalid
---- @field TurretName? string The name displayed for a turret if the turret's first weapon is this weapon class. Turret name (aka alternate subsystem name), or empty string if handle is invalid
---- @field Title? string Weapon class title Weapon class title, or empty string if handle is invalid
---- @field Description? string Weapon class description string Description string, or empty string if handle is invalid
---- @field TechTitle? string Weapon class tech title Tech title, or empty string if handle is invalid
---- @field TechAnimationFilename? string Weapon class animation filename Filename, or empty string if handle is invalid
---- @field SelectIconFilename? string Weapon class select icon filename Filename, or empty string if handle is invalid
---- @field SelectAnimFilename? string Weapon class select animation filename Filename, or empty string if handle is invalid
---- @field TechDescription? string Weapon class tech description string Description string, or empty string if handle is invalid
---- @field Model? model Model Weapon class model, or invalid model handle if weaponclass handle is invalid
---- @field ArmorFactor? number Amount of weapon damage applied to ship hull (0-1.0) Armor factor, or empty string if handle is invalid
---- @field Damage? number Amount of damage that weapon deals Damage amount, or 0 if handle is invalid
---- @field DamageType? number No description available. Damage Type index, or 0 if handle is invalid. Index is index into armor.tbl
---- @field FireWait? number Weapon fire wait (cooldown time) in seconds Fire wait time, or 0 if handle is invalid
---- @field FreeFlightTime? number The time the weapon will fly before turing onto its target Free flight time or empty string if invalid
---- @field SwarmInfo? boolean No description available. Returns whether the weapon has the swarm flag, or nil if the handle is invalid.
+--- @field Name? string Weapon class name, or empty string if handle is invalid Weapon class name. This is the possibly untranslated name. Use tostring(class) to get the string which should be shown to the user.
+--- @field AltName? string Alternate weapon class name, or empty string if handle is invalid The alternate weapon class name.
+--- @field TurretName? string Turret name (aka alternate subsystem name), or empty string if handle is invalid The name displayed for a turret if the turret's first weapon is this weapon class.
+--- @field Title? string Weapon class title, or empty string if handle is invalid Weapon class title
+--- @field Description? string Description string, or empty string if handle is invalid Weapon class description string
+--- @field TechTitle? string Tech title, or empty string if handle is invalid Weapon class tech title
+--- @field TechAnimationFilename? string Filename, or empty string if handle is invalid Weapon class animation filename
+--- @field SelectIconFilename? string Filename, or empty string if handle is invalid Weapon class select icon filename
+--- @field SelectAnimFilename? string Filename, or empty string if handle is invalid Weapon class select animation filename
+--- @field TechDescription? string Description string, or empty string if handle is invalid Weapon class tech description string
+--- @field Model? model Weapon class model, or invalid model handle if weaponclass handle is invalid Model
+--- @field ArmorFactor? number Armor factor, or empty string if handle is invalid Amount of weapon damage applied to ship hull (0-1.0)
+--- @field Damage? number Damage amount, or 0 if handle is invalid Amount of damage that weapon deals
+--- @field DamageType? number Damage Type index, or 0 if handle is invalid. Index is index into armor.tbl No description available.
+--- @field FireWait? number Fire wait time, or 0 if handle is invalid Weapon fire wait (cooldown time) in seconds
+--- @field FreeFlightTime? number Free flight time or empty string if invalid The time the weapon will fly before turing onto its target
+--- @field SwarmInfo? boolean Returns whether the weapon has the swarm flag, or nil if the handle is invalid. DEPRECATED 24.2.0: Deprecated in favor of weaponclass:getSwarmInfo(), since virtvars can only return a single value. --  No description available.
 --- @field getSwarmInfo fun(self: self): boolean, number, number
---- @field CorkscrewInfo? boolean, number, number, number, boolean, number No description available. Returns whether the weapon has the corkscrew flag, or nil if the handle is invalid.
+--- @field CorkscrewInfo? boolean, number, number, number, boolean, number Returns whether the weapon has the corkscrew flag, or nil if the handle is invalid. DEPRECATED 24.2.0: Deprecated in favor of weaponclass:getCorkscrewInfo(), since virtvars can only return a single value. --  No description available.
 --- @field getCorkscrewInfo fun(self: self): boolean, number, number, number, boolean, number
---- @field LifeMax? number Life of weapon in seconds Life of weapon, or 0 if handle is invalid
---- @field Range? number Range of weapon in meters Weapon Range, or 0 if handle is invalid
---- @field Mass? number Weapon mass Weapon mass, or 0 if handle is invalid
---- @field ShieldFactor? number Amount of weapon damage applied to ship shields (0-1.0) Shield damage factor, or 0 if handle is invalid
---- @field SubsystemFactor? number Amount of weapon damage applied to ship subsystems (0-1.0) Subsystem damage factor, or 0 if handle is invalid
---- @field TargetLOD? number LOD used for weapon model in the targeting computer LOD number, or 0 if handle is invalid
---- @field Speed? number Weapon max speed, aka $Velocity in weapons.tbl Weapon speed, or 0 if handle is invalid
---- @field EnergyConsumed? number No description available. Energy Consumed, or 0 if handle is invalid
---- @field ShockwaveDamage? number Damage the shockwave is set to if damage is overridden Shockwave Damage if explicitly specified via table, or -1 if unspecified. Returns nil if handle is invalid
---- @field InnerRadius? number Radius at which the full explosion damage is done. Marks the line where damage attenuation begins. Same as $Inner Radius in weapons.tbl Inner Radius, or 0 if handle is invalid
---- @field OuterRadius? number Maximum Radius at which any damage is done with this weapon. Same as $Outer Radius in weapons.tbl Outer Radius, or 0 if handle is invalid
---- @field Bomb? boolean Is weapon class flagged as bomb New flag
---- @field CustomData? table Gets the custom data table for this weapon class The weapon class's custom data table
+--- @field LifeMax? number Life of weapon, or 0 if handle is invalid Life of weapon in seconds
+--- @field Range? number Weapon Range, or 0 if handle is invalid Range of weapon in meters
+--- @field Mass? number Weapon mass, or 0 if handle is invalid Weapon mass
+--- @field ShieldFactor? number Shield damage factor, or 0 if handle is invalid Amount of weapon damage applied to ship shields (0-1.0)
+--- @field SubsystemFactor? number Subsystem damage factor, or 0 if handle is invalid Amount of weapon damage applied to ship subsystems (0-1.0)
+--- @field TargetLOD? number LOD number, or 0 if handle is invalid LOD used for weapon model in the targeting computer
+--- @field Speed? number Weapon speed, or 0 if handle is invalid Weapon max speed, aka $Velocity in weapons.tbl
+--- @field EnergyConsumed? number Energy Consumed, or 0 if handle is invalid No description available.
+--- @field ShockwaveDamage? number Shockwave Damage if explicitly specified via table, or -1 if unspecified. Returns nil if handle is invalid Damage the shockwave is set to if damage is overridden
+--- @field InnerRadius? number Inner Radius, or 0 if handle is invalid Radius at which the full explosion damage is done. Marks the line where damage attenuation begins. Same as $Inner Radius in weapons.tbl
+--- @field OuterRadius? number Outer Radius, or 0 if handle is invalid Maximum Radius at which any damage is done with this weapon. Same as $Outer Radius in weapons.tbl
+--- @field Bomb? boolean New flag Is weapon class flagged as bomb
+--- @field CustomData? table The weapon class's custom data table Gets the custom data table for this weapon class
 --- @field hasCustomData fun(self: self): boolean Detects whether the weapon class has any custom data
---- @field CustomStrings? table Gets the indexed custom string table for this weapon. Each item in the table is a table with the following values: Name - the name of the custom string, Value - the value associated with the custom string, String - the custom string itself. The weapon's custom data table
+--- @field CustomStrings? table The weapon's custom data table Gets the indexed custom string table for this weapon. Each item in the table is a table with the following values: Name - the name of the custom string, Value - the value associated with the custom string, String - the custom string itself.
 --- @field hasCustomStrings fun(self: self): boolean Detects whether the weapon has any custom strings
---- @field InTechDatabase? boolean Gets or sets whether this weapon class is visible in the tech room True or false
---- @field AllowedInCampaign? boolean Gets or sets whether this weapon class is allowed in loadouts in campaign mode True or false
---- @field CargoSize? number The cargo size of this weapon class The new cargo size or -1 on error
---- @field heatEffectiveness? number The heat effectiveness of this weapon class if it's a countermeasure. Otherwise returns -1 The heat effectiveness or -1 on error
---- @field aspectEffectiveness? number The aspect effectiveness of this weapon class if it's a countermeasure. Otherwise returns -1 The aspect effectiveness or -1 on error
---- @field effectiveRange? number The effective range of this weapon class if it's a countermeasure. Otherwise returns -1 The effective range or -1 on error
---- @field pulseInterval? number The pulse interval of this weapon class if it's a countermeasure. Otherwise returns -1 The pulse interval or -1 on error
---- @field BurstShots? number The number of shots in a burst from this weapon. Burst shots, 1 for non-burst weapons, or 0 if handle is invalid
---- @field BurstDelay? number The time in seconds between shots in a burst. Burst delay, or 0 if handle is invalid
---- @field FieldOfFire? number The angular spread for shots of this weapon. Fof in degrees, or 0 if handle is invalid
---- @field MaxFieldOfFire? number The maximum field of fire this weapon can have if it increases while firing. Max Fof in degrees, or 0 if handle is invalid
---- @field BeamLife? number The time in seconds that a beam lasts while firing. Beam life, or 0 if handle is invalid or the weapon is not a beam
---- @field BeamWarmup? number The time in seconds that a beam takes to warm up. Warmup time, or 0 if handle is invalid or the weapon is not a beam
---- @field BeamWarmdown? number The time in seconds that a beam takes to warm down. Warmdown time, or 0 if handle is invalid or the weapon is not a beam
+--- @field InTechDatabase? boolean True or false Gets or sets whether this weapon class is visible in the tech room
+--- @field AllowedInCampaign? boolean True or false Gets or sets whether this weapon class is allowed in loadouts in campaign mode
+--- @field CargoSize? number The new cargo size or -1 on error The cargo size of this weapon class
+--- @field heatEffectiveness? number The heat effectiveness or -1 on error The heat effectiveness of this weapon class if it's a countermeasure. Otherwise returns -1
+--- @field aspectEffectiveness? number The aspect effectiveness or -1 on error The aspect effectiveness of this weapon class if it's a countermeasure. Otherwise returns -1
+--- @field effectiveRange? number The effective range or -1 on error The effective range of this weapon class if it's a countermeasure. Otherwise returns -1
+--- @field pulseInterval? number The pulse interval or -1 on error The pulse interval of this weapon class if it's a countermeasure. Otherwise returns -1
+--- @field BurstShots? number Burst shots, 1 for non-burst weapons, or 0 if handle is invalid The number of shots in a burst from this weapon.
+--- @field BurstDelay? number Burst delay, or 0 if handle is invalid The time in seconds between shots in a burst.
+--- @field FieldOfFire? number Fof in degrees, or 0 if handle is invalid The angular spread for shots of this weapon.
+--- @field MaxFieldOfFire? number Max Fof in degrees, or 0 if handle is invalid The maximum field of fire this weapon can have if it increases while firing.
+--- @field BeamLife? number Beam life, or 0 if handle is invalid or the weapon is not a beam The time in seconds that a beam lasts while firing.
+--- @field BeamWarmup? number Warmup time, or 0 if handle is invalid or the weapon is not a beam The time in seconds that a beam takes to warm up.
+--- @field BeamWarmdown? number Warmdown time, or 0 if handle is invalid or the weapon is not a beam The time in seconds that a beam takes to warm down.
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
 --- @field renderTechModel fun(self: self, X1: number, Y1: number, X2: number, Y2: number, RotationPercent?: number, PitchPercent?: number, BankPercent?: number, Zoom?: number, Lighting?: boolean): boolean Draws weapon tech model. True for regular lighting, false for flat lighting.
 --- @field renderTechModel2 fun(self: self, X1: number, Y1: number, X2: number, Y2: number, Orientation?: orientation, Zoom?: number): boolean Draws weapon tech model
@@ -1617,44 +1617,44 @@ weaponclass = {}
 -- wing object: Wing handle
 wing = {}
 --- @class wing
---- @field Name? string Name of Wing Wing name, or empty string if handle is invalid
+--- @field Name? string Wing name, or empty string if handle is invalid Name of Wing
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
 --- @field getBreedName fun(self: self): string Gets the FreeSpace type name
 --- @field setFlag fun(self: self, set_it: boolean, flag_name: string): nil Sets or clears one or more flags - this function can accept an arbitrary number of flag arguments.  The flag names are currently limited to the arrival and departure parseable flags.
 --- @field getFlag fun(self: self, flag_name: string): boolean Checks whether one or more flags are set - this function can accept an arbitrary number of flag arguments.  The flag names are currently limited to the arrival and departure parseable flags.
 --- @field makeWingArrive fun(self: self): boolean Causes this wing to arrive as if its arrival cue had become true.  Note that reinforcements are only marked as available, not actually created.
---- @field Formation? wingformation Gets or sets the formation of the wing. Wing formation, or nil if wing is invalid
---- @field FormationScale? number Gets or sets the scale (i.e. distance multiplier) of the current wing formation. scale of wing formation, nil if wing or formation invalid
---- @field CurrentCount? number Gets the number of ships in the wing that are currently present Number of ships, or nil if invalid handle
---- @field WaveCount? number Gets the maximum number of ships in a wave for this wing Number of ships, or nil if invalid handle
---- @field NumWaves? number Gets the number of waves for this wing Number of waves, or nil if invalid handle
---- @field CurrentWave? number Gets the current wave number for this wing Wave number, 0 if the wing has not yet arrived, or nil if invalid handle
---- @field TotalArrived? number Gets the number of ships that have arrived over the course of the mission, regardless of wave Number of ships, or nil if invalid handle
---- @field TotalDestroyed? number Gets the number of ships that have been destroyed over the course of the mission, regardless of wave Number of ships, or nil if invalid handle
---- @field TotalDeparted? number Gets the number of ships that have departed over the course of the mission, regardless of wave Number of ships, or nil if invalid handle
---- @field TotalVanished? number Gets the number of ships that have vanished over the course of the mission, regardless of wave Number of ships, or 0 if invalid handle
---- @field ArrivalLocation? string The wing's arrival location Arrival location, or nil if handle is invalid
---- @field DepartureLocation? string The wing's departure location Departure location, or nil if handle is invalid
---- @field ArrivalAnchor? string The wing's arrival anchor Arrival anchor, or nil if handle is invalid
---- @field DepartureAnchor? string The wing's departure anchor Departure anchor, or nil if handle is invalid
---- @field ArrivalPathMask? number The wing's arrival path mask Arrival path mask, or nil if handle is invalid
---- @field DeparturePathMask? number The wing's departure path mask Departure path mask, or nil if handle is invalid
---- @field ArrivalDelay? number The wing's arrival delay Arrival delay, or nil if handle is invalid
---- @field DepartureDelay? number The wing's departure delay Departure delay, or nil if handle is invalid
---- @field ArrivalDistance? number The wing's arrival distance Arrival distance, or nil if handle is invalid
---- @field WaveDelayMinimum? number The wing's minimum wave delay Min wave delay, or nil if handle is invalid
---- @field WaveDelayMaximum? number The wing's maximum wave delay Max wave delay, or nil if handle is invalid
+--- @field Formation? wingformation Wing formation, or nil if wing is invalid Gets or sets the formation of the wing.
+--- @field FormationScale? number scale of wing formation, nil if wing or formation invalid Gets or sets the scale (i.e. distance multiplier) of the current wing formation.
+--- @field CurrentCount? number Number of ships, or nil if invalid handle Gets the number of ships in the wing that are currently present
+--- @field WaveCount? number Number of ships, or nil if invalid handle Gets the maximum number of ships in a wave for this wing
+--- @field NumWaves? number Number of waves, or nil if invalid handle Gets the number of waves for this wing
+--- @field CurrentWave? number Wave number, 0 if the wing has not yet arrived, or nil if invalid handle Gets the current wave number for this wing
+--- @field TotalArrived? number Number of ships, or nil if invalid handle Gets the number of ships that have arrived over the course of the mission, regardless of wave
+--- @field TotalDestroyed? number Number of ships, or nil if invalid handle Gets the number of ships that have been destroyed over the course of the mission, regardless of wave
+--- @field TotalDeparted? number Number of ships, or nil if invalid handle Gets the number of ships that have departed over the course of the mission, regardless of wave
+--- @field TotalVanished? number Number of ships, or 0 if invalid handle Gets the number of ships that have vanished over the course of the mission, regardless of wave
+--- @field ArrivalLocation? string Arrival location, or nil if handle is invalid The wing's arrival location
+--- @field DepartureLocation? string Departure location, or nil if handle is invalid The wing's departure location
+--- @field ArrivalAnchor? string Arrival anchor, or nil if handle is invalid The wing's arrival anchor
+--- @field DepartureAnchor? string Departure anchor, or nil if handle is invalid The wing's departure anchor
+--- @field ArrivalPathMask? number Arrival path mask, or nil if handle is invalid The wing's arrival path mask
+--- @field DeparturePathMask? number Departure path mask, or nil if handle is invalid The wing's departure path mask
+--- @field ArrivalDelay? number Arrival delay, or nil if handle is invalid The wing's arrival delay
+--- @field DepartureDelay? number Departure delay, or nil if handle is invalid The wing's departure delay
+--- @field ArrivalDistance? number Arrival distance, or nil if handle is invalid The wing's arrival distance
+--- @field WaveDelayMinimum? number Min wave delay, or nil if handle is invalid The wing's minimum wave delay
+--- @field WaveDelayMaximum? number Max wave delay, or nil if handle is invalid The wing's maximum wave delay
 
 -- wingformation object: Wing formation handle
 wingformation = {}
 --- @class wingformation
---- @field Name? string Wing formation name Wing formation name, or empty string if handle is invalid
+--- @field Name? string Wing formation name, or empty string if handle is invalid Wing formation name
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
 
 --- Async: Support library for asynchronous operations
 --- @class Async
---- @field OnFrameExecutor? executor An executor that executes operations at the end of rendering a frame. The executor handle
---- @field OnSimulationExecutor? executor An executor that executes operations after all object simulation has been done but before rendering starts. This is the place to do physics manipulations. The executor handle
+--- @field OnFrameExecutor? executor The executor handle An executor that executes operations at the end of rendering a frame.
+--- @field OnSimulationExecutor? executor The executor handle An executor that executes operations after all object simulation has been done but before rendering starts. This is the place to do physics manipulations.
 --- @field promise fun(body: fun(resolve: fun(resolveVal: any), reject: fun(errorVal: any))): promise Creates a promise that resolves when the resolve function of the callback is called or errors if the reject function is called. The function will be called on its own.
 --- @field resolved fun(...: any): promise Creates a resolved promise with the values passed to this function.
 --- @field errored fun(...: any): promise Creates an errored promise with the values passed to this function.
@@ -1674,9 +1674,9 @@ async = {}
 
 --- Audio: Sound/Music Library
 --- @class Audio
---- @field MasterVoiceVolume? number The current master voice volume. This property is read-only. The volume in the range from 0 to 1
---- @field MasterEventMusicVolume? number The current master event music volume. This property is read-only. The volume in the range from 0 to 1
---- @field MasterEffectsVolume? number The current master effects volume. This property is read-only. The volume in the range from 0 to 1
+--- @field MasterVoiceVolume? number The volume in the range from 0 to 1 The current master voice volume. This property is read-only.
+--- @field MasterEventMusicVolume? number The volume in the range from 0 to 1 The current master event music volume. This property is read-only.
+--- @field MasterEffectsVolume? number The volume in the range from 0 to 1 The current master effects volume. This property is read-only.
 --- @field getSoundentry fun(param1: string | number): soundentry Return a sound entry matching the specified index or name. If you are using a number then the first valid index is 1
 --- @field loadSoundfile fun(filename: string): soundfile Loads the specified sound file
 --- @field playSound fun(param1: soundentry): sound Plays the specified sound entry handle
@@ -1716,7 +1716,7 @@ ad = {}
 --- @field getSecondsOverall fun(): number The overall time in seconds since the engine has started
 --- @field getMissionFrametime fun(): number Gets how long this frame is calculated to take. Use it to for animations, physics, etc to make incremental changes. Increased or decreased based on current time compression
 --- @field getRealFrametime fun(): number Gets how long this frame is calculated to take in real time. Not affected by time compression.
---- @field getFrametime fun(adjustForTimeCompression?: boolean): number Gets how long this frame is calculated to take. Use it to for animations, physics, etc to make incremental changes.
+--- @field getFrametime fun(adjustForTimeCompression?: boolean): number DEPRECATED 20.2.0: The parameter of this function is inverted from the naming (passing true returns non-adjusted time). Please use either getMissionFrametime() or getRealFrametime(). --  Gets how long this frame is calculated to take. Use it to for animations, physics, etc to make incremental changes.
 --- @field getCurrentGameState fun(depth?: number): gamestate Gets current FreeSpace state; if a depth is specified, the state at that depth is returned. (IE at the in-game options game, a depth of 1 would give you the game state, while the function defaults to 0, which would be the options screen.
 --- @field getCurrentMPStatus fun(): string Gets this computers current MP status
 --- @field getCurrentPlayer fun(): player Gets a handle of the currently used player.<br><b>Note:</b> If there is no current player then the first player will be returned, check the game state to make sure you have a valid player handle.
@@ -1741,7 +1741,7 @@ ad = {}
 --- @field getModRootName fun(): string Returns the name of the current mod's root folder.
 --- @field getModTitle fun(): string Returns the title of the current mod as defined in game_settings.tbl. Will return an empty string if not defined.
 --- @field getModVersion fun(): string, number, number, number Returns the version of the current mod as defined in game_settings.tbl. If the version is semantic versioning then the returned numbers will reflect that. String always returns the complete string. If semantic version is not used then the returned numbers will all be -1
---- @field MultiplayerMode? boolean Determines if the game is currently in single- or multiplayer mode true if in multiplayer mode, false if in singleplayer. If neither is the case (e.g. on game init) nil will be returned
+--- @field MultiplayerMode? boolean true if in multiplayer mode, false if in singleplayer. If neither is the case (e.g. on game init) nil will be returned Determines if the game is currently in single- or multiplayer mode
 --- @field serializeValue fun(value: any): bytearray Serializes the specified value so that it can be stored and restored consistently later. The actual format of the returned data is implementation specific but will be deserializable by at least this engine version and following versions.
 --- @field deserializeValue fun(serialized: bytearray): any Deserializes a previously serialized Lua value.
 --- @field setDiscordPresence fun(DisplayText: string, Gameplay?: boolean): nil Sets the Discord presence to a specific string. If Gameplay is true then the string is ignored and presence will be set as if the player is in-mission. The latter will fail if the player is not in a mission.
@@ -1759,7 +1759,7 @@ ba = {}
 --- @field XOR fun(param1: number, param2: number): number Values for which bitwise boolean XOR operation is performed
 --- @field toggleBit fun(baseNumber: number, bit: number): number Toggles the value of the set bit in the given number for 32 bit integer
 --- @field checkBit fun(baseNumber: number, bit: number): boolean Checks the value of the set bit in the given number for 32 bit integer
---- @field addBit fun(baseNumber: number, bit: number): number Performs inclusive or (OR) operation on the set bit of the value
+--- @field addBit fun(baseNumber: number, bit: number): number DEPRECATED 21.4.0: BitOps.addBit has been replaced by BitOps.setBit --  Performs inclusive or (OR) operation on the set bit of the value
 --- @field setBit fun(baseNumber: number, bit: number): number Turns on the specified bit of baseNumber (sets it to 1)
 --- @field unsetBit fun(baseNumber: number, bit: number): number Turns off the specified bit of baseNumber (sets it to 0)
 bit = {}
@@ -1775,7 +1775,7 @@ ca = {}
 --- @class CFile
 --- @field deleteFile fun(Filename: string, Path: string): boolean Deletes given file. Path must be specified. Use a slash for the root directory.
 --- @field fileExists fun(Filename: string, Path?: string, CheckVPs?: boolean): boolean Checks if a file exists. Use a blank string for path for any directory, or a slash for the root directory.
---- @field listFiles fun(directory: string, filter: string): string Lists all the files in the specified directory matching a filter. The filter must have the format "*<rest>" (the wildcard has to appear at the start), "<subfolder>/*<rest>" (to check subfolder(s)) or "*/*<rest>" (for a glob search).
+--- @field listFiles fun(directory: string, filter: string): table Lists all the files in the specified directory matching a filter. The filter must have the format "*<rest>" (the wildcard has to appear at the start), "<subfolder>/*<rest>" (to check subfolder(s)) or "*/*<rest>" (for a glob search).
 --- @field openFile fun(Filename: string, Mode?: string, Path?: string): file Opens a file. 'Mode' uses standard C fopen arguments. In read mode use a blank string for path for any directory, or a slash for the root directory. When using write mode a valid path must be specified. Be EXTREMELY CAREFUL when using this function, as you may PERMANENTLY delete any file by accident
 --- @field openTempFile fun(): file Opens a temp file that is automatically deleted when closed
 --- @field renameFile fun(CurrentFilename: string, NewFilename: string, Path: string): boolean Renames given file. Path must be specified. Use a slash for the root directory.
@@ -1789,30 +1789,30 @@ cf = {}
 --- @field isMouseButtonDown fun(buttonCheck1: enumeration, buttonCheck2?: enumeration, buttonCheck3?: enumeration): boolean Returns whether the specified mouse buttons are up or down
 --- @field mouseButtonDownCount fun(buttonCheck: enumeration, reset_count?: boolean): number Returns the pressed count of the specified button.  The count is then reset, unless reset_count (which defaults to true) is false.
 --- @field flushMouse fun(): nil Clears mouse input data, including button press count, button flags, wheel scroll value, and position delta.
---- @field XAxisInverted? boolean Gets or sets whether the heading axis action's primary binding is inverted True/false
---- @field YAxisInverted? boolean Gets or sets whether the pitch axis action's primary binding is inverted True/false
---- @field ZAxisInverted? boolean Gets or sets whether the bank axis action's primary binding is inverted True/false
---- @field HeadingAxisPrimaryInverted? boolean Gets or sets whether the heading axis action's primary binding is inverted True/false
---- @field HeadingAxisSecondaryInverted? boolean Gets or sets whether the heading axis action's secondary binding is inverted True/false
---- @field PitchAxisPrimaryInverted? boolean Gets or sets whether the pitch axis action's primary binding is inverted True/false
---- @field PitchAxisSecondaryInverted? boolean Gets or sets whether the pitch axis action's secondary binding is inverted True/false
---- @field BankAxisPrimaryInverted? boolean Gets or sets whether the bank axis action's primary binding is inverted True/false
---- @field BankAxisSecondaryInverted? boolean Gets or sets whether the bank axis action's secondary binding is inverted True/false
---- @field AbsoluteThrottleAxisPrimaryInverted? boolean Gets or sets whether the absolute throttle axis action's primary binding is inverted True/false
---- @field AbsoluteThrottleAxisSecondaryInverted? boolean Gets or sets whether the absolute throttle axis action's secondary binding is inverted True/false
---- @field RelativeThrottleAxisPrimaryInverted? boolean Gets or sets whether the relative throttle axis action's primary binding is inverted True/false
---- @field RelativeThrottleAxisSecondaryInverted? boolean Gets or sets whether the relative throttle axis action's secondary binding is inverted True/false
+--- @field XAxisInverted? boolean True/false DEPRECATED 21.6.0: Deprecated in favor of HeadingAxisInverted --  Gets or sets whether the heading axis action's primary binding is inverted
+--- @field YAxisInverted? boolean True/false DEPRECATED 21.6.0: Deprecated in favor of PitchAxisInverted --  Gets or sets whether the pitch axis action's primary binding is inverted
+--- @field ZAxisInverted? boolean True/false DEPRECATED 21.6.0: Deprecated in favor of BankAxisInverted --  Gets or sets whether the bank axis action's primary binding is inverted
+--- @field HeadingAxisPrimaryInverted? boolean True/false Gets or sets whether the heading axis action's primary binding is inverted
+--- @field HeadingAxisSecondaryInverted? boolean True/false Gets or sets whether the heading axis action's secondary binding is inverted
+--- @field PitchAxisPrimaryInverted? boolean True/false Gets or sets whether the pitch axis action's primary binding is inverted
+--- @field PitchAxisSecondaryInverted? boolean True/false Gets or sets whether the pitch axis action's secondary binding is inverted
+--- @field BankAxisPrimaryInverted? boolean True/false Gets or sets whether the bank axis action's primary binding is inverted
+--- @field BankAxisSecondaryInverted? boolean True/false Gets or sets whether the bank axis action's secondary binding is inverted
+--- @field AbsoluteThrottleAxisPrimaryInverted? boolean True/false Gets or sets whether the absolute throttle axis action's primary binding is inverted
+--- @field AbsoluteThrottleAxisSecondaryInverted? boolean True/false Gets or sets whether the absolute throttle axis action's secondary binding is inverted
+--- @field RelativeThrottleAxisPrimaryInverted? boolean True/false Gets or sets whether the relative throttle axis action's primary binding is inverted
+--- @field RelativeThrottleAxisSecondaryInverted? boolean True/false Gets or sets whether the relative throttle axis action's secondary binding is inverted
 --- @field AxisInverted fun(cid: number, axis: number, inverted: boolean): boolean Gets or sets the given Joystick or Mouse axis inversion state.  Mouse cid = -1, Joystick cid = [0, 3]
---- @field FlightCursorMode? enumeration Flight Mode; uses LE_FLIGHTMODE_* enumerations. enumeration flight mode
---- @field FlightCursorExtent? number How far from the center the cursor can go. Flight cursor extent in radians
---- @field FlightCursorDeadzone? number How far from the center the cursor needs to go before registering. Flight cursor deadzone in radians
+--- @field FlightCursorMode? enumeration enumeration flight mode Flight Mode; uses LE_FLIGHTMODE_* enumerations.
+--- @field FlightCursorExtent? number Flight cursor extent in radians How far from the center the cursor can go.
+--- @field FlightCursorDeadzone? number Flight cursor deadzone in radians How far from the center the cursor needs to go before registering.
 --- @field FlightCursorPitch? number Flight cursor pitch value Flight cursor pitch value
 --- @field FlightCursorHeading? number Flight cursor heading value Flight cursor heading value
 --- @field resetFlightCursor fun(): nil Resets flight cursor position to the center of the screen.
 --- @field setCursorImage fun(filename: string): boolean Sets mouse cursor image, and allows you to lock/unlock the image. (A locked cursor may only be changed with the unlock parameter)
 --- @field setCursorHidden fun(hide: boolean, grab?: boolean): nil Hides the cursor when <i>hide</i> is true, otherwise shows it. <i>grab</i> determines if the mouse will be restricted to the window. Set this to true when hiding the cursor while in game. By default grab will be true when we are in the game play state, false otherwise.
 --- @field forceMousePosition fun(x: number, y: number): boolean function to force mouse position
---- @field MouseControlStatus? boolean Gets and sets the retail mouse control status if the retail mouse is on or off
+--- @field MouseControlStatus? boolean if the retail mouse is on or off Gets and sets the retail mouse control status
 --- @field getMouseSensitivity fun(): number Gets mouse sensitivity setting
 --- @field getJoySensitivity fun(): number Gets joystick sensitivity setting
 --- @field getJoyDeadzone fun(): number Gets joystick deadzone setting
@@ -1842,7 +1842,7 @@ engine = {}
 --- @field setPostEffect fun(name: string, value?: number, red?: number, green?: number, blue?: number): boolean Sets the intensity of the specified post-processing effect. Optionally sets RGB values for effects that use them (valid values are 0.0 to 1.0)
 --- @field resetPostEffects fun(): boolean Resets all post-processing effects to their default values
 --- @field CurrentOpacityType? enumeration Current alpha blending type; uses ALPHABLEND_* enumerations
---- @field CurrentRenderTarget? texture Current rendering target Current rendering target, or invalid texture handle if screen is render target
+--- @field CurrentRenderTarget? texture Current rendering target, or invalid texture handle if screen is render target Current rendering target
 --- @field CurrentResizeMode? enumeration Current resize mode; uses GR_RESIZE_* enumerations.  This resize mode will be used by the gr.* drawing methods.
 --- @field clear fun(): nil Calls gr_clear(), which fills the entire screen with the currently active color.  Useful if you want to have a fresh start for drawing things.  (Call this between setClip and resetClip if you only want to clear part of the screen.)
 --- @field clearScreen fun(param1?: number | color, green?: number, blue?: number, alpha?: number): nil Clears the screen to black, or the color specified.
@@ -1889,7 +1889,7 @@ engine = {}
 --- @field loadTexture fun(Filename: string, LoadIfAnimation?: boolean, NoDropFrames?: boolean): texture Gets a handle to a texture. If second argument is set to true, animations will also be loaded.If third argument is set to true, every other animation frame will not be loaded if system has less than 48 MB memory.<br><strong>IMPORTANT:</strong> Textures will not be unload themselves unless you explicitly tell them to do so.When you are done with a texture, call the unload() function to free up memory.
 --- @field drawImage fun(fileNameOrTexture: string | texture, X1?: number, Y1?: number, X2?: number, Y2?: number, UVX1?: number, UVY1?: number, UVX2?: number, UVY2?: number, alpha?: number, aaImage?: boolean, angle?: number): boolean Draws an image file or texture. Any image extension passed will be ignored.The UV variables specify the UV value for each corner of the image. In UV coordinates, (0,0) is the top left of the image; (1,1) is the lower right. If aaImage is true, image needs to be monochrome and will be drawn tinted with the currently active color.The angle variable can be used to rotate the image in radians.
 --- @field drawImageCentered fun(fileNameOrTexture: string | texture, X?: number, Y?: number, W?: number, H?: number, UVX1?: number, UVY1?: number, UVX2?: number, UVY2?: number, alpha?: number, aaImage?: boolean, angle?: number): boolean Draws an image file or texture centered on the X,Y position. Any image extension passed will be ignored.The UV variables specify the UV value for each corner of the image. In UV coordinates, (0,0) is the top left of the image; (1,1) is the lower right. If aaImage is true, image needs to be monochrome and will be drawn tinted with the currently active color.The angle variable can be used to rotate the image in radians.
---- @field drawMonochromeImage fun(fileNameOrTexture: string | texture, X1: number, Y1: number, X2?: number, Y2?: number, alpha?: number): boolean Draws a monochrome image from a texture or file using the current color
+--- @field drawMonochromeImage fun(fileNameOrTexture: string | texture, X1: number, Y1: number, X2?: number, Y2?: number, alpha?: number): boolean DEPRECATED 21.0.0: gr.drawImage now has support for drawing monochrome images with full UV scaling support --  Draws a monochrome image from a texture or file using the current color
 --- @field getImageWidth fun(Filename: string): number Gets image width
 --- @field getImageHeight fun(name: string): number Gets image height
 --- @field flashScreen fun(param1: number | color, Green: number, Blue: number): nil Flashes the screen
@@ -1910,14 +1910,75 @@ gr = {}
 --- HookVariables: Hook variables repository
 --- @class HookVariables
 --- @field Globals table<string, string> 
+--- @field Action? string
+--- @field Ship? ship
+--- @field Self? object
+--- @field Object? object
+--- @field Asteroid? object
+--- @field Hitpos? vector
+--- @field Debris? object
+--- @field Weapon? weapon
+--- @field Beam? weapon
+--- @field User? ship
+--- @field Target? object
+--- @field OldStage? number
+--- @field NewStage? number
+--- @field Camera? camera
+--- @field Campaign? string
+--- @field Cheat? string
+--- @field CountermeasuresLeft? number
+--- @field Countermeasure? weapon
+--- @field Killer? object
+--- @field Source? object
+--- @field IsDeathPopup? boolean
+--- @field Submit? fun(result: number | string | nil): nil
+--- @field Freeze? boolean
+--- @field Choices? table
+--- @field Title? string
+--- @field Text? string
+--- @field IsTimeStopped? boolean
+--- @field IsStateRunning? boolean
+--- @field IsInputPopup? boolean
+--- @field AllowedInput? string
+--- @field DeathMessage? string
+--- @field Player? object
+--- @field SourceType? number
+--- @field Key? string
+--- @field RawKey? string
+--- @field TimeHeld? number
+--- @field WasOverridden? boolean
+--- @field Progress? number
+--- @field Name? string
+--- @field Message? string
+--- @field SenderString? string
+--- @field Builtin? boolean
+--- @field Sender? ship
+--- @field MessageHandle? message
+--- @field MouseWheelY? number
+--- @field MouseWheelX? number
+--- @field Filename? string
+--- @field ViaTechRoom? boolean
+--- @field Pain_Type? number
+--- @field Parent? object
+--- @field ShipSubmodel? submodel
+--- @field ShipB? ship
+--- @field ShipBSubmodel? submodel
+--- @field JumpNode? string
+--- @field Method? ship
+--- @field OldState? gamestate
+--- @field NewState? gamestate
+--- @field Subsystem? subsystem
+--- @field Wing? wing
+--- @field Waypointlist? waypointlist
+--- @field WeaponB? weapon
 hv = {}
 
 --- HUD: HUD library
 --- @class HUD
---- @field HUDDrawn? boolean Whether the HUD is toggled on, i.e. is the HUD enabled.  See also hu.isOnHudDrawCalled() Whether the HUD can be drawn
---- @field HUDHighContrast? boolean Gets or sets whether the HUD is currently high-contrast Whether the HUD is high-contrast
---- @field HUDDisabledExceptMessages? boolean Specifies if only the messages gauges of the hud are drawn true if only the message gauges are drawn, false otherwise
---- @field HUDDefaultGaugeCount? number Specifies the number of HUD gauges defined by FSO.  Note that for historical reasons, HUD scripting functions use a zero-based index (0 to n-1) for gauges. The number of FSO HUD gauges
+--- @field HUDDrawn? boolean Whether the HUD can be drawn Whether the HUD is toggled on, i.e. is the HUD enabled.  See also hu.isOnHudDrawCalled()
+--- @field HUDHighContrast? boolean Whether the HUD is high-contrast Gets or sets whether the HUD is currently high-contrast
+--- @field HUDDisabledExceptMessages? boolean true if only the message gauges are drawn, false otherwise Specifies if only the messages gauges of the hud are drawn
+--- @field HUDDefaultGaugeCount? number The number of FSO HUD gauges Specifies the number of HUD gauges defined by FSO.  Note that for historical reasons, HUD scripting functions use a zero-based index (0 to n-1) for gauges.
 --- @field getHUDConfigShowStatus fun(gaugeNameOrIndex: number | string): boolean Gets the HUD configuration show status for the specified default HUD gauge.
 --- @field setHUDGaugeColor fun(gaugeNameOrIndex: number | string, param2?: number | color, green?: number, blue?: number, alpha?: number): boolean Modifies color used to draw the gauge in the pilot config
 --- @field getHUDGaugeColor fun(gaugeNameOrIndex: number | string, ReturnType?: boolean): number, number, number, number, color Color specified in the config to draw the gauge. False to return raw rgba, true to return color object. Defaults to false.
@@ -1929,8 +1990,8 @@ hv = {}
 --- @field getDirectiveLines fun(): number Returns the number of lines displayed by the currently active directives
 --- @field isCommMenuOpen fun(): boolean Returns whether the HUD comm menu is currently being displayed
 --- @field isOnHudDrawCalled fun(): boolean Returns whether the On Hud Draw hook is called this frame.  This is useful for scripting logic that is relevant to HUD drawing but is not part of the On Hud Draw hook
---- @field toggleCockpits? boolean Gets or sets whether the the cockpit model will be rendered. true if being rendered, false otherwise
---- @field toggleCockpitSway? boolean Gets or sets whether the the cockpit model will sway due to ship acceleration. true if using 'sway', false otherwise
+--- @field toggleCockpits? boolean true if being rendered, false otherwise Gets or sets whether the the cockpit model will be rendered.
+--- @field toggleCockpitSway? boolean true if using 'sway', false otherwise Gets or sets whether the the cockpit model will sway due to ship acceleration.
 hu = {}
 
 --- Mission: Mission library
@@ -1974,22 +2035,22 @@ hu = {}
 --- @field getMissionFilename fun(): string Gets mission filename
 --- @field startMission fun(mission: string | enumeration, Briefing?: boolean): boolean Starts the defined mission
 --- @field getMissionTime fun(): number Game time in seconds since the mission was started; is affected by time compression
---- @field MissionHUDTimerPadding? number Gets or sets padding currently applied to the HUD mission timer. the padding in seconds
+--- @field MissionHUDTimerPadding? number the padding in seconds Gets or sets padding currently applied to the HUD mission timer.
 --- @field loadMission fun(missionName: string): boolean Loads a mission
 --- @field unloadMission fun(forceUnload?: boolean): nil Stops the current mission and unloads it. If forceUnload is true then the mission unload logic will run regardless of if a mission is loaded or not. Use with caution.
 --- @field simulateFrame fun(): nil Simulates mission frame
 --- @field renderFrame fun(): nil Renders mission frame, but does not move anything
 --- @field applyShudder fun(time: number, intensity: number, perpetual?: boolean, everywhere?: boolean): boolean Applies a shudder effect to the camera. Time is in seconds. Intensity specifies the shudder effect strength; the Maxim has a value of 1440. If perpetual is true, the shudder does not decay. If everywhere is true, the shudder is applied regardless of view.
---- @field ShudderPerpetual? boolean Gets or sets whether the shudder is perpetual, i.e. with a constant intensity that does not decay. the shudder perpetual flag
---- @field ShudderEverywhere? boolean Gets or sets whether the shudder is applied everywhere regardless of camera view. the shudder everywhere flag
---- @field ShudderTimeLeft? number Gets or sets the number of seconds until the shudder stops.  This is independent of the decay time. the shudder time left variable
---- @field ShudderDecayTime? number Gets or sets the shudder decay time in seconds.  This can be zero in which case the shudder will not decay. the shudder decay time variable
---- @field ShudderIntensity? number Gets or sets the shudder intensity variable.  For comparison, the Maxim has a value of 1440. the shudder intensity variable
---- @field Gravity? vector Gravity acceleration vector in meters / second^2 gravity vector
---- @field CustomData? table Gets the custom data table for this mission The mission's custom data table
+--- @field ShudderPerpetual? boolean the shudder perpetual flag Gets or sets whether the shudder is perpetual, i.e. with a constant intensity that does not decay.
+--- @field ShudderEverywhere? boolean the shudder everywhere flag Gets or sets whether the shudder is applied everywhere regardless of camera view.
+--- @field ShudderTimeLeft? number the shudder time left variable Gets or sets the number of seconds until the shudder stops.  This is independent of the decay time.
+--- @field ShudderDecayTime? number the shudder decay time variable Gets or sets the shudder decay time in seconds.  This can be zero in which case the shudder will not decay.
+--- @field ShudderIntensity? number the shudder intensity variable Gets or sets the shudder intensity variable.  For comparison, the Maxim has a value of 1440.
+--- @field Gravity? vector gravity vector Gravity acceleration vector in meters / second^2
+--- @field CustomData? table The mission's custom data table Gets the custom data table for this mission
 --- @field hasCustomData fun(): boolean Detects whether the mission has any custom data
 --- @field addDefaultCustomData fun(key: string, value: string, description: string): boolean Adds a custom data pair with the given key if it's unique. Only works in FRED! The description will be displayed in the FRED custom data editor.
---- @field CustomStrings? table Gets the indexed custom data table for this mission. Each item in the table is a table with the following values: Name - the name of the custom string, Value - the value associated with the custom string, String - the custom string itself. The mission's custom data table
+--- @field CustomStrings? table The mission's custom data table Gets the indexed custom data table for this mission. Each item in the table is a table with the following values: Name - the name of the custom string, Value - the value associated with the custom string, String - the custom string itself.
 --- @field hasCustomStrings fun(): boolean Detects whether the mission has any custom strings
 --- @field isInMission fun(): boolean get whether or not a mission is currently being played
 --- @field isPrePlayerEntry fun(): boolean get whether the mission is currently in the pre-player-entry state
@@ -2001,22 +2062,22 @@ hu = {}
 --- @field hasNoBriefing fun(): boolean Get whether or not the mission is set to skip the briefing
 --- @field isNebula fun(): boolean Get whether or not the current mission being played is set in a nebula
 --- @field hasVolumetricNebula fun(): boolean Get whether or not the current mission being played contains a volumetric nebula
---- @field NebulaSensorRange? number Gets or sets the Neb2_awacs variable.  This is multiplied by a species-specific factor to get the "scan range".  Within the scan range, a ship is at least partially targetable (fuzzy blip); within half the scan range, a ship is fully targetable.  Beyond the scan range, a ship is not targetable. the Neb2_awacs variable
---- @field NebulaNearMult? number Gets or sets the multiplier of the near plane of the current nebula. The multiplier of the near plane.
---- @field NebulaFarMult? number Gets or sets the multiplier of the far plane of the current nebula. The multiplier of the far plane.
+--- @field NebulaSensorRange? number the Neb2_awacs variable Gets or sets the Neb2_awacs variable.  This is multiplied by a species-specific factor to get the "scan range".  Within the scan range, a ship is at least partially targetable (fuzzy blip); within half the scan range, a ship is fully targetable.  Beyond the scan range, a ship is not targetable.
+--- @field NebulaNearMult? number The multiplier of the near plane. Gets or sets the multiplier of the near plane of the current nebula.
+--- @field NebulaFarMult? number The multiplier of the far plane. Gets or sets the multiplier of the far plane of the current nebula.
 --- @field isSubspace fun(): boolean Get whether or not the current mission being played is set in subspace
 --- @field getMissionTitle fun(): string Get the title of the current mission
 --- @field getMissionModifiedDate fun(): string Get the modified date of the current mission
 --- @field BackgroundSuns table<string, background_element> Suns in the current background
 --- @field BackgroundBitmaps table<string, background_element> Bitmaps in the current background
---- @field addBackgroundBitmap fun(name: string, orientation?: orientation, scaleX?: number, scale_y?: number, div_x?: number, div_y?: number): background_element Adds a background bitmap to the mission with the specified parameters, but using the old incorrectly-calculated angle math.
+--- @field addBackgroundBitmap fun(name: string, orientation?: orientation, scaleX?: number, scale_y?: number, div_x?: number, div_y?: number): background_element DEPRECATED 22.2.0: addBackgroundBitmap uses the old incorrectly-calculated angle math; use addBackgroundBitmapNew instead --  Adds a background bitmap to the mission with the specified parameters, but using the old incorrectly-calculated angle math.
 --- @field addBackgroundBitmapNew fun(name: string, orientation?: orientation, scaleX?: number, scale_y?: number, div_x?: number, div_y?: number): background_element Adds a background bitmap to the mission with the specified parameters, treating the angles as correctly calculated.
---- @field addSunBitmap fun(name: string, orientation?: orientation, scaleX?: number, scale_y?: number): background_element Adds a sun bitmap to the mission with the specified parameters, but using the old incorrectly-calculated angle math.
+--- @field addSunBitmap fun(name: string, orientation?: orientation, scaleX?: number, scale_y?: number): background_element DEPRECATED 22.2.0: addSunBitmap uses the old incorrectly-calculated angle math; use addSunBitmapNew instead --  Adds a sun bitmap to the mission with the specified parameters, but using the old incorrectly-calculated angle math.
 --- @field addSunBitmapNew fun(name: string, orientation?: orientation, scaleX?: number, scale_y?: number): background_element Adds a sun bitmap to the mission with the specified parameters, treating the angles as correctly calculated.
 --- @field removeBackgroundElement fun(el: background_element): boolean Removes the background element specified by the handle. The handle must have been returned by either addBackgroundBitmap or addBackgroundSun. This handle will be invalidated by this function.
---- @field SkyboxOrientation? orientation Sets or returns the current skybox orientation the orientation
---- @field SkyboxAlpha? number Sets or returns the current skybox alpha the alpha
---- @field Skybox? model Sets or returns the current skybox model The skybox model
+--- @field SkyboxOrientation? orientation the orientation Sets or returns the current skybox orientation
+--- @field SkyboxAlpha? number the alpha Sets or returns the current skybox alpha
+--- @field Skybox? model The skybox model Sets or returns the current skybox model
 --- @field getSkyboxInstance fun(): model_instance Returns the current skybox model instance
 --- @field isRedAlertMission fun(): boolean Determines if the current mission is a red alert mission
 --- @field hasCommandBriefing fun(): boolean Determines if the current mission has a command briefing
@@ -2046,12 +2107,12 @@ multi = {}
 
 --- Options: Options library
 --- @class Options
---- @field Options? option The available options. A table of all the options.
+--- @field Options? option A table of all the options. The available options.
 --- @field persistChanges fun(): option Persist any changes made to the options system. Options can be incapable of applying changes immediately in which case they are returned here.
 --- @field discardChanges fun(): boolean Discard any changes made to the options system.
---- @field MultiLogin? string The multiplayer PXO login name The login name
---- @field MultiPassword? boolean The multiplayer PXO login password True if a password is set, false otherwise
---- @field MultiSquad? string The multiplayer PXO squad name The squad name
+--- @field MultiLogin? string The login name The multiplayer PXO login name
+--- @field MultiPassword? boolean True if a password is set, false otherwise The multiplayer PXO login password
+--- @field MultiSquad? string The squad name The multiplayer PXO squad name
 --- @field readIPAddressTable fun(): table Gets the current multiplayer IP Address list as a table
 --- @field writeIPAddressTable fun(param1: table): boolean Saves the table to the multiplayer IP Address list
 --- @field verifyIPAddress fun(param1: string): boolean Verifies if a string is a valid IP address
@@ -2081,7 +2142,7 @@ parse = {}
 --- @field SimulatedSpeechOverrides table<string, string> 
 --- @field DecalDefinitions table<string, decaldefinition> 
 --- @field isDecalSystemActive fun(): boolean Returns whether the decal system is able to work on the current machine
---- @field DecalOptionActive? boolean Gets or sets whether the decal option is active (note, decals will only work if the decal system is able to work on the current machine) true if active, false if inactive
+--- @field DecalOptionActive? boolean true if active, false if inactive Gets or sets whether the decal option is active (note, decals will only work if the decal system is able to work on the current machine)
 --- @field WingFormations table<string, wingformation> 
 tb = {}
 
@@ -2089,7 +2150,7 @@ tb = {}
 --- @class Testing
 --- @field openAudioStreamMem fun(snddata: string, stream_type: enumeration): audio_stream Opens an audio stream of the specified in-memory file contents and type.
 --- @field avdTest fun(): nil Test the AVD Physics code
---- @field createParticle fun(Position: vector, Velocity: vector, Lifetime: number, Radius: number, Type: enumeration, TracerLength?: number, Reverse?: boolean, Texture?: texture, AttachedObject?: object): particle Creates a particle. Use PARTICLE_* enumerations for type.Reverse reverse animation, if one is specifiedAttached object specifies object that Position will be (and always be) relative to.
+--- @field createParticle fun(Position: vector, Velocity: vector, Lifetime: number, Radius: number, Type: enumeration, TracerLength?: number, Reverse?: boolean, Texture?: texture, AttachedObject?: object): particle DEPRECATED 19.0.0: Not available in the testing library anymore. Use gr.createPersistentParticle instead. --  Creates a particle. Use PARTICLE_* enumerations for type.Reverse reverse animation, if one is specifiedAttached object specifies object that Position will be (and always be) relative to.
 --- @field getStack fun(): string Generates an ADE stackdump
 --- @field isCurrentPlayerMulti fun(): boolean Returns whether current player is a multiplayer pilot or not.
 --- @field isPXOEnabled fun(): boolean Returns whether PXO is currently enabled in the configuration.
@@ -2113,7 +2174,7 @@ utf8 = {}
 --- @field setOffset fun(x: number, y: number): boolean Sets the offset from the top left corner at which <b>all</b> rocket contexts will be rendered
 --- @field enableInput fun(context: any): boolean Enables input for the specified libRocket context
 --- @field disableInput fun(): nil Disables UI input
---- @field ColorTags? table<string, color> The available tagged colors A mapping from tag string to color value
+--- @field ColorTags? table<string, color> A mapping from tag string to color value The available tagged colors
 --- @field DefaultTextColorTag fun(UiScreen: number): string Gets the default color tag string for the specified state. 1 for Briefing, 2 for CBriefing, 3 for Debriefing, 4 for Fiction Viewer, 5 for Red Alert, 6 for Loop Briefing, 7 for Recommendation text. Defaults to 1. Index into ColorTags.
 --- @field playElementSound fun(element: any, event: string, state?: string): boolean Plays an element specific sound with an optional state for differentiating different UI states.
 --- @field maybePlayCutscene fun(MovieType: enumeration, RestartMusic: boolean, ScoreIndex: number): nil Plays a cutscene, if one exists, for the appropriate state transition.  If RestartMusic is true, then the music score at ScoreIndex will be started after the cutscene plays.
@@ -2124,9 +2185,9 @@ utf8 = {}
 
 --- PilotSelect: API for accessing values specific to the Pilot Select UI.
 --- @class PilotSelect
---- @field MAX_PILOTS? number Gets the maximum number of possible pilots. The maximum number of pilots
---- @field WarningCount? number The amount of warnings caused by the mod while loading. The maximum number of pilots
---- @field ErrorCount? number The amount of errors caused by the mod while loading. The maximum number of pilots
+--- @field MAX_PILOTS? number The maximum number of pilots Gets the maximum number of possible pilots.
+--- @field WarningCount? number The maximum number of pilots The amount of warnings caused by the mod while loading.
+--- @field ErrorCount? number The maximum number of pilots The amount of errors caused by the mod while loading.
 --- @field enumeratePilots fun(): string Lists all pilots available for the pilot selection<br>
 --- @field getLastPilot fun(): string Reads the last active pilot from the config file and returns some information about it. callsign is the name of the player and is_multi indicates whether the pilot was last active as a multiplayer pilot.
 --- @field checkPilotLanguage fun(callsign: string): boolean Checks if the pilot with the specified callsign has the right language.
@@ -2135,7 +2196,7 @@ utf8 = {}
 --- @field createPilot fun(callsign: string, is_multi: boolean, copy_from?: string): boolean Creates a new pilot in either single or multiplayer mode and optionally copies settings from an existing pilot.
 --- @field unloadPilot fun(): boolean Unloads a player file & associated campaign file. Can not be used outside of pilot select!
 --- @field isAutoselect fun(): boolean Determines if the pilot selection screen should automatically select the default user.
---- @field CmdlinePilot? string The pilot chosen from commandline, if any. The name if specified, nil otherwise
+--- @field CmdlinePilot? string The name if specified, nil otherwise The pilot chosen from commandline, if any.
 ui.PilotSelect = {}
 
 --- MainHall: API for accessing values specific to the Main Hall UI.
@@ -2254,13 +2315,13 @@ ui.ShipWepSelect = {}
 
 --- Credits: 
 --- @class Credits
---- @field Music? string The credits music filename The music filename
---- @field NumImages? number The total number of credits images The number of images
---- @field StartIndex? number The image index to begin with The index
---- @field DisplayTime? number The display time for each image The display time
---- @field FadeTime? number The crossfade time for each image The fade time
---- @field ScrollRate? number The scroll rate of the text The scroll rate
---- @field Complete? string The complete credits string The credits
+--- @field Music? string The music filename The credits music filename
+--- @field NumImages? number The number of images The total number of credits images
+--- @field StartIndex? number The index The image index to begin with
+--- @field DisplayTime? number The display time The display time for each image
+--- @field FadeTime? number The fade time The crossfade time for each image
+--- @field ScrollRate? number The scroll rate The scroll rate of the text
+--- @field Complete? string The credits The complete credits string
 ui.TechRoom.Credits = {}
 ui.TechRoom = {}
 
@@ -2326,7 +2387,7 @@ ui.HudConfig = {}
 
 --- PauseScreen: API for accessing data related to the Pause Screen UI.
 --- @class PauseScreen
---- @field isPaused? boolean Returns true if the game is paused, false otherwise true if paused, false if unpaused
+--- @field isPaused? boolean true if paused, false if unpaused Returns true if the game is paused, false otherwise
 --- @field initPause fun(): nil Makes sure everything is done correctly to pause the game.
 --- @field closePause fun(): nil Makes sure everything is done correctly to unpause the game.
 ui.PauseScreen = {}
@@ -2342,10 +2403,10 @@ ui.PauseScreen = {}
 --- @field getPlayers fun(): string Gets the entire player list as a table of strings
 --- @field getPlayerChannel fun(param1: string): string Searches for a player and returns if they were found and the channel they are on. Channel is an empty string if channel is private or player is not found.
 --- @field getPlayerStats fun(param1: string): scoring_stats Gets a handle of the player stats by player name or invalid handle if the name is invalid
---- @field StatusText? string The current status text the status text
---- @field MotdText? string The current message of the day the motd text
---- @field bannerFilename? string The current banner filename the banner filename
---- @field bannerURL? string The current banner URL the banner url
+--- @field StatusText? string the status text The current status text
+--- @field MotdText? string the motd text The current message of the day
+--- @field bannerFilename? string the banner filename The current banner filename
+--- @field bannerURL? string the banner url The current banner URL
 --- @field Channels table<string, pxo_channel> 
 --- @field joinPrivateChannel fun(): nil Joins the specified private channel
 --- @field getHelpText fun(): string Gets the help text lines as a table of strings
@@ -2353,8 +2414,8 @@ ui.MultiPXO = {}
 
 --- MultiGeneral: API for accessing general data related to all Multi UIs with the exception of the PXO Lobby.
 --- @class MultiGeneral
---- @field StatusText? string The current status text the status text
---- @field InfoText? string The current info text the info text
+--- @field StatusText? string the status text The current status text
+--- @field InfoText? string the info text The current info text
 --- @field getNetGame fun(): netgame The handle to the netgame. Note that the netgame will be invalid if a multiplayer game has not been joined or created.
 --- @field NetPlayers table<string, net_player> 
 --- @field getChat fun(): table Gets the entire chat as a table of tables each with the following values: Callsign - the name of the message sender, Message - the message text, Color - the color the text should be according to the player id
@@ -2418,8 +2479,8 @@ ui.MultiPreJoin = {}
 
 --- MultiPauseScreen: API for accessing data related to the Pause Screen UI.
 --- @class MultiPauseScreen
---- @field isPaused? boolean Returns true if the game is paused, false otherwise true if paused, false if unpaused
---- @field Pauser? string The callsign of who paused the game. Empty string if invalid the callsign
+--- @field isPaused? boolean true if paused, false if unpaused Returns true if the game is paused, false otherwise
+--- @field Pauser? string the callsign The callsign of who paused the game. Empty string if invalid
 --- @field requestUnpause fun(): nil Sends a request to unpause the game.
 --- @field initPause fun(): nil Makes sure everything is done correctly to pause the game.
 --- @field closePause fun(EndMission?: boolean): nil Makes sure everything is done correctly to unpause the game. If end mission is true then it tries to end the mission.
