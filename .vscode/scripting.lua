@@ -3,1118 +3,6 @@
 
 -- Lua Version: Lua 5.1.5
 ---@meta
--- Conditions:
--- State
--- Campaign
--- Mission
--- KeyPress
--- Version
--- Application
--- Multi type
--- VR device
-
--- FRED On Mission Load:
---   Invoked when a new mission is loaded.
---   This hook is NOT overridable
-
--- FRED On Mission Specs Save:
---   Invoked when the Mission Specs dialog OK Button has been hit and all data is sucessfully saved.
---   This hook is NOT overridable
-
--- On Action:
---   Invoked whenever a user action was invoked through control input.
---   This hook is NOT overridable
---   Hook Variables:
---
---- Action string The name of the action that was executed.
---
---   Hook-specific Conditions:
---
---      Action
---         Description: Specifies the action triggered by a keypress.
---
-
--- On Action Stopped:
---   Invoked whenever a user action is no longer invoked through control input.
---   This hook is NOT overridable
---   Hook Variables:
---
---- Action string The name of the action that was stopped.
---
---   Hook-specific Conditions:
---
---      Action
---         Description: Specifies the action triggered by a keypress.
---
-
--- On Afterburner Engage:
---   Invoked whenever a ship engages its afterburners
---   This hook is NOT overridable
---   Hook Variables:
---
---- Ship ship The ship engaging its afterburners
---
---   Hook-specific Conditions:
---
---      Ship class
---         Description: Specifies the class of the ship that was the source of the event.
---      Ship
---         Description: Specifies the name of the ship that was the source of the event.
---      Ship type
---         Description: Specifies the type of the ship that was the source of the event.
---
-
--- On Afterburner Stop:
---   Invoked whenever a ship stops using its afterburners
---   This hook is NOT overridable
---   Hook Variables:
---
---- Ship ship The ship which had been using its afterburners
---
---   Hook-specific Conditions:
---
---      Ship class
---         Description: Specifies the class of the ship that was the source of the event.
---      Ship
---         Description: Specifies the name of the ship that was the source of the event.
---      Ship type
---         Description: Specifies the type of the ship that was the source of the event.
---
-
--- On Asteroid Collision:
---   Invoked when an asteroid collides with another object.
---   This hook is overridable
---   Hook Variables:
---
---- Self object The "other" object that collided with the asteroid.
---- Object object The asteroid object with which the "other" object collided with. Provided for consistency with other collision hooks.
---- Asteroid object Same as "Object"
---- Hitpos vector The world position where the collision was detected
---- Debris object The debris object with which the asteroid collided (only set for debris collisions)
---- Ship ship The ship object with which the asteroid collided (only set for ship collisions)
---- Weapon weapon The weapon object with which the asteroid collided (only set for weapon collisions)
---- Beam weapon The beam object with which the asteroid collided (only set for beam collisions)
---
---   Hook-specific Conditions:
---
---      Ship class
---         Description: Specifies the class of the ship which was part of the collision. At least one ship must be part of the collision and match.
---      Ship
---         Description: Specifies the name of the ship which was part of the collision. At least one ship must be part of the collision and match.
---      Weapon class
---         Description: Specifies the name of the weapon class which was part of the collision. At least one weapon must be part of the collision and match.
---      Ship type
---         Description: Specifies the type of the ship which was part of the collision. At least one ship must be part of the collision and match.
---      Object type
---         Description: Specifies the type of the object which was part of the collision. At least one object must match.
---
-
--- On Asteroid Created:
---   Called when an asteroid has been created.
---   This hook is NOT overridable
---   Hook Variables:
---
---- Asteroid asteroid The asteroid that was created.
---
-
--- On Asteroid Death:
---   Called when an asteroid has been destroyed.  Supersedes On Death for asteroids.
---   This hook is NOT overridable
---   Hook Variables:
---
---- Asteroid asteroid The asteroid that was destroyed.
---- Hitpos vector The world coordinates of the killing blow.
---
-
--- On Beam Collision:
---   Invoked when a beam collides with another object.
---   This hook is overridable
---   Hook Variables:
---
---- Self object The "other" object that collided with the beam.
---- Object weapon The beam object with which the "other" object collided with. Provided for consistency with other collision hooks.
---- Beam weapon Same as "Object"
---- Hitpos vector The world position where the collision was detected
---- Debris object The debris object with which the beam collided (only set for debris collisions)
---- Ship ship The ship object with which the beam collided (only set for ship collisions)
---- Asteroid object The asteroid object with which the beam collided (only set for asteroid collisions)
---- Weapon weapon The weapon object with which the beam collided (only set for weapon collisions)
---
---   Hook-specific Conditions:
---
---      Ship class
---         Description: Specifies the class of the ship which was part of the collision. At least one ship must be part of the collision and match.
---      Ship
---         Description: Specifies the name of the ship which was part of the collision. At least one ship must be part of the collision and match.
---      Weapon class
---         Description: Specifies the name of the weapon class which was part of the collision. At least one weapon must be part of the collision and match.
---      Ship type
---         Description: Specifies the type of the ship which was part of the collision. At least one ship must be part of the collision and match.
---      Object type
---         Description: Specifies the type of the object which was part of the collision. At least one object must match.
---
-
--- On Beam Death:
---   Called when a beam has been removed from the mission (whether by finishing firing, destruction of turret, etc.).
---   This hook is NOT overridable
---   Hook Variables:
---
---- Beam beam The beam that was removed.
---
-
--- On Beam Fire:
---   Invoked when a beam starts firing (after warming up).
---   This hook is NOT overridable
---   Hook Variables:
---
---- User ship The ship that is firing the beam.
---- Beam beam The spawned beam object.
---- Target object The current target of the shot.
---
---   Hook-specific Conditions:
---
---      Ship class
---         Description: Specifies the class of the ship that fired the weapon.
---      Ship
---         Description: Specifies the name of the ship that fired the weapon.
---      Weapon class
---         Description: Specifies the class of the weapon that was fired.
---      Ship type
---         Description: Specifies the type of the ship that fired the weapon.
---
-
--- On Beam Warmdown:
---   Invoked when a beam starts "warming down" after firing.
---   This hook is NOT overridable
---   Hook Variables:
---
---- User ship The ship that is firing the beam.
---- Beam beam The spawned beam object.
---- Target object The current target of the shot.
---
---   Hook-specific Conditions:
---
---      Ship class
---         Description: Specifies the class of the ship that fired the weapon.
---      Ship
---         Description: Specifies the name of the ship that fired the weapon.
---      Weapon class
---         Description: Specifies the class of the weapon that was fired.
---      Ship type
---         Description: Specifies the type of the ship that fired the weapon.
---
-
--- On Beam Warmup:
---   Invoked when a beam starts warming up to fire.
---   This hook is NOT overridable
---   Hook Variables:
---
---- User ship The ship that is firing the beam.
---- Beam beam The spawned beam object.
---- Target object The current target of the shot.
---
---   Hook-specific Conditions:
---
---      Ship class
---         Description: Specifies the class of the ship that fired the weapon.
---      Ship
---         Description: Specifies the name of the ship that fired the weapon.
---      Weapon class
---         Description: Specifies the class of the weapon that was fired.
---      Ship type
---         Description: Specifies the type of the ship that fired the weapon.
---
-
--- On Briefing Stage:
---   Invoked for each briefing stage what it is shown.
---   This hook is NOT overridable
---   Hook Variables:
---
---- OldStage number The index of the previous briefing stage.
---- NewStage number The index of the new briefing stage.
---
-
--- On Camera Set Up:
---   Called every frame when the camera is positioned and oriented for rendering.
---   This hook is NOT overridable
---   Hook Variables:
---
---- Camera camera The camera about to be used for rendering.
---
-
--- On Campaign Begin:
---   Called when a campaign is started from the beginning or is reset
---   This hook is NOT overridable
---   Hook Variables:
---
---- Campaign string The campaign filename (without the extension)
---
-
--- On Campaign Mission Accept:
---   Invoked after a campaign mission once the player accepts the result and moves on to the next mission instead of replaying it.
---   This hook is NOT overridable
-
--- On Cheat:
---   Called when a cheat is used
---   This hook is NOT overridable
---   Hook Variables:
---
---- Cheat string The cheat code the user typed
---
-
--- On Countermeasure Fire:
---   Called when a ship fires a countermeasure.
---   This hook is NOT overridable
---   Hook Variables:
---
---- Ship ship The ship that has fired the countermeasure.
---- CountermeasuresLeft number The number of countermeasures left on the ship after firing the current countermeasure.
---- Countermeasure weapon The countermeasure object that was just fired.
---
---   Hook-specific Conditions:
---
---      Ship class
---         Description: Specifies the class of the ship that was the source of the event.
---      Ship
---         Description: Specifies the name of the ship that was the source of the event.
---      Ship type
---         Description: Specifies the type of the ship that was the source of the event.
---
-
--- On Death:
---   Invoked when an object (ship or asteroid) has been destroyed.  Deprecated in favor of On Ship Death and On Asteroid Death.
---   This hook is overridable
---   DEPRECATED starting with version 23.0.0.
---   Hook Variables:
---
---- Self object The object that was killed
---- Ship ship The ship that was destroyed (only set for ships)
---- Killer object The object that caused the death (only set for ships)
---- Hitpos vector The position of the hit that caused the death (only set for ships and only if available)
---
---   Hook-specific Conditions:
---
---      Ship class
---         Description: Specifies the class of the ship that died.
---      Ship
---         Description: Specifies the name of the ship that died.
---      Weapon class
---         Description: Specifies the class of the weapon that died.
---      Ship type
---         Description: Specifies the type of the ship that died.
---      Object type
---         Description: Specifies the type of the object that died.
---
-
--- On Debris Collision:
---   Invoked when a debris piece collides with another object.
---   This hook is overridable
---   Hook Variables:
---
---- Self object The "other" object that collided with the debris.
---- Object debris The debris object with which the "other" object collided with. Provided for consistency with other collision hooks.
---- Debris debris Same as "Object"
---- Hitpos vector The world position where the collision was detected
---- Asteroid object The asteroid object with which the debris collided (only set for asteroid collisions)
---- Ship ship The ship object with which the debris collided (only set for ship collisions).
---- Weapon weapon The weapon object with which the debris collided (only set for weapon collisions)
---- Beam weapon The beam object with which the debris collided (only set for beam collisions)
---
---   Hook-specific Conditions:
---
---      Ship class
---         Description: Specifies the class of the ship which was part of the collision. At least one ship must be part of the collision and match.
---      Ship
---         Description: Specifies the name of the ship which was part of the collision. At least one ship must be part of the collision and match.
---      Weapon class
---         Description: Specifies the name of the weapon class which was part of the collision. At least one weapon must be part of the collision and match.
---      Ship type
---         Description: Specifies the type of the ship which was part of the collision. At least one ship must be part of the collision and match.
---      Object type
---         Description: Specifies the type of the object which was part of the collision. At least one object must match.
---
-
--- On Debris Created:
---   Invoked when a piece of debris is created.
---   This hook is NOT overridable
---   Hook Variables:
---
---- Debris debris The newly created debris object
---- Source object The object (probably a ship) from which this debris piece was spawned.
---
---   Hook-specific Conditions:
---
---      Ship class
---         Description: Specifies the class of the ship that was the source of the event.
---      Ship
---         Description: Specifies the name of the ship that was the source of the event.
---      Ship type
---         Description: Specifies the type of the ship that was the source of the event.
---
-
--- On Debris Death:
---   Called when a piece of debris has been destroyed.
---   This hook is NOT overridable
---   Hook Variables:
---
---- Debris debris The piece of debris that was destroyed.
---- Hitpos vector The world coordinates of the killing blow.  Could be nil.
---
-
--- On Departure Started:
---   Called when a ship starts the departure process.
---   This hook is NOT overridable
---   Hook Variables:
---
---- Self ship An alias for Ship.
---- Ship ship The ship that has begun the departure process.
---
---   Hook-specific Conditions:
---
---      Ship class
---         Description: Specifies the class of the ship that departed.
---      Ship
---         Description: Specifies the name of the ship that departed.
---      Ship type
---         Description: Specifies the type of the ship that departed.
---
-
--- On Dialog Close:
---   Invoked when a dialog closes.
---   This hook is NOT overridable
---   Hook Variables:
---
---- IsDeathPopup boolean True if this popup is an in-mission death popup and should be styled as such.
---
-
--- On Dialog Frame:
---   Invoked each frame for a system dialog. Override to prevent the system dialog from rendering and evaluating.
---   This hook is overridable
---   Hook Variables:
---
---- Submit function(number | string | nil result) -> nil A callback function that should be called if the popup resolves. Should be string only if it is an input popup. Pass nil to abort.
---- IsDeathPopup boolean True if this popup is an in-mission death popup and should be styled as such.
---- Freeze boolean If not nil and true, the popup should not process any inputs but just render.
---
-
--- On Dialog Init:
---   Invoked when a system dialog initializes. Override to prevent the system dialog from loading dialog-related resources (requires retail files)
---   This hook is overridable
---   Hook Variables:
---
---- Choices table A table containing the different choices for this dialog. Contains subtables, each consisting of Positivity (an int, 0 if neutral, 1 if positive, and -1 if negative), Text (a string, the text of the button), and Shorcut (a string, the keypress that should activate the choice or nil if no valid shortcut).
---- Title string The title of the popup window. Nil for a death popup.
---- Text string The text to be displayed in the popup window. Nil for a death popup.
---- IsTimeStopped boolean True if mission time was interrupted for this popup.
---- IsStateRunning boolean True if the underlying state is still being processed and rendered.
---- IsInputPopup boolean True if this popup is for entering text.
---- IsDeathPopup boolean True if this popup is an in-mission death popup and should be styled as such.
---- AllowedInput string A string of characters allowed to be present in the input popup. Nil if not an input popup.
---- DeathMessage string The death message if the dialog is a death popup. Nil if not a death popup.
---
-
--- On Frame:
---   Called every frame as the last action before showing the frame result to the user.
---   This hook is overridable
-
--- On Game Init:
---   Executed at the start of the engine after all game data has been loaded.
---   This hook is NOT overridable
-
--- On Gameplay Start:
---   Invoked when the gameplay portion of a mission starts.
---   This hook is NOT overridable
---   Hook Variables:
---
---- Player object The player object.
---
-
--- On Goals Cleared:
---   Invoked whenever a ship has its goals cleared.
---   This hook is NOT overridable
---   Hook Variables:
---
---- Ship ship The ship whose goals are cleared.
---
---   Hook-specific Conditions:
---
---      Ship class
---         Description: Specifies the class of the ship that was the source of the event.
---      Ship
---         Description: Specifies the name of the ship that was the source of the event.
---      Ship type
---         Description: Specifies the type of the ship that was the source of the event.
---
-
--- On HUD Comm Menu Closed:
---   Invoked when the HUD comm menu, or squad message menu, is hidden.
---   This hook is overridable
---   Hook Variables:
---
---- Player object The player object.
---
-
--- On HUD Comm Menu Opened:
---   Invoked when the HUD comm menu, or squad message menu, is displayed.
---   This hook is overridable
---   Hook Variables:
---
---- Player object The player object.
---
-
--- On HUD Draw:
---   Invoked when the HUD is rendered.
---   This hook is overridable
---   Hook Variables:
---
---- Self object The object from which the scene is viewed.
---- Player object The player object.
---
---   Hook-specific Conditions:
---
---      Ship class
---         Description: Specifies the class of the ship that was drawn / drawn from.
---      Ship
---         Description: Specifies the name of the ship that was drawn / drawn from.
---      Weapon class
---         Description: Specifies the class of the weapon that was drawn / drawn from.
---      Ship type
---         Description: Specifies the type of the ship that was drawn / drawn from.
---      Object type
---         Description: Specifies the type of the object that was drawn / drawn from.
---
-
--- On HUD Message Received:
---   Called when a HUD message is received. For normal messages this will be called with the final text that appears on the HUD (e.g. [ship]: [message]). Will also be called for engine generated messages.
---   This hook is NOT overridable
---   Hook Variables:
---
---- Text string The text of the message.
---- SourceType number The type of message sent by the engine.
---
-
--- On Intro About To Play:
---   Executed just before the intro movie is played.
---   This hook is overridable
-
--- On Key Pressed:
---   Invoked whenever a key is pressed. If overridden, FSO behaves as if this key has simply not been pressed. The only thing that FSO will do with this key if overridden is fire the corresponding OnKeyReleased hook once the key is released. Be especially careful if overriding modifier keys (such as Alt and Shift) with this.
---   This hook is overridable
---   Hook Variables:
---
---- Key string The scancode of the key that has been pressed.
---- RawKey string The scancode of the key that has been pressed, without modifiers applied.
---
---   Hook-specific Conditions:
---
---      Raw KeyPress
---         Description: The key that is pressed, with no consideration for any modifier keys.
---
-
--- On Key Released:
---   Invoked whenever a key is released.
---   This hook is NOT overridable
---   Hook Variables:
---
---- Key string The scancode of the key that has been pressed.
---- RawKey string The scancode of the key that has been pressed, without modifiers applied.
---- TimeHeld number The time that this key has been held down in milliseconds. Can be 0 if input latency fluctuates.
---- WasOverridden boolean Whether or not the key press corresponding to this release was overridden.
---
---   Hook-specific Conditions:
---
---      Raw KeyPress
---         Description: The key that is pressed, with no consideration for any modifier keys.
---
-
--- On Load Complete:
---   Executed once a mission load has completed.
---   This hook is NOT overridable
-
--- On Load Screen:
---   Executed regularly during loading of a mission.
---   This hook is NOT overridable
---   Hook Variables:
---
---- Progress number A number from 0 to 1 indicating how far along the loading process the game is.
---
-
--- On Loadout About To Parse:
---   Called during mission load just before parsing the team loadout.
---   This hook is NOT overridable
-
--- On Message Received:
---   Invoked when a mission sends a message.
---   This hook is NOT overridable
---   Hook Variables:
---
---- Name string The name of the message in the mission
---- Message string The text of the sent message. This will have any placeholder expanded (e.g. SEXP variables) and will be what the player sees on the HUD.
---- SenderString string The source of the message as a string. Same as used by the engine on the HUD.
---- Builtin boolean true if this is a builtin message, false of this is a mission message
---- Sender ship If sent from an object, the object that has sent the message. Invalid if not sent from an object
---- MessageHandle message The scripting handle of the message being sent.
---
-
--- On Missile Death:
---   Called when a missile has been destroyed (whether by impact, interception, or expiration).
---   This hook is NOT overridable
---   Hook Variables:
---
---- Weapon weapon The weapon that was destroyed.
---- Object object The object that the weapon hit - a ship, asteroid, or piece of debris.  Always set but could be invalid if there is no other object.  If this missile was destroyed by another weapon, the 'other object' will be invalid but the DestroyedByWeapon flag will be set.
---
---   Hook-specific Conditions:
---
---      Weapon class
---         Description: Specifies the class of the weapon that died.
---
-
--- On Missile Death Started:
---   Called when a missile is about to be destroyed (whether by impact, interception, or expiration).
---   This hook is NOT overridable
---   Hook Variables:
---
---- Weapon weapon The weapon that was destroyed.
---- Object object The object that the weapon hit - a ship, asteroid, or piece of debris.  Always set but could be invalid if there is no other object.  If this missile was destroyed by another weapon, the 'other object' will be invalid but the DestroyedByWeapon flag will be set.
---
---   Hook-specific Conditions:
---
---      Weapon class
---         Description: Specifies the class of the weapon that died.
---
-
--- On Mission About To End:
---   Called when a mission is about to end but has not run any mission-ending logic
---   This hook is NOT overridable
-
--- On Mission End:
---   Called when a mission has ended
---   This hook is overridable
-
--- On Mission Start:
---   Invoked when a mission starts.
---   This hook is NOT overridable
---   Hook Variables:
---
---- Player object The player object.
---
-
--- On Mouse Moved:
---   Invoked whenever the mouse is moved.
---   This hook is NOT overridable
-
--- On Mouse Pressed:
---   Invoked whenever a mouse button is pressed.
---   This hook is NOT overridable
-
--- On Mouse Released:
---   Invoked whenever a mouse button is released.
---   This hook is NOT overridable
-
--- On Mouse Wheel:
---   Called when the mouse wheel is moved in any direction.
---   This hook is NOT overridable
---   Hook Variables:
---
---- MouseWheelY number Positive if moved up, negative if moved down.
---- MouseWheelX number Positive if moved right, negative if moved left.
---
-
--- On Movie About To Play:
---   Executed just before any cutscene movie is played.
---   This hook is overridable
---   Hook Variables:
---
---- Filename string The filename of the movie that is about to play.
---- ViaTechRoom boolean Whether the movie player was invoked through the tech room.
---
-
--- On Object Render:
---   Invoked every time an object is rendered.
---   This hook is overridable
---   Hook Variables:
---
---- Self object The object which is rendered.
---
---   Hook-specific Conditions:
---
---      Ship class
---         Description: Specifies the class of the ship that was drawn / drawn from.
---      Ship
---         Description: Specifies the name of the ship that was drawn / drawn from.
---      Weapon class
---         Description: Specifies the class of the weapon that was drawn / drawn from.
---      Ship type
---         Description: Specifies the type of the ship that was drawn / drawn from.
---      Object type
---         Description: Specifies the type of the object that was drawn / drawn from.
---
-
--- On Pain Flash:
---   Called when a pain flash is displayed.
---   This hook is NOT overridable
---   Hook Variables:
---
---- Pain_Type number The type of pain flash displayed: shield = 0 and hull = 1.
---
-
--- On Player Loaded:
---   Called when a player has been successfully loaded
---   This hook is NOT overridable
---   Hook Variables:
---
---- Player object The player object
---
-
--- On Primary Fire:
---   Invoked when a primary weapon is fired.
---   This hook is NOT overridable
---   Hook Variables:
---
---- User ship The ship that has fired the weapon.
---- Target object The current target of this ship.
---
---   Hook-specific Conditions:
---
---      Ship class
---         Description: Specifies the class of the ship that fired the weapon.
---      Ship
---         Description: Specifies the name of the ship that fired the weapon.
---      Weapon class
---         Description: Specifies the class of the weapon that was fired.
---      Ship type
---         Description: Specifies the type of the ship that fired the weapon.
---
-
--- On Secondary Fire:
---   Invoked when a secondary weapon is fired.
---   This hook is NOT overridable
---   Hook Variables:
---
---- User ship The ship that has fired the weapon.
---- Target object The current target of this ship.
---
---   Hook-specific Conditions:
---
---      Ship class
---         Description: Specifies the class of the ship that fired the weapon.
---      Ship
---         Description: Specifies the name of the ship that fired the weapon.
---      Weapon class
---         Description: Specifies the class of the weapon that was fired.
---      Ship type
---         Description: Specifies the type of the ship that fired the weapon.
---
-
--- On Ship Arrive:
---   Invoked when a ship arrives in mission.
---   This hook is NOT overridable
---   Hook Variables:
---
---- Ship ship The ship that has arrived.
---- Parent object The object which serves as the arrival anchor of the ship. Could be nil.
---
---   Hook-specific Conditions:
---
---      Ship class
---         Description: Specifies the class of the ship that arrived.
---      Ship
---         Description: Specifies the name of the ship that arrived.
---      Ship type
---         Description: Specifies the type of the ship that arrived.
---
-
--- On Ship Collision:
---   Invoked when a ship collides with another object. Note: When two ships collide this will be called twice, once with each ship as the "Self" parameter.
---   This hook is overridable
---   Hook Variables:
---
---- Self object The object the ship collided with.
---- Object ship The ship that collided with "Self". Provided for consistency with other collision hooks.
---- Ship ship For ship-on-ship collisions, the same as "Self". For ship-on-object collisions, the same as "Object".
---- Hitpos vector The world position where the collision was detected
---- ShipSubmodel submodel The submodel of "Ship" involved in the collision, if "Ship" was the heavier object
---- Debris object The debris object with which the ship collided (only set for debris collisions)
---- Asteroid object The asteroid object with which the ship collided (only set for asteroid collisions)
---- ShipB ship For ship-on-ship collisions, the same as "Object" (only set for ship-on-ship collisions)
---- ShipBSubmodel submodel For ship-on-ship collisions, the submodel of "ShipB" involved in the collision, if "ShipB" was the heavier object
---- Weapon weapon The weapon object with which the ship collided (only set for weapon collisions)
---- Beam weapon The beam object with which the ship collided (only set for beam collisions)
---
---   Hook-specific Conditions:
---
---      Ship class
---         Description: Specifies the class of the ship which was part of the collision. At least one ship must be part of the collision and match.
---      Ship
---         Description: Specifies the name of the ship which was part of the collision. At least one ship must be part of the collision and match.
---      Weapon class
---         Description: Specifies the name of the weapon class which was part of the collision. At least one weapon must be part of the collision and match.
---      Ship type
---         Description: Specifies the type of the ship which was part of the collision. At least one ship must be part of the collision and match.
---      Object type
---         Description: Specifies the type of the object which was part of the collision. At least one object must match.
---
-
--- On Ship Death:
---   Called when a ship has been destroyed.  Supersedes On Death for ships.
---   This hook is overridable
---   Hook Variables:
---
---- Ship ship The ship that was destroyed.
---- Killer object The object responsible for killing the ship.  Always set but could be invalid if there is no killer.
---- Hitpos vector The world coordinates of the killing blow.  Could be nil.
---
---   Hook-specific Conditions:
---
---      Ship class
---         Description: Specifies the class of the ship that died.
---      Ship
---         Description: Specifies the name of the ship that died.
---      Ship type
---         Description: Specifies the type of the ship that died.
---
-
--- On Ship Death Started:
---   Called when a ship starts the death process.
---   This hook is NOT overridable
---   Hook Variables:
---
---- Ship ship The ship that has begun the death process.
---- Killer object The object responsible for killing the ship.  Always set but could be invalid if there is no killer.
---- Hitpos vector The world coordinates of the killing blow.  Could be nil.
---
---   Hook-specific Conditions:
---
---      Ship class
---         Description: Specifies the class of the ship that died.
---      Ship
---         Description: Specifies the name of the ship that died.
---      Ship type
---         Description: Specifies the type of the ship that died.
---
-
--- On Ship Depart:
---   Invoked when a ship departs the mission without being destroyed.
---   This hook is NOT overridable
---   Hook Variables:
---
---- Ship ship The ship departing the mission
---- JumpNode string The name of the jump node the ship jumped out of. Can be nil.
---- Method ship The name of the method the ship used to depart. One of: 'SHIP_DEPARTED', 'SHIP_DEPARTED_WARP', 'SHIP_DEPARTED_BAY', 'SHIP_VANISHED', 'SHIP_DEPARTED_REDALERT'.
---
---   Hook-specific Conditions:
---
---      Ship class
---         Description: Specifies the class of the ship that departed.
---      Ship
---         Description: Specifies the name of the ship that departed.
---      Ship type
---         Description: Specifies the type of the ship that departed.
---
-
--- On Simulation:
---   Invoked every time that FSO processes physics and AI.
---   This hook is NOT overridable
-
--- On Splash End:
---   Executed just after the splash screen fades out.
---   This hook is NOT overridable
-
--- On Splash Screen:
---   Will be called once when the splash screen shows for the first time.
---   This hook is overridable
---   DEPRECATED (+Override removed) starting with version 23.0.0.
-
--- On State About To End:
---   Called when a game state is about to end but has not run any state-ending logic
---   This hook is NOT overridable
---   Hook Variables:
---
---- OldState gamestate The game state that has ended.
---- NewState gamestate The game state that will begin next.
---
-
--- On State End:
---   Called when a game state has ended
---   This hook is overridable
---   Hook Variables:
---
---- OldState gamestate The game state that has ended.
---- NewState gamestate The game state that will begin next.
---
-
--- On State Start:
---   Executed whenever a new state is entered.
---   This hook is overridable
---   Hook Variables:
---
---- OldState gamestate The gamestate that was executing.
---- NewState gamestate The gamestate that will be executing.
---
-
--- On Subsystem Destroyed:
---   Called when a subsystem is destroyed.
---   This hook is NOT overridable
---   Hook Variables:
---
---- Ship ship The ship that held the subsystem.
---- Subsystem subsystem The subsystem that has been destroyed.
---
---   Hook-specific Conditions:
---
---      Ship class
---         Description: Specifies the class of the ship whose subsystem got destroyed.
---      Ship
---         Description: Specifies the name of the ship whose subsystem got destroyed.
---      Ship type
---         Description: Specifies the type of the ship whose subsystem got destroyed.
---
-
--- On Turret Fired:
---   Invoked when a turret is fired.
---   This hook is NOT overridable
---   Hook Variables:
---
---- Ship ship The ship that has fired the turret.
---- Weapon weapon The spawned weapon object (nil if the turret fired a beam).
---- Beam beam The spawned beam object (nil unless the turret fired a beam).
---- Target object The current target of the shot.
---
---   Hook-specific Conditions:
---
---      Ship class
---         Description: Specifies the class of the ship that fired the weapon.
---      Ship
---         Description: Specifies the name of the ship that fired the weapon.
---      Weapon class
---         Description: Specifies the class of the weapon that was fired.
---      Ship type
---         Description: Specifies the type of the ship that fired the weapon.
---
-
--- On Warp In:
---   Called when a ship warps in.
---   This hook is overridable
---   Hook Variables:
---
---- Self ship The object that is warping in.
---
---   Hook-specific Conditions:
---
---      Ship class
---         Description: Specifies the class of the ship that was the source of the event.
---      Ship
---         Description: Specifies the name of the ship that was the source of the event.
---      Ship type
---         Description: Specifies the type of the ship that was the source of the event.
---
-
--- On Warp Out:
---   Called when a ship warps out.
---   This hook is overridable
---   Hook Variables:
---
---- Self ship The object that is warping out.
---
---   Hook-specific Conditions:
---
---      Ship class
---         Description: Specifies the class of the ship that was the source of the event.
---      Ship
---         Description: Specifies the name of the ship that was the source of the event.
---      Ship type
---         Description: Specifies the type of the ship that was the source of the event.
---
-
--- On Warp Out Complete:
---   Called when a ship has completed the warp out animation
---   This hook is overridable
---   Hook Variables:
---
---- Self ship The object that is warping out.
---
---   Hook-specific Conditions:
---
---      Ship class
---         Description: Specifies the class of the ship that was the source of the event.
---      Ship
---         Description: Specifies the name of the ship that was the source of the event.
---      Ship type
---         Description: Specifies the type of the ship that was the source of the event.
---
-
--- On Waypoints Done:
---   Invoked whenever a ship stops using its afterburners
---   This hook is NOT overridable
---   Hook Variables:
---
---- Ship ship The ship which has completed the waypoints.
---- Wing wing The wing which the ship belongs to. Can be invalid.
---- Waypointlist waypointlist The set of waypoints which was completed.
---
---   Hook-specific Conditions:
---
---      Ship class
---         Description: Specifies the class of the ship that was the source of the event.
---      Ship
---         Description: Specifies the name of the ship that was the source of the event.
---      Ship type
---         Description: Specifies the type of the ship that was the source of the event.
---
-
--- On Weapon Collision:
---   Invoked when a weapon collides with another object. Note: When two weapons collide this will be called twice, once with each weapon object as the "Weapon" parameter.
---   This hook is overridable
---   Hook Variables:
---
---- Self object The "other" object that collided with the weapon.
---- Object weapon The weapon object with which the "other" object collided with. Provided for consistency with other collision hooks.
---- Weapon weapon Same as "Object"
---- Hitpos vector The world position where the collision was detected
---- Debris object The debris object with which the weapon collided (only set for debris collisions)
---- Asteroid object The asteroid object with which the weapon collided (only set for asteroid collisions)
---- Ship ship The ship object with which the weapon collided (only set for ship collisions).
---- WeaponB weapon For weapon on weapon collisions, the "other" weapon.
---- Beam weapon The beam object with which the weapon collided (only set for beam collisions)
---
---   Hook-specific Conditions:
---
---      Ship class
---         Description: Specifies the class of the ship which was part of the collision. At least one ship must be part of the collision and match.
---      Ship
---         Description: Specifies the name of the ship which was part of the collision. At least one ship must be part of the collision and match.
---      Weapon class
---         Description: Specifies the name of the weapon class which was part of the collision. At least one weapon must be part of the collision and match.
---      Ship type
---         Description: Specifies the type of the ship which was part of the collision. At least one ship must be part of the collision and match.
---      Object type
---         Description: Specifies the type of the object which was part of the collision. At least one object must match.
---
-
--- On Weapon Created:
---   Invoked every time a weapon object is created.
---   This hook is NOT overridable
---   Hook Variables:
---
---- Weapon weapon The weapon object.
---
---   Hook-specific Conditions:
---
---      Ship class
---         Description: Specifies the class of the ship that fired the weapon.
---      Ship
---         Description: Specifies the name of the ship that fired the weapon.
---      Weapon class
---         Description: Specifies the class of the weapon that was fired.
---      Ship type
---         Description: Specifies the type of the ship that fired the weapon.
---      Object type
---         Description: Specifies the type of the object that is the parent of this weapon.
---
-
--- On Weapon Delete:
---   Invoked whenever a weapon is deleted from the scene.
---   This hook is NOT overridable
---   Hook Variables:
---
---- Weapon weapon The weapon that was deleted.
---- Self weapon An alias for "Weapon".
---
---   Hook-specific Conditions:
---
---      Weapon class
---         Description: Specifies the class of the weapon that died.
---
-
--- On Weapon Deselected:
---   Invoked when a weapon is deselected.
---   This hook is NOT overridable
---   Hook Variables:
---
---- User ship The ship that has deselected the weapon.
---- Target object The current target of this ship.
---
---   Hook-specific Conditions:
---
---      Ship class
---         Description: Specifies the class of the ship that has deselected the weapon.
---      Ship
---         Description: Specifies the name of the ship that has deselected the weapon.
---      Weapon class
---         Description: Specifies the class of the weapon that was deselected.
---      Ship type
---         Description: Specifies the type of the ship that has deselected the weapon.
---
-
--- On Weapon Equipped:
---   Invoked for each ship for each frame, allowing to be filtered for whether a weapon is equipped by the ship using conditions.
---   This hook is NOT overridable
---   Hook Variables:
---
---- User ship The ship that has a weapon equipped.
---- Target object The current AI target of this ship.
---
---   Hook-specific Conditions:
---
---      Ship class
---         Description: Specifies the class of the ship that has the weapon equipped.
---      Ship
---         Description: Specifies the name of the ship that has the weapon equipped.
---      Weapon class
---         Description: Specifies the class of the weapon that the ship needs to have equipped in at least one bank.
---      Ship type
---         Description: Specifies the type of the ship that has the weapon equipped.
---
-
--- On Weapon Fired:
---   Invoked when a weapon is fired.
---   This hook is NOT overridable
---   Hook Variables:
---
---- User ship The ship that has fired the weapon.
---- Target object The current target of this ship.
---
---   Hook-specific Conditions:
---
---      Ship class
---         Description: Specifies the class of the ship that fired the weapon.
---      Ship
---         Description: Specifies the name of the ship that fired the weapon.
---      Weapon class
---         Description: Specifies the class of the weapon that was fired.
---      Ship type
---         Description: Specifies the type of the ship that fired the weapon.
---
-
--- On Weapon Selected:
---   Invoked when a new weapon is selected.
---   This hook is NOT overridable
---   Hook Variables:
---
---- User ship The ship that has selected the weapon.
---- Target object The current target of this ship.
---
---   Hook-specific Conditions:
---
---      Ship class
---         Description: Specifies the class of the ship that has selected the weapon.
---      Ship
---         Description: Specifies the name of the ship that has selected the weapon.
---      Weapon class
---         Description: Specifies the class of the weapon that was selected.
---      Ship type
---         Description: Specifies the type of the ship that has selected the weapon.
---
-
--- Global Hook Variables (accessible through 'hv'):
---- @type table
-hv = {}
---
---- Player object The player object in a mission. Does not need to be a ship (e.g. in multiplayer). Not present if not in a game play state.
---
-
-
 
 
 -- active_game object: Active Game handle
@@ -1351,7 +239,6 @@ debris = {}
 -- decaldefinition object: Decal definition handle
 decaldefinition = {}
 --- @class decaldefinition
---- @operator eq(decaldefinition): boolean # Checks if the two definitions are equal
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
 --- @field Name? string Decal definition name Decal definition name, or empty string if handle is invalid
 --- @field create fun(self: self, width: number, height: number, minLifetime: number, maxLifetime: number, host: object, submodel: submodel, local_pos?: vector, local_orient?: orientation): nil Creates a decal with the specified parameters.  A negative value for either lifetime will result in a perpetual decal.  The position and orientation are in the frame-of-reference of the submodel.
@@ -1414,8 +301,6 @@ dogfight_scores = {}
 -- enumeration object: Enumeration object
 enumeration = {}
 --- @class enumeration
---- @operator newindex(enumeration): enumeration # Sets enumeration to specified value (if it is not a global)
---- @operator eq(enumeration): boolean # Compares the two enumerations for equality
 --- @operator add(enumeration): enumeration # Calculates the logical OR of the two enums. Only applicable for certain bitfield enums (OS_*, DC_*, ...)
 --- @operator mul(enumeration): enumeration # Calculates the logical AND of the two enums. Only applicable for certain bitfield enums (OS_*, DC_*, ...)
 --- @field IntValue? number Internal value of the enum.  Probably not useful unless this enum is a bitfield or corresponds to a #define somewhere else in the source code. Integer (index) value of the enum
@@ -1492,7 +377,6 @@ fireball = {}
 -- fireballclass object: Fireball class handle
 fireballclass = {}
 --- @class fireballclass
---- @operator eq(fireballclass): boolean # Checks if the two classes are equal
 --- @field UniqueID? string Fireball class name Fireball class unique id, or empty string if handle is invalid
 --- @field Filename? string Fireball class animation filename (LOD 0) Filename, or empty string if handle is invalid
 --- @field NumberFrames? number Amount of frames the animation has (LOD 0) Amount of frames, or -1 if handle is invalid
@@ -1503,7 +387,6 @@ fireballclass = {}
 -- font object: font handle
 font = {}
 --- @class font
---- @operator eq(font): boolean # Checks if the two fonts are equal
 --- @field Filename? string Name of font (including extension)<br><b>Important:</b>This variable is deprecated. Use <i>Name</i> instead.
 --- @field Name? string Name of font (including extension)
 --- @field Height? number Height of font (in pixels) Font height, or 0 if the handle is invalid
@@ -1610,7 +493,6 @@ HudGaugeDrawFunctions = {}
 -- intel_entry object: Intel entry handle
 intel_entry = {}
 --- @class intel_entry
---- @operator eq(intel_entry): boolean # Checks if the two entries are equal
 --- @field Name? string Intel entry name Intel entry name, or an empty string if handle is invalid
 --- @field Description? string Intel entry description Description, or empty string if handle is invalid
 --- @field AnimFilename? string Intel entry animation filename Filename, or empty string if handle is invalid
@@ -1878,7 +760,6 @@ netgame = {}
 -- object object: Object handle
 object = {}
 --- @class object
---- @operator eq(object): boolean # Checks whether two object handles are for the same object
 --- @field Parent? object Parent of the object. Value may also be a deriviative of the 'object' class, such as 'ship'. Parent handle, or invalid handle if object is invalid
 --- @field Radius? number Radius of an object Radius, or 0 if handle is invalid
 --- @field Position? vector Object world position (World vector) World position, or null vector if handle is invalid
@@ -2124,7 +1005,6 @@ red_alert_stage = {}
 -- rpc object: A function object for remote procedure calls
 rpc = {}
 --- @class rpc
---- @operator newindex(fun(arg: any)): fun(arg: any) # Sets the function to be called when the RPC is invoked on this client
 --- @operator call(any): boolean # Calls the RPC on the specified recipients with the given argument.
 --- @field waitRPC fun(self: self): promise Performs an asynchronous wait until this RPC has been evoked on this client and the RPC function has finished running. Does NOT trigger when the RPC is called from this client.
 
@@ -2288,7 +1168,6 @@ ship_registry_entry = {}
 -- shipclass object: Ship class handle
 shipclass = {}
 --- @class shipclass
---- @operator eq(shipclass): boolean # Checks if the two classes are equal
 --- @field Name? string Ship class name Ship class name, or an empty string if handle is invalid
 --- @field ShortName? string Ship class short name Ship short name, or empty string if handle is invalid
 --- @field TypeString? string Ship class type string Type string, or empty string if handle is invalid
@@ -2534,7 +1413,6 @@ subsystem = {}
 -- team object: Team handle
 team = {}
 --- @class team
---- @operator eq(team): boolean # Checks whether two teams are the same team
 --- @field Name? string Team name Team name, or empty string if handle is invalid
 --- @field getColor fun(self: self, ReturnType: boolean): number, number, number, number, color Gets the IFF color of the specified Team. False to return raw rgb, true to return color object. Defaults to false.
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
@@ -2544,7 +1422,6 @@ team = {}
 -- texture object: Texture handle
 texture = {}
 --- @class texture
---- @operator eq(texture): boolean # Checks if two texture handles refer to the same texture
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
 --- @field unload fun(self: self): nil Unloads a texture from memory
 --- @field destroyRenderTarget fun(self: self): nil Destroys a texture's render target. Call this when done drawing to a texture, as it frees up resources.
@@ -2588,7 +1465,6 @@ tracing_category = {}
 -- ValueDescription object: An option value that contains a displayable string and the serialized value.
 ValueDescription = {}
 --- @class ValueDescription
---- @operator eq(ValueDescription): string # Compares two value descriptions
 --- @field Display? string Value display string The display string or nil on error
 --- @field Serialized? string Serialized string value of the contained value The serialized string or nil on error
 
@@ -2671,7 +1547,6 @@ weaponbanktype = {}
 -- weaponclass object: Weapon class handle
 weaponclass = {}
 --- @class weaponclass
---- @operator eq(weaponclass): boolean # Checks if the two classes are equal
 --- @field Name? string Weapon class name. This is the possibly untranslated name. Use tostring(class) to get the string which should be shown to the user. Weapon class name, or empty string if handle is invalid
 --- @field AltName? string The alternate weapon class name. Alternate weapon class name, or empty string if handle is invalid
 --- @field TurretName? string The name displayed for a turret if the turret's first weapon is this weapon class. Turret name (aka alternate subsystem name), or empty string if handle is invalid
@@ -2773,7 +1648,6 @@ wing = {}
 -- wingformation object: Wing formation handle
 wingformation = {}
 --- @class wingformation
---- @operator eq(wingformation): boolean # Checks if the two formations are equal
 --- @field Name? string Wing formation name Wing formation name, or empty string if handle is invalid
 --- @field isValid fun(self: self): boolean Detects whether handle is valid
 
@@ -3562,384 +2436,384 @@ ui.MultiDogfightDebrief = {}
 ui = {}
 
 -- Enumerations
---- @const ALPHABLEND_FILTER # values shown here are dummy values
+--- @const ALPHABLEND_FILTER
 ALPHABLEND_FILTER = enumeration
---- @const ALPHABLEND_NONE # values shown here are dummy values
+--- @const ALPHABLEND_NONE
 ALPHABLEND_NONE = enumeration
---- @const CFILE_TYPE_NORMAL # values shown here are dummy values
+--- @const CFILE_TYPE_NORMAL
 CFILE_TYPE_NORMAL = enumeration
---- @const CFILE_TYPE_MEMORY_MAPPED # values shown here are dummy values
+--- @const CFILE_TYPE_MEMORY_MAPPED
 CFILE_TYPE_MEMORY_MAPPED = enumeration
---- @const MOUSE_LEFT_BUTTON # values shown here are dummy values
+--- @const MOUSE_LEFT_BUTTON
 MOUSE_LEFT_BUTTON = enumeration
---- @const MOUSE_RIGHT_BUTTON # values shown here are dummy values
+--- @const MOUSE_RIGHT_BUTTON
 MOUSE_RIGHT_BUTTON = enumeration
---- @const MOUSE_MIDDLE_BUTTON # values shown here are dummy values
+--- @const MOUSE_MIDDLE_BUTTON
 MOUSE_MIDDLE_BUTTON = enumeration
---- @const MOUSE_X1_BUTTON # values shown here are dummy values
+--- @const MOUSE_X1_BUTTON
 MOUSE_X1_BUTTON = enumeration
---- @const MOUSE_X2_BUTTON # values shown here are dummy values
+--- @const MOUSE_X2_BUTTON
 MOUSE_X2_BUTTON = enumeration
---- @const FLIGHTMODE_FLIGHTCURSOR # values shown here are dummy values
+--- @const FLIGHTMODE_FLIGHTCURSOR
 FLIGHTMODE_FLIGHTCURSOR = enumeration
---- @const FLIGHTMODE_SHIPLOCKED # values shown here are dummy values
+--- @const FLIGHTMODE_SHIPLOCKED
 FLIGHTMODE_SHIPLOCKED = enumeration
---- @const ORDER_ATTACK # values shown here are dummy values
+--- @const ORDER_ATTACK
 ORDER_ATTACK = enumeration
---- @const ORDER_ATTACK_ANY # values shown here are dummy values
+--- @const ORDER_ATTACK_ANY
 ORDER_ATTACK_ANY = enumeration
---- @const ORDER_DEPART # values shown here are dummy values
+--- @const ORDER_DEPART
 ORDER_DEPART = enumeration
---- @const ORDER_DISABLE # values shown here are dummy values
+--- @const ORDER_DISABLE
 ORDER_DISABLE = enumeration
---- @const ORDER_DISABLE_TACTICAL # values shown here are dummy values
+--- @const ORDER_DISABLE_TACTICAL
 ORDER_DISABLE_TACTICAL = enumeration
---- @const ORDER_DISARM # values shown here are dummy values
+--- @const ORDER_DISARM
 ORDER_DISARM = enumeration
---- @const ORDER_DISARM_TACTICAL # values shown here are dummy values
+--- @const ORDER_DISARM_TACTICAL
 ORDER_DISARM_TACTICAL = enumeration
---- @const ORDER_DOCK # values shown here are dummy values
+--- @const ORDER_DOCK
 ORDER_DOCK = enumeration
---- @const ORDER_EVADE # values shown here are dummy values
+--- @const ORDER_EVADE
 ORDER_EVADE = enumeration
---- @const ORDER_FLY_TO # values shown here are dummy values
+--- @const ORDER_FLY_TO
 ORDER_FLY_TO = enumeration
---- @const ORDER_FORM_ON_WING # values shown here are dummy values
+--- @const ORDER_FORM_ON_WING
 ORDER_FORM_ON_WING = enumeration
---- @const ORDER_GUARD # values shown here are dummy values
+--- @const ORDER_GUARD
 ORDER_GUARD = enumeration
---- @const ORDER_IGNORE_SHIP # values shown here are dummy values
+--- @const ORDER_IGNORE_SHIP
 ORDER_IGNORE_SHIP = enumeration
---- @const ORDER_IGNORE_SHIP_NEW # values shown here are dummy values
+--- @const ORDER_IGNORE_SHIP_NEW
 ORDER_IGNORE_SHIP_NEW = enumeration
---- @const ORDER_KEEP_SAFE_DISTANCE # values shown here are dummy values
+--- @const ORDER_KEEP_SAFE_DISTANCE
 ORDER_KEEP_SAFE_DISTANCE = enumeration
---- @const ORDER_PLAY_DEAD # values shown here are dummy values
+--- @const ORDER_PLAY_DEAD
 ORDER_PLAY_DEAD = enumeration
---- @const ORDER_PLAY_DEAD_PERSISTENT # values shown here are dummy values
+--- @const ORDER_PLAY_DEAD_PERSISTENT
 ORDER_PLAY_DEAD_PERSISTENT = enumeration
---- @const ORDER_REARM # values shown here are dummy values
+--- @const ORDER_REARM
 ORDER_REARM = enumeration
---- @const ORDER_STAY_NEAR # values shown here are dummy values
+--- @const ORDER_STAY_NEAR
 ORDER_STAY_NEAR = enumeration
---- @const ORDER_STAY_STILL # values shown here are dummy values
+--- @const ORDER_STAY_STILL
 ORDER_STAY_STILL = enumeration
---- @const ORDER_UNDOCK # values shown here are dummy values
+--- @const ORDER_UNDOCK
 ORDER_UNDOCK = enumeration
---- @const ORDER_WAYPOINTS # values shown here are dummy values
+--- @const ORDER_WAYPOINTS
 ORDER_WAYPOINTS = enumeration
---- @const ORDER_WAYPOINTS_ONCE # values shown here are dummy values
+--- @const ORDER_WAYPOINTS_ONCE
 ORDER_WAYPOINTS_ONCE = enumeration
---- @const ORDER_ATTACK_WING # values shown here are dummy values
+--- @const ORDER_ATTACK_WING
 ORDER_ATTACK_WING = enumeration
---- @const ORDER_GUARD_WING # values shown here are dummy values
+--- @const ORDER_GUARD_WING
 ORDER_GUARD_WING = enumeration
---- @const ORDER_ATTACK_SHIP_CLASS # values shown here are dummy values
+--- @const ORDER_ATTACK_SHIP_CLASS
 ORDER_ATTACK_SHIP_CLASS = enumeration
---- @const PARTICLE_DEBUG # values shown here are dummy values
+--- @const PARTICLE_DEBUG
 PARTICLE_DEBUG = enumeration
---- @const PARTICLE_BITMAP # values shown here are dummy values
+--- @const PARTICLE_BITMAP
 PARTICLE_BITMAP = enumeration
---- @const PARTICLE_FIRE # values shown here are dummy values
+--- @const PARTICLE_FIRE
 PARTICLE_FIRE = enumeration
---- @const PARTICLE_SMOKE # values shown here are dummy values
+--- @const PARTICLE_SMOKE
 PARTICLE_SMOKE = enumeration
---- @const PARTICLE_SMOKE2 # values shown here are dummy values
+--- @const PARTICLE_SMOKE2
 PARTICLE_SMOKE2 = enumeration
---- @const PARTICLE_PERSISTENT_BITMAP # values shown here are dummy values
+--- @const PARTICLE_PERSISTENT_BITMAP
 PARTICLE_PERSISTENT_BITMAP = enumeration
---- @const SEXPVAR_CAMPAIGN_PERSISTENT # values shown here are dummy values
+--- @const SEXPVAR_CAMPAIGN_PERSISTENT
 SEXPVAR_CAMPAIGN_PERSISTENT = enumeration
---- @const SEXPVAR_NOT_PERSISTENT # values shown here are dummy values
+--- @const SEXPVAR_NOT_PERSISTENT
 SEXPVAR_NOT_PERSISTENT = enumeration
---- @const SEXPVAR_PLAYER_PERSISTENT # values shown here are dummy values
+--- @const SEXPVAR_PLAYER_PERSISTENT
 SEXPVAR_PLAYER_PERSISTENT = enumeration
---- @const SEXPVAR_TYPE_NUMBER # values shown here are dummy values
+--- @const SEXPVAR_TYPE_NUMBER
 SEXPVAR_TYPE_NUMBER = enumeration
---- @const SEXPVAR_TYPE_STRING # values shown here are dummy values
+--- @const SEXPVAR_TYPE_STRING
 SEXPVAR_TYPE_STRING = enumeration
---- @const TEXTURE_STATIC # values shown here are dummy values
+--- @const TEXTURE_STATIC
 TEXTURE_STATIC = enumeration
---- @const TEXTURE_DYNAMIC # values shown here are dummy values
+--- @const TEXTURE_DYNAMIC
 TEXTURE_DYNAMIC = enumeration
---- @const LOCK # values shown here are dummy values
+--- @const LOCK
 LOCK = enumeration
---- @const UNLOCK # values shown here are dummy values
+--- @const UNLOCK
 UNLOCK = enumeration
---- @const NONE # values shown here are dummy values
+--- @const NONE
 NONE = enumeration
---- @const SHIELD_FRONT # values shown here are dummy values
+--- @const SHIELD_FRONT
 SHIELD_FRONT = enumeration
---- @const SHIELD_LEFT # values shown here are dummy values
+--- @const SHIELD_LEFT
 SHIELD_LEFT = enumeration
---- @const SHIELD_RIGHT # values shown here are dummy values
+--- @const SHIELD_RIGHT
 SHIELD_RIGHT = enumeration
---- @const SHIELD_BACK # values shown here are dummy values
+--- @const SHIELD_BACK
 SHIELD_BACK = enumeration
---- @const MISSION_REPEAT # values shown here are dummy values
+--- @const MISSION_REPEAT
 MISSION_REPEAT = enumeration
---- @const NORMAL_CONTROLS # values shown here are dummy values
+--- @const NORMAL_CONTROLS
 NORMAL_CONTROLS = enumeration
---- @const LUA_STEERING_CONTROLS # values shown here are dummy values
+--- @const LUA_STEERING_CONTROLS
 LUA_STEERING_CONTROLS = enumeration
---- @const LUA_FULL_CONTROLS # values shown here are dummy values
+--- @const LUA_FULL_CONTROLS
 LUA_FULL_CONTROLS = enumeration
---- @const NORMAL_BUTTON_CONTROLS # values shown here are dummy values
+--- @const NORMAL_BUTTON_CONTROLS
 NORMAL_BUTTON_CONTROLS = enumeration
---- @const LUA_ADDITIVE_BUTTON_CONTROL # values shown here are dummy values
+--- @const LUA_ADDITIVE_BUTTON_CONTROL
 LUA_ADDITIVE_BUTTON_CONTROL = enumeration
---- @const LUA_OVERRIDE_BUTTON_CONTROL # values shown here are dummy values
+--- @const LUA_OVERRIDE_BUTTON_CONTROL
 LUA_OVERRIDE_BUTTON_CONTROL = enumeration
---- @const VM_INTERNAL # values shown here are dummy values
+--- @const VM_INTERNAL
 VM_INTERNAL = enumeration
---- @const VM_EXTERNAL # values shown here are dummy values
+--- @const VM_EXTERNAL
 VM_EXTERNAL = enumeration
---- @const VM_TRACK # values shown here are dummy values
+--- @const VM_TRACK
 VM_TRACK = enumeration
---- @const VM_DEAD_VIEW # values shown here are dummy values
+--- @const VM_DEAD_VIEW
 VM_DEAD_VIEW = enumeration
---- @const VM_CHASE # values shown here are dummy values
+--- @const VM_CHASE
 VM_CHASE = enumeration
---- @const VM_OTHER_SHIP # values shown here are dummy values
+--- @const VM_OTHER_SHIP
 VM_OTHER_SHIP = enumeration
---- @const VM_CAMERA_LOCKED # values shown here are dummy values
+--- @const VM_CAMERA_LOCKED
 VM_CAMERA_LOCKED = enumeration
---- @const VM_WARP_CHASE # values shown here are dummy values
+--- @const VM_WARP_CHASE
 VM_WARP_CHASE = enumeration
---- @const VM_PADLOCK_UP # values shown here are dummy values
+--- @const VM_PADLOCK_UP
 VM_PADLOCK_UP = enumeration
---- @const VM_PADLOCK_REAR # values shown here are dummy values
+--- @const VM_PADLOCK_REAR
 VM_PADLOCK_REAR = enumeration
---- @const VM_PADLOCK_LEFT # values shown here are dummy values
+--- @const VM_PADLOCK_LEFT
 VM_PADLOCK_LEFT = enumeration
---- @const VM_PADLOCK_RIGHT # values shown here are dummy values
+--- @const VM_PADLOCK_RIGHT
 VM_PADLOCK_RIGHT = enumeration
---- @const VM_WARPIN_ANCHOR # values shown here are dummy values
+--- @const VM_WARPIN_ANCHOR
 VM_WARPIN_ANCHOR = enumeration
---- @const VM_TOPDOWN # values shown here are dummy values
+--- @const VM_TOPDOWN
 VM_TOPDOWN = enumeration
---- @const VM_FREECAMERA # values shown here are dummy values
+--- @const VM_FREECAMERA
 VM_FREECAMERA = enumeration
---- @const VM_CENTERING # values shown here are dummy values
+--- @const VM_CENTERING
 VM_CENTERING = enumeration
---- @const MESSAGE_PRIORITY_LOW # values shown here are dummy values
+--- @const MESSAGE_PRIORITY_LOW
 MESSAGE_PRIORITY_LOW = enumeration
---- @const MESSAGE_PRIORITY_NORMAL # values shown here are dummy values
+--- @const MESSAGE_PRIORITY_NORMAL
 MESSAGE_PRIORITY_NORMAL = enumeration
---- @const MESSAGE_PRIORITY_HIGH # values shown here are dummy values
+--- @const MESSAGE_PRIORITY_HIGH
 MESSAGE_PRIORITY_HIGH = enumeration
---- @const OPTION_TYPE_SELECTION # values shown here are dummy values
+--- @const OPTION_TYPE_SELECTION
 OPTION_TYPE_SELECTION = enumeration
---- @const OPTION_TYPE_RANGE # values shown here are dummy values
+--- @const OPTION_TYPE_RANGE
 OPTION_TYPE_RANGE = enumeration
---- @const AUDIOSTREAM_EVENTMUSIC # values shown here are dummy values
+--- @const AUDIOSTREAM_EVENTMUSIC
 AUDIOSTREAM_EVENTMUSIC = enumeration
---- @const AUDIOSTREAM_MENUMUSIC # values shown here are dummy values
+--- @const AUDIOSTREAM_MENUMUSIC
 AUDIOSTREAM_MENUMUSIC = enumeration
---- @const AUDIOSTREAM_VOICE # values shown here are dummy values
+--- @const AUDIOSTREAM_VOICE
 AUDIOSTREAM_VOICE = enumeration
---- @const CONTEXT_VALID # values shown here are dummy values
+--- @const CONTEXT_VALID
 CONTEXT_VALID = enumeration
---- @const CONTEXT_SUSPENDED # values shown here are dummy values
+--- @const CONTEXT_SUSPENDED
 CONTEXT_SUSPENDED = enumeration
---- @const CONTEXT_INVALID # values shown here are dummy values
+--- @const CONTEXT_INVALID
 CONTEXT_INVALID = enumeration
---- @const FIREBALL_MEDIUM_EXPLOSION # values shown here are dummy values
+--- @const FIREBALL_MEDIUM_EXPLOSION
 FIREBALL_MEDIUM_EXPLOSION = enumeration
---- @const FIREBALL_LARGE_EXPLOSION # values shown here are dummy values
+--- @const FIREBALL_LARGE_EXPLOSION
 FIREBALL_LARGE_EXPLOSION = enumeration
---- @const FIREBALL_WARP_EFFECT # values shown here are dummy values
+--- @const FIREBALL_WARP_EFFECT
 FIREBALL_WARP_EFFECT = enumeration
---- @const GR_RESIZE_NONE # values shown here are dummy values
+--- @const GR_RESIZE_NONE
 GR_RESIZE_NONE = enumeration
---- @const GR_RESIZE_FULL # values shown here are dummy values
+--- @const GR_RESIZE_FULL
 GR_RESIZE_FULL = enumeration
---- @const GR_RESIZE_FULL_CENTER # values shown here are dummy values
+--- @const GR_RESIZE_FULL_CENTER
 GR_RESIZE_FULL_CENTER = enumeration
---- @const GR_RESIZE_MENU # values shown here are dummy values
+--- @const GR_RESIZE_MENU
 GR_RESIZE_MENU = enumeration
---- @const GR_RESIZE_MENU_ZOOMED # values shown here are dummy values
+--- @const GR_RESIZE_MENU_ZOOMED
 GR_RESIZE_MENU_ZOOMED = enumeration
---- @const GR_RESIZE_MENU_NO_OFFSET # values shown here are dummy values
+--- @const GR_RESIZE_MENU_NO_OFFSET
 GR_RESIZE_MENU_NO_OFFSET = enumeration
---- @const OS_NONE # values shown here are dummy values
+--- @const OS_NONE
 OS_NONE = enumeration
---- @const OS_MAIN # values shown here are dummy values
+--- @const OS_MAIN
 OS_MAIN = enumeration
---- @const OS_ENGINE # values shown here are dummy values
+--- @const OS_ENGINE
 OS_ENGINE = enumeration
---- @const OS_TURRET_BASE_ROTATION # values shown here are dummy values
+--- @const OS_TURRET_BASE_ROTATION
 OS_TURRET_BASE_ROTATION = enumeration
---- @const OS_TURRET_GUN_ROTATION # values shown here are dummy values
+--- @const OS_TURRET_GUN_ROTATION
 OS_TURRET_GUN_ROTATION = enumeration
---- @const OS_SUBSYS_ALIVE # values shown here are dummy values
+--- @const OS_SUBSYS_ALIVE
 OS_SUBSYS_ALIVE = enumeration
---- @const OS_SUBSYS_DEAD # values shown here are dummy values
+--- @const OS_SUBSYS_DEAD
 OS_SUBSYS_DEAD = enumeration
---- @const OS_SUBSYS_DAMAGED # values shown here are dummy values
+--- @const OS_SUBSYS_DAMAGED
 OS_SUBSYS_DAMAGED = enumeration
---- @const OS_SUBSYS_ROTATION # values shown here are dummy values
+--- @const OS_SUBSYS_ROTATION
 OS_SUBSYS_ROTATION = enumeration
---- @const OS_PLAY_ON_PLAYER # values shown here are dummy values
+--- @const OS_PLAY_ON_PLAYER
 OS_PLAY_ON_PLAYER = enumeration
---- @const OS_LOOPING_DISABLED # values shown here are dummy values
+--- @const OS_LOOPING_DISABLED
 OS_LOOPING_DISABLED = enumeration
---- @const MOVIE_PRE_FICTION # values shown here are dummy values
+--- @const MOVIE_PRE_FICTION
 MOVIE_PRE_FICTION = enumeration
---- @const MOVIE_PRE_CMD_BRIEF # values shown here are dummy values
+--- @const MOVIE_PRE_CMD_BRIEF
 MOVIE_PRE_CMD_BRIEF = enumeration
---- @const MOVIE_PRE_BRIEF # values shown here are dummy values
+--- @const MOVIE_PRE_BRIEF
 MOVIE_PRE_BRIEF = enumeration
---- @const MOVIE_PRE_GAME # values shown here are dummy values
+--- @const MOVIE_PRE_GAME
 MOVIE_PRE_GAME = enumeration
---- @const MOVIE_PRE_DEBRIEF # values shown here are dummy values
+--- @const MOVIE_PRE_DEBRIEF
 MOVIE_PRE_DEBRIEF = enumeration
---- @const MOVIE_POST_DEBRIEF # values shown here are dummy values
+--- @const MOVIE_POST_DEBRIEF
 MOVIE_POST_DEBRIEF = enumeration
---- @const MOVIE_END_CAMPAIGN # values shown here are dummy values
+--- @const MOVIE_END_CAMPAIGN
 MOVIE_END_CAMPAIGN = enumeration
---- @const TBOX_FLASH_NAME # values shown here are dummy values
+--- @const TBOX_FLASH_NAME
 TBOX_FLASH_NAME = enumeration
---- @const TBOX_FLASH_CARGO # values shown here are dummy values
+--- @const TBOX_FLASH_CARGO
 TBOX_FLASH_CARGO = enumeration
---- @const TBOX_FLASH_HULL # values shown here are dummy values
+--- @const TBOX_FLASH_HULL
 TBOX_FLASH_HULL = enumeration
---- @const TBOX_FLASH_STATUS # values shown here are dummy values
+--- @const TBOX_FLASH_STATUS
 TBOX_FLASH_STATUS = enumeration
---- @const TBOX_FLASH_SUBSYS # values shown here are dummy values
+--- @const TBOX_FLASH_SUBSYS
 TBOX_FLASH_SUBSYS = enumeration
---- @const LUAAI_ACHIEVABLE # values shown here are dummy values
+--- @const LUAAI_ACHIEVABLE
 LUAAI_ACHIEVABLE = enumeration
---- @const LUAAI_NOT_YET_ACHIEVABLE # values shown here are dummy values
+--- @const LUAAI_NOT_YET_ACHIEVABLE
 LUAAI_NOT_YET_ACHIEVABLE = enumeration
---- @const LUAAI_UNACHIEVABLE # values shown here are dummy values
+--- @const LUAAI_UNACHIEVABLE
 LUAAI_UNACHIEVABLE = enumeration
---- @const SCORE_BRIEFING # values shown here are dummy values
+--- @const SCORE_BRIEFING
 SCORE_BRIEFING = enumeration
---- @const SCORE_DEBRIEFING_SUCCESS # values shown here are dummy values
+--- @const SCORE_DEBRIEFING_SUCCESS
 SCORE_DEBRIEFING_SUCCESS = enumeration
---- @const SCORE_DEBRIEFING_AVERAGE # values shown here are dummy values
+--- @const SCORE_DEBRIEFING_AVERAGE
 SCORE_DEBRIEFING_AVERAGE = enumeration
---- @const SCORE_DEBRIEFING_FAILURE # values shown here are dummy values
+--- @const SCORE_DEBRIEFING_FAILURE
 SCORE_DEBRIEFING_FAILURE = enumeration
---- @const SCORE_FICTION_VIEWER # values shown here are dummy values
+--- @const SCORE_FICTION_VIEWER
 SCORE_FICTION_VIEWER = enumeration
---- @const INVALID # values shown here are dummy values
+--- @const INVALID
 INVALID = enumeration
---- @const NOT_YET_PRESENT # values shown here are dummy values
+--- @const NOT_YET_PRESENT
 NOT_YET_PRESENT = enumeration
---- @const PRESENT # values shown here are dummy values
+--- @const PRESENT
 PRESENT = enumeration
---- @const DEATH_ROLL # values shown here are dummy values
+--- @const DEATH_ROLL
 DEATH_ROLL = enumeration
---- @const EXITED # values shown here are dummy values
+--- @const EXITED
 EXITED = enumeration
---- @const DC_IS_HULL # values shown here are dummy values
+--- @const DC_IS_HULL
 DC_IS_HULL = enumeration
---- @const DC_VAPORIZE # values shown here are dummy values
+--- @const DC_VAPORIZE
 DC_VAPORIZE = enumeration
---- @const DC_SET_VELOCITY # values shown here are dummy values
+--- @const DC_SET_VELOCITY
 DC_SET_VELOCITY = enumeration
---- @const DC_FIRE_HOOK # values shown here are dummy values
+--- @const DC_FIRE_HOOK
 DC_FIRE_HOOK = enumeration
---- @const RPC_SERVER # values shown here are dummy values
+--- @const RPC_SERVER
 RPC_SERVER = enumeration
---- @const RPC_CLIENTS # values shown here are dummy values
+--- @const RPC_CLIENTS
 RPC_CLIENTS = enumeration
---- @const RPC_BOTH # values shown here are dummy values
+--- @const RPC_BOTH
 RPC_BOTH = enumeration
---- @const RPC_RELIABLE # values shown here are dummy values
+--- @const RPC_RELIABLE
 RPC_RELIABLE = enumeration
---- @const RPC_ORDERED # values shown here are dummy values
+--- @const RPC_ORDERED
 RPC_ORDERED = enumeration
---- @const RPC_UNRELIABLE # values shown here are dummy values
+--- @const RPC_UNRELIABLE
 RPC_UNRELIABLE = enumeration
---- @const HOTKEY_LINE_NONE # values shown here are dummy values
+--- @const HOTKEY_LINE_NONE
 HOTKEY_LINE_NONE = enumeration
---- @const HOTKEY_LINE_HEADING # values shown here are dummy values
+--- @const HOTKEY_LINE_HEADING
 HOTKEY_LINE_HEADING = enumeration
---- @const HOTKEY_LINE_WING # values shown here are dummy values
+--- @const HOTKEY_LINE_WING
 HOTKEY_LINE_WING = enumeration
---- @const HOTKEY_LINE_SHIP # values shown here are dummy values
+--- @const HOTKEY_LINE_SHIP
 HOTKEY_LINE_SHIP = enumeration
---- @const HOTKEY_LINE_SUBSHIP # values shown here are dummy values
+--- @const HOTKEY_LINE_SUBSHIP
 HOTKEY_LINE_SUBSHIP = enumeration
---- @const SCROLLBACK_SOURCE_COMPUTER # values shown here are dummy values
+--- @const SCROLLBACK_SOURCE_COMPUTER
 SCROLLBACK_SOURCE_COMPUTER = enumeration
---- @const SCROLLBACK_SOURCE_TRAINING # values shown here are dummy values
+--- @const SCROLLBACK_SOURCE_TRAINING
 SCROLLBACK_SOURCE_TRAINING = enumeration
---- @const SCROLLBACK_SOURCE_HIDDEN # values shown here are dummy values
+--- @const SCROLLBACK_SOURCE_HIDDEN
 SCROLLBACK_SOURCE_HIDDEN = enumeration
---- @const SCROLLBACK_SOURCE_IMPORTANT # values shown here are dummy values
+--- @const SCROLLBACK_SOURCE_IMPORTANT
 SCROLLBACK_SOURCE_IMPORTANT = enumeration
---- @const SCROLLBACK_SOURCE_FAILED # values shown here are dummy values
+--- @const SCROLLBACK_SOURCE_FAILED
 SCROLLBACK_SOURCE_FAILED = enumeration
---- @const SCROLLBACK_SOURCE_SATISFIED # values shown here are dummy values
+--- @const SCROLLBACK_SOURCE_SATISFIED
 SCROLLBACK_SOURCE_SATISFIED = enumeration
---- @const SCROLLBACK_SOURCE_COMMAND # values shown here are dummy values
+--- @const SCROLLBACK_SOURCE_COMMAND
 SCROLLBACK_SOURCE_COMMAND = enumeration
---- @const SCROLLBACK_SOURCE_NETPLAYER # values shown here are dummy values
+--- @const SCROLLBACK_SOURCE_NETPLAYER
 SCROLLBACK_SOURCE_NETPLAYER = enumeration
---- @const MULTI_TYPE_COOP # values shown here are dummy values
+--- @const MULTI_TYPE_COOP
 MULTI_TYPE_COOP = enumeration
---- @const MULTI_TYPE_TEAM # values shown here are dummy values
+--- @const MULTI_TYPE_TEAM
 MULTI_TYPE_TEAM = enumeration
---- @const MULTI_TYPE_DOGFIGHT # values shown here are dummy values
+--- @const MULTI_TYPE_DOGFIGHT
 MULTI_TYPE_DOGFIGHT = enumeration
---- @const MULTI_TYPE_SQUADWAR # values shown here are dummy values
+--- @const MULTI_TYPE_SQUADWAR
 MULTI_TYPE_SQUADWAR = enumeration
---- @const MULTI_OPTION_RANK # values shown here are dummy values
+--- @const MULTI_OPTION_RANK
 MULTI_OPTION_RANK = enumeration
---- @const MULTI_OPTION_LEAD # values shown here are dummy values
+--- @const MULTI_OPTION_LEAD
 MULTI_OPTION_LEAD = enumeration
---- @const MULTI_OPTION_ANY # values shown here are dummy values
+--- @const MULTI_OPTION_ANY
 MULTI_OPTION_ANY = enumeration
---- @const MULTI_OPTION_HOST # values shown here are dummy values
+--- @const MULTI_OPTION_HOST
 MULTI_OPTION_HOST = enumeration
---- @const MULTI_GAME_TYPE_OPEN # values shown here are dummy values
+--- @const MULTI_GAME_TYPE_OPEN
 MULTI_GAME_TYPE_OPEN = enumeration
---- @const MULTI_GAME_TYPE_PASSWORD # values shown here are dummy values
+--- @const MULTI_GAME_TYPE_PASSWORD
 MULTI_GAME_TYPE_PASSWORD = enumeration
---- @const MULTI_GAME_TYPE_RANK_ABOVE # values shown here are dummy values
+--- @const MULTI_GAME_TYPE_RANK_ABOVE
 MULTI_GAME_TYPE_RANK_ABOVE = enumeration
---- @const MULTI_GAME_TYPE_RANK_BELOW # values shown here are dummy values
+--- @const MULTI_GAME_TYPE_RANK_BELOW
 MULTI_GAME_TYPE_RANK_BELOW = enumeration
---- @const SEXP_TRUE # values shown here are dummy values
+--- @const SEXP_TRUE
 SEXP_TRUE = enumeration
---- @const SEXP_FALSE # values shown here are dummy values
+--- @const SEXP_FALSE
 SEXP_FALSE = enumeration
---- @const SEXP_KNOWN_FALSE # values shown here are dummy values
+--- @const SEXP_KNOWN_FALSE
 SEXP_KNOWN_FALSE = enumeration
---- @const SEXP_KNOWN_TRUE # values shown here are dummy values
+--- @const SEXP_KNOWN_TRUE
 SEXP_KNOWN_TRUE = enumeration
---- @const SEXP_UNKNOWN # values shown here are dummy values
+--- @const SEXP_UNKNOWN
 SEXP_UNKNOWN = enumeration
---- @const SEXP_NAN # values shown here are dummy values
+--- @const SEXP_NAN
 SEXP_NAN = enumeration
---- @const SEXP_NAN_FOREVER # values shown here are dummy values
+--- @const SEXP_NAN_FOREVER
 SEXP_NAN_FOREVER = enumeration
---- @const SEXP_CANT_EVAL # values shown here are dummy values
+--- @const SEXP_CANT_EVAL
 SEXP_CANT_EVAL = enumeration
---- @const COMMIT_SUCCESS # values shown here are dummy values
+--- @const COMMIT_SUCCESS
 COMMIT_SUCCESS = enumeration
---- @const COMMIT_FAIL # values shown here are dummy values
+--- @const COMMIT_FAIL
 COMMIT_FAIL = enumeration
---- @const COMMIT_PLAYER_NO_WEAPONS # values shown here are dummy values
+--- @const COMMIT_PLAYER_NO_WEAPONS
 COMMIT_PLAYER_NO_WEAPONS = enumeration
---- @const COMMIT_NO_REQUIRED_WEAPON # values shown here are dummy values
+--- @const COMMIT_NO_REQUIRED_WEAPON
 COMMIT_NO_REQUIRED_WEAPON = enumeration
---- @const COMMIT_NO_REQUIRED_WEAPON_MULTIPLE # values shown here are dummy values
+--- @const COMMIT_NO_REQUIRED_WEAPON_MULTIPLE
 COMMIT_NO_REQUIRED_WEAPON_MULTIPLE = enumeration
---- @const COMMIT_BANK_GAP_ERROR # values shown here are dummy values
+--- @const COMMIT_BANK_GAP_ERROR
 COMMIT_BANK_GAP_ERROR = enumeration
---- @const COMMIT_PLAYER_NO_SLOT # values shown here are dummy values
+--- @const COMMIT_PLAYER_NO_SLOT
 COMMIT_PLAYER_NO_SLOT = enumeration
---- @const COMMIT_MULTI_PLAYERS_NO_SHIPS # values shown here are dummy values
+--- @const COMMIT_MULTI_PLAYERS_NO_SHIPS
 COMMIT_MULTI_PLAYERS_NO_SHIPS = enumeration
---- @const COMMIT_MULTI_NOT_ALL_ASSIGNED # values shown here are dummy values
+--- @const COMMIT_MULTI_NOT_ALL_ASSIGNED
 COMMIT_MULTI_NOT_ALL_ASSIGNED = enumeration
---- @const COMMIT_MULTI_NO_PRIMARY # values shown here are dummy values
+--- @const COMMIT_MULTI_NO_PRIMARY
 COMMIT_MULTI_NO_PRIMARY = enumeration
---- @const COMMIT_MULTI_NO_SECONDARY # values shown here are dummy values
+--- @const COMMIT_MULTI_NO_SECONDARY
 COMMIT_MULTI_NO_SECONDARY = enumeration
 
