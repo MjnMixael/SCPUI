@@ -16,7 +16,7 @@
 			<div id=top_panel_b>
 				<div id=top_b_panel_wrapper>
 					<div id=bullet_cont>
-						<button id="award_btn_1" class="bullet button_1" onclick="controller:change_view(false)">
+						<button id="award_btn_1" class="bullet button_1" onclick="controller:change_view(controller.STATE_MEDALS)">
 							<span id="bullet_img" class="bullet button_img">
 								<img src="bullet-r.png" class="psuedo_img"></img>
 							</span>
@@ -26,12 +26,22 @@
 						</button>
 					</div>
 					<div id=bullet_cont>
-						<button id="award_btn_2" class="bullet button_1" onclick="controller:change_view(true)">
+						<button id="award_btn_2" class="bullet button_1" onclick="controller:change_view(controller.STATE_RIBBONS)">
 							<span id="bullet_img" class="bullet button_img">
 								<img src="bullet-r.png" class="psuedo_img"></img>
 							</span>
 							<span class="pos button_text_right">
 								<p>XSTR("Ribbons", 888078)</p>
+							</span>
+						</button>
+					</div>
+					<div id=bullet_cont>
+						<button id="award_btn_3" class="bullet button_1" onclick="controller:change_view(controller.STATE_ACHIEVEMENTS)">
+							<span id="bullet_img" class="bullet button_img">
+								<img src="bullet-r.png" class="psuedo_img"></img>
+							</span>
+							<span class="pos button_text_right">
+								<p>XSTR("Achievements", 888563)</p>
 							</span>
 						</button>
 					</div>
@@ -59,6 +69,16 @@
 				<div id=ribbon_column_4 class="ribbon_column">
 				</div>
 				<div id=ribbon_column_5 class="ribbon_column">
+				</div>
+			</div>
+			<img src="fiction-window.png"></img>
+		</div>
+		<div id=achievements_wrapper>
+			<div id=hidden_achievements></div>
+			<div id=achievements_wrapper_actual>
+				<div id=achievements_left class="achievement_column_left">
+				</div>
+				<div id=achievements_right class="achievement_column_right">
 				</div>
 			</div>
 			<img src="fiction-window.png"></img>

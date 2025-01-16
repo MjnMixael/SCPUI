@@ -328,7 +328,9 @@
 888559, "French translation by Achille"
 888560, "wookiejedi"
 888561, "WoolieWool"
+888563, "Achievements"
+888564, "Hidden Achievements"
 
-;;Next available ID: 888563
+;;Next available ID: 888565
 
 #end

@@ -3,10 +3,15 @@
 -----------------------------------
 
 local Topics = require("lib_ui_topics")
+local Utils = require('lib_utils')
 
 local Class = require("lib_class")
 
 local MedalsController = Class()
+
+MedalsController.STATE_MEDALS = 0 --- @type number The state for viewing medals
+MedalsController.STATE_RIBBONS = 1 --- @type number The state for viewing ribbons
+MedalsController.STATE_ACHIEVEMENTS = 2 --- @type number The state for viewing achievements
 
 --- Called by the class constructor
 --- @return nil
@@ -75,9 +80,32 @@ function MedalsController:initialize(document)
 		self:buildRibbonDiv(i)
 	end
 
+	ScpuiSystem:loadAchievementsFromFile()
+
+	local hidden_count = 0
+	local count = 0
+	for i = 1, #ScpuiSystem.data.Achievements.Current_Achievements do
+		local show = true
+		if ScpuiSystem.data.Achievements.Current_Achievements[i].Hidden then
+			local id = ScpuiSystem.data.Achievements.Current_Achievements[i].Id
+			if not ScpuiSystem.data.Achievements.Completed_Achievements[id] then
+				show = false
+			end
+		end
+		if not show then
+			hidden_count = hidden_count + 1
+		else
+			self:buildAchievementDiv(i, count)
+			count = count + 1
+		end
+	end
+
+	local hidden_string = "+" .. tostring(hidden_count) .. " " .. ba.XSTR("Hidden Achievements", 888564)
+	self.Document:GetElementById("hidden_achievements").inner_rml = hidden_string
+
 	Topics.medals.initialize:send(self)
 
-	self:change_view(false)
+	self:change_view(self.STATE_MEDALS)
 
 end
 
@@ -283,21 +311,126 @@ function MedalsController:buildRibbonDiv(idx)
 	parent_el:AppendChild(ribbon_el)
 end
 
---- Called by the RML to toggle between medals and ribbons. True for ribbons, false for medals
---- @param toggle boolean The toggle value
+--- Create a div element for an achievement, placing it in the correct position
+--- @param idx number The index of the achievement in the Current_Achievements list
+--- @param count number The current count of achievements displayed
 --- @return nil
-function MedalsController:change_view(toggle)
+function MedalsController:buildAchievementDiv(idx, count)
+    local achievement = ScpuiSystem.data.Achievements.Current_Achievements[idx]
+
+    -- Prevent processing if achievement data is missing
+    if not achievement then return end
+
+    -- Determine the parent element for current achievements
+    local parent_el
+
+	if Utils.isOdd(count) then
+		parent_el = self.Document:GetElementById("achievements_left")
+	else
+		parent_el = self.Document:GetElementById("achievements_right")
+	end
+
+	local r, g, b, a = ScpuiSystem:findParentColor(parent_el)
+
+	if achievement.TextColor then
+		r, g, b, a = Utils.hexToRgba(achievement.TextColor)
+	end
+
+    -- Create a new div for the achievement
+    local achievement_el = self.Document:CreateElement("div")
+    achievement_el.id = "achievement_" .. idx
+    achievement_el:SetClass("achievement_box", true)
+	achievement_el.style["border-color"] = Utils.rgbaToHex(r or 255, g or 255, b or 255, Utils.clamp(a - 150, 25, 255))
+
+    -- Top inner box for name and description
+    local top_box_el = self.Document:CreateElement("div")
+    top_box_el:SetClass("achievement_top_box", true)
+
+    -- Create and append the name element (bold)
+    local name_el = self.Document:CreateElement("p")
+    name_el:SetClass("achievement_name", true)
+    name_el.inner_rml = "<b>" .. achievement.Name .. "</b>"
+	name_el.style["color"] = Utils.rgbaToHex(r or 255, g or 255, b or 255, a)
+    top_box_el:AppendChild(name_el)
+
+    -- Create and append the description element (smaller, not bold)
+    local description_el = self.Document:CreateElement("p")
+    description_el:SetClass("achievement_description", true)
+    description_el.inner_rml = achievement.Description
+	description_el.style["color"] = Utils.rgbaToHex(r or 255, g or 255, b or 255, Utils.clamp(a - 75, 50, 255))
+    top_box_el:AppendChild(description_el)
+
+    achievement_el:AppendChild(top_box_el)
+
+    -- Bottom inner box for progress bar and percentage
+    local bottom_box_el = self.Document:CreateElement("div")
+    bottom_box_el:SetClass("achievement_bottom_box", true)
+
+    -- Create and append the progress bar container
+    local progress_container_el = self.Document:CreateElement("div")
+    progress_container_el:SetClass("progress_container", true)
+	progress_container_el.style["background-color"] = Utils.rgbaToHex(r or 255, g or 255, b or 255, Utils.clamp(a - 150, 25, 255))
+
+    -- Create the progress bar
+    local progress_bar_el = self.Document:CreateElement("div")
+    progress_bar_el:SetClass("progress_bar", true)
+
+    -- Calculate random progress for testing
+    local progress = ScpuiSystem.data.Achievements.Completed_Achievements[achievement.Id] or 0
+
+	if not achievement.Criteria.Threshold then
+		if progress ~= 0 then
+			progress = 100
+		end
+	else
+		if progress > achievement.Criteria.Threshold then
+			progress = achievement.Criteria.Threshold
+		end
+	end
+
+	if progress < 0 then progress = 0 end
+
+	local progress_pct = math.min((progress / achievement.Criteria.Threshold) * 100, 100)
+
+    progress_bar_el:SetAttribute("style", "width: " .. progress_pct .. "%;")
+	progress_bar_el.style["background-color"] = achievement.BarColor
+    progress_container_el:AppendChild(progress_bar_el)
+    bottom_box_el:AppendChild(progress_container_el)
+
+    -- Create and append the percentage text
+	if achievement.Criteria.Threshold > 1 then
+		local percent_el = self.Document:CreateElement("p")
+		percent_el:SetClass("progress_percent", true)
+		percent_el.inner_rml = progress .. "/" .. achievement.Criteria.Threshold
+		percent_el.style["color"] = Utils.rgbaToHex(r or 255, g or 255, b or 255, Utils.clamp(a - 75, 50, 255))
+		bottom_box_el:AppendChild(percent_el)
+	end
+
+    achievement_el:AppendChild(bottom_box_el)
+
+    -- Append the achievement element to the parent
+    parent_el:AppendChild(achievement_el)
+end
+
+--- Called by the RML to toggle between medals and ribbons.
+--- @param state number The state to change to. Should be one of the STATE_ enumerations
+--- @return nil
+function MedalsController:change_view(state)
 	local medal_el = self.Document:GetElementById("medals_wrapper")
 	local ribbon_el = self.Document:GetElementById("ribbons_wrapper")
+	local achievements_el = self.Document:GetElementById("achievements_wrapper")
 
-	medal_el:SetClass("hidden", toggle)
-	ribbon_el:SetClass("hidden", not toggle)
+	medal_el:SetClass("hidden", state ~= self.STATE_MEDALS)
+	ribbon_el:SetClass("hidden", state ~= self.STATE_RIBBONS)
+	achievements_el:SetClass("hidden", state ~= self.STATE_ACHIEVEMENTS)
 
 	local medal_btn_el = self.Document:GetElementById("award_btn_1")
 	local ribbon_btn_el = self.Document:GetElementById("award_btn_2")
+	local achievements_btn_el = self.Document:GetElementById("award_btn_3")
 
-	medal_btn_el:SetPseudoClass("checked", not toggle)
-	ribbon_btn_el:SetPseudoClass("checked", toggle)
+	medal_btn_el:SetPseudoClass("checked", state == self.STATE_MEDALS)
+	ribbon_btn_el:SetPseudoClass("checked", state == self.STATE_RIBBONS)
+	achievements_btn_el:SetPseudoClass("checked", state == self.STATE_ACHIEVEMENTS)
 end
 
 --- Called by the RML to exit the medals screen

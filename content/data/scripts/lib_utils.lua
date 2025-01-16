@@ -17,6 +17,20 @@ function utils.round(num, decimal_places)
     return math.floor(num * multiplier + 0.5) / multiplier
 end
 
+--- Check if a value is even
+--- @param number number The number to check
+--- @return boolean result Whether the number is even
+function utils.isEven(number)
+    return number % 2 == 0
+end
+
+--- Check if a value is odd
+--- @param number number The number to check
+--- @return boolean result Whether the number is odd
+function utils.isOdd(number)
+    return number % 2 ~= 0
+end
+
 --- Parses an XSTR from Custom data if it's formatted like so:
 ---  +Val: NAME "string", #
 --- and returns the string and id in a table That can be sent to ba.XSTR()
@@ -115,6 +129,48 @@ function utils.runSEXP(sexp, ...)
 
 	if not warned then
 		return mn.runSEXP("( " .. sexp_string .. " )")
+	end
+
+	return false
+
+end
+
+--- A wrapper for mn.evaluateSEXP that is not fucking stupid. Will take the arguments and construct the mn.evaluateSEXP() call for you.
+--- @param sexp string The SEXP to run
+--- @param ... any The arguments to pass to the SEXP
+--- @return boolean Whether the SEXP was run successfully
+function utils.evaluateSEXP(sexp, ...)
+
+	local sexp_string = sexp
+	local warned = false
+
+	for _, data in ipairs(arg) do
+
+		if data ~= nil and data ~= "" then
+            ---@type any
+			local param = ""
+
+			if type(data) == "boolean" then
+				param = "( " .. tostring(data) .. " )"
+			elseif type(data) == "number" then
+				param = math.floor(data)
+			elseif type(data) == "string" then
+                param = "!" .. data:gsub("!", "!!") .. "!"
+            end
+
+			if param ~= "" then
+				sexp_string = sexp_string .. " " .. param
+			else
+				ba.warning("Util evaluateSEXP() got parameter '" .. tostring(data) .. "' which is not a valid data type! Must be boolean, number, or string.")
+				warned = true
+			end
+
+		end
+
+	end
+
+	if not warned then
+		return mn.evaluateSEXP("( " .. sexp_string .. " )")
 	end
 
 	return false
@@ -223,6 +279,52 @@ function utils.extractString(inputstr, stop)
 		return inputstr
 	end
 end
+
+--- Convert rgba color values to a hex color code
+--- @param r number The red value
+--- @param g number The green value
+--- @param b number The blue value
+--- @param a number The alpha value
+--- @return string hex The hex color code
+function utils.rgbaToHex(r, g, b, a)
+    -- Ensure all values are within the 0-255 range
+    r = math.max(0, math.min(255, r))
+    g = math.max(0, math.min(255, g))
+    b = math.max(0, math.min(255, b))
+    a = math.max(0, math.min(255, a))
+
+    -- Format the values as a hexadecimal color code
+    return string.format("#%02X%02X%02X%02X", r, g, b, a)
+end
+
+--- Converts a hexadecimal color string to RGBA values
+--- @param hex string The hexadecimal color string (e.g., "#RRGGBB" or "#RRGGBBAA")
+--- @return number, number, number, number values The RGBA values (0-255)
+function utils.hexToRgba(hex)
+    -- Ensure the hex starts with '#' and is the correct length
+    if not hex or not hex:match("^#%x%x%x%x%x%x") then
+        return 255, 255, 255, 255 -- Default to white with full opacity
+    end
+
+    -- Remove the '#' prefix
+    hex = hex:sub(2)
+
+    -- Extract RGBA values
+    local r, g, b, a
+    if #hex == 6 then
+        -- Hex format is RRGGBB
+        r, g, b = tonumber(hex:sub(1, 2), 16), tonumber(hex:sub(3, 4), 16), tonumber(hex:sub(5, 6), 16)
+        a = 255 -- Default alpha
+    elseif #hex == 8 then
+        -- Hex format is RRGGBBAA
+        r, g, b, a = tonumber(hex:sub(1, 2), 16), tonumber(hex:sub(3, 4), 16), tonumber(hex:sub(5, 6), 16), tonumber(hex:sub(7, 8), 16)
+    else
+        return 255, 255, 255, 255 -- Default to white with full opacity
+    end
+
+    return r, g, b, a
+end
+
 
 --- Split a string using a separator or space if separator is not provided
 --- @param inputstr string The string to split

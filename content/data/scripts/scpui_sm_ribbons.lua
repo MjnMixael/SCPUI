@@ -2,7 +2,7 @@
 --This file contains functions and methods for handling the ribbons rewards system
 -----------------------------------
 
---Create the custom options table
+--Create the ribbons table
 ScpuiSystem.data.Player_Ribbons = {}
 
 --LuaSexp to grant a ribbon permanently to the player
@@ -106,6 +106,37 @@ function ScpuiSystem:loadRibbonsFromFile()
 			config = {}
 		end
 	end
+
+	--- Mapping of old keys to new keys
+	local keyMapping = {
+		name = "Name",
+		description = "Description",
+		source = "Source",
+		border = "Border",
+		colors = "Stripes_List",
+		r = "R",
+		g = "G",
+		b = "B",
+		p = "P"
+	}
+
+	--- Function to convert keys using the key mapping
+	local function convertKeysUsingMapping(data)
+		if type(data) ~= "table" then
+			return data
+		end
+
+		local newTable = {}
+		for key, value in pairs(data) do
+			-- Use mapped key if it exists, otherwise keep the original key
+			local newKey = keyMapping[key] or key
+			newTable[newKey] = convertKeysUsingMapping(value)
+		end
+		return newTable
+	end
+
+	-- Convert keys using the mapping table
+    config = convertKeysUsingMapping(config)
 
 	--Currently not doing this per-player on purpose.. but we could!
 	--[[if not config[ba.getCurrentPlayer():getName()] then

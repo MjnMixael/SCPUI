@@ -38,6 +38,35 @@
 --- @field Border scpui_color The border color of the ribbon
 --- @field Stripes_List scpui_ribbon_stripe[] The stripe colors of the ribbon
 
+--- SCPUI Achievement Criteria
+--- @class scpui_achievement_criteria
+--- @field Type number The type of the criteria. Should be one of the Achievements.Types enumerations
+--- @field Target string? The target of the achievement. Usually a ship/weapon class or mission name
+--- @field Threshold number? The numeric threshold of the achievement if a certain amount is required
+
+--- SCPUI Current Achievement
+--- @class scpui_current_achievement
+--- @field Name string The name of the achievement
+--- @field Id string The id of the achievement
+--- @field Description string The description of the achievement
+--- @field Hidden boolean Whether or not the achievement is hidden until completed
+--- @field Criteria scpui_achievement_criteria The criteria for the achievement
+--- @field BarColor string The hexadecimal color of the achievement progress bar
+--- @field TextColor? string The hexadecimal color of the achievement text
+
+--- SCPUI Achievement Types
+--- @class scpui_achievement_types
+--- @field NUMBER_OF_KILLS number --- Number of kills type, optionally of a specific class
+--- @field WEAPONS_FIRED number --- Number of weapons fired type, optionally of a specific class
+--- @field CUSTOM number --- Optional achievement awarded by sexp
+
+--- SCPUI Achievements Info
+--- @class achievements_info
+--- @field Current_Achievements scpui_current_achievement[] Table of achievements available in the current mod
+--- @field Completed_Achievements any[] Table of completed achievements loaded from the save file
+--- @field ModId string The current mod id parsed from the loaded mod's folder name
+--- @field Types scpui_achievement_types The enumerations for each valid type of achievement
+
 --- SCPUI UI Replacements
 --- @class ui_replacement
 --- @field Markup string The document to use to load
@@ -366,6 +395,7 @@
 --- @field Saved_Loadouts? saved_loadout[] The saved loadouts for SCPUI
 --- @field Custom_Options? table The custom options for values
 --- @field Player_Ribbons? ribbon_info[] The player ribbons for SCPUI
+--- @field Achievements? achievements_info The data for SCPUI's achievements system
 --- @field Generated_Icons? loadout_icon[] The rocket UI icons for SCPUI loadout screens
 --- @field ScpuiOptionValues custom_option_data The values for the built-in SCPUI options
 --- @field Reset? boolean True if SCPUI should regen the icons, false otherwise

@@ -26,6 +26,7 @@ div#medals_wrapper
 	margin: auto;
 	width: 100%;
 	height: auto;
+	z-index: 5;
 }
 
 div#medals_wrapper_actual
@@ -66,6 +67,7 @@ div#ribbons_wrapper
 	position: absolute;
 	top: 8%;
 	width: 79%;
+	z-index: 5;
 }
 
 div#ribbons_wrapper img
@@ -77,7 +79,7 @@ div#ribbons_wrapper img
 
 div#ribbons_wrapper_actual
 {
-	width: 98%;
+	width: 95%;
 	height: 93.5%;
 	position: absolute;
 	top: 3.5%;
@@ -111,6 +113,109 @@ div#ribbons_wrapper_actual
 {
 	text-align: center;
 	height: 5%;
+}
+
+/*Achievements stuff*/
+
+div#achievements_wrapper
+{
+	margin: auto;
+	position: absolute;
+	top: 8%;
+	width: 79%;
+	z-index: 5;
+}
+
+div#achievements_wrapper img
+{
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+div#hidden_achievements
+{
+	position: absolute;
+	left: 10%;
+}
+
+div#achievements_wrapper_actual
+{
+	width: 98%;
+	height: 93.5%;
+	position: absolute;
+	top: 3.5%;
+	left: 1%;
+	overflow: scroll;
+}
+
+.achievement_column_left
+{
+	width: 49%;
+	position: relative;
+	float: left;
+}
+
+.achievement_column_right
+{
+	width: 49%;
+	position: relative;
+	float: left;
+}
+
+.achievement_box {
+    margin: 1%;
+    padding: 1%;
+	border-width: 2px;
+}
+
+
+.achievement_top_box {
+    margin-bottom: 10px;
+}
+
+
+.achievement_name {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+
+.achievement_description {
+    font-size: 14px;
+}
+
+
+.achievement_bottom_box {
+    margin-top: 10px;
+    width: 100%;
+}
+
+
+.progress_container {
+    width: 74%;
+    height: 20px;
+    position: relative;
+	float: left;
+}
+
+
+.progress_bar {
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+}
+
+
+.progress_percent {
+    width: 25%;
+    text-align: right;
+    vertical-align: middle;
+    font-size: 14px;
+    font-weight: bold;
+	float: right;
 }
 
 /*Bottom Panel Elements*/
@@ -183,7 +288,7 @@ button#fv_accept_btn:active #accept_img
 
 div#top_panel_wrapper
 {
-	width: 100%;
+	width: 10%;
 	height: auto;
 	overflow: hidden;
 	position: absolute;
@@ -194,7 +299,7 @@ div#top_panel_wrapper
 
 div#top_panel_b
 {
-	width: 4%;
+	width: 40%;
 	height: auto;
 	position: relative;
 	float: left;
@@ -283,6 +388,24 @@ button#award_btn_2:checked #bullet_img
 	background-image: bullet-r-o.png;
 }
 
+button#award_btn_3:hover #bullet_img
+{
+	background-decorator: image;
+	background-image: bullet-r-h.png;
+}
+
+button#award_btn_3:active #bullet_img
+{
+	background-decorator: image;
+	background-image: bullet-r-o.png;
+}
+
+button#award_btn_3:checked #bullet_img
+{
+	background-decorator: image;
+	background-image: bullet-r-o.png;
+}
+
 /*Scroll Buttons*/
 
 #ribbons_wrapper_actual scrollbarvertical
@@ -353,6 +476,78 @@ button#award_btn_2:checked #bullet_img
 }
 
 #ribbons_wrapper_actual scrollbarvertical sliderarrowinc:active
+{
+	icon-image: arrow-dbl-down-o.png;
+}
+
+#achievements_wrapper_actual scrollbarvertical
+{
+	scrollchange-sound: 9;
+	width: 4%;
+	position: absolute;
+	right: 1.1%;
+	top: -9%;
+	z-index: 5;
+}
+
+#achievements_wrapper_actual scrollbarvertical slidertrack
+{
+	visibility: hidden;
+}
+
+#achievements_wrapper_actual scrollbarvertical sliderbar
+{
+	height: 5%;
+}
+
+#achievements_wrapper_actual scrollbarvertical sliderbar:hover
+{
+
+}
+
+#achievements_wrapper_actual scrollbarvertical sliderbar:active
+{
+
+}
+
+#achievements_wrapper_actual scrollbarvertical sliderarrowdec
+{
+	width: 100%;
+	height: 8%;
+	margin-top: 8%;
+	mouseover-sound: 17;
+	click-sound: 0;
+	icon-decorator: image;
+	icon-image: arrow-dbl-up.png;
+}
+
+#achievements_wrapper_actual scrollbarvertical sliderarrowinc
+{
+	width: 100%;
+	height: 8%;
+	margin-bottom: -10%;
+	mouseover-sound: 17;
+	click-sound: 0;
+	icon-decorator: image;
+	icon-image: arrow-dbl-down.png;
+}
+
+#achievements_wrapper_actual scrollbarvertical sliderarrowdec:hover
+{
+	icon-image: arrow-dbl-up-h.png;
+}
+
+#achievements_wrapper_actual scrollbarvertical sliderarrowinc:hover
+{
+	icon-image: arrow-dbl-down-h.png;
+}
+
+#achievements_wrapper_actual scrollbarvertical sliderarrowdec:active
+{
+	icon-image: arrow-dbl-up-o.png;
+}
+
+#achievements_wrapper_actual scrollbarvertical sliderarrowinc:active
 {
 	icon-image: arrow-dbl-down-o.png;
 }

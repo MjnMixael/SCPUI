@@ -203,6 +203,48 @@ function ScpuiSystem:getFontSize(val, default)
     return math.floor(converted_value)
 end
 
+--- Traverse parents of an element to find the most recent color style
+--- @param element Element The starting element
+--- @return number?, number?, number?, number values The RGBA values of the color, or default to white if not found
+function ScpuiSystem:findParentColor(element)
+
+	--- Parse the color style to ge the rgba values
+	--- @param color_style string The color style to parse
+	--- @return number?, number?, number?, number values The RGBA values of the color
+	local function extract_rgba(color_style)
+		-- Remove 'rgb(' and ')' prefixes/suffixes
+		color_style = color_style:gsub("rgb%(", ""):gsub("%)", "")
+
+		-- Extract values using string.match with multiple calls
+		local r = string.match(color_style, "^(%d+)")
+		color_style = string.sub(color_style, string.len(r) + 2) -- Remove matched 'r' and comma
+		local g = string.match(color_style, "^(%d+)")
+		color_style = string.sub(color_style, string.len(g) + 2) -- Remove matched 'g' and comma
+		local b = string.match(color_style, "^(%d+)")
+		color_style = string.sub(color_style, string.len(b) + 2) -- Remove matched 'b' and comma
+		local a = string.match(color_style, "^(%d+)") or 255
+
+		return r, g, b, a
+	end
+
+    while element do
+        -- Get the computed style for 'color'
+        local color_style = element.style.color
+        if color_style then
+			return extract_rgba(color_style)
+        end
+
+        -- Move to the parent element
+        element = element.parent_node
+    end
+
+    -- Return default color if no parent has a color style
+    --return unpack(default_color)
+
+	return nil, nil, nil, 255
+end
+
+
 --- Gets the background rcss class to use based on the current campaign. Returns "general_bg" if no class is found.
 --- @return string class The rcss class to use to set the background image
 function ScpuiSystem:getBackgroundClass()

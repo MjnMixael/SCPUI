@@ -1,4 +1,40 @@
+#Lua Enums
+
+;;This enum is now filled by factionshandler-sct.tbm
+
+$Name: SCPUI_Achievements
+	+Enum: <none>
+			
+#End
+
 #Lua SEXPs
+
+$Operator: set-achievement-value
+$Category: Change
+$Subcategory: Mission and Campaign
+$Minimum Arguments: 2
+$Maximum Arguments: 2
+$Return Type: Nothing
+$Description: Sets an SCPUI achievement to a specific value for the current player
+$Parameter:
+  +Description: The name of the achievement to set the value of
+  +Type: enum
+  		+Enum name: SCPUI_Achievements
+$Parameter:
+  +Description: The numeric value to set. If the achievement has no threshold then any non zero number will grant the achievement
+  +Type: Number
+
+$Operator: get-achievement-value
+$Category: Change
+$Subcategory: Mission and Campaign
+$Minimum Arguments: 1
+$Maximum Arguments: 1
+$Return Type: Number
+$Description: Gets an SCPUI achievement value
+$Parameter:
+  +Description: The name of the achievement to get the value of
+  +Type: enum
+  		+Enum name: SCPUI_Achievements
 
 $Operator: grant-scpui-ribbon
 $Category: Change
