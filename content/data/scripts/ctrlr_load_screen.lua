@@ -12,7 +12,6 @@ local LoadScreenController = Class()
 --- @return nil
 function LoadScreenController:init()
 	self.Document = nil --- @type Document The RML document
-	self.LoadProgress = 0 --- @type number The current progress of the loading bar
 	self.PreviousProgress = 0 --- @type number The previous progress of the loading bar
 	self.LoopLoadBar = false --- @type boolean Whether the loading bar should loop
 	self.ImageTexture = nil --- @type texture The texture for the loading bar image
@@ -125,13 +124,11 @@ function LoadScreenController:unload()
 	Topics.loadscreen.unload:send(self)
 end
 
---- For each frame, set and draw the loading bar
-engine.addHook("On Frame", function()
+--- For each load screen frame, set and draw the loading bar
+engine.addHook("On Load Screen", function()
 	if ScpuiSystem.data.LoadDoc ~= nil then
 		LoadScreenController:setLoadingBar()
 	end
-end, {}, function()
-    return false
 end)
 
 return LoadScreenController

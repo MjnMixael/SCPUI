@@ -218,7 +218,8 @@ function ScpuiSystem:parseScpuiTable(data)
 	while parse.optionalString("$State:") do
 		local state = parse.getString()
 
-		if state == "GS_STATE_SCRIPTING" then
+		if state == "GS_STATE_SCRIPTING" or state == "GS_STATE_SCRIPTING_MISSION" then
+			local mission_state = state == "GS_STATE_SCRIPTING_MISSION"
 			parse.requiredString("+Substate:")
 			state = parse.getString()
 			parse.requiredString("+Markup:")
@@ -227,6 +228,13 @@ function ScpuiSystem:parseScpuiTable(data)
 			self.data.Replacements_List[state] = {
 				Markup = markup
 			}
+
+			if mission_state then
+				---@type LuaEnum
+				local enum = mn.LuaEnums["SCPUI_Menus"]
+				enum:addEnumItem(state)
+				enum:removeEnumItem("<none>")
+			end
 		else
 			parse.requiredString("+Markup:")
 			local markup = parse.getString()
@@ -413,7 +421,7 @@ function ScpuiSystem:stateEnd(substate)
 
 	ui.disableInput()
 
-	if not substate and hv.OldState.Name == "GS_STATE_SCRIPTING" then
+	if not substate and (hv.OldState.Name == "GS_STATE_SCRIPTING" or hv.OldState.Name == "GS_STATE_SCRIPTING_MISSION") then
 		ScpuiSystem.data.Substate = "none"
 	end
 end
@@ -423,21 +431,27 @@ end
 --- @param state gamestate The game state or substate
 --- @return gamestate state The game state or substate table
 function ScpuiSystem:getRocketUiHandle(state)
-	if state.Name == "GS_STATE_SCRIPTING" then
+	if state.Name == "GS_STATE_SCRIPTING" or state.Name == "GS_STATE_SCRIPTING_MISSION" then
 		return {Name = ScpuiSystem.data.Substate}
 	else
 		return state
 	end
 end
 
---- This function is used to begin a new scripting substate in the GS_STATE_SCRIPTING game state
+--- This function is used to begin a new scripting substate in the GS_STATE_SCRIPTING or GS_STATE_SCRIPTING_MISSION game states
 --- @param state string The substate to begin
+--- @param mission_state boolean? True to use GS_STATE_SCRIPTING_MISSION instead of GS_STATE_SCRIPTING
 --- @return nil
-function ScpuiSystem:beginSubstate(state)
+function ScpuiSystem:beginSubstate(state, mission_state)
 	ScpuiSystem.data.OldSubstate = ScpuiSystem.data.Substate
 	ScpuiSystem.data.Substate = state
-	--If we're already in GS_STATE_SCRIPTING then force loading the new scpui define
-	if ba.getCurrentGameState().Name == "GS_STATE_SCRIPTING" then
+
+	local script_state = "GS_STATE_SCRIPTING"
+	if mission_state then
+		script_state = "GS_STATE_SCRIPTING_MISSION"
+	end
+	--If we're already in the scripting state then force loading the new scpui define
+	if ba.getCurrentGameState().Name == script_state then
 		ba.print("Got event SCPUI SCRIPTING SUBSTATE " .. ScpuiSystem.data.Substate .. " in SCPUI SCRIPTING SUBSTATE " .. ScpuiSystem.data.OldSubstate .. "\n")
 		--We don't actually change game states so we need to manually clean up
 		ScpuiSystem:stateEnd(true)
@@ -445,7 +459,7 @@ function ScpuiSystem:beginSubstate(state)
 		ScpuiSystem:stateStart()
 	else
 		ba.print("Got event SCPUI SCRIPTING SUBSTATE " .. ScpuiSystem.data.Substate .. "\n")
-		ba.postGameEvent(ba.GameEvents["GS_EVENT_SCRIPTING"])
+		ba.postGameEvent(ba.GameEvents[script_state:gsub("STATE", "EVENT")])
 	end
 end
 
@@ -461,7 +475,9 @@ function ScpuiSystem:returnToState(state)
 		event = "GS_EVENT_START_BRIEFING"
 	elseif state.Name == "GS_STATE_VIEW_CUTSCENES" then
 		event = "GS_EVENT_GOTO_VIEW_CUTSCENES_SCREEN"
-	elseif state.Name == "GS_STATE_SCRIPTING" then
+	elseif state.Name == "GS_STATE_GAME_PLAY" then
+		event = "GS_EVENT_ENTER_GAME"
+	elseif state.Name == "GS_STATE_SCRIPTING" or state.Name == "GS_STATE_SCRIPTING_MISSION" then
 		ScpuiSystem:beginSubstate(ScpuiSystem.data.OldSubstate)
 		return
 	else
@@ -772,6 +788,10 @@ function ScpuiSystem:closeLoadScreen()
 	else
 		ui.disableInput()
 	end
+end
+
+mn.LuaSEXPs["scpui-show-menu"].Action = function(state)
+	ScpuiSystem:beginSubstate(state, true)
 end
 
 --RUN AWAY IT'S FRED!

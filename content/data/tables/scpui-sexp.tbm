@@ -1,13 +1,25 @@
 #Lua Enums
 
-;;This enum is now filled by factionshandler-sct.tbm
-
 $Name: SCPUI_Achievements
 	+Enum: <none>
-			
+
+$Name: SCPUI_Menus
+	+Enum: <none>
+
 #End
 
 #Lua SEXPs
+
+$Operator: scpui-show-menu
+$Category: Change
+$Subcategory: Other
+$Minimum Arguments: 1
+$Maximum Arguments: 1
+$Description: Opens an SCPUI menu, pausing the mission in the background.
+$Parameter:
+  +Description: The SCPUI menu to Open
+  +Type: Enum
+    +Enum name: SCPUI_Menus
 
 $Operator: set-achievement-value
 $Category: Change

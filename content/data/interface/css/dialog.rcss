@@ -160,37 +160,32 @@
 {
   color: #abbbab;
 }
-*/
 
 .button_positive .button_text_dialog:active
 {
   color: #c9e4c9;
 }
 
-/*
 .button_negative .button_text_dialog:hover
 {
   color: #946565;
 }
-*/
 
 .button_negative .button_text_dialog:active
 {
   color: #dd9393;
 }
 
-/*
 .button_neutral .button_text_dialog:hover
 {
   color: #abbbab;
 }
-*/
 
 .button_neutral .button_text_dialog:active
 {
   color: #c9e4c9;
 }
-
+*/
 
 #dialog_body #text_container scrollbarvertical
 {

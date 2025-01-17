@@ -146,6 +146,7 @@
   background-image: bullet-l-o.png;
 }
 
+/*
 .button_positive .button_text_dialog:hover
 {
   color: #abbbab;
@@ -175,6 +176,7 @@
 {
   color: #c9e4c9;
 }
+*/
 
 #dialog_body #text_container scrollbarvertical
 {
