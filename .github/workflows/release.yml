@@ -45,12 +45,12 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Approve Pull Request
+    - name: Bot Review PR
       run: |
         PR_URL=$(gh pr view --json url -q '.url')
         gh pr review $PR_URL --approve
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.BOT_PAT }}
 
     - name: Merge Pull Request
       run: |
