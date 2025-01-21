@@ -1,3 +1,6 @@
+-- Version of SCPUI System
+local version = "1.0.0-RC3"
+
 local Utils = require("lib_utils")
 local Topics = require("lib_ui_topics")
 
@@ -6,7 +9,6 @@ local Topics = require("lib_ui_topics")
 --all necessary preloading of content. Disabling this, disables
 --everything. Modify with care.
 -----------------------------------
-local version = "1.1.0 - RC3"
 
 local UpdateCategory = engine.createTracingCategory("UpdateRocket", false)
 local RenderCategory = engine.createTracingCategory("RenderRocket", true)

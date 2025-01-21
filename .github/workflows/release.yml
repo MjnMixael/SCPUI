@@ -1,0 +1,53 @@
+name: Create Release
+
+permissions:
+  contents: write
+  actions: write
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_name:
+        description: 'Name of the release (e.g., v1.0.0)'
+        required: true
+        default: ''
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Set up Git
+      run: |
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
+
+    - name: Update Version in File
+      run: |
+        sed -i 's/^local version = ".*"/local version = "${{ github.event.inputs.release_name }}"/' content/data/scripts/scpui_system_core.lua
+        git add content/data/scripts/scpui_system_core.lua
+        git commit -m "Update version to ${{ github.event.inputs.release_name }}"
+
+    - name: Tag the Release
+      run: |
+        git tag -a v.${{ github.event.inputs.release_name }}-release -m "Release v.${{ github.event.inputs.release_name }}"
+        git push origin v.${{ github.event.inputs.release_name }}-release
+
+    - name: Push Version Update
+      run: |
+        git push origin HEAD:main
+
+    - name: Create GitHub Release
+      uses: actions/create-release@v1
+      with:
+        tag_name: v.${{ github.event.inputs.release_name }}-release
+        release_name: v.${{ github.event.inputs.release_name }} Release
+        body: |
+          Automated release for v.${{ github.event.inputs.release_name }}.
+        draft: false
+        prerelease: false
