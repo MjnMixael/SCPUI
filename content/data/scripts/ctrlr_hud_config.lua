@@ -694,7 +694,7 @@ function HudConfigController:unload()
 end
 
 --- Create a hook to draw the hud gauges every frame
-engine.addHook("On Frame", function()
+ScpuiSystem:addHook("On Frame", function()
 	if ScpuiSystem.data.Render then
 		HudConfigController:drawHUD()
 	end

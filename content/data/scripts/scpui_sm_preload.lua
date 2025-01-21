@@ -314,6 +314,6 @@ local function runPreload()
 	end
 end
 
-engine.addHook("On Intro About To Play", function()
+ScpuiSystem:addHook("On Intro About To Play", function()
 	runPreload()
 end)

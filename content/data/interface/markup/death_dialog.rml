@@ -11,7 +11,7 @@
 	<body id="main_background">
 		<div id="dialog_body">
 			<div id="content">
-				<div id="title_container"></div>
+				<div class="h1" id="title_container"></div>
 				<div id="text_container"></div>
 			</div>
 			<button id="button_4">

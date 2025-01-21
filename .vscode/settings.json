@@ -1,12 +1,13 @@
 {
   "Lua.workspace.library": [
-      "./.vscode/scripting.lua",
-      "./.vscode/rocket.lua",
-      "./.vscode/scupi.lua",
+      "./.vscode/meta/",
   ],
   "Lua.diagnostics.globals": [
       "ScpuiSystem" // Add other globals as needed
   ],
   "Lua.runtime.version": "Lua 5.1",
-  "Lua.workspace.preloadFileSize": 1500
+  "Lua.workspace.preloadFileSize": 1500,
+  "cSpell.words": [
+    "Datasaver"
+  ]
 }

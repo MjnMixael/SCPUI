@@ -82,21 +82,23 @@ div#secondary_slot_amounts
 
 .slot_3d
 {
-	/*cborder-decorator: corner-borders;
+	cborder-decorator: corner-borders;
     cborder-thickness: 0.6%;
-	cborder-color: teal;*/
-	border-width: 0.6%;
-	border-color: teal;
+	cborder-color: teal;
 }
 
 .slot_3d:valid
 {
-	border-color:white;
+	cborder-decorator: corner-borders;
+    cborder-thickness: 0.6%;
+	cborder-color: white;
 }
 
 .slot_3d:invalid
 {
-	border-color:red;
+	cborder-decorator: corner-borders;
+    cborder-thickness: 0.6%;
+	cborder-color: red;
 }
 
 .weapon_slot
@@ -388,26 +390,30 @@ div#wings_wrapper
 
 .highlighted
 {
-	border-width: 0.9%;
-	border-color: green;
+	cborder-decorator: corner-borders;
+    cborder-thickness: 0.6%;
+	cborder-color: green;
 }
 
 .available
 {
-	border-width: 0.9%;
-	border-color: teal;
+	cborder-decorator: corner-borders;
+    cborder-thickness: 0.6%;
+	cborder-color: teal;
 }
 
 .locked
 {
-	border-width: 0.9%;
-	border-color: grey;
+	cborder-decorator: corner-borders;
+    cborder-thickness: 0.6%;
+	cborder-color: grey;
 }
 
 .weapon_locked
 {
-	border-width: 1.0%;
-	border-color: orange;
+	cborder-decorator: corner-borders;
+    cborder-thickness: 0.6%;
+	cborder-color: orange;
 }
 
 div#breakout_button

@@ -1,0 +1,73 @@
+name: Automated Release Workflow
+
+permissions:
+  contents: write
+  pull-requests: write
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_name:
+        description: 'Name of the release (e.g., v1.0.0)'
+        required: true
+        default: ''
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Set up Git
+      run: |
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
+
+    - name: Create a New Branch and Commit Changes
+      run: |
+        git checkout -b release/v.${{ github.event.inputs.release_name }}
+        sed -i 's/^local version = ".*"/local version = "${{ github.event.inputs.release_name }}"/' content/data/scripts/scpui_system_core.lua
+        git add content/data/scripts/scpui_system_core.lua
+        git commit -m "Update version to ${{ github.event.inputs.release_name }}"
+        git push origin release/v.${{ github.event.inputs.release_name }}
+
+    - name: Create Pull Request
+      run: |
+        gh pr create \
+          --base master \
+          --head release/v.${{ github.event.inputs.release_name }} \
+          --title "Release v.${{ github.event.inputs.release_name }}" \
+          --body "Automated release for v.${{ github.event.inputs.release_name }}."
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Bot Review PR
+      run: |
+        PR_URL=$(gh pr view --json url -q '.url')
+        gh pr review $PR_URL --approve
+      env:
+        GITHUB_TOKEN: ${{ secrets.BOT_PAT }}
+
+    - name: Merge Pull Request
+      run: |
+        PR_URL=$(gh pr view --json url -q '.url')
+        gh pr merge $PR_URL --squash --delete-branch --admin
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Create Tag and GitHub Release
+      run: |
+        git fetch origin master
+        git checkout master
+        git tag -a v.${{ github.event.inputs.release_name }}-release -m "Release v.${{ github.event.inputs.release_name }}"
+        git push origin v.${{ github.event.inputs.release_name }}-release
+
+        gh release create v.${{ github.event.inputs.release_name }}-release \
+          --title "v.${{ github.event.inputs.release_name }} Release" \
+          --notes "Automated release for v.${{ github.event.inputs.release_name }}."
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

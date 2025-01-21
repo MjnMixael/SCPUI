@@ -40,6 +40,7 @@
   height: 88%;
   margin-left: 2%;
   margin-right: 14%;
+  margin-top: 5%;
   overflow: auto;
   z-index: 10;
 }

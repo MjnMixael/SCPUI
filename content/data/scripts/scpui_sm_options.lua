@@ -383,12 +383,12 @@ else
 	file:close()
 end
 
-engine.addHook("On State End", function()
+ScpuiSystem:addHook("On State End", function()
 	if (hv.NewState.Name == "GS_STATE_MAIN_MENU") then
 		ScpuiSystem:applyCustomOptions()
 	end
 end, {State="GS_STATE_INITIAL_PLAYER_SELECT"})
 
-engine.addHook("On State End", function()
+ScpuiSystem:addHook("On State End", function()
 	ScpuiSystem:applyCustomOptions()
 end, {State="GS_STATE_BARRACKS_MENU"})

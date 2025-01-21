@@ -44,11 +44,11 @@ if ba.inMissionEditor() then
 	return
 end
 
-engine.addHook("On Key Pressed", function()
+ScpuiSystem:addHook("On Key Pressed", function()
 	clearLoadoutWithKeypress()
 end,
 {State="GS_STATE_START_GAME", KeyPress="F12"})
 
-engine.addHook("On Campaign Begin", function()
+ScpuiSystem:addHook("On Campaign Begin", function()
 	clearLoadoutOnCampaignStart()
 end)

@@ -1255,7 +1255,7 @@ function TechDatabaseController:unload()
 end
 
 --- Every frame try to draw the current entry's model, if possible
-engine.addHook("On Frame", function()
+ScpuiSystem:addHook("On Frame", function()
 	if ScpuiSystem.data.Render then
 		TechDatabaseController:drawModel()
 	end

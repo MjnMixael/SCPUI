@@ -79,7 +79,7 @@ local function weaponStats(weapon_class)
 	}
 end
 
-return {
+local topics = {
 	--Global
 	Scpui = {
 		pauseAudio = Topic(nil)
@@ -322,3 +322,30 @@ return {
 	}
 }
 
+--- Register a new topic
+--- @param category string The category to add the topic to (e.g., "journal", "ships").
+--- @param topic_name string The name of the topic (e.g., "initialize").
+--- @param handler any The topic instance to register.
+function topics:registerTopic(category, topic_name, handler)
+    if not self[category] then
+        self[category] = {}
+    end
+
+    if self[category][topic_name] then
+        ba.error("SCPUI cannot override existing topic '" .. topic_name .. "' in category '" .. category .. "'")
+    end
+
+    self[category][topic_name] = Topic(handler)
+    ba.print("SCPUI registered topic '" .. topic_name .. "' in category '" .. category .. "'\n")
+end
+
+--- Register multiple topics at once.
+--- @param category string The category to add the topics to.
+--- @param new_topics table A table of topic names and instances.
+function topics:registerTopics(category, new_topics)
+    for topic_name, handler in pairs(new_topics) do
+        self:registerTopic(category, topic_name, handler)
+    end
+end
+
+return topics

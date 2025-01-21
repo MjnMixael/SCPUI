@@ -499,7 +499,7 @@ function MedalsController:unload()
 end
 
 --- Every frame if the mouse is over a medal, draw a text box with the name of th medal
-engine.addHook("On Frame", function()
+ScpuiSystem:addHook("On Frame", function()
 	MedalsController:drawText()
 end, {State="GS_STATE_VIEW_MEDALS"}, function()
     return false

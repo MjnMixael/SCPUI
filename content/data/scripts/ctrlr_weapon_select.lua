@@ -20,8 +20,8 @@ else
 end
 
 WeaponSelectController.STATE_BRIEFING = 1 --- @type number The enumeration for the briefing game state
-WeaponSelectController.STATE_SHIP_SELECTION = 2 --- @type number The enumeration for the ship selection game state
-WeaponSelectController.STATE_WEAPON_SELECTION = 3 --- @type number The enumeration for the weapon selection game state
+WeaponSelectController.STATE_SHIP_SELECT = 2 --- @type number The enumeration for the ship selection game state
+WeaponSelectController.STATE_WEAPON_SELECT = 3 --- @type number The enumeration for the weapon selection game state
 
 WeaponSelectController.WEAPON_EFFECT_OFF = 0 --- @type number The enumeration for the ship effect off
 WeaponSelectController.WEAPON_EFFECT_NORMAL = 1 --- @type number The enumeration for the ship effect fs1 style
@@ -926,13 +926,13 @@ end
 function WeaponSelectController:change_brief_state(state)
 	if state == self.STATE_BRIEFING then
 		ba.postGameEvent(ba.GameEvents["GS_EVENT_START_BRIEFING"])
-	elseif state == self.STATE_SHIP_SELECTION then
+	elseif state == self.STATE_SHIP_SELECT then
 		if mn.isScramble() then
 			ad.playInterfaceSound(10)
 		else
 			ba.postGameEvent(ba.GameEvents["GS_EVENT_SHIP_SELECTION"])
 		end
-	elseif state == self.STATE_WEAPON_SELECTION then
+	elseif state == self.STATE_WEAPON_SELECT then
 		--Do nothing because we're this is the current state!
 	end
 end
@@ -1661,7 +1661,7 @@ function WeaponSelectController:input_change(event)
 end
 
 --- Every frame draw the current weapon model and overhead model
-engine.addHook("On Frame", function()
+ScpuiSystem:addHook("On Frame", function()
 	WeaponSelectController:drawSelectModel()
 	WeaponSelectController:drawOverheadModel()
 end, {State="GS_STATE_WEAPON_SELECT"}, function()

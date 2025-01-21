@@ -1,0 +1,15 @@
+;; FSO will not actually run our load_scpui-sct.lua file unless it detects a valid scripting table.
+;; This file is a dummy file to trick FSO into running the SCPUI loader just in case the current mod does not have a scripting table.
+
+#Conditional Hooks
+$On Game Init: [
+
+-- This is guaranteed to run after load_scpui-sct.lua so let's use it to verify that SCPUI has been loaded.
+if ScpuiSystem then
+    ba.print("SCPUI detected. Loading successful. Well done everyone.\n")
+else
+    ba.print("SCPUI has not been loaded!\n")
+end
+
+]
+#End

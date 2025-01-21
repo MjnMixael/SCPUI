@@ -125,7 +125,7 @@ function LoadScreenController:unload()
 end
 
 --- For each load screen frame, set and draw the loading bar
-engine.addHook("On Load Screen", function()
+ScpuiSystem:addHook("On Load Screen", function()
 	if ScpuiSystem.data.LoadDoc ~= nil then
 		LoadScreenController:setLoadingBar()
 	end

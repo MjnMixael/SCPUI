@@ -1,3 +1,5 @@
+--- @diagnostic disable: action-after-return
+
 -----------------------------------
 --SCPUI's Lua Style Guide
 -----------------------------------
@@ -110,8 +112,8 @@ end
 --- ---
 --- --- Naming Lua files in UI extensions should follow similar rules to the core SCPUI files
 --- --- --- journal_ui/scripts/ctrlr_journal.lua -- For the Journal UI's main controller
---- --- --- journal_ui/scripts/lib_journal_*.lua -- For the Journal UI's libraries
---- --- --- journal_ui/scripts/scpui_jrnl_core*.lua -- For the Journal UI's core code file
+--- --- --- journal_ui/scripts/lib_jrnl_*.lua -- For the Journal UI's libraries
+--- --- --- journal_ui/scripts/scpui_ext_journal.lua -- For the Journal UI's core code extension file
 --- --- --- journal_ui/scripts/scpui_jrnl_sm_*.lua -- For the Journal UI's submodules
 
 
@@ -139,3 +141,44 @@ local ScpuiSystemNewController = Class()
 
 --- Controllers and libraries must return themselves at the end of the file
 return ScpuiSystemNewController
+
+
+
+-----------------------------------
+--- Extensions
+-----------------------------------
+
+--- Extensions are a way to add new functionality to the ScpuiSystem global table and are automatically stored in the ScpuiSystem.extensions table
+--- Extensions should be in their own subfolder in the root directory and should follow the structure as seen in the File Structure & Naming section
+
+--- The top of the extension file should include any class documentation. See the Journal UI Extension for an example
+
+--- Extensions create themselves as a table starting with the Name, Version, and Key members
+local ExtensionUi = {
+	Name = "Extension", -- Human readable name of the extension
+	Version = "1.0.0", -- Version of the extension
+	Key = "ExtensionUi" -- Key used to access the extension in the ScpuiSystem.extensions table
+}
+
+--- All extensions must have an init method. This method is called when the extension is loaded
+--- @return nil
+function ExtensionUi:init()
+    -- Your initialization code can go here
+
+    -- Load any submodules for the extension
+    ScpuiSystem:loadSubmodules("ext")
+
+    -- Register extension-specific topics
+    ScpuiSystem:registerExtensionTopics("extension", {
+        initialize = function() return nil end,
+        unload = function() return nil end
+    })
+
+    --- Add any additional FSO hooks needed
+    ScpuiSystem:addHook("On Campaign Begin", function()
+        self:clearAll()
+    end)
+end
+
+--- Return the extension at the end of the file
+return ExtensionUi

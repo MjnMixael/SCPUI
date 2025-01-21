@@ -1367,7 +1367,7 @@ end
 
 --- During multiplayer run the network functions every frame
 for _, v_statename in ipairs(AbstractMultiController.GAME_STATE_HOOKS) do
-	engine.addHook("On Frame", function()
+	ScpuiSystem:addHook("On Frame", function()
 		if ScpuiSystem.data.memory.multiplayer_general.RunNetwork then
 			ScpuiSystem.data.memory.multiplayer_general.Context:updateLists()
 		end

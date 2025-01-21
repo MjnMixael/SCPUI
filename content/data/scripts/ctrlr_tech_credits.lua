@@ -276,7 +276,7 @@ function TechCreditsController:unload()
 end
 
 --- Every frame check if we are in the credits state and if so, draw the image
-engine.addHook("On Frame", function()
+ScpuiSystem:addHook("On Frame", function()
 	TechCreditsController:drawImage()
 end, {State="GS_STATE_CREDITS"}, function()
     return false

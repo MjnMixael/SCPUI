@@ -35,7 +35,7 @@ function ControlConfigController:init()
 	self.CurrentTab = 0 --- @type number The current controls list tab index
 	self.PreviousControl = nil --- @type number | nil The index of the previous control entry
 	self.CurrentControl = nil --- @type number | nil The currently selected ui list item, if any
-	self.CurrentBind = nil --- @type number The currentky selected bind ID
+	self.CurrentBind = nil --- @type number The currently selected bind ID
 	self.NumBinds = nil --- @type number The total number of binds
 	self.PromptControl = ControlConfigController.PROMPT_TYPE_NONE --- @type number Controls which dialog prompt to show the player. Should be one of the PROMPT_TYPE enumerations
 	ScpuiSystem.data.memory.control_config.NextDialog = nil --- @type dialog_setup The next dialog to show
@@ -336,7 +336,7 @@ function ControlConfigController:clonePreset(name, overwrite)
 	end
 
 	--Make sure preset names have no spaces and aren't longer than 28 characters
-	local name = name:gsub("%s+", "")
+	name = name:gsub("%s+", "")
 	if #name > 28 then
 		name = name:sub(1, 28)
 	end
@@ -1257,7 +1257,7 @@ function ControlConfigController:unload()
 	Topics.controlconfig.unload:send(self)
 end
 
-engine.addHook("On Frame", function()
+ScpuiSystem:addHook("On Frame", function()
 	if ScpuiSystem.data.memory.control_config.NextDialog ~= nil then
 		ScpuiSystem.data.memory.control_config.Context:maybeShowDialogs()
 	elseif ScpuiSystem.data.memory.control_config.DialogResponse ~= nil then

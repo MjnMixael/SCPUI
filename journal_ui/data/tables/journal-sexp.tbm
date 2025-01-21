@@ -6,13 +6,14 @@ $Subcategory: Mission and Campaign
 $Minimum Arguments: 2
 $Return Type: Nothing
 $Description: Updates the journal save data to make a series of entries visible. You can unlock multiple entries for a single category.
-$Repeat
 $Parameter:
 	+Description: The category to unlock from
 	+Type: enum
 		+Enum name: Journal Sections
+$Repeat
 $Parameter:
 	+Description: 'Short Title' of entry to unlock as defined in the Journal Entries
 	+Type: child_enum
-	
+		+Parent Parameter Index: 1
+
 #End

@@ -1,8 +1,119 @@
---- Create the local JournalUi object
-local JournalUi = {}
+-----------------------------------
+--This file extends SCPUI by adding the journal core methods and members
+------------------------------------
 
-JournalUi.SectionEnum = nil --- @type LuaEnum the enum for a journal sections in the sexp operators
+--- SCPUI Journal Data
+--- @class scpui_journal_data
+--- @field Visible_List Element[] The list of visible entry elements
+--- @field Section_List scpui_journal_section[] The sections of the journal
+--- @field Entry_List scpui_journal_entry[] table The entries of the journal
+--- @field Title string The title of the journal
+
+--- SCPUI Journal Section
+--- @class scpui_journal_section
+--- @field Display string The display name of the section
+--- @field Name string The name of the section
+
+--- SCPUI Journal Entry
+--- @class scpui_journal_entry
+--- @field File string? The filename of the journal entry
+--- @field Image string? The image filename of the journal entry
+--- @field Caption string? The caption of the journal entry
+--- @field Name string? The name of the journal entry
+--- @field Display string? The display name of the journal entry
+--- @field Key string? The element key of the journal entry
+--- @field Group string? The group of the journal entry
+--- @field GroupIndex number? The index of the group of the journal entry
+--- @field InitialVis boolean? True if the journal entry is initially visible, false otherwise
+
+--- SCPUI Journal Save Data
+--- @class scpui_journal_save_data
+--- @field Visible boolean True if the journal entry is visible, false otherwise
+--- @field Unread boolean True if the journal entry is unread, false otherwise
+
+--- Scpui Journal Extension
+--- @class JournalUi
+--- @field parseJournalTable fun(self: JournalUi, filename: string): scpui_journal_data Parses a journal table from the specified file.
+--- @field loadDataFromFile fun(self: JournalUi): table<number, scpui_journal_save_data[]> Loads the journal save data from disk.
+--- @field saveDataToFile fun(self: JournalUi, data: table<number, scpui_journal_save_data[]>): nil Saves the journal data to disk.
+--- @field checkNew fun(self: JournalUi): boolean Checks if there are new journal entries.
+--- @field getTitle fun(self: JournalUi): string Returns the title of the journal.
+--- @field doesConfigExist fun(self: JournalUi): boolean Checks if the journal configuration exists on disk.
+--- @field lockEntry fun(self: JournalUi, section: string, ...: string[]): nil Locks the specified journal entries.
+--- @field unlockEntry fun(self: JournalUi, section: string, ...: string[]): boolean Unlocks the specified journal entries.
+
+--- Create the local JournalUi object
+local JournalUi = {
+	Name = "Journal",
+	Version = "1.0.0",
+	Key = "JournalUi"
+}
+
+JournalUi.SectionEnum = nil --- @type LuaEnum the enum for a journal section in the sexp operators
 JournalUi.Enum_Lists = {} --- @type LuaEnum[] the enums for the journal entries in the sexp operators
+
+--- Initialize the JournalUi object. Called after the journal extension is registered with SCPUI
+--- @return nil
+function JournalUi:init()
+
+	mn.LuaSEXPs["lua-journal-unlock-article"].Action = function(section, ...)
+
+		--Remove the first part of the parent enum name so we can unlock using the actual section name
+		local function removeJournalPrefix(inputString)
+			local prefix = "Journal "
+			if string.sub(inputString, 1, #prefix) == prefix then
+				return string.sub(inputString, #prefix + 1)
+			else
+				return inputString
+			end
+		end
+
+		if mn.isInCampaign() then
+			self:unlockEntry(removeJournalPrefix(section), ...)
+		end
+	end
+
+	--- If we're in FRED then create all the enums
+	if ba.inMissionEditor() then
+		local journal_files = cf.listFiles("data/tables", "*journal.tbl")
+
+		for _, v in pairs(journal_files) do
+			local data = self:parseJournalTable(v)
+
+			if #data.Section_List > 0 then
+				local name = "Journal Sections"
+				self.SectionEnum = mn.LuaEnums[name]
+				self.SectionEnum:removeEnumItem("<none>")
+			end
+			for i = 1, #data.Section_List do
+				local name = "Journal " .. data.Section_List[i].Display
+				mn.addLuaEnum(name)
+				self.SectionEnum:addEnumItem(name)
+				self.Enum_Lists[i] = mn.LuaEnums[name]
+			end
+
+			for i = 1, #data.Entry_List do
+				for _, entry in ipairs(data.Entry_List[i]) do
+					self.Enum_Lists[i]:addEnumItem(entry.Key)
+				end
+			end
+		end
+	else
+		ScpuiSystem:loadSubmodules("jrnl")
+
+		-- Register journal-specific topics
+		ScpuiSystem:registerExtensionTopics("journal", {
+			initialize = function() return nil end,
+			unload = function() return nil end
+		})
+
+		--- On campaign begin, clear the journal data
+		ScpuiSystem:addHook("On Campaign Begin", function()
+			self:clearAll()
+		end)
+	end
+
+end
 
 --- Get the index for a specific section in a list of sections
 --- @param section_name string the name of the section to find
@@ -26,12 +137,12 @@ end
 
 --- Parse a journal table file
 --- @param file string the file to parse
---- @param entriesonly? boolean whether to only parse the entries
+--- @param entries_only? boolean whether to only parse the entries
 --- @return scpui_journal_data data the parsed journal data
-function JournalUi:parseJournalTable(file, entriesonly)
+function JournalUi:parseJournalTable(file, entries_only)
 
 	---@type scpui_journal_data
-	local newdata = {
+	local new_data = {
 		Visible_List = {},
 		Section_List = {},
 		Entry_List = {},
@@ -39,19 +150,19 @@ function JournalUi:parseJournalTable(file, entriesonly)
 	}
 
 	if not parse.readFileText(file, "data/tables") then
-		return newdata
+		return new_data
 	end
 
-	if (not entriesonly) and parse.optionalString("#Journal Options") then
+	if (not entries_only) and parse.optionalString("#Journal Options") then
 		if parse.optionalString("$Title:") then
-			newdata.Title = parse.getString()
+			new_data.Title = parse.getString()
 		end
 		parse.requiredString("#End")
 	end
 
-	 if (not entriesonly) and parse.optionalString("#Journal Sections") then
+	 if (not entries_only) and parse.optionalString("#Journal Sections") then
 
-		while parse.optionalString("$Name:") and (#newdata.Section_List < 3) do
+		while parse.optionalString("$Name:") and (#new_data.Section_List < 3) do
 
 			local t = {}
 
@@ -61,7 +172,7 @@ function JournalUi:parseJournalTable(file, entriesonly)
 				t.Display = ba.XSTR(t.Name, parse.getInt())
 			end
 
-		newdata.Section_List[#newdata.Section_List+1] = t
+		new_data.Section_List[#new_data.Section_List+1] = t
 
 		end
 
@@ -85,7 +196,7 @@ function JournalUi:parseJournalTable(file, entriesonly)
 
 			if parse.requiredString("$Group:") then
 				t.Group = parse.getString()
-				t.GroupIndex = self:getGroupIndex(t.Group, newdata.Section_List)
+				t.GroupIndex = self:getGroupIndex(t.Group, new_data.Section_List)
 			end
 
 			if parse.optionalString("$Visible by Default:") then
@@ -115,13 +226,13 @@ function JournalUi:parseJournalTable(file, entriesonly)
 				end
 			end
 
-			if not newdata.Entry_List[t.GroupIndex] then newdata.Entry_List[t.GroupIndex] = {} end
+			if not new_data.Entry_List[t.GroupIndex] then new_data.Entry_List[t.GroupIndex] = {} end
 
-			new_index = #newdata.Entry_List[t.GroupIndex] + 1
+			new_index = #new_data.Entry_List[t.GroupIndex] + 1
 
 			--t.Name = newIndex .. " - " .. t.GroupIndex .. " - " .. t.Name
 
-			newdata.Entry_List[t.GroupIndex][new_index] = t
+			new_data.Entry_List[t.GroupIndex][new_index] = t
 
 		end
 
@@ -131,7 +242,7 @@ function JournalUi:parseJournalTable(file, entriesonly)
 
 	parse.stop()
 
-	return newdata
+	return new_data
 
 end
 
@@ -142,9 +253,9 @@ function JournalUi:checkLanguage(filename)
 
 	local language = ba.getCurrentLanguageExtension()
 	if language ~= "" then
-		local langfile = filename:gsub(".txt", "") .. "-" .. language .. ".txt"
-		if cf.fileExists(langfile, "data/fiction", true) then
-			filename = langfile
+		local language_file = filename:gsub(".txt", "") .. "-" .. language .. ".txt"
+		if cf.fileExists(language_file, "data/fiction", true) then
+			filename = language_file
 		end
 	end
 	return filename
@@ -355,8 +466,8 @@ end
 --- @return string title the title of the journal UI
 function JournalUi:getTitle()
 	local player = ba.getCurrentPlayer()
-	local campaignfilename = player:getCampaignFilename()
-	local data = self:parseJournalTable(campaignfilename .. "-journal.tbl")
+	local campaign_filename = player:getCampaignFilename()
+	local data = self:parseJournalTable(campaign_filename .. "-journal.tbl")
 	return data.Title
 end
 
@@ -367,57 +478,4 @@ function JournalUi:clearAll()
 	self:saveDataToFile(config)
 end
 
---- Now that we have the JournalUi object, we can add it to the ScpuiSystem
-ScpuiSystem.extensions.JournalUi = JournalUi
-
-mn.LuaSEXPs["lua-journal-unlock-article"].Action = function(section, ...)
-
-	--Remove the first part of the parent enum name so we can unlock using the actual section name
-	local function removeJournalPrefix(inputString)
-		local prefix = "Journal "
-		if string.sub(inputString, 1, #prefix) == prefix then
-			return string.sub(inputString, #prefix + 1)
-		else
-			return inputString
-		end
-	end
-
-	if mn.isInCampaign() then
-		ScpuiSystem.extensions.JournalUi:unlockEntry(removeJournalPrefix(section), ...)
-	end
-end
-
---- If we're in FRED then create all the enums
-if ba.inMissionEditor() then
-    local journal_files = cf.listFiles("data/tables", "*journal.tbl")
-
-    for _, v in pairs(journal_files) do
-        local data = ScpuiSystem.extensions.JournalUi:parseJournalTable(v)
-
-        if #data.Section_List > 0 then
-            local name = "Journal Sections"
-            ScpuiSystem.extensions.JournalUi.SectionEnum = mn.LuaEnums[name]
-            ScpuiSystem.extensions.JournalUi.SectionEnum:removeEnumItem("<none>")
-        end
-        for i = 1, #data.Section_List do
-            local name = "Journal " .. data.Section_List[i].Display
-            mn.addLuaEnum(name)
-            ScpuiSystem.extensions.JournalUi.SectionEnum:addEnumItem(name)
-            ScpuiSystem.extensions.JournalUi.Enum_Lists[i] = mn.LuaEnums[name]
-        end
-
-        for i = 1, #data.Entry_List do
-            for _, entry in ipairs(data.Entry_List[i]) do
-                ScpuiSystem.extensions.JournalUi.Enum_Lists[i]:addEnumItem(entry.Key)
-            end
-        end
-    end
-
-	--- We don't need the hook below in FRED
-	return
-end
-
---- On campaign begin, clear the journal data
-engine.addHook("On Campaign Begin", function()
-	ScpuiSystem.extensions.JournalUi:clearAll()
-end)
+return JournalUi

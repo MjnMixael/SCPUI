@@ -9,7 +9,7 @@ ScpuiSystem.data.Generated_Icons = {}
 function ScpuiSystem:openCache()
 
 	---@type json
-	local json = require('dkjson')
+	local Json = require('dkjson')
 	local location = 'data/config'
 	local file = nil
 
@@ -24,7 +24,7 @@ function ScpuiSystem:openCache()
 	local cache
 	if cf.fileExists(filename, location) then
 		file = cf.openFile(filename, 'r', location)
-		cache = json.decode(file:read('*a'))
+		cache = Json.decode(file:read('*a'))
 		file:close()
 		if not cache then
 			cache = {}
@@ -40,7 +40,7 @@ end
 --- @return nil
 function ScpuiSystem:saveCache(cache)
 
-	local json = require('dkjson')
+	local Json = require('dkjson')
 	local location = 'data/config'
 
 	local mod_name = string.sub(ScpuiSystem:getModTitle(), 1, 20)
@@ -53,7 +53,7 @@ function ScpuiSystem:saveCache(cache)
 	local filename = "scpui_" .. mod_name:gsub(" ", "") .. ".cache"
 
 	local file = cf.openFile(filename, 'w', location)
-	file:write(json.encode(cache))
+	file:write(Json.encode(cache))
 	file:close()
 
 end
@@ -354,7 +354,7 @@ local function resetIconCache()
 	end
 end
 
-engine.addHook("On Key Pressed", function()
+ScpuiSystem:addHook("On Key Pressed", function()
 	resetIconCache()
 end,
 {KeyPress="F12"})

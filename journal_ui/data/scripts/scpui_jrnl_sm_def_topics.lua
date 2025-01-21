@@ -1,7 +1,14 @@
+-----------------------------------
+--This file adds a button to the briefing screens that open the journal UI
+-----------------------------------
+
 (function()
 
     local Topics = require("lib_ui_topics")
     local Utils = require("lib_utils")
+
+    --- @type JournalUi
+    local JournalUi = ScpuiSystem.extensions.JournalUi
 
     --Adds Journal Button to the relevant UI screens
     Topics.briefcommon.initialize:bind(2, function(message, context)
@@ -16,7 +23,7 @@
       end
 
       --Only setup journal stuff if the config exists
-      if ScpuiSystem.extensions.JournalUi:doesConfigExist() then
+      if JournalUi:doesConfigExist() then
 
         --Do the nasty and make the children
 
@@ -87,7 +94,7 @@
         button_text_el.style.top = "-50%"
         button_text_el.style.right = "0"
         button_text_el.style["text-align"] = "right"
-        button_text_el.inner_rml = ScpuiSystem.extensions.JournalUi:getTitle()
+        button_text_el.inner_rml = JournalUi:getTitle()
 
         if button_el then
           button_el:AddEventListener("click", function(_, _, _)
@@ -108,7 +115,7 @@
         end
 
         --New Journal Notification
-        if not ScpuiSystem.extensions.JournalUi:checkNew() then
+        if not JournalUi:checkNew() then
           new_el:SetClass("hidden", true)
         end
 

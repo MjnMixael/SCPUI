@@ -929,7 +929,7 @@ end
 
 --Prevent the debriefing UI from being drawn if we're just going
 --to skip it in a frame or two
-engine.addHook("On Frame", function()
+ScpuiSystem:addHook("On Frame", function()
     if not mn.hasDebriefing() and not ui.isCutscenePlaying() then
         gr.clearScreen()
     end

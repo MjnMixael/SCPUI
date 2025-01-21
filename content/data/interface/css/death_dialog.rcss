@@ -30,6 +30,7 @@
   height: 88%;
   margin-left: 1%;
   margin-right: 14%;
+  margin-top: 5%;
   color: white;
   overflow: auto;
   z-index: 10;

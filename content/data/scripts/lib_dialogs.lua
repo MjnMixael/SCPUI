@@ -21,7 +21,7 @@ module.BUTTON_MAPPING       = {
 module.BUTTON_TEXT_MAPPING       = {
     [module.BUTTON_TYPE_POSITIVE] = "pos",
     [module.BUTTON_TYPE_NEGATIVE] = "neg",
-    [module.BUTTON_TYPE_NEUTRAL]  = "pos"
+    [module.BUTTON_TYPE_NEUTRAL]  = "neu"
 }
 
 --- Finds the character to underline in a string and applies the underline class to it

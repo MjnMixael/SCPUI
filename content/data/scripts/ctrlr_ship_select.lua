@@ -20,8 +20,8 @@ else
 end
 
 ShipSelectController.STATE_BRIEFING = 1 --- @type number The enumeration for the briefing game state
-ShipSelectController.STATE_SHIP_SELECTION = 2 --- @type number The enumeration for the ship selection game state
-ShipSelectController.STATE_WEAPON_SELECTION = 3 --- @type number The enumeration for the weapon selection game state
+ShipSelectController.STATE_SHIP_SELECT = 2 --- @type number The enumeration for the ship selection game state
+ShipSelectController.STATE_WEAPON_SELECT = 3 --- @type number The enumeration for the weapon selection game state
 
 ShipSelectController.SHIP_EFFECT_OFF = 0 --- @type number The enumeration for the ship effect off
 ShipSelectController.SHIP_EFFECT_NORMAL = 1 --- @type number The enumeration for the ship effect fs1 style
@@ -603,9 +603,9 @@ end
 function ShipSelectController:change_brief_state(state)
 	if state == self.STATE_BRIEFING then
 		ba.postGameEvent(ba.GameEvents["GS_EVENT_START_BRIEFING"])
-	elseif state == self.STATE_SHIP_SELECTION then
+	elseif state == self.STATE_SHIP_SELECT then
 		--Do nothing because we're this is the current state!
-	elseif state == self.STATE_WEAPON_SELECTION then
+	elseif state == self.STATE_WEAPON_SELECT then
 		if mn.isScramble() then
 			ad.playInterfaceSound(10)
 		else
@@ -1114,7 +1114,7 @@ function ShipSelectController:input_change(event)
 end
 
 --- Add a hook to draw the currently selected ship every frame
-engine.addHook("On Frame", function()
+ScpuiSystem:addHook("On Frame", function()
 	ShipSelectController:drawSelectModel()
 end, {State="GS_STATE_SHIP_SELECT"}, function()
     return false
