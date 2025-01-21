@@ -34,7 +34,7 @@ jobs:
         git add content/data/scripts/scpui_system_core.lua
         git commit -m "Update version to ${{ github.event.inputs.release_name }}"
         git tag -a v.${{ github.event.inputs.release_name }}-release -m "Release v.${{ github.event.inputs.release_name }}"
-        git push origin main --tags
+        git push origin master --tags
 
     - name: Create GitHub Release
       uses: actions/create-release@v1
