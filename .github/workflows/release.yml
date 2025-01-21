@@ -51,3 +51,5 @@ jobs:
           Automated release for v.${{ github.event.inputs.release_name }}.
         draft: false
         prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
