@@ -38,6 +38,10 @@ jobs:
         git tag -a v.${{ github.event.inputs.release_name }}-release -m "Release v.${{ github.event.inputs.release_name }}"
         git push origin v.${{ github.event.inputs.release_name }}-release
 
+    - name: Pull Remote Changes
+      run: |
+        git pull origin main
+
     - name: Push Version Update
       run: |
         git push origin HEAD:main
