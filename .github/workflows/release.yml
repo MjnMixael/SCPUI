@@ -26,25 +26,15 @@ jobs:
       run: |
         git config user.name "GitHub Actions"
         git config user.email "actions@github.com"
+        git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
 
-    - name: Update Version in File
+    - name: Update Version in File and create Tag
       run: |
         sed -i 's/^local version = ".*"/local version = "${{ github.event.inputs.release_name }}"/' content/data/scripts/scpui_system_core.lua
         git add content/data/scripts/scpui_system_core.lua
         git commit -m "Update version to ${{ github.event.inputs.release_name }}"
-
-    - name: Tag the Release
-      run: |
         git tag -a v.${{ github.event.inputs.release_name }}-release -m "Release v.${{ github.event.inputs.release_name }}"
-        git push origin v.${{ github.event.inputs.release_name }}-release
-
-    - name: Pull Remote Changes
-      run: |
-        git pull --rebase origin main
-
-    - name: Push Version Update
-      run: |
-        git push origin HEAD:main
+        git push origin main --tags
 
     - name: Create GitHub Release
       uses: actions/create-release@v1
