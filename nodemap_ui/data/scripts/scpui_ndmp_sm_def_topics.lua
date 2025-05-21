@@ -79,7 +79,7 @@
             inner_el:AppendChild(cont_el)
         end
 
-        message.Document:GetElementById("main_background"):AppendChild(main_el)
+        ScpuiSystem:getRootParent(message.Document):AppendChild(main_el)
 
         Topics.techroom.initialize:send(message)
     end)

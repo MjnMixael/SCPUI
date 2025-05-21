@@ -107,6 +107,62 @@ function ScpuiSystem:applyWideLayoutFix(main_bg, opts)
 	end
 end
 
+--- Triple-monitor layout patch: moves all children of main_background into a centered wrapper
+--- @param document Document
+--- @return nil
+function ScpuiSystem:applyTripleMonitorLayoutFix(document)
+	local screen_width = gr.getScreenWidth()
+	local screen_height = gr.getScreenHeight()
+	local center_width = gr.getCenterWidth()
+	local center_height = gr.getCenterHeight()
+
+	if center_width >= screen_width then return end
+
+	local main = document:GetElementById("main_background")
+	if not main then return end
+	if main:GetElementById("center_wrapper") then return end
+
+	local offset_x = math.floor((screen_width - center_width) / 2)
+	local offset_y = math.floor((screen_height - center_height) / 2)
+
+	-- Create wrapper
+	local wrapper = document:CreateElement("div")
+	wrapper.id = "center_wrapper"
+	wrapper.style.width = string.format("%dpx", center_width)
+	wrapper.style.height = string.format("%dpx", center_height)
+	wrapper.style.position = "absolute"
+	wrapper.style.left = string.format("%dpx", offset_x)
+	wrapper.style.top = string.format("%dpx", offset_y)
+
+	-- Move all children into wrapper
+	local children = {}
+	local child = main.first_child
+	while child do
+		table.insert(children, child)
+		child = child.next_sibling
+	end
+
+	for _, el in ipairs(children) do
+		main:RemoveChild(el)
+		wrapper:AppendChild(el)
+	end
+
+	main:AppendChild(wrapper)
+
+	ba.print(string.format("[SCPUI] Centered layout applied: root UI width = %d, screen = %d\n", center_width, screen_width))
+end
+
+--- Returns the appropriate root parent for downstream manipulation
+--- @param document Document
+--- @return Element
+function ScpuiSystem:getRootParent(document)
+	local main = document:GetElementById("main_background")
+	if not main then return document end
+
+	local center = main:GetElementById("center_wrapper")
+	return center or main
+end
+
 --------------------------------------------------------------------------------
 -- 🔧 Monkey-patch Class() to wrap controller initialize() if loaded from ctrlr_*.lua
 --------------------------------------------------------------------------------
@@ -135,14 +191,21 @@ if not ScpuiSystem._layoutPatchApplied then
 
                             local origInit = value
                             local patchedInit = function(self, document)
-                                local result = origInit(self, document)
+								local result = origInit(self, document)
 
-                                if document and ScpuiSystem.applyWideLayoutFix then
-                                    ScpuiSystem:applyWideLayoutFix(document)
-                                end
+								if document then
+									local screen_width = gr.getScreenWidth()
+									local center_width = gr.getCenterWidth()
 
-                                return result
-                            end
+									if center_width < screen_width and ScpuiSystem.applyTripleMonitorLayoutFix then
+										ScpuiSystem:applyTripleMonitorLayoutFix(document)
+									elseif ScpuiSystem.applyWideLayoutFix then
+										ScpuiSystem:applyWideLayoutFix(document)
+									end
+								end
+
+								return result
+							end
 
                             if raw_newindex then
                                 raw_newindex(tbl, key, patchedInit)

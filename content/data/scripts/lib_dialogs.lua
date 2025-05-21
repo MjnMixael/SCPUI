@@ -197,6 +197,11 @@ local function show_dialog(context, properties, finish_func, reject, abort_cb_ta
 
     dialog_doc:Show(DocumentFocus.FOCUS) -- MODAL would be better than FOCUS but then the debugger cannot be used anymore
 
+    -- Apply triple monitor centering if needed
+    if ScpuiSystem.applyTripleMonitorLayoutFix then
+        ScpuiSystem:applyTripleMonitorLayoutFix(dialog_doc)
+    end
+
     if ScpuiSystem.data.DialogDoc ~= nil then
         ba.print("SCPUI got command to close a dialog while creating a dialog! This is unusual!\n")
         ScpuiSystem:closeDialog()

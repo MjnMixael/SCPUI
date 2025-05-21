@@ -91,7 +91,7 @@ if false then
 end
 
 if not ba.inMissionEditor() then
-	ScpuiSystem.data.Context = rocket:CreateContext("menuui", Vector2i.new(gr.getCenterWidth(), gr.getCenterHeight()));
+	ScpuiSystem.data.Context = rocket:CreateContext("menuui", Vector2i.new(gr.getScreenWidth(), gr.getScreenHeight()));
 end
 
 --- Initialize ScpuiSystem and send relevant scpui.tbl files to the parser
