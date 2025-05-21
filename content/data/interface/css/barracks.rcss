@@ -26,17 +26,6 @@ div#logo img
 	height: auto;
 }
 
-.window_container
-{
-	margin: 1%;
-}
-
-#lower_windows
-{
-	position: absolute;
-	bottom: 0;
-}
-
 /*Bottom Panel Elements*/
 
 div#bottom_panel_wrapper
@@ -88,8 +77,8 @@ div#pilot_select
 	width: 50%;
 	height: auto;
 	overflow: hidden;
-	position: relative;
-	float: left;
+	position: absolute;
+	margin: 1%;
 }
 
 div#pilot_select img
@@ -432,8 +421,9 @@ div#pilot_head_select
 	width: 25%;
 	height: auto;
 	overflow: hidden;
-	position: relative;
-	float: right;
+	position: absolute;
+	right: 0;
+	margin: 1%;
 }
 
 div#pilot_head_select img
@@ -527,8 +517,10 @@ div#pilot_squad_select
 	width: 18%;
 	height: auto;
 	overflow: hidden;
-	position: relative;
-	float: right;
+	position: absolute;
+	right: 0;
+	top: 40%;
+	margin: 1%;
 }
 
 div#pilot_squad_select img
@@ -578,8 +570,9 @@ div#pilot_info
 	width: 45%;
 	height: auto;
 	overflow: hidden;
-	position: relative;
-	float: left;
+	position: absolute;
+	top: 36%;
+	margin: 1%;
 }
 
 div#pilot_info img
