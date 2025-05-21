@@ -235,6 +235,8 @@
 
 --- SCPUI HUD Drawing Memory
 --- @class hud_draw_memory
+--- @field Ready? boolean True if the HUD is ready to be drawn, false otherwise
+--- @field Parent? Element The parent element to draw the HUD in
 --- @field Draw? boolean True if the HUD should be drawn, false otherwise
 --- @field Mx? number The x position of the mouse
 --- @field My? number The y position of the mouse
@@ -335,6 +337,7 @@
 
 --- SCPUI Credits Image Data
 --- @class credits_image_memory
+--- @field Ready boolean True if the credits image is ready to be displayed, false otherwise
 --- @field X1 number The x1 position of the image
 --- @field Y1 number The y1 position of the image
 --- @field X2 number The x2 position of the image

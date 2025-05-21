@@ -263,7 +263,7 @@ div#top_b_panel_wrapper
 	margin-top: 5%;
 }
 
-.button_text_right p
+div#top_b_panel_wrapper .button_text_right p
 {
 	margin-top: -20%;
 	width: 400%;

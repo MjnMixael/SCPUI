@@ -137,6 +137,11 @@ div#bottom_panel_c img
 	width: 19.5%;
 }
 
+.tab_button_text
+{
+	text-align: center;
+}
+
 /*Basic*/
 
 .basic

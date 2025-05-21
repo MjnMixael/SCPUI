@@ -21,7 +21,7 @@
 					<span id="basic_img" class="basic button_img">
 						<img src="diamonds.png" class="psuedo_img"></img>
 					</span>
-					<span class="pos button_text">
+					<span class="pos button_text tab_button_text">
 						<p>XSTR("Basic", 888153)</p>
 					</span>
 				</tab>
@@ -32,7 +32,7 @@
 					<span id="misc_img" class="misc button_img">
 						<img src="computer.png" class="psuedo_img"></img>
 					</span>
-					<span class="pos button_text">
+					<span class="pos button_text tab_button_text">
 						<p>XSTR("Misc", 888040)</p>
 					</span>
 				</tab>
@@ -43,7 +43,7 @@
 					<span id="graphics_img" class="graphics button_img">
 						<img src="detail.png" class="psuedo_img"></img>
 					</span>
-					<span class="pos button_text">
+					<span class="pos button_text tab_button_text">
 						<p>XSTR("Graphics", 888155)</p>
 					</span>
 				</tab>
@@ -54,7 +54,7 @@
 					<span id="settings_img" class="settings button_img">
 						<img src="prefs.png" class="psuedo_img"></img>
 					</span>
-					<span class="pos button_text">
+					<span class="pos button_text tab_button_text">
 						<p>XSTR("Settings", 888156)</p>
 					</span>
 				</tab>
@@ -65,7 +65,7 @@
 					<span id="multi_img" class="multi button_img">
 						<img src="multiplayer.png" class="psuedo_img"></img>
 					</span>
-					<span class="pos button_text">
+					<span class="pos button_text tab_button_text">
 						<p>XSTR("Multi", 888001)</p>
 					</span>
 				</tab>
