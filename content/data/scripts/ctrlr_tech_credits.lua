@@ -24,6 +24,7 @@ function TechCreditsController:init()
 	self.CreditsTextElement = nil --- @type Element the element containing the credits text
 
 	ScpuiSystem.data.memory.credits_memory = {
+		Ready = false,
 		X1 = 0,
 		Y1 = 0,
 		X2 = 0,
@@ -83,24 +84,6 @@ function TechCreditsController:initialize(document)
 
 	self:scrollCredits()
 
-	local image_el = self.Document:GetElementById("credits_image")
-	local image_x1 = image_el.offset_left + image_el.parent_node.offset_left
-	local image_y1 = image_el.offset_top + image_el.parent_node.offset_top
-
-	ScpuiSystem.data.memory.credits_memory = {
-		X1 = image_x1,
-		Y1 = image_y1,
-		X2 = image_x1 + image_el.offset_width,
-		Y2 = image_y1 + image_el.offset_height,
-		Index = ui.TechRoom.Credits.StartIndex,
-		Alpha = 0,
-		FadeAmount = 0.01 / ui.TechRoom.Credits.FadeTime,
-		Timer = ui.TechRoom.Credits.DisplayTime,
-		FadeTimer = ui.TechRoom.Credits.FadeTime,
-		ImageFile1 = nil,
-		ImageFile2 = nil
-	}
-
 	self:chooseImage()
 	self:timeImages()
 
@@ -142,9 +125,36 @@ function TechCreditsController:change_tech_state(element, state)
 
 end
 
+--- Setup the credits image rendering parameters
+--- @return nil
+function TechCreditsController:setupCreditsImage()
+	local image_el = self.Document:GetElementById("credits_image")
+	local image_x1 = image_el.offset_left + image_el.parent_node.offset_left
+	local image_y1 = image_el.offset_top + image_el.parent_node.offset_top
+
+	ScpuiSystem.data.memory.credits_memory = {
+		Ready = true,
+		X1 = image_x1,
+		Y1 = image_y1,
+		X2 = image_x1 + image_el.offset_width,
+		Y2 = image_y1 + image_el.offset_height,
+		Index = ui.TechRoom.Credits.StartIndex,
+		Alpha = 0,
+		FadeAmount = 0.01 / ui.TechRoom.Credits.FadeTime,
+		Timer = ui.TechRoom.Credits.DisplayTime,
+		FadeTimer = ui.TechRoom.Credits.FadeTime,
+		ImageFile1 = nil,
+		ImageFile2 = nil
+	}
+end
+
 --- Choose a credits image to display and begin fading it in
 --- @return nil
 function TechCreditsController:chooseImage()
+	if not ScpuiSystem.data.memory.credits_memory.Ready then
+		self:setupCreditsImage()
+	end
+
 	---@type integer | string
 	local image_index = ScpuiSystem.data.memory.credits_memory.Index
 

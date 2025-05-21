@@ -68,7 +68,9 @@ function HudConfigController:init()
 	}
 
 	--- Make sure to clear the memory data
-	ScpuiSystem.data.memory.hud_config = {}
+	ScpuiSystem.data.memory.hud_config = {
+		Ready = false,
+	}
 end
 
 --- Called by the RML document
@@ -83,25 +85,10 @@ function HudConfigController:initialize(document)
 	---Load the desired font size from the save file
 	self.Document:GetElementById("main_background"):SetClass(("base_font" .. ScpuiSystem:getFontPixelSize()), true)
 
-	local hud_el = self.Document:GetElementById("hud_drawn_content")
-
-	--get coords to draw at
-	local hx = hud_el.offset_left + hud_el.parent_node.offset_left  + hud_el.parent_node.parent_node.offset_left
-	local hy = hud_el.offset_top + hud_el.parent_node.offset_top  + hud_el.parent_node.parent_node.offset_top
-	local hw = hud_el.client_width
-	local hh = hud_el.client_height
-
-	--increase those coords by percentage
-	hx = hx --+ (0.02 * hx)
-	hy = hy --+ (-0.2 * hy)
-	hw = hw --+ (0.2 * hw)
-	hh = hh --+ (0.2 * hh)
-
-	ui.HudConfig.initHudConfig(hx, hy, hw, hh)
-
 	ScpuiSystem.data.memory.hud_config.Mx = 0
 	ScpuiSystem.data.memory.hud_config.My = 0
 	ScpuiSystem.data.memory.hud_config.Draw = true
+	ScpuiSystem.data.memory.hud_config.Parent = self.Document:GetElementById("hud_drawn_content")
 
 	self.Mutex = true -- stop circular updates at start
 
@@ -355,6 +342,31 @@ end
 --- Tells FSO to draw the gauges for the HUD Config UI
 --- @return nil
 function HudConfigController:drawHUD()
+	if not ScpuiSystem.data.memory.hud_config.Ready then
+		local hud_el = ScpuiSystem.data.memory.hud_config.Parent
+
+		if hud_el == nil then
+			ScpuiSystem.data.memory.hud_config.Draw = false
+			return
+		end
+
+		--get coords to draw at
+		local hx = hud_el.offset_left + hud_el.parent_node.offset_left  + hud_el.parent_node.parent_node.offset_left
+		local hy = hud_el.offset_top + hud_el.parent_node.offset_top  + hud_el.parent_node.parent_node.offset_top
+		local hw = hud_el.client_width
+		local hh = hud_el.client_height
+
+		--increase those coords by percentage
+		hx = hx --+ (0.02 * hx)
+		hy = hy --+ (-0.2 * hy)
+		hw = hw --+ (0.2 * hw)
+		hh = hh --+ (0.2 * hh)
+
+		ui.HudConfig.initHudConfig(hx, hy, hw, hh)
+
+		ScpuiSystem.data.memory.hud_config.Ready = true
+	end
+
 	if ScpuiSystem.data.memory.hud_config ~= nil then
 		if ScpuiSystem.data.memory.hud_config.Draw == false then
 			return
