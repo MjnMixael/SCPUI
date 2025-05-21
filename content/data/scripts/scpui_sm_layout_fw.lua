@@ -37,7 +37,7 @@ local function fixPercentStyle(styleTable, key)
 	if not pct then return end
 
     -- Skip 100% values – these are often full-width containers
-	if pct >= 100 then return end
+	--if pct >= 100 then return end
 
 	local scale = getResponsiveScale(gr.getScreenWidth() / gr.getScreenHeight())
     local new_pct = pct * scale
@@ -46,19 +46,13 @@ local function fixPercentStyle(styleTable, key)
     styleTable[key] = string.format("%.2f%%", new_pct)
 end
 
---- Fixes the width of an element if the screen is wider than an allowed threshold
---- @param element Element The UI element to adjust
---- @param opts? table Optional parameters: { maxPercent, minPercent, scale }
-local function fixLayoutWidth(element, opts)
+--- Fixes only margin/padding on an element
+--- @param element Element
+--- @param opts? table
+--- @return nil
+local function fixLayoutSpacingOnly(element, opts)
 	if not element or not element.style then return end
 
-	local screen_ratio = gr.getScreenWidth() / gr.getScreenHeight()
-	if screen_ratio < aspect_threshold then return end
-
-	-- Resize width if in percent
-	fixPercentStyle(element.style, "width")
-
-	-- Resize margin and padding fields if in percent
 	for _, key in ipairs({
 		"margin_top", "margin_bottom", "margin_left", "margin_right",
 		"padding_top", "padding_bottom", "padding_left", "padding_right"
@@ -67,23 +61,50 @@ local function fixLayoutWidth(element, opts)
 	end
 end
 
---- Recursively applies layout fixes to all elements in the document
---- @param document Document The Rocket screen or document context
---- @param opts? table Optional parameters passed to each fix
-function ScpuiSystem:applyWideLayoutFix(document, opts)
-	if not document then return end
+--- Fixes width + margin/padding for top-level children of main_background
+--- @param element Element The UI element to adjust
+--- @param opts? table Optional parameters: { maxPercent, minPercent, scale }
+--- @return nil
+local function fixLayoutWidth(element, opts)
+	if not element or not element.style then return end
 
-	local function walk(element)
-		fixLayoutWidth(element, opts)
+	local screen_ratio = gr.getScreenWidth() / gr.getScreenHeight()
+	if screen_ratio < aspect_threshold then return end
 
-		local child = element.first_child
-		while child do
-			walk(child)
-			child = child.next_sibling
+	-- Only apply width fix here
+	fixPercentStyle(element.style, "width")
+
+	-- Also apply spacing fix at this level
+	fixLayoutSpacingOnly(element, opts)
+end
+
+--- Applies layout fixes to children of main_background only
+--- @param main_bg Element The element Rocket gives to initialize(); usually main_background
+--- @param opts? table Optional parameters: { maxPercent, minPercent, scale }
+--- @return nil
+function ScpuiSystem:applyWideLayoutFix(main_bg, opts)
+	if not main_bg or not main_bg.first_child then return end
+
+	-- Step 1: Resize direct children (width + spacing)
+	local child = main_bg.first_child
+	while child do
+		fixLayoutWidth(child, opts)
+
+		-- Step 2: Recursively walk child’s children to fix spacing only
+		local function walkSpacing(el)
+			fixLayoutSpacingOnly(el, opts)
+
+			local c = el.first_child
+			while c do
+				walkSpacing(c)
+				c = c.next_sibling
+			end
 		end
-	end
 
-	walk(document)
+		walkSpacing(child)
+
+		child = child.next_sibling
+	end
 end
 
 --------------------------------------------------------------------------------
