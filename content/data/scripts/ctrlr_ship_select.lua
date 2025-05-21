@@ -1051,8 +1051,8 @@ function ShipSelectController:drawSelectModel()
 			return
 		end
 
-		local model_x = model_view.parent_node.offset_left + model_view.offset_left --This is pretty messy, but it's functional
-		local model_y = model_view.parent_node.offset_top + model_view.parent_node.parent_node.offset_top + model_view.offset_top
+		local model_x = ScpuiSystem:getAbsoluteLeft(model_view) --This is pretty messy, but it's functional
+		local model_y = ScpuiSystem:getAbsoluteTop(model_view)
 		local model_w = model_view.offset_width
 		local model_h = model_view.offset_height
 

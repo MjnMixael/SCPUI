@@ -351,8 +351,8 @@ function HudConfigController:drawHUD()
 		end
 
 		--get coords to draw at
-		local hx = hud_el.offset_left + hud_el.parent_node.offset_left  + hud_el.parent_node.parent_node.offset_left
-		local hy = hud_el.offset_top + hud_el.parent_node.offset_top  + hud_el.parent_node.parent_node.offset_top
+		local hx = ScpuiSystem:getAbsoluteLeft(hud_el)
+		local hy = ScpuiSystem:getAbsoluteTop(hud_el)
 		local hw = hud_el.client_width
 		local hh = hud_el.client_height
 

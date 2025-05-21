@@ -957,8 +957,8 @@ function TechDatabaseController:drawModel()
 		end
 
 		-- Get screen coordinates from the SCPUI element position/offset
-		local model_x = model_view.offset_left + model_view.parent_node.offset_left + model_view.parent_node.parent_node.offset_left --This is pretty messy, but it's functional
-		local model_y = model_view.parent_node.offset_top + model_view.parent_node.parent_node.offset_top + 2 --Does not include modelView.offset_top because that element's padding is set for anims
+		local model_x = ScpuiSystem:getAbsoluteLeft(model_view)
+		local model_y = ScpuiSystem:getAbsoluteTop(model_view) - model_view.offset_top + 2 --Does not include modelView.offset_top because that element's padding is set for anims
 		local model_w = model_view.offset_width
 		local model_h = model_view.offset_height + 10
 

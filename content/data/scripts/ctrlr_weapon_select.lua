@@ -1520,8 +1520,8 @@ function WeaponSelectController:drawSelectModel()
 			return
 		end
 
-		local model_x = model_view.parent_node.offset_left + model_view.offset_left --This is pretty messy, but it's functional
-		local model_y = model_view.parent_node.offset_top + model_view.parent_node.parent_node.offset_top + model_view.offset_top
+		local model_x = ScpuiSystem:getAbsoluteLeft(model_view) --This is pretty messy, but it's functional
+		local model_y = ScpuiSystem:getAbsoluteTop(model_view)
 		local model_w = model_view.offset_width
 		local model_h = model_view.offset_height
 
@@ -1572,8 +1572,8 @@ function WeaponSelectController:drawOverheadModel()
 			return
 		end
 
-		local modexl_x = model_view.parent_node.offset_left + model_view.offset_left --This is pretty messy, but it's functional
-		local model_y = model_view.parent_node.offset_top + model_view.parent_node.parent_node.offset_top + model_view.offset_top
+		local model_x = ScpuiSystem:getAbsoluteLeft(model_view)
+		local model_y = ScpuiSystem:getAbsoluteTop(model_view)
 		local model_w = model_view.offset_width
 		local model_h = model_view.offset_height
 
@@ -1582,25 +1582,25 @@ function WeaponSelectController:drawOverheadModel()
 		local primary_offset = 15
 		local secondary_offset = -15
 
-		local bank1_x = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[1].offset_left + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[1].parent_node.offset_left + modexl_x + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[1].offset_width + primary_offset
+		local bank1_x = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[1].offset_left + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[1].parent_node.offset_left + model_x + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[1].offset_width + primary_offset
 		local bank1_y = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[1].offset_top + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[1].parent_node.offset_top + model_y + (ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[1].offset_height / 2)
 
-		local bank2_x = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[2].offset_left + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[2].parent_node.offset_left + modexl_x + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[2].offset_width + primary_offset
+		local bank2_x = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[2].offset_left + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[2].parent_node.offset_left + model_x + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[2].offset_width + primary_offset
 		local bank2_y = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[2].offset_top + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[2].parent_node.offset_top + model_y + (ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[2].offset_height / 2)
 
-		local bank3_x = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[3].offset_left + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[3].parent_node.offset_left + modexl_x + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[3].offset_width + primary_offset
+		local bank3_x = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[3].offset_left + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[3].parent_node.offset_left + model_x + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[3].offset_width + primary_offset
 		local bank3_y = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[3].offset_top + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[3].parent_node.offset_top + model_y + (ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[3].offset_height / 2)
 
-		local bank4_x = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[4].offset_left + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[4].parent_node.offset_left + modexl_x + secondary_offset
+		local bank4_x = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[4].offset_left + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[4].parent_node.offset_left + model_x + secondary_offset
 		local bank4_y = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[4].offset_top + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[4].parent_node.offset_top + model_y + (ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[4].offset_height / 2)
 
-		local bank5_x = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[5].offset_left + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[5].parent_node.offset_left + modexl_x + secondary_offset
+		local bank5_x = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[5].offset_left + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[5].parent_node.offset_left + model_x + secondary_offset
 		local bank5_y = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[5].offset_top + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[5].parent_node.offset_top + model_y + (ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[5].offset_height / 2)
 
-		local bank6_x = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[6].offset_left + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[6].parent_node.offset_left + modexl_x + secondary_offset
+		local bank6_x = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[6].offset_left + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[6].parent_node.offset_left + model_x + secondary_offset
 		local bank6_y = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[6].offset_top + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[6].parent_node.offset_top + model_y + (ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[6].offset_height / 2)
 
-		local bank7_x = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[7].offset_left + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[7].parent_node.offset_left + modexl_x + secondary_offset
+		local bank7_x = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[7].offset_left + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[7].parent_node.offset_left + model_x + secondary_offset
 		local bank7_y = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[7].offset_top + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[7].parent_node.offset_top + model_y + (ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[7].offset_height / 2)
 
 		--This is just a multiplier to make the rendered model a little bigger
@@ -1611,12 +1611,12 @@ function WeaponSelectController:drawOverheadModel()
 		local ratio = (gr.getScreenWidth() / gr.getScreenHeight()) * 2
 
 		--Increase by percentage and move slightly left and up.
-		modexl_x = modexl_x * (1 - (val/ratio))
+		model_x = model_x * (1 - (val/ratio))
 		model_y = model_y * (1 - val)
 		model_w = model_w * (1 + val)
 		model_h = model_h * (1 + val)
 
-		tb.ShipClasses[ScpuiSystem.data.memory.model_rendering.OverheadClass]:renderOverheadModel(modexl_x, model_y, model_w, model_h, ScpuiSystem.data.memory.model_rendering.Weapons_List, ScpuiSystem.data.memory.model_rendering.Class, ScpuiSystem.data.memory.model_rendering.Hover, bank1_x, bank1_y, bank2_x, bank2_y, bank3_x, bank3_y, bank4_x, bank4_y, bank5_x, bank5_y, bank6_x, bank6_y, bank7_x, bank7_y, ScpuiSystem.data.memory.model_rendering.overheadEffect)
+		tb.ShipClasses[ScpuiSystem.data.memory.model_rendering.OverheadClass]:renderOverheadModel(model_x, model_y, model_w, model_h, ScpuiSystem.data.memory.model_rendering.Weapons_List, ScpuiSystem.data.memory.model_rendering.Class, ScpuiSystem.data.memory.model_rendering.Hover, bank1_x, bank1_y, bank2_x, bank2_y, bank3_x, bank3_y, bank4_x, bank4_y, bank5_x, bank5_y, bank6_x, bank6_y, bank7_x, bank7_y, ScpuiSystem.data.memory.model_rendering.overheadEffect)
 
 		ScpuiSystem.data.memory.model_rendering.Start = false
 
