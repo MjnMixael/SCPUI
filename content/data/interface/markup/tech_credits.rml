@@ -64,6 +64,7 @@
 		</div>
 		<div id=credits_image_wrapper>
 			<div id=credits_image>
+				<img></img>
 			</div>
 			<img src="credits-image-window.png"></img>
 		</div>

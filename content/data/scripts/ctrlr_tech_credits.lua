@@ -25,10 +25,8 @@ function TechCreditsController:init()
 
 	ScpuiSystem.data.memory.credits_memory = {
 		Ready = false,
-		X1 = 0,
-		Y1 = 0,
-		X2 = 0,
-		Y2 = 0,
+		W = 0,
+		H = 0,
 		Index = 0,
 		Alpha = 0,
 		FadeAmount = 0,
@@ -129,23 +127,34 @@ end
 --- @return nil
 function TechCreditsController:setupCreditsImage()
 	local image_el = self.Document:GetElementById("credits_image")
-	local image_x1 = image_el.offset_left + image_el.parent_node.offset_left
-	local image_y1 = image_el.offset_top + image_el.parent_node.offset_top
+	local image_x1 = ScpuiSystem:getAbsoluteLeft(image_el)
+	local image_y1 = ScpuiSystem:getAbsoluteTop(image_el)
+
+	local first_img = "2_Crim00.png"
+
+	local w = gr.getImageWidth(first_img) or 50
+	local h = gr.getImageHeight(first_img) or 50
+
+	local new_texture = gr.createTexture(w, h)
 
 	ScpuiSystem.data.memory.credits_memory = {
 		Ready = true,
-		X1 = image_x1,
-		Y1 = image_y1,
-		X2 = image_x1 + image_el.offset_width,
-		Y2 = image_y1 + image_el.offset_height,
+		W = w,
+		H = h,
 		Index = ui.TechRoom.Credits.StartIndex,
 		Alpha = 0,
 		FadeAmount = 0.01 / ui.TechRoom.Credits.FadeTime,
 		Timer = ui.TechRoom.Credits.DisplayTime,
 		FadeTimer = ui.TechRoom.Credits.FadeTime,
 		ImageFile1 = nil,
-		ImageFile2 = nil
+		ImageFile2 = nil,
+		Texture = new_texture,
+		Url = ui.linkTexture(new_texture)
 	}
+
+	-- Replace <img> contents with new texture-backed image
+	local img_el = image_el.first_child
+	img_el:SetAttribute("src", ScpuiSystem.data.memory.credits_memory.Url)
 end
 
 --- Choose a credits image to display and begin fading it in
@@ -201,12 +210,20 @@ end
 --- @return nil
 function TechCreditsController:drawImage()
 	if not ScpuiSystem.data.memory.credits_memory then return end
+
+	if not ScpuiSystem.data.memory.credits_memory.Texture then return end
+
+	gr.setTarget(ScpuiSystem.data.memory.credits_memory.Texture)
+	gr.clearScreen(0, 0, 0, 0)
+
 	if ScpuiSystem.data.memory.credits_memory.ImageFile2 then
-		gr.drawImage(ScpuiSystem.data.memory.credits_memory.ImageFile2, ScpuiSystem.data.memory.credits_memory.X1, ScpuiSystem.data.memory.credits_memory.Y1, ScpuiSystem.data.memory.credits_memory.X2, ScpuiSystem.data.memory.credits_memory.Y2, 0, 0 , 1, 1, ScpuiSystem.data.memory.credits_memory.Alpha)
+		gr.drawImage(ScpuiSystem.data.memory.credits_memory.ImageFile2, 0, 0, ScpuiSystem.data.memory.credits_memory.W, ScpuiSystem.data.memory.credits_memory.H, 0, 0 , 1, 1, ScpuiSystem.data.memory.credits_memory.Alpha)
 	end
 	if ScpuiSystem.data.memory.credits_memory.ImageFile1 then
-		gr.drawImage(ScpuiSystem.data.memory.credits_memory.ImageFile1, ScpuiSystem.data.memory.credits_memory.X1, ScpuiSystem.data.memory.credits_memory.Y1, ScpuiSystem.data.memory.credits_memory.X2, ScpuiSystem.data.memory.credits_memory.Y2, 0, 0 , 1, 1, (1.0 - ScpuiSystem.data.memory.credits_memory.Alpha))
+		gr.drawImage(ScpuiSystem.data.memory.credits_memory.ImageFile1, 0, 0, ScpuiSystem.data.memory.credits_memory.W, ScpuiSystem.data.memory.credits_memory.H, 0, 0 , 1, 1, (1.0 - ScpuiSystem.data.memory.credits_memory.Alpha))
 	end
+
+	gr.setTarget()
 end
 
 --- Start the credits music
@@ -279,6 +296,10 @@ function TechCreditsController:unload()
 	if self.CreditsMusicHandle ~= nil and self.CreditsMusicHandle:isValid() then
         self.CreditsMusicHandle:close(true)
     end
+	if ScpuiSystem.data.memory.credits_memory.Texture then
+		ScpuiSystem.data.memory.credits_memory.Texture:unload()
+		ScpuiSystem.data.memory.credits_memory.Texture = nil
+	end
 	ui.MainHall.startAmbientSound()
 	ui.MainHall.startMusic()
 

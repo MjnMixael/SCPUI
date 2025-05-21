@@ -338,10 +338,10 @@
 --- SCPUI Credits Image Data
 --- @class credits_image_memory
 --- @field Ready boolean True if the credits image is ready to be displayed, false otherwise
---- @field X1 number The x1 position of the image
---- @field Y1 number The y1 position of the image
---- @field X2 number The x2 position of the image
---- @field Y2 number The y2 position of the image
+--- @field Texture? texture The texture to use for the credits image
+--- @field Url? string The string url of the texture that can be assigned to librocket element
+--- @field W number The width of the image
+--- @field H number The height of the image
 --- @field Index number The current index of the image to display
 --- @field Alpha number The current alpha value of the image
 --- @field FadeAmount number The amount to fade the image by each frame

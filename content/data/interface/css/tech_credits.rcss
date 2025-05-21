@@ -55,6 +55,13 @@ div#credits_image
 	height: 92%;
 }
 
+div#credits_image img
+{
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
 div#credits_text_wrapper
 {
 	width: 72%;
