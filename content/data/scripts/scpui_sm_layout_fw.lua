@@ -42,7 +42,7 @@ local function fixPercentStyle(styleTable, key)
 	local scale = getResponsiveScale(gr.getScreenWidth() / gr.getScreenHeight())
     local new_pct = pct * scale
 
-    ba.print(string.format("Resizing %s: %.2f%% → %.2f%%", key, pct, new_pct))
+    ba.print(string.format("Resizing %s: %.2f%% -> %.2f%%\n", key, pct, new_pct))
     styleTable[key] = string.format("%.2f%%", new_pct)
 end
 
@@ -52,6 +52,8 @@ end
 --- @return nil
 local function fixLayoutSpacingOnly(element, opts)
 	if not element or not element.style then return end
+
+	ba.print(string.format("Fixing layout spacing for %s\n", element.id))
 
 	for _, key in ipairs({
 		"margin_top", "margin_bottom", "margin_left", "margin_right",
@@ -68,8 +70,7 @@ end
 local function fixLayoutWidth(element, opts)
 	if not element or not element.style then return end
 
-	local screen_ratio = gr.getScreenWidth() / gr.getScreenHeight()
-	if screen_ratio < aspect_threshold then return end
+	ba.print(string.format("Fixing layout width for %s\n", element.id))
 
 	-- Only apply width fix here
 	fixPercentStyle(element.style, "width")
@@ -83,27 +84,23 @@ end
 --- @param opts? table Optional parameters: { maxPercent, minPercent, scale }
 --- @return nil
 function ScpuiSystem:applyWideLayoutFix(main_bg, opts)
-	if not main_bg or not main_bg.first_child then return end
+	if not main_bg or not main_bg.child_nodes then return end
 
-	-- Step 1: Resize direct children (width + spacing)
-	local child = main_bg.first_child
-	while child do
+	-- Step 1: Fix layout widths of all direct children
+	for _, child in pairs(main_bg.child_nodes) do
 		fixLayoutWidth(child, opts)
 
-		-- Step 2: Recursively walk child’s children to fix spacing only
+		-- Step 2: Recursively walk each child's descendants to fix spacing
 		local function walkSpacing(el)
 			fixLayoutSpacingOnly(el, opts)
-
-			local c = el.first_child
-			while c do
-				walkSpacing(c)
-				c = c.next_sibling
+			if el.child_nodes then
+				for _, grandchild in pairs(el.child_nodes) do
+					walkSpacing(grandchild)
+				end
 			end
 		end
 
 		walkSpacing(child)
-
-		child = child.next_sibling
 	end
 end
 
@@ -196,10 +193,11 @@ if not ScpuiSystem._layoutPatchApplied then
 								if document then
 									local screen_width = gr.getScreenWidth()
 									local center_width = gr.getCenterWidth()
+									local screen_ratio = gr.getScreenWidth() / gr.getScreenHeight()
 
 									if center_width < screen_width and ScpuiSystem.applyTripleMonitorLayoutFix then
 										ScpuiSystem:applyTripleMonitorLayoutFix(document)
-									elseif ScpuiSystem.applyWideLayoutFix then
+									elseif screen_ratio >= aspect_threshold and ScpuiSystem.applyWideLayoutFix then
 										ScpuiSystem:applyWideLayoutFix(document)
 									end
 								end
