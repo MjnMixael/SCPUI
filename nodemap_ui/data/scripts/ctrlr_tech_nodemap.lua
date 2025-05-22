@@ -55,69 +55,60 @@ function TechNodeMapController:initialize(document)
 	--Get the key for the game progression
 	self.Key = self:getPlayerProgress()
 
-	Topics.nodemap.preload:send(self)
-
-	self.MainMapElement = self.Document:GetElementById("map_view")
-	self.Width = self.MainMapElement.client_width
-	self.Height = self.MainMapElement.client_height
-
-	self.Texture = gr.createTexture(self.Width, self.Height)
-	self.Url = ui.linkTexture(self.Texture)
-
-	self.Background = "mapgrid.png"
-
-	if ba.inDebug() then
-		NodemapUi:parseTables()
-	end
-
-	--Setup all the button data
-	for k, v in pairs(NodemapUi.entries) do
-		self:setupButton(v)
-	end
-
-	local mapEl = self.Document:CreateElement("img")
-	mapEl:SetAttribute("src", self.Url)
-	self.MainMapElement:AppendChild(mapEl)
-
-	--Get the image size
-	local sys_w = gr.getImageWidth(self.Background)
-	local sys_h = gr.getImageHeight(self.Background)
-
-	--Get the screen size
-	local screen_w = gr.getScreenWidth()
-	local screen_h = gr.getScreenHeight()
-
-	--Get the scale factor
-	if screen_w > screen_h then
-		self.Scale = self:calculateScaleFactor(screen_w, sys_w)
-	else
-		self.Scale = self:calculateScaleFactor(screen_h, sys_h)
-	end
-
-	self:generateIconButtons(NodemapUi.entries)
-
-	--Set the background
-	self.DrawLines = true
-	self.Document:GetElementById("oval_btn"):SetPseudoClass("checked", not self.DrawLines)
-	self:updateBackground()
-
 	Topics.nodemap.initialize:send(self)
 
-end
+	-- After all initialization is done we can generate the map on the next frame
+	async.run(function()
+        async.await(async.yield())
 
---- Check if we're in an ultrawide mode so we can handle that explicitely during button creation
---- @return nil
-function TechNodeMapController:getWideScaleFactor()
-	local screen_width = gr.getScreenWidth()
-	local screen_height = gr.getScreenHeight()
-	local base_aspect = 16 / 9
-	local current_aspect = screen_width / screen_height
+		self.MainMapElement = self.Document:GetElementById("map_view")
+		self.Width = self.MainMapElement.client_width
+		self.Height = self.MainMapElement.client_height
 
-	if current_aspect <= base_aspect then
-		return 1.0
-	end
+		self.Texture = gr.createTexture(self.Width, self.Height)
+		self.Url = ui.linkTexture(self.Texture)
 
-	return base_aspect / current_aspect -- e.g. 0.7819 for 21:9
+		self.Background = "mapgrid.png"
+
+		if ba.inDebug() then
+			NodemapUi:parseTables()
+		end
+
+		--Setup all the button data
+		for k, v in pairs(NodemapUi.entries) do
+			self:setupButton(v)
+		end
+
+		local mapEl = self.Document:CreateElement("img")
+		mapEl:SetAttribute("src", self.Url)
+		self.MainMapElement:AppendChild(mapEl)
+
+		--Get the image size
+		local sys_w = gr.getImageWidth(self.Background)
+		local sys_h = gr.getImageHeight(self.Background)
+
+		--Get the screen size
+		local screen_w = gr.getCenterWidth()
+		local screen_h = gr.getCenterHeight()
+
+		--Get the scale factor
+		if screen_w > screen_h then
+			self.Scale = self:calculateScaleFactor(screen_w, sys_w)
+		else
+			self.Scale = self:calculateScaleFactor(screen_h, sys_h)
+		end
+
+        self:generateIconButtons(NodemapUi.entries)
+
+		--Set the background
+		self.DrawLines = true
+		self.Document:GetElementById("oval_btn"):SetPseudoClass("checked", not self.DrawLines)
+		self:updateBackground()
+
+		Topics.nodemap.postMapBuild:send(self)
+
+    end, async.OnFrameExecutor)
+
 end
 
 --- Get the player's current game progress.
@@ -450,12 +441,10 @@ function TechNodeMapController:generateIconButtons(iconTable)
 				end
 
 			end
-			
-			local ultrawide_scale = self:getWideScaleFactor()
 
 			--Setup the button position
-			button_el.style.top = value.BitmapY * ultrawide_scale .. "px"
-			button_el.style.left = value.BitmapX * ultrawide_scale .. "px"
+			button_el.style.top = value.BitmapY .. "px"
+			button_el.style.left = value.BitmapX .. "px"
 			button_el.style.width = math.floor(gr.getImageWidth(tostring(bitmap)) * self.Scale) .. "px"
 			value.ButtonElement = button_el
 			value.ImageElement = img_el

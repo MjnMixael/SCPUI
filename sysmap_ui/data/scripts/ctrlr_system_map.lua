@@ -62,6 +62,8 @@ function SystemMapController:initialize(document)
 	self.MainMapElement = self.Document:GetElementById("map")
 	self.BackButtonElement = self.Document:GetElementById("top_panel_wrapper")
 
+	self.Document:GetElementById("closeup_container").style.ultrawide = "false"
+
 	self:doInitialLoad()
 
 	Topics.systemmap.initialize:send(self)
@@ -151,8 +153,8 @@ function SystemMapController:loadNewSystem(system_name, scale_only)
 		local sys_h = gr.getImageHeight(self.CurrentSystem.Background)
 
 		--Get the screen size
-		local screen_w = gr.getScreenWidth()
-		local screen_h = gr.getScreenHeight()
+		local screen_w = gr.getCenterWidth()
+		local screen_h = gr.getCenterHeight()
 
 		--Get the scale factor
 		if screen_w > screen_h then
@@ -340,7 +342,7 @@ function SystemMapController:setupSystem()
 	mapEl:SetAttribute("src", self.Url)
 	self.MainMapElement:AppendChild(mapEl)
 
-	self.totalWidth = self.CurrentSystem.Width - gr.getScreenWidth()
+	self.totalWidth = self.CurrentSystem.Width - gr.getCenterWidth()
 	self.totalHeight = self.CurrentSystem.Height - gr.getScreenHeight()
 
 	self.MainMapElement.scroll_left = self.totalWidth * self.FocalWidth
@@ -624,10 +626,7 @@ function SystemMapController:displayObjectInfo(object)
 			ScpuiSystem.SysMap.z = 0.8
 		end
 
-		ScpuiSystem.SysMap.x = object_el.offset_left
-		ScpuiSystem.SysMap.y = object_el.offset_top
-		ScpuiSystem.SysMap.w = object_el.offset_width
-		ScpuiSystem.SysMap.h = object_el.offset_height
+		ScpuiSystem.SysMap.ObjectElement = object_el
 	end
 
 
@@ -782,7 +781,7 @@ function SystemMapController:checkMouse()
 			self:scrollLeft()
 		end
 
-		if self.MouseData.Mx >= gr.getScreenWidth() - self.MouseData.Threshold then
+		if self.MouseData.Mx >= gr.getCenterWidth() - self.MouseData.Threshold then
 			self:scrollRight()
 		end
 
@@ -959,7 +958,14 @@ function SystemMapController:drawModel()
 
 		ScpuiSystem.SysMap.TechModelOri = SystemMapController:changeTechModelOrientation(ScpuiSystem.SysMap.TechModelOri)
 
-		thisShipClass:renderTechModel2(ScpuiSystem.SysMap.x, ScpuiSystem.SysMap.y, ScpuiSystem.SysMap.x + ScpuiSystem.SysMap.w, ScpuiSystem.SysMap.y + ScpuiSystem.SysMap.h, ScpuiSystem.SysMap.TechModelOri, ScpuiSystem.SysMap.z)
+		local object_el = ScpuiSystem.SysMap.ObjectElement
+
+		local x = ScpuiSystem:getAbsoluteLeft(object_el)
+		local y = ScpuiSystem:getAbsoluteTop(object_el)
+		local w = object_el.offset_width
+		local h = object_el.offset_height
+
+		thisShipClass:renderTechModel2(x, y, x + w, y + h, ScpuiSystem.SysMap.TechModelOri, ScpuiSystem.SysMap.z)
 	end
 end
 
