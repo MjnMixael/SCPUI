@@ -163,7 +163,7 @@ function ScpuiSystem:getRootParent(document)
 end
 
 --------------------------------------------------------------------------------
--- 🔧 Monkey-patch Class() to wrap controller initialize() if loaded from ctrlr_*.lua
+-- Monkey-patch Class() to wrap controller initialize() if loaded from ctrlr_*.lua
 --------------------------------------------------------------------------------
 
 if not ScpuiSystem._layoutPatchApplied then
