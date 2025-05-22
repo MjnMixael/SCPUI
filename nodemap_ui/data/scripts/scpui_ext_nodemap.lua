@@ -71,10 +71,10 @@
 --- @field colorValues table<string, table<number, number, number>> The color values for the systems
 --- @field entries node_map_entry[] The entries for the systems
 
---- Create the local JournalUi object
+--- Create the local NodemapUi object
 local NodemapUi = {
 	Name = "Node Map",
-	Version = "1.0.0",
+	Version = "1.1.0",
 	Submodule = "ndmp",
 	Key = "NodemapUi"
 }
@@ -90,6 +90,7 @@ function NodemapUi:init()
     ScpuiSystem:registerExtensionTopics("nodemap", {
         preload = function() return nil end,
         initialize = function() return nil end,
+		postMapBuild = function() return nil end,
         progressionFunction = function()
             -- Default to returning a dummy function
             return function(_) return 1 end
