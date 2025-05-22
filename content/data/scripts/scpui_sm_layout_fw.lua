@@ -30,6 +30,8 @@ end
 --- @return nil
 local function fixPercentStyle(styleTable, key)
 
+	if styleTable.ultrawide == "false" then return end
+
 	local value = styleTable[key]
 	if not value then return end
 
