@@ -47,11 +47,6 @@ function TechNodeMapController:initialize(document)
 	---Load background choice
 	self.Document:GetElementById("main_background"):SetClass(ScpuiSystem:getBackgroundClass(), true)
 
-	--For BtA: Set the class custom. This is a thing because Journal needs to be modular to SCPUI as well as BtA.
-	--So eventually this will need a separate file to add it's own hooks into ui_topics that can then be referenced.
-	--But for now we just brute force it.
-	self.Document:GetElementById("main_background"):SetClass("node_map_bg", true)
-
 	---Load the desired font size from the save file
 	self.Document:GetElementById("main_background"):SetClass(("base_font" .. ScpuiSystem:getFontPixelSize()), true)
 
@@ -108,6 +103,21 @@ function TechNodeMapController:initialize(document)
 
 	Topics.nodemap.initialize:send(self)
 
+end
+
+--- Check if we're in an ultrawide mode so we can handle that explicitely during button creation
+--- @return nil
+function TechNodeMapController:getWideScaleFactor()
+	local screen_width = gr.getScreenWidth()
+	local screen_height = gr.getScreenHeight()
+	local base_aspect = 16 / 9
+	local current_aspect = screen_width / screen_height
+
+	if current_aspect <= base_aspect then
+		return 1.0
+	end
+
+	return base_aspect / current_aspect -- e.g. 0.7819 for 21:9
 end
 
 --- Get the player's current game progress.
@@ -440,10 +450,12 @@ function TechNodeMapController:generateIconButtons(iconTable)
 				end
 
 			end
+			
+			local ultrawide_scale = self:getWideScaleFactor()
 
 			--Setup the button position
-			button_el.style.top = value.BitmapY .. "px"
-			button_el.style.left = value.BitmapX .. "px"
+			button_el.style.top = value.BitmapY * ultrawide_scale .. "px"
+			button_el.style.left = value.BitmapX * ultrawide_scale .. "px"
 			button_el.style.width = math.floor(gr.getImageWidth(tostring(bitmap)) * self.Scale) .. "px"
 			value.ButtonElement = button_el
 			value.ImageElement = img_el

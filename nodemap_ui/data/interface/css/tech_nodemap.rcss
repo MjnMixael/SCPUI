@@ -58,6 +58,13 @@ div#map_view
 	border-width: 1px;
 }
 
+div#map_view img
+{
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
 div#make_a_selection
 {
 	position: absolute;
