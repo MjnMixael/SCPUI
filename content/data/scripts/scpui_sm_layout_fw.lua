@@ -44,7 +44,6 @@ local function fixPercentStyle(styleTable, key)
 	local scale = getResponsiveScale(gr.getScreenWidth() / gr.getScreenHeight())
     local new_pct = pct * scale
 
-    ba.print(string.format("Resizing %s: %.2f%% -> %.2f%%\n", key, pct, new_pct))
     styleTable[key] = string.format("%.2f%%", new_pct)
 end
 
@@ -54,8 +53,6 @@ end
 --- @return nil
 local function fixLayoutSpacingOnly(element, opts)
 	if not element or not element.style then return end
-
-	ba.print(string.format("Fixing layout spacing for %s\n", element.id))
 
 	for _, key in ipairs({
 		"margin_top", "margin_bottom", "margin_left", "margin_right",
@@ -71,8 +68,6 @@ end
 --- @return nil
 local function fixLayoutWidth(element, opts)
 	if not element or not element.style then return end
-
-	ba.print(string.format("Fixing layout width for %s\n", element.id))
 
 	-- Only apply width fix here
 	fixPercentStyle(element.style, "width")
@@ -145,8 +140,6 @@ function ScpuiSystem:applyTripleMonitorLayoutFix(document)
 	end
 
 	main:AppendChild(wrapper)
-
-	ba.print(string.format("[SCPUI] Centered layout applied: root UI width = %d, screen = %d\n", center_width, screen_width))
 end
 
 --- Returns the appropriate root parent for downstream manipulation
@@ -197,8 +190,10 @@ if not ScpuiSystem._layoutPatchApplied then
 
 									if center_width < screen_width and ScpuiSystem.applyTripleMonitorLayoutFix then
 										ScpuiSystem:applyTripleMonitorLayoutFix(document)
+										ba.print(string.format("[SCPUI] Triple monitor layout applied: root UI width = %d, screen = %d\n", center_width, screen_width))
 									elseif screen_ratio >= aspect_threshold and ScpuiSystem.applyWideLayoutFix then
 										ScpuiSystem:applyWideLayoutFix(document)
+										ba.print(string.format("[SCPUI] Wide layout applied: root UI width = %d, screen = %d\n", center_width, screen_width))
 									end
 								end
 
