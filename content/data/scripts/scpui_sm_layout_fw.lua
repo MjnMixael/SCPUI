@@ -135,10 +135,8 @@ function ScpuiSystem:applyTripleMonitorLayoutFix(document)
 
 	-- Move all children into wrapper
 	local children = {}
-	local child = main.first_child
-	while child do
+	for _, child in pairs(main.child_nodes) do
 		table.insert(children, child)
-		child = child.next_sibling
 	end
 
 	for _, el in ipairs(children) do
