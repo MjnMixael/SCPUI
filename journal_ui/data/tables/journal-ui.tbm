@@ -1,0 +1,7 @@
+#State Replacement
+
+$State: GS_STATE_SCRIPTING
+    +Substate: Journal
+    +Markup: data/interface/markup/journal.rml
+
+#End

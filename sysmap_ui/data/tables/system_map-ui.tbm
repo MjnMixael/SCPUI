@@ -1,0 +1,7 @@
+#State Replacement
+
+$State: GS_STATE_SCRIPTING
+    +Substate: SystemMap
+    +Markup: data/interface/markup/system_map.rml
+
+#End

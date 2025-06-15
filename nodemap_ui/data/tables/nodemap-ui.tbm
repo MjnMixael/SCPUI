@@ -1,0 +1,7 @@
+#State Replacement
+
+$State: GS_STATE_SCRIPTING
+    +Substate: NodeMap
+    +Markup: data/interface/markup/tech_nodemap.rml
+
+#End
