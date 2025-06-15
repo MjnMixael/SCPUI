@@ -301,6 +301,11 @@ end
 --- @param mission_state boolean? True to use GS_STATE_SCRIPTING_MISSION instead of GS_STATE_SCRIPTING
 --- @return nil
 function ScpuiSystem:beginSubstate(state, mission_state)
+	if not self:hasOverrideForState({Name = state}) then
+		ba.warning("No SCPUI document defined for " .. state .. " in scpui.tbl!\n")
+		return
+	end
+
 	ScpuiSystem.data.OldSubstate = ScpuiSystem.data.Substate
 	ScpuiSystem.data.Substate = state
 
