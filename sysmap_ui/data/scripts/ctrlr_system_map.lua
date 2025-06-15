@@ -3,7 +3,6 @@
 -----------------------------------
 
 local AsyncUtil = require("lib_async")
-local Md = require("debugFunctions")
 local SysMapUtils = require('lib_sysmap_utils')
 local Topics = require("lib_ui_topics")
 local Utils = require("lib_utils")
@@ -95,7 +94,7 @@ function SystemMapController:LoadConfig(data)
 
 	self.Config = data.Configs[ba.getCurrentPlayer():getCampaignFilename()]
 	if self.Config == nil then
-		Md.warning("No config data found for campaign " .. ba.getCurrentPlayer():getCampaignFilename())
+		ba.warning("No config data found for campaign " .. ba.getCurrentPlayer():getCampaignFilename())
 		self.Systems = {}
 		return
 	end
@@ -137,7 +136,7 @@ function SystemMapController:loadNewSystem(system_name, scale_only)
 			self:cleanupBackground()
 		end
 
-		Md.printAlways("System Viewer loading system " .. system_name)
+		ba.print("System Viewer loading system " .. system_name)
 
 		if not scale_only then
 			self.FocalWidth = 0.5
@@ -187,7 +186,7 @@ function SystemMapController:loadNewSystem(system_name, scale_only)
 		end
 
 	else
-		Md.warning("No system with name " .. system_name .. " was found!")
+		ba.warning("No system with name " .. system_name .. " was found!")
 		local map_el = self.Document:CreateElement("div")
 		map_el.inner_rml = Utils.xstr("No System Loaded", -1)
 		map_el.id = "no_system_warning"
@@ -216,16 +215,16 @@ function SystemMapController:autoLoadSystem()
 	end
 
 	if mission_name ~= nil then
-		Md.print("System Viewer detected next mission as " .. mission_name)
+		ba.print("System Viewer detected next mission as " .. mission_name)
 	else
 		--It's possible to get here at the end of the campaign.. so for BtA, let's check if that's the case
         --If so we'll force load the last map because we're cool like that
         local previous_mission = ca.getPrevMissionFilename()
         if string.sub(previous_mission, -9) == "m4_01.fs2" then
             mission_name = previous_mission
-            Md.print("System Viewer detected next mission as " .. mission_name)
+            ba.print("System Viewer detected next mission as " .. mission_name)
         else
-            Md.print("System Viewer could not detect the next mission. Loading default!")
+            ba.print("System Viewer could not detect the next mission. Loading default!")
         end
 	end
 
