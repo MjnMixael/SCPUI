@@ -536,7 +536,7 @@ function ScpuiSystem:setBriefingText(parent, brief_text, recommendation)
 						search_index = range_end_end + 1
 					else
 						-- Still need to update this so that the final text element will not be shown twice
-						search_index = #line
+						search_index = #line + 1
 					end
 				end
 			end
