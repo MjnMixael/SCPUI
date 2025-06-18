@@ -63,13 +63,13 @@ end
 --- Scroll the text up by 10 pixels
 --- @return nil
 function FictionViewerController:scrollUp()
-	ScpuiSystem:ScrollUp(self.Document:GetElementById("fiction_text"))
+	ScpuiSystem:scrollUp(self.Document:GetElementById("fiction_text"))
 end
 
 --- Scroll the text down by 10 pixels
 --- @return nil
 function FictionViewerController:scrollDown()
-	ScpuiSystem:ScrollDown(self.Document:GetElementById("fiction_text"))
+	ScpuiSystem:scrollDown(self.Document:GetElementById("fiction_text"))
 end
 
 return FictionViewerController
