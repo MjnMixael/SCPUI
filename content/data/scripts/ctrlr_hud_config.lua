@@ -100,6 +100,8 @@ function HudConfigController:initialize(document)
 	self.Document:GetElementById("hud_on_btn"):SetClass("hidden", true)
 	self.Document:GetElementById("hud_off_btn"):SetClass("hidden", true)
 
+	self:drawHUD() -- Call this once to make sure all data is initialized
+
 	self:initPresets()
 
 	Topics.hudconfig.initialize:send(self)
