@@ -1116,6 +1116,31 @@ function LoadoutHandler:AddShipToSlot(slot, ship_idx)
 
 end
 
+--- Copies the loadout from one slot to another
+--- @param source_slot integer The slot index to copy the loadout from
+--- @param target_slot integer The slot index to copy the loadout to
+--- @return nil
+function LoadoutHandler:MoveShipToSlotFromSlot(source_slot, target_slot)
+
+	local source = self:GetShipLoadout(source_slot)
+	local target = self:GetShipLoadout(target_slot)
+
+	ScpuiSystem.data.Loadout.Loadout_Slots[target_slot].ShipClassIndex = source.ShipClassIndex
+
+	--Copy the weapons and amounts
+	target.Weapons_List = {}
+	target.Amounts_List = {}
+	for i = 1, #source.Weapons_List do
+		target.Weapons_List[i] = source.Weapons_List[i]
+		target.Amounts_List[i] = source.Amounts_List[i]
+	end
+
+	self:TakeShipFromSlot(source_slot)
+
+	Topics.loadouts.fillShipSlot:send(target_slot)
+
+end
+
 --- Removes a ship from the ship pool
 --- @param ship_idx integer The index of the ship class to remove
 --- @return nil

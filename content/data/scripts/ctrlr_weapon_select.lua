@@ -364,6 +364,7 @@ function WeaponSelectController:reloadInterface()
 	ScpuiSystem:clearEntries(list_items_el)
 	self.SelectedEntry = nil
 	self.SelectedShip = nil
+	self.Active_Slots = {}
 	if LoadoutHandler:GetNumPrimaryWeapons() > 0 then
 		self:createPoolList(LoadoutHandler:GetPrimaryWeaponList())
 	end
