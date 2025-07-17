@@ -495,15 +495,19 @@ function AbstractBriefingController:initializeStage(stage_idx, briefing_text, au
             return CONTEXT_VALID
         end))
 
+	ba.print("SCPUI: Initializing voice for stage: " .. stage_idx .. "\n")
     async.run(function()
         -- First, wait until the text has been shown fully
         async.await(AsyncUtil.wait_for(2.0))
 
         -- And now we can start playing the voice file
-		if self.Stages_List[stage_idx].AudioFilename then
+		if audio_filename then
+			ba.print("SCPUI: Preparing to play voice file: " .. audio_filename .. "\n")
 			if #audio_filename > 0 and string.lower(audio_filename) ~= "none" then
 				self.CurrentVoiceHandle = ad.openAudioStream(audio_filename, AUDIOSTREAM_VOICE)
+				ba.print("SCPUI: Current voice validity is: " .. tostring(self.CurrentVoiceHandle:isValid()) .. "\n")
 				self.CurrentVoiceHandle:play(ad.MasterVoiceVolume)
+				ba.print("SCPUI: Voice file '" .. audio_filename .. "' should be playing!\n")
 			end
 		end
 
