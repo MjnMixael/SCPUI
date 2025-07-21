@@ -1,5 +1,5 @@
 -----------------------------------
---Controller for the Command Briefing UI
+--Controller for the Fiction Viewer UI
 -----------------------------------
 
 local Topics = require("lib_ui_topics")
@@ -39,7 +39,9 @@ function FictionViewerController:initialize(document)
 	---Load the desired font size from the save file
 	self.Document:GetElementById("main_background"):SetClass(("base_font" .. ScpuiSystem:getFontPixelSize()), true)
 
-	self.TextFile = ui.FictionViewer.getFiction().TextFile
+	local stage = ui.FictionViewer.getFiction()
+
+	self.TextFile = stage.TextFile
 
 	local file = cf.openFile(self.TextFile, 'r', '')
 	self.Text = file:read('*a')
@@ -48,6 +50,12 @@ function FictionViewerController:initialize(document)
 	local text_el = self.Document:GetElementById("fiction_text")
 
 	local color_text = ScpuiSystem:setBriefingText(text_el, self.Text)
+
+	local font = gr.Fonts[stage.FontFile]
+
+	if font:isValid() then
+		text_el.style.font = font.FamilyName
+	end
 
 	Topics.fictionviewer.initialize:send(self)
 
