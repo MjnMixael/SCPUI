@@ -163,7 +163,7 @@ div#weapon_view
 
 div#weapon_view ani
 {
-	height: 100%;
+	width: 100%;
 }
 
 div#weapon_name
