@@ -624,23 +624,24 @@ end
 --- @param event Event The event that was triggered
 --- @return nil
 function TechNodeMapController:global_keydown(element, event)
+	local keys = ScpuiSystem:getKeyInfo(event)
 	if not Topics.nodemap.keydown:send(event) then
-		if event.parameters.key_identifier == rocket.key_identifier.ESCAPE then
+		if keys.ESCAPE then
 			event:StopPropagation()
 
 			self:exit()
-		elseif event.parameters.key_identifier == rocket.key_identifier.S and event.parameters.ctrl_key == 1 and event.parameters.shift_key == 1 then
+		elseif keys.S and keys.Ctrl and keys.Shift then
 			self.ShowAll  = not self.ShowAll
 			self:ReloadList()
-		elseif event.parameters.key_identifier == rocket.key_identifier.UP then
+		elseif keys.UP then
 			self:scrollText(self.Document:GetElementById("map_desc"), 0)
-		elseif event.parameters.key_identifier == rocket.key_identifier.DOWN then
+		elseif keys.DOWN then
 			self:scrollText(self.Document:GetElementById("map_desc"), 1)
-		elseif event.parameters.key_identifier == rocket.key_identifier.RETURN then
+		elseif keys.RETURN then
 			--self:commit_pressed(element)
-		elseif event.parameters.key_identifier == rocket.key_identifier.F1 then
+		elseif keys.F1 then
 			self:help_clicked(element)
-		elseif event.parameters.key_identifier == rocket.key_identifier.F2 then
+		elseif keys.F2 then
 			self:options_button_clicked(element)
 		end
 	end

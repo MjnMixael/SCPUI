@@ -900,8 +900,9 @@ end
 --- @param event Event The event that was triggered
 --- @return nil
 function SystemMapController:global_keydown(element, event)
+	local keys = ScpuiSystem:getKeyInfo(event)
 	if not Topics.systemmap.keydown:send(event) then
-		if event.parameters.key_identifier == rocket.key_identifier.ESCAPE then
+		if keys.ESCAPE then
 			if self.CloseupActive == true then
 				self:closeObjectInfo()
 			elseif self.CurrentSystem ~= nil then
@@ -916,18 +917,18 @@ function SystemMapController:global_keydown(element, event)
 				event:StopPropagation()
 				self:exit()
 			end
-		elseif event.parameters.key_identifier == rocket.key_identifier.UP then
+		elseif keys.UP then
 			self:scrollUp()
-		elseif event.parameters.key_identifier == rocket.key_identifier.DOWN then
+		elseif keys.DOWN then
 			self:scrollDown()
-		elseif event.parameters.key_identifier == rocket.key_identifier.LEFT then
+		elseif keys.LEFT then
 			self:scrollLeft()
-		elseif event.parameters.key_identifier == rocket.key_identifier.RIGHT then
+		elseif keys.RIGHT then
 			self:scrollRight()
-		elseif event.parameters.key_identifier == rocket.key_identifier.P and event.parameters.ctrl_key == 1 and event.parameters.shift_key == 1 then
+		elseif keys.P and keys.Ctrl and keys.Shift then
 			self:reload()
-		elseif event.parameters.key_identifier == rocket.key_identifier.Z then
-			if event.parameters.shift_key == 1 then
+		elseif keys.Z then
+			if keys.Shift then
 				self.ZoomLevel = self.ZoomLevel + 0.02
 				if self.ZoomLevel > 0.7 then
 					self.ZoomLevel = 0.7

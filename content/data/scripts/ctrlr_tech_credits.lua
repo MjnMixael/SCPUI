@@ -260,15 +260,16 @@ end
 --- @param event Event The event that was triggered
 --- @return nil
 function TechCreditsController:global_keydown(element, event)
-    if event.parameters.key_identifier == rocket.key_identifier.ESCAPE then
+	local keys = ScpuiSystem:getKeyInfo(event)
+    if keys.ESCAPE then
         event:StopPropagation()
 
         ba.postGameEvent(ba.GameEvents["GS_EVENT_MAIN_MENU"])
-    elseif event.parameters.key_identifier == rocket.key_identifier.TAB then
+    elseif keys.TAB then
 		self.ScrollRate = ui.TechRoom.Credits.ScrollRate * 10
-	elseif event.parameters.key_identifier == rocket.key_identifier.UP and event.parameters.ctrl_key == 1 then
+	elseif keys.UP and keys.Ctrl then
 		self:change_tech_state(element, 3)
-	elseif event.parameters.key_identifier == rocket.key_identifier.DOWN and event.parameters.ctrl_key == 1 then
+	elseif keys.DOWN and keys.Ctrl then
 		self:change_tech_state(element, 1)
 	end
 end
@@ -278,7 +279,8 @@ end
 --- @param event Event The event that was triggered
 --- @return nil
 function TechCreditsController:global_keyup(element, event)
-    if event.parameters.key_identifier == rocket.key_identifier.TAB then
+	local keys = ScpuiSystem:getKeyInfo(event)
+    if keys.TAB then
 		self.ScrollRate = ui.TechRoom.Credits.ScrollRate
 	end
 end

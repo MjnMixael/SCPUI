@@ -525,9 +525,11 @@ end
 --- @param event Event The event that was triggered
 --- @return nil
 function MedalsController:global_keydown(element, event)
-    if event.parameters.key_identifier == rocket.key_identifier.ESCAPE then
+	local keys = ScpuiSystem:getKeyInfo(event)
+
+    if keys.ESCAPE then
         ba.postGameEvent(ba.GameEvents["GS_EVENT_PREVIOUS_STATE"])
-	elseif event.parameters.key_identifier == rocket.key_identifier.D and event.parameters.ctrl_key == 1 then
+	elseif keys.D and keys.Ctrl then
 		if self.CurrentState == self.STATE_ACHIEVEMENTS and ba.inDebug() then
 			self:showResetAchievementDialog()
 		end

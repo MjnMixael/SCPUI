@@ -3,6 +3,49 @@
 --related to ui manipulation but also contains some other utility functions
 -----------------------------------
 
+--- Returns a simplified table for key event checks
+--- @param event Event The event to extract key data from
+--- @return scpui_keypress keys A table containing the key information
+function ScpuiSystem:getKeyInfo(event)
+	local p = event.parameters
+	local keys = {}
+
+	-- Modifiers
+	keys.Ctrl  = p.ctrl_key == 1
+	keys.Shift = p.shift_key == 1
+	keys.Alt   = p.alt_key == 1
+	keys.Meta  = p.meta_key == 1
+
+	local k = p.key_identifier
+	if not k then return keys end
+
+	-- Custom mapping to match your @class naming
+	local nameMap = {
+		["0"] = "NUM0",
+		["1"] = "NUM1",
+		["2"] = "NUM2",
+		["3"] = "NUM3",
+		["4"] = "NUM4",
+		["5"] = "NUM5",
+		["6"] = "NUM6",
+		["7"] = "NUM7",
+		["8"] = "NUM8",
+		["9"] = "NUM9",
+		NEXT = "PGDWN",
+		PRIOR = "PGUP"
+	}
+
+	for name, enum in pairs(rocket.key_identifier) do
+		if enum == k then
+			local mapped = nameMap[name] or name
+			keys[string.upper(mapped)] = true
+			break
+		end
+	end
+
+	return keys
+end
+
 --- Helper function to parse a table
 --- @param parser_object table The context/target object that owns the `parseFunction`.
 --- @param parseFunction function The function to call to parse the table.

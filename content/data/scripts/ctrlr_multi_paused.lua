@@ -116,7 +116,8 @@ end
 --- @param event Event The event that was triggered
 --- @return nil
 function MultiPausedController:global_keydown(element, event)
-    if (event.parameters.key_identifier == rocket.key_identifier.ESCAPE) or (event.parameters.key_identifier == rocket.key_identifier.PAUSE) then
+	local keys = ScpuiSystem:getKeyInfo(event)
+    if keys.ESCAPE or keys.PAUSE then
         ui.MultiPauseScreen.requestUnpause()
 	end
 end

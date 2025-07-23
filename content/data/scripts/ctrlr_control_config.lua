@@ -1053,12 +1053,13 @@ end
 --- @param event Event The event that was triggered
 --- @return nil
 function ControlConfigController:global_keydown(element, event)
-    if event.parameters.key_identifier == rocket.key_identifier.ESCAPE then
+	local keys = ScpuiSystem:getKeyInfo(event)
+    if keys.ESCAPE then
         event:StopPropagation()
 		ba.postGameEvent(ba.GameEvents["GS_EVENT_PREVIOUS_STATE"])
 		ui.ControlConfig.cancelBinding()
 		ui.ControlConfig.closeControlConfig()
-	elseif event.parameters.key_identifier == rocket.key_identifier.Z and event.parameters.ctrl_key == 1 then
+	elseif keys.Z and keys.Ctrl then
 		self:undo_change()
 	end
 end

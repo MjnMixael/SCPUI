@@ -100,8 +100,8 @@ end
 --- @param event Event The event that was triggered
 --- @return nil
 function LoopBriefController:global_keydown(element, event)
-    if event.parameters.key_identifier == rocket.key_identifier.ESCAPE then
-
+	local keys = ScpuiSystem:getKeyInfo(event)
+    if keys.ESCAPE then
 		local text = ba.XSTR("You must either Accept or Decline before returning to the Main Hall", 888356)
 		local title = ""
 		self:showDialog(text, title)

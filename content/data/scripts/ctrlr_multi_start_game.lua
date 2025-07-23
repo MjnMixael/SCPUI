@@ -197,7 +197,8 @@ end
 --- @param event Event The event that was triggered
 --- @return nil
 function JoinGameController:global_keydown(element, event)
-    if event.parameters.key_identifier == rocket.key_identifier.ESCAPE then
+	local keys = ScpuiSystem:getKeyInfo(event)
+    if keys.ESCAPE then
        self:exit()
 	end
 end
@@ -257,7 +258,8 @@ end
 --- @param event Event The event that was triggered
 --- @return nil
 function JoinGameController:title_keyup(element, event)
-    if event.parameters.key_identifier ~= rocket.key_identifier.ESCAPE then
+	local keys = ScpuiSystem:getKeyInfo(event)
+    if not keys.ESCAPE then
         return
     end
 end
@@ -276,7 +278,8 @@ end
 --- @param event Event The event that was triggered
 --- @return nil
 function JoinGameController:password_keyup(element, event)
-    if event.parameters.key_identifier ~= rocket.key_identifier.ESCAPE then
+	local keys = ScpuiSystem:getKeyInfo(event)
+    if not keys.ESCAPE then
         return
     end
 end

@@ -994,14 +994,15 @@ end
 --- @param event Event The event that was triggered
 --- @return nil
 function ShipSelectController:global_keydown(element, event)
-    if event.parameters.key_identifier == rocket.key_identifier.ESCAPE then
+	local keys = ScpuiSystem:getKeyInfo(event)
+    if keys.ESCAPE then
         event:StopPropagation()
 
 		ba.postGameEvent(ba.GameEvents["GS_EVENT_START_BRIEFING"])
         --ba.postGameEvent(ba.GameEvents["GS_EVENT_MAIN_MENU"])
-	--elseif event.parameters.key_identifier == rocket.key_identifier.UP and event.parameters.ctrl_key == 1 then
+	--elseif keys.UP and keys.Ctrl == 1 then
 	--	self:change_tech_state(3)
-	--elseif event.parameters.key_identifier == rocket.key_identifier.DOWN and event.parameters.ctrl_key == 1 then
+	--elseif keys.DOWN and keys.Ctrl == 1 then
 	--	self:change_tech_state(1)
 	end
 end

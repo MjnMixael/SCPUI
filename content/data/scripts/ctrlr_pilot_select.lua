@@ -292,17 +292,18 @@ end
 --- @param event Event The event that was triggered
 --- @return nil
 function PilotSelectController:global_keydown(element, event)
+    local keys = ScpuiSystem:getKeyInfo(event)
     if self.Controller == PilotSelectController.CONTROLLER_PLAYER_SELECT then
-        if event.parameters.key_identifier == rocket.key_identifier.ESCAPE and Topics.pilotselect.escKeypress:send(self) == true then
+        if keys.ESCAPE and Topics.pilotselect.escKeypress:send(self) == true then
             event:StopPropagation()
             ba.postGameEvent(ba.GameEvents["GS_EVENT_QUIT_GAME"])
-        elseif event.parameters.key_identifier == rocket.key_identifier.UP and Topics.pilotselect.upKeypress:send(self) == true then
+        elseif keys.UP and Topics.pilotselect.upKeypress:send(self) == true then
             self:down_button_pressed()
-        elseif event.parameters.key_identifier == rocket.key_identifier.DOWN and Topics.pilotselect.dwnKeypress:send(self) == true then
+        elseif keys.DOWN and Topics.pilotselect.dwnKeypress:send(self) == true then
             self:up_button_pressed()
-        elseif event.parameters.key_identifier == rocket.key_identifier.RETURN and Topics.pilotselect.retKeypress:send(self) == true then
+        elseif keys.RETURN and Topics.pilotselect.retKeypress:send(self) == true then
             self:commit_pressed()
-        elseif event.parameters.key_identifier == rocket.key_identifier.DELETE and Topics.pilotselect.delKeypress:send(self) == true then
+        elseif keys.DELETE and Topics.pilotselect.delKeypress:send(self) == true then
             self:delete_player()
         else
             --Catch all for customization
@@ -327,11 +328,13 @@ end
 --- @param event Event The event that was triggered
 --- @return nil
 function PilotSelectController:callsign_keyup(element, event)
+    local keys = ScpuiSystem:getKeyInfo(event)
+
     if not self.CallsignInputActive then
         return
     end
 
-    if event.parameters.key_identifier ~= rocket.key_identifier.ESCAPE then
+    if not keys.ESCAPE then
         return
     end
     event:StopPropagation()

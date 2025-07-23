@@ -856,7 +856,8 @@ end
 --- @param event Event The event that was triggered
 --- @return nil
 function DebriefingController:global_keydown(element, event)
-    if event.parameters.key_identifier == rocket.key_identifier.ESCAPE then
+    local keys = ScpuiSystem:getKeyInfo(event)
+    if keys.ESCAPE then
         event:StopPropagation()
         if ui.Debriefing:mustReplay() then
             local text = ba.XSTR("Because this mission was a failure, you must replay this mission when you continue your campaign.\n\nReturn to the Flight Deck?", 888335)

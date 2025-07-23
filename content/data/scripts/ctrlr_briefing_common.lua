@@ -101,7 +101,8 @@ end
 --- @param event Event The event that was triggered
 --- @return nil
 function AbstractBriefingController:global_keydown(element, event)
-    if event.parameters.key_identifier == rocket.key_identifier.ESCAPE then
+	local keys = ScpuiSystem:getKeyInfo(event)
+    if keys.ESCAPE then
 		ScpuiSystem:stopMusic()
 		ScpuiSystem.data.memory.CurrentMusicFile = nil
 		ScpuiSystem.data.memory.briefing_map = nil
@@ -115,15 +116,15 @@ function AbstractBriefingController:global_keydown(element, event)
 
 		mn.unloadMission(true)
         ba.postGameEvent(ba.GameEvents["GS_EVENT_MAIN_MENU"])
-	elseif event.parameters.key_identifier == rocket.key_identifier.UP then
+	elseif keys.UP then
 		self:scrollUp()
-	elseif event.parameters.key_identifier == rocket.key_identifier.DOWN then
+	elseif keys.DOWN then
 		self:scrollDown()
-	elseif self.BriefState ~= self.CONTROLLER_FICTION_VIEWER and event.parameters.key_identifier == rocket.key_identifier.LEFT then
+	elseif self.BriefState ~= self.CONTROLLER_FICTION_VIEWER and keys.LEFT then
 		self:goToPrevStage(element)
-	elseif self.BriefState ~= self.CONTROLLER_FICTION_VIEWER and event.parameters.key_identifier == rocket.key_identifier.RIGHT then
+	elseif self.BriefState ~= self.CONTROLLER_FICTION_VIEWER and keys.RIGHT then
 		self:goToNextStage(element)
-	elseif self.BriefState == self.CONTROLLER_FICTION_VIEWER and event.parameters.key_identifier == rocket.key_identifier.RETURN then
+	elseif self.BriefState == self.CONTROLLER_FICTION_VIEWER and keys.RETURN then
 		self:acceptPressed()
     end
 end

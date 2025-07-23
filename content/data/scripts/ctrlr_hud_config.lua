@@ -329,14 +329,15 @@ end
 --- @param event Event The event that was triggered
 --- @return nil
 function HudConfigController:global_keydown(element, event)
-    if event.parameters.key_identifier == rocket.key_identifier.ESCAPE then
+	local keys = ScpuiSystem:getKeyInfo(event)
+    if keys.ESCAPE then
         event:StopPropagation()
 		ScpuiSystem.data.memory.hud_config.Draw = nil
 		ui.HudConfig.closeHudConfig(false)
 		ba.postGameEvent(ba.GameEvents["GS_EVENT_PREVIOUS_STATE"])
-	elseif event.parameters.key_identifier == rocket.key_identifier.LEFT then
+	elseif keys.LEFT then
 		ui.HudConfig.selectPrevHud()
-	elseif event.parameters.key_identifier == rocket.key_identifier.RIGHT then
+	elseif keys.RIGHT then
 		ui.HudConfig.selectNextHud()
 	end
 end

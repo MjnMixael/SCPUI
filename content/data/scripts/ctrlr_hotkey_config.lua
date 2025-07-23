@@ -432,70 +432,71 @@ end
 --- @param event Event The event that was triggered
 --- @return nil
 function HotkeyController:global_keydown(element, event)
-    if event.parameters.key_identifier == rocket.key_identifier.ESCAPE then
+	local keys = ScpuiSystem:getKeyInfo(event)
+    if keys.ESCAPE then
         event:StopPropagation()
 		if mn.isInMission() then
 			ScpuiSystem:pauseAllAudio(false)
 		end
 		ba.postGameEvent(ba.GameEvents["GS_EVENT_PREVIOUS_STATE"])
-	elseif event.parameters.key_identifier == rocket.key_identifier.UP then
+	elseif keys.UP then
 		self:selectPrev()
-	elseif event.parameters.key_identifier == rocket.key_identifier.DOWN then
+	elseif keys.DOWN then
 		self:selectNext()
-	elseif event.parameters.key_identifier == rocket.key_identifier.RETURN then
+	elseif keys.RETURN then
 		local entry = self.Index_List[self.SelectedIndex]
 		self:toggleKey(entry[1], entry[2], entry[3], entry[4])
-    elseif event.parameters.key_identifier == rocket.key_identifier.F5 then
-		if event.parameters.shift_key == 1 then
+    elseif keys.F5 then
+		if keys.Shift then
 			local entry = self.Index_List[self.SelectedIndex]
 			self:toggleKey(entry[1], entry[2], entry[3], entry[4], 1)
 		else
 			self:changeKey(1)
 		end
-	elseif event.parameters.key_identifier == rocket.key_identifier.F6 then
-		if event.parameters.shift_key == 1 then
+	elseif keys.F6 then
+		if keys.Shift then
 			local entry = self.Index_List[self.SelectedIndex]
 			self:toggleKey(entry[1], entry[2], entry[3], entry[4], 2)
 		else
 			self:changeKey(2)
 		end
-	elseif event.parameters.key_identifier == rocket.key_identifier.F7 then
-		if event.parameters.shift_key == 1 then
+	elseif keys.F7 then
+		if keys.Shift then
 			local entry = self.Index_List[self.SelectedIndex]
 			self:toggleKey(entry[1], entry[2], entry[3], entry[4], 3)
 		else
 			self:changeKey(3)
 		end
-	elseif event.parameters.key_identifier == rocket.key_identifier.F8 then
-		if event.parameters.shift_key == 1 then
+	elseif keys.F8 then
+		if keys.Shift then
 			local entry = self.Index_List[self.SelectedIndex]
 			self:toggleKey(entry[1], entry[2], entry[3], entry[4], 4)
 		else
 			self:changeKey(4)
 		end
-	elseif event.parameters.key_identifier == rocket.key_identifier.F9 then
-		if event.parameters.shift_key == 1 then
+	elseif keys.F9 then
+		if keys.Shift then
 			local entry = self.Index_List[self.SelectedIndex]
 			self:toggleKey(entry[1], entry[2], entry[3], entry[4], 5)
 		else
 			self:changeKey(5)
 		end
-	elseif event.parameters.key_identifier == rocket.key_identifier.F10 then
-		if event.parameters.shift_key == 1 then
+	elseif keys.F10 then
+		if keys.Shift then
 			local entry = self.Index_List[self.SelectedIndex]
 			self:toggleKey(entry[1], entry[2], entry[3], entry[4], 6)
 		else
 			self:changeKey(6)
 		end
-	elseif event.parameters.key_identifier == rocket.key_identifier.F11 then
-		if event.parameters.shift_key == 1 then
+	elseif keys.F11 then
+		if keys.Shift then
 			local entry = self.Index_List[self.SelectedIndex]
 			self:toggleKey(entry[1], entry[2], entry[3], entry[4], 7)
 		else
 			self:changeKey(7)
 		end
-	elseif event.parameters.key_identifier == rocket.key_identifier.F12 then
-		if event.parameters.shift_key == 1 then
+	elseif keys.F12 then
+		if keys.Shift then
 			local entry = self.Index_List[self.SelectedIndex]
 			self:toggleKey(entry[1], entry[2], entry[3], entry[4], 8)
 		else

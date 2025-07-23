@@ -1490,7 +1490,8 @@ end
 --- @param event Event The event that was triggered
 --- @return nil
 function OptionsController:global_keydown(element, event)
-    if event.parameters.key_identifier == rocket.key_identifier.ESCAPE then
+	local keys = ScpuiSystem:getKeyInfo(event)
+    if keys.ESCAPE then
         event:StopPropagation()
 
         self:discardChanges()

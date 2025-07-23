@@ -174,7 +174,8 @@ end
 --- @param event Event The event that was triggered
 --- @return nil
 function HostOptionsController:global_keydown(element, event)
-    if event.parameters.key_identifier == rocket.key_identifier.ESCAPE then
+	local keys = ScpuiSystem:getKeyInfo(event)
+    if keys.ESCAPE then
        self:exit()
 	end
 end
@@ -215,7 +216,8 @@ end
 --- @param event Event The event that was triggered
 --- @return nil
 function HostOptionsController:time_limit_keyup(element, event)
-    if event.parameters.key_identifier ~= rocket.key_identifier.ESCAPE then
+	local keys = ScpuiSystem:getKeyInfo(event)
+    if not keys.ESCAPE then
         return
     end
 end
@@ -237,7 +239,8 @@ end
 --- @param event Event The event that was triggered
 --- @return nil
 function HostOptionsController:respawn_limit_keyup(element, event)
-    if event.parameters.key_identifier ~= rocket.key_identifier.ESCAPE then
+	local keys = ScpuiSystem:getKeyInfo(event)
+    if not keys.ESCAPE then
         return
     end
 end
@@ -259,7 +262,8 @@ end
 --- @param event Event The event that was triggered
 --- @return nil
 function HostOptionsController:kill_limit_keyup(element, event)
-    if event.parameters.key_identifier ~= rocket.key_identifier.ESCAPE then
+	local keys = ScpuiSystem:getKeyInfo(event)
+    if not keys.ESCAPE then
         return
     end
 end
@@ -281,7 +285,8 @@ end
 --- @param event Event The event that was triggered
 --- @return nil
 function HostOptionsController:observers_limit_keyup(element, event)
-    if event.parameters.key_identifier ~= rocket.key_identifier.ESCAPE then
+	local keys = ScpuiSystem:getKeyInfo(event)
+    if not keys.ESCAPE then
         return
     end
 end

@@ -385,6 +385,106 @@
 --- @field Database_Category? string[] The category type for the database; one for each of "ships", "weapons", and "intel".
 --- @field Sim_Room_Choice? integer The choice for the sim room. 1 = single, 2 = campaign in base SCPUI
 
+--- SCPUI Keypress
+--- @class scpui_keypress
+--- @field Ctrl boolean True if the Ctrl key is pressed, false otherwise
+--- @field Alt boolean True if the Alt key is pressed, false otherwise
+--- @field Shift boolean True if the Shift key is pressed, false otherwise
+--- @field Meta boolean True if the Meta key is pressed, false otherwise
+--- @field A boolean? True if pressed, nil otherwise
+--- @field B boolean? True if pressed, nil otherwise
+--- @field C boolean? True if pressed, nil otherwise
+--- @field D boolean? True if pressed, nil otherwise
+--- @field E boolean? True if pressed, nil otherwise
+--- @field F boolean? True if pressed, nil otherwise
+--- @field G boolean? True if pressed, nil otherwise
+--- @field H boolean? True if pressed, nil otherwise
+--- @field I boolean? True if pressed, nil otherwise
+--- @field J boolean? True if pressed, nil otherwise
+--- @field K boolean? True if pressed, nil otherwise
+--- @field L boolean? True if pressed, nil otherwise
+--- @field M boolean? True if pressed, nil otherwise
+--- @field N boolean? True if pressed, nil otherwise
+--- @field O boolean? True if pressed, nil otherwise
+--- @field P boolean? True if pressed, nil otherwise
+--- @field Q boolean? True if pressed, nil otherwise
+--- @field R boolean? True if pressed, nil otherwise
+--- @field S boolean? True if pressed, nil otherwise
+--- @field T boolean? True if pressed, nil otherwise
+--- @field U boolean? True if pressed, nil otherwise
+--- @field V boolean? True if pressed, nil otherwise
+--- @field W boolean? True if pressed, nil otherwise
+--- @field X boolean? True if pressed, nil otherwise
+--- @field Y boolean? True if pressed, nil otherwise
+--- @field Z boolean? True if pressed, nil otherwise
+--- @field NUM0 boolean? True if pressed, nil otherwise
+--- @field NUM1 boolean? True if pressed, nil otherwise
+--- @field NUM2 boolean? True if pressed, nil otherwise
+--- @field NUM3 boolean? True if pressed, nil otherwise
+--- @field NUM4 boolean? True if pressed, nil otherwise
+--- @field NUM5 boolean? True if pressed, nil otherwise
+--- @field NUM6 boolean? True if pressed, nil otherwise
+--- @field NUM7 boolean? True if pressed, nil otherwise
+--- @field NUM8 boolean? True if pressed, nil otherwise
+--- @field NUM9 boolean? True if pressed, nil otherwise
+--- @field LEFT boolean? True if pressed, nil otherwise
+--- @field RIGHT boolean? True if pressed, nil otherwise
+--- @field UP boolean? True if pressed, nil otherwise
+--- @field DOWN boolean? True if pressed, nil otherwise
+--- @field INSERT boolean? True if pressed, nil otherwise
+--- @field DELETE boolean? True if pressed, nil otherwise
+--- @field HOME boolean? True if pressed, nil otherwise
+--- @field END boolean? True if pressed, nil otherwise
+--- @field PGUP boolean? True if pressed, nil otherwise
+--- @field PGDWN boolean? True if pressed, nil otherwise
+--- @field ESCAPE boolean? True if pressed, nil otherwise
+--- @field TAB boolean? True if pressed, nil otherwise
+--- @field RETURN boolean? True if pressed, nil otherwise
+--- @field SPACE boolean? True if pressed, nil otherwise
+--- @field BACK boolean? True if pressed, nil otherwise
+--- @field PAUSE boolean? True if pressed, nil otherwise
+--- @field CAPITAL boolean? True if pressed, nil otherwise
+--- @field F1 boolean? True if pressed, nil otherwise
+--- @field F2 boolean? True if pressed, nil otherwise
+--- @field F3 boolean? True if pressed, nil otherwise
+--- @field F4 boolean? True if pressed, nil otherwise
+--- @field F5 boolean? True if pressed, nil otherwise
+--- @field F6 boolean? True if pressed, nil otherwise
+--- @field F7 boolean? True if pressed, nil otherwise
+--- @field F8 boolean? True if pressed, nil otherwise
+--- @field F9 boolean? True if pressed, nil otherwise
+--- @field F10 boolean? True if pressed, nil otherwise
+--- @field F11 boolean? True if pressed, nil otherwise
+--- @field F12 boolean? True if pressed, nil otherwise
+--- @field NUMPAD0 boolean? True if pressed, nil otherwise
+--- @field NUMPAD1 boolean? True if pressed, nil otherwise
+--- @field NUMPAD2 boolean? True if pressed, nil otherwise
+--- @field NUMPAD3 boolean? True if pressed, nil otherwise
+--- @field NUMPAD4 boolean? True if pressed, nil otherwise
+--- @field NUMPAD5 boolean? True if pressed, nil otherwise
+--- @field NUMPAD6 boolean? True if pressed, nil otherwise
+--- @field NUMPAD7 boolean? True if pressed, nil otherwise
+--- @field NUMPAD8 boolean? True if pressed, nil otherwise
+--- @field NUMPAD9 boolean? True if pressed, nil otherwise
+--- @field NUMPADENTER boolean? True if pressed, nil otherwise
+--- @field ADD boolean? True if pressed, nil otherwise
+--- @field SUBTRACT boolean? True if pressed, nil otherwise
+--- @field MULTIPLY boolean? True if pressed, nil otherwise
+--- @field DIVIDE boolean? True if pressed, nil otherwise
+--- @field DECIMAL boolean? True if pressed, nil otherwise
+--- @field OEM_MINUS boolean? True if pressed, nil otherwise
+--- @field OEM_PLUS boolean? True if pressed, nil otherwise
+--- @field OEM_1 boolean? True if pressed, nil otherwise
+--- @field OEM_2 boolean? True if pressed, nil otherwise
+--- @field OEM_3 boolean? True if pressed, nil otherwise
+--- @field OEM_4 boolean? True if pressed, nil otherwise
+--- @field OEM_5 boolean? True if pressed, nil otherwise
+--- @field OEM_6 boolean? True if pressed, nil otherwise
+--- @field OEM_7 boolean? True if pressed, nil otherwise
+--- @field OEM_8 boolean? True if pressed, nil otherwise
+--- @field OEM_PERIOD boolean? True if pressed, nil otherwise
+--- @field OEM_COMMA boolean? True if pressed, nil otherwise
+
 --- SCPUI Constants
 --- @class scpui_constants
 --- @field NUM_FONT_SIZES? number The number of font sizes available in the SCPUI system

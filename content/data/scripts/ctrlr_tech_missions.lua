@@ -453,37 +453,38 @@ end
 --- @param event Event The event that was triggered
 --- @return nil
 function TechMissionsController:global_keydown(element, event)
-    if event.parameters.key_identifier == rocket.key_identifier.ESCAPE then
+	local keys = ScpuiSystem:getKeyInfo(event)
+    if keys.ESCAPE then
         event:StopPropagation()
 
         ba.postGameEvent(ba.GameEvents["GS_EVENT_MAIN_MENU"])
-    elseif event.parameters.key_identifier == rocket.key_identifier.S and event.parameters.ctrl_key == 1 and event.parameters.shift_key == 1 then
+    elseif keys.S and keys.Ctrl and keys.Shift then
 		self.ShowAll = not self.ShowAll
 		self:reloadList()
-	elseif event.parameters.key_identifier == rocket.key_identifier.UP and event.parameters.ctrl_key == 1 then
+	elseif keys.UP and keys.Ctrl then
 		self:change_tech_state(element, 1)
-	elseif event.parameters.key_identifier == rocket.key_identifier.DOWN and event.parameters.ctrl_key == 1 then
+	elseif keys.DOWN and keys.Ctrl then
 		self:change_tech_state(element, 3)
-	elseif event.parameters.key_identifier == rocket.key_identifier.TAB then
+	elseif keys.TAB then
 		local newSection = Topics.simulator.tabkey:send(self.SectionIndex)
 		self:change_section(newSection)
-	elseif event.parameters.key_identifier == rocket.key_identifier.UP and event.parameters.shift_key == 1 then
+	elseif keys.UP and keys.Shift then
 		self:scrollList(self.Document:GetElementById("mission_list"), 0)
-	elseif event.parameters.key_identifier == rocket.key_identifier.DOWN and event.parameters.shift_key == 1 then
+	elseif keys.DOWN and keys.Shift then
 		self:scrollList(self.Document:GetElementById("mission_list"), 1)
-	elseif event.parameters.key_identifier == rocket.key_identifier.UP then
+	elseif keys.UP then
 		self:selectPrev(element)
-	elseif event.parameters.key_identifier == rocket.key_identifier.DOWN then
+	elseif keys.DOWN then
 		self:selectNext(element)
-	elseif event.parameters.key_identifier == rocket.key_identifier.LEFT then
+	elseif keys.LEFT then
 		--self:select_prev()
-	elseif event.parameters.key_identifier == rocket.key_identifier.RIGHT then
+	elseif keys.RIGHT then
 		--self:select_next()
-	elseif event.parameters.key_identifier == rocket.key_identifier.RETURN then
+	elseif keys.RETURN then
 		self:commit_pressed(element)
-	elseif event.parameters.key_identifier == rocket.key_identifier.F1 then
+	elseif keys.F1 then
 		self:help_clicked(element)
-	elseif event.parameters.key_identifier == rocket.key_identifier.F2 then
+	elseif keys.F2 then
 		self:options_button_clicked(element)
 	end
 end

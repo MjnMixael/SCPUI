@@ -405,8 +405,9 @@ end
 --- @param event Event The event that was triggered
 --- @return nil
 function BarracksScreenController:global_keydown(element, event)
+    local keys = ScpuiSystem:getKeyInfo(event)
     if self.Controller == PilotSelectController.CONTROLLER_BARRACKS then
-        if event.parameters.key_identifier == rocket.key_identifier.ESCAPE then
+        if keys.ESCAPE then
             if self.SelectedPilotHandle == nil then
                 ui.playElementSound(element, "click", "error")
                 return

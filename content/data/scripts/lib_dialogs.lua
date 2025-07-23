@@ -158,7 +158,8 @@ local function show_dialog(context, properties, finish_func, reject, abort_cb_ta
     end
 
     dialog_doc:AddEventListener("keydown", function(event, _, _)
-        if event.parameters.key_identifier == rocket.key_identifier.ESCAPE then
+        local keys = ScpuiSystem:getKeyInfo(event)
+        if keys.ESCAPE then
             if properties.EscapeValue ~= nil then
                 finish_func(properties.EscapeValue)
                 ScpuiSystem:closeDialog()
