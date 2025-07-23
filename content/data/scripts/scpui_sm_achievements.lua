@@ -105,7 +105,6 @@ end
 --- @param save boolean? True to save the achievement to the save file immediately, false otherwise
 --- @return nil
 function ScpuiSystem:setAchievementValue(id, value, display, save)
-    local old_value = ScpuiSystem.data.Achievements.Completed_Achievements[id] or 0
     local achievement
     for _, v in ipairs(ScpuiSystem.data.Achievements.Current_Achievements) do
         if v.Id == id then
@@ -113,6 +112,13 @@ function ScpuiSystem:setAchievementValue(id, value, display, save)
             break
         end
     end
+
+    if not achievement then
+        ba.print("SCPUI: Achievement with ID '" .. id .. "' not found!")
+        return
+    end
+
+    local old_value = ScpuiSystem.data.Achievements.Completed_Achievements[id] or 0
 
     local threshold = achievement.Criteria.Threshold
     value = Utils.clamp(value, 0, threshold)
@@ -133,6 +139,45 @@ function ScpuiSystem:setAchievementValue(id, value, display, save)
     if display and show then
         ScpuiSystem:displayAchievementMessage(id)
     end
+end
+
+--- Reset all achievements for the current player
+--- @param name string The name of the achievement to reset, or "all" to reset all achievements
+--- @return nil
+function ScpuiSystem:resetAchievements(name)
+    if not name or name == "" then
+        return
+    end
+
+    local nameLower = string.lower(name)
+
+    -- Handle "all" reset (case-insensitive)
+    if nameLower == "all" then
+        ScpuiSystem.data.Achievements.Completed_Achievements = {}
+        ba.print("SCPUI: All achievements have been reset!\n")
+        ScpuiSystem:saveAchievementsToFile()
+        return
+    end
+
+    -- Case-insensitive match for a single achievement
+    local achievement
+    for _, v in ipairs(ScpuiSystem.data.Achievements.Current_Achievements) do
+        if string.lower(v.Name) == nameLower then
+            achievement = v
+            break
+        end
+    end
+
+    if achievement then
+        if ScpuiSystem.data.Achievements.Completed_Achievements[achievement.Id] then
+            ScpuiSystem:setAchievementValue(achievement.Id, 0, false, false)
+            ba.print("SCPUI: Achievement '" .. achievement.Name .. "' has been reset!\n")
+        end
+    else
+        ba.print("SCPUI: Achievement '" .. name .. "' does not exist, skipping!\n")
+    end
+
+    ScpuiSystem:saveAchievementsToFile()
 end
 
 --- Parse the criteria of a specific achievement

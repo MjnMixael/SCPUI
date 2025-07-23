@@ -116,6 +116,10 @@
 888356, "You must either Accept or Decline before returning to the Main Hall"
 ;;medals.rml
 888078, "Ribbons"
+888563, "Achievements"
+888564, "Hidden Achievements"
+888565, "Type the name of the achievement to reset progress or type 'all' to reset all achievements."
+888566, "Reset Achievement"
 ;;missionlog.rml
 888082, "Objectives"
 888083, "Messages"
@@ -328,9 +332,7 @@
 888559, "French translation by Achille"
 888560, "wookiejedi"
 888561, "WoolieWool"
-888563, "Achievements"
-888564, "Hidden Achievements"
 
-;;Next available ID: 888565
+;;Next available ID: 888567
 
 #end

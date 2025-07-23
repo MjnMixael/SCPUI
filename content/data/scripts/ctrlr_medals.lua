@@ -2,6 +2,7 @@
 --Controller for the Medals UI
 -----------------------------------
 
+local Dialogs = require("lib_dialogs")
 local Topics = require("lib_ui_topics")
 local Utils = require('lib_utils')
 
@@ -22,6 +23,7 @@ function MedalsController:init()
 	self.PlayerName = nil --- @type string The player's name
 	self.RibbonCounts = nil --- @type table<string, number> The number of ribbons from each source
 	self.RibbonColumn = nil --- @type number The current column for ribbons
+	self.CurrentState = 0 --- @type number The current state of the controller. Will be one of the STATE_ enumerations
 
 	ScpuiSystem.data.memory.medal_text = {
 		Name = nil,
@@ -48,6 +50,21 @@ function MedalsController:initialize(document)
 	---Load the desired font size from the save file
 	self.Document:GetElementById("main_background"):SetClass(("base_font" .. ScpuiSystem:getFontPixelSize()), true)
 
+	self:setupMedals()
+
+	self:setupRibbons()
+
+	self:setupAchievements()
+
+	Topics.medals.initialize:send(self)
+
+	self:change_view(self.STATE_MEDALS)
+
+end
+
+--- Setup the medals elements
+--- @return nil
+function MedalsController:setupMedals()
 	self.PlayerMedals = ba.getCurrentPlayer().Stats.Medals
 	self.PlayerRank = ba.getCurrentPlayer().Stats.Rank.Name
 	self.PlayerName = ba.getCurrentPlayer():getName()
@@ -68,7 +85,11 @@ function MedalsController:initialize(document)
 	end
 
 	self.Document:GetElementById("medals_text").inner_rml = self.PlayerName
+end
 
+--- Setup the ribbons elements
+--- @return nil
+function MedalsController:setupRibbons()
 	ScpuiSystem:loadRibbonsFromFile()
 
 	table.sort(ScpuiSystem.data.Player_Ribbons, function(a, b)
@@ -79,7 +100,11 @@ function MedalsController:initialize(document)
 	for i = 1, #ScpuiSystem.data.Player_Ribbons do
 		self:buildRibbonDiv(i)
 	end
+end
 
+--- Setup the achievements elements
+--- @return nil
+function MedalsController:setupAchievements()
 	ScpuiSystem:loadAchievementsFromFile()
 
 	local hidden_count = 0
@@ -103,14 +128,12 @@ function MedalsController:initialize(document)
 	local hidden_string = "+" .. tostring(hidden_count) .. " " .. ba.XSTR("Hidden Achievements", 888564)
 	self.Document:GetElementById("hidden_achievements").inner_rml = hidden_string
 
+	local visibility = false
 	if count == 0 and hidden_count == 0 then
-		self.Document:GetElementById("award_btn_3"):SetClass("hidden", true)
+		visibility = true
 	end
 
-	Topics.medals.initialize:send(self)
-
-	self:change_view(self.STATE_MEDALS)
-
+	self.Document:GetElementById("award_btn_3"):SetClass("hidden", visibility)
 end
 
 --- Force reparsing of the medal info data in SCPUI's tables
@@ -126,6 +149,8 @@ function MedalsController:reparseTableData()
 end
 
 --- Parse the medals section of a table file, skipping to it
+--- @param data string The file to parse
+--- @return nil
 function MedalsController:parseMedalInfo(data)
 	parse.readFileText(data, "data/tables")
 
@@ -140,12 +165,14 @@ end
 
 --- Check if a medal is a badge
 --- @param medal medal The medal to check
+--- @return boolean val if the medal is a badge, false otherwise
 function MedalsController:isBadge(medal)
 	return (medal.KillsNeeded > 0)
 end
 
 --- Check if a medal is a rank
 --- @param medal medal The medal to check
+--- @return boolean val if the medal is a rank, false otherwise
 function MedalsController:isRank(medal)
 	return medal:isRank()
 end
@@ -420,6 +447,7 @@ end
 --- @param state number The state to change to. Should be one of the STATE_ enumerations
 --- @return nil
 function MedalsController:change_view(state)
+	self.CurrentState = state
 	local medal_el = self.Document:GetElementById("medals_wrapper")
 	local ribbon_el = self.Document:GetElementById("ribbons_wrapper")
 	local achievements_el = self.Document:GetElementById("achievements_wrapper")
@@ -443,6 +471,55 @@ function MedalsController:accept_pressed()
 	ba.postGameEvent(ba.GameEvents["GS_EVENT_PREVIOUS_STATE"])
 end
 
+--- Show a dialog box with the given text and title
+--- @param text string the text to display
+--- @param title string the title to display
+--- @return nil
+function MedalsController:showDialog(text, title, input, buttons, callback)
+	--Create a simple dialog box with the text and title
+
+	local dialog = Dialogs.new()
+		dialog:title(title)
+		dialog:text(text)
+		dialog:input(input)
+		for i = 1, #buttons do
+			dialog:button(buttons[i].Type, buttons[i].Text, buttons[i].Value, buttons[i].Keypress)
+		end
+		dialog:escape("")
+		dialog:show(self.Document.context)
+		:continueWith(function(response)
+            if callback then
+				callback(response)
+			end
+    end)
+	-- Route input to our context until the user dismisses the dialog box.
+	ui.enableInput(self.Document.context)
+end
+
+--- Called by the RML when the join private channel button is pressed. Creates a dialog box to enter the channel name
+--- @return nil
+function MedalsController:showResetAchievementDialog()
+	local text = Utils.xstr("Type the name of the achievement to reset progress or type 'all' to reset all achievements.", 888565)
+	local title = Utils.xstr("Reset Achievement", 888566)
+	--- @type dialog_button[]
+	local buttons = {}
+	buttons[1] = {
+		Type = Dialogs.BUTTON_TYPE_POSITIVE,
+		Text = ba.XSTR("Okay", 888290),
+		Value = "",
+		Keypress = string.sub(ba.XSTR("Okay", 888290), 1, 1)
+	}
+
+	self:showDialog(text, title, true, buttons, function(response)
+		ScpuiSystem:resetAchievements(response)
+		local left_el = self.Document:GetElementById("achievements_left")
+		local right_el = self.Document:GetElementById("achievements_right")
+		ScpuiSystem:clearEntries(left_el)
+		ScpuiSystem:clearEntries(right_el)
+		self:setupAchievements()
+	end)
+end
+
 --- Global keydown function handles all keypresses
 --- @param element Element The main document element
 --- @param event Event The event that was triggered
@@ -450,7 +527,11 @@ end
 function MedalsController:global_keydown(element, event)
     if event.parameters.key_identifier == rocket.key_identifier.ESCAPE then
         ba.postGameEvent(ba.GameEvents["GS_EVENT_PREVIOUS_STATE"])
-    end
+	elseif event.parameters.key_identifier == rocket.key_identifier.D and event.parameters.ctrl_key == 1 then
+		if self.CurrentState == self.STATE_ACHIEVEMENTS and ba.inDebug() then
+			self:showResetAchievementDialog()
+		end
+	end
 end
 
 --- Called by the RML when the mouse moves over the medals elements
