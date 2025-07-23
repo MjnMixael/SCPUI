@@ -514,6 +514,8 @@ function ShipSelectController:selectShip(entry, slot)
 
 		self:displayShipInfo(entry)
 
+		Topics.shipselect.selectShip:send({self, entry.Index})
+
 		if self.Ship3d or entry.Anim == nil then
 			ScpuiSystem.data.memory.model_rendering.Class = entry.Index
 			ScpuiSystem.data.memory.model_rendering.Element = self.Document:GetElementById("ship_view_wrapper")
