@@ -310,12 +310,18 @@ end
 --- @return nil
 function ScpuiSystem:loadAchievementsFromFile()
 
+    -- Ensure the player is valid
+    if ba.getCurrentPlayer():getName() == "" then
+        return
+    end
+
     local Datasaver = require('lib_data_saver')
 
     local config = Datasaver:loadDataFromFile("scpui_achievements", true)
 
     if config then
         ScpuiSystem.data.Achievements.Completed_Achievements = config
+        ba.print("SCPUI: Loaded achievements from save file!\n")
     end
 
 end
@@ -323,6 +329,11 @@ end
 --- Save the current achievements to the save file
 --- @return nil
 function ScpuiSystem:saveAchievementsToFile()
+
+    -- Ensure the player is valid
+    if ba.getCurrentPlayer():getName() == "" then
+        return
+    end
 
     local Datasaver = require('lib_data_saver')
 
@@ -338,8 +349,12 @@ if ba.inMissionEditor() then
 end
 
 if #ScpuiSystem.data.Achievements.Current_Achievements > 0 then
-    engine.addHook("On Mission End", function()
+    ScpuiSystem:addHook("On Mission End", function()
         ScpuiSystem:saveAchievementsToFile()
+    end)
+
+    ScpuiSystem:addHook("On Player Loaded", function()
+        ScpuiSystem:loadAchievementsFromFile()
     end)
 end
 
