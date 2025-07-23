@@ -220,9 +220,9 @@ function TechCutscenesController:global_keydown(element, event)
 		self.ShowAll  = not self.ShowAll
 		self:reloadCutscenesList()
 	elseif keys.UP and keys.Ctrl then
-		self:change_tech_state(element, 2)
+		self:change_tech_state(element, self.STATE_SIMULATOR)
 	elseif keys.DOWN and keys.Ctrl then
-		self:change_tech_state(element, 4)
+		self:change_tech_state(element, self.STATE_CREDITS)
 	elseif keys.TAB then
 		--do nothing
 	elseif keys.UP and keys.Shift then

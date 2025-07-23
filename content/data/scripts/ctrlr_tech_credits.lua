@@ -268,9 +268,9 @@ function TechCreditsController:global_keydown(element, event)
     elseif keys.TAB then
 		self.ScrollRate = ui.TechRoom.Credits.ScrollRate * 10
 	elseif keys.UP and keys.Ctrl then
-		self:change_tech_state(element, 3)
+		self:change_tech_state(element, self.STATE_CUTSCENE)
 	elseif keys.DOWN and keys.Ctrl then
-		self:change_tech_state(element, 1)
+		self:change_tech_state(element, self.STATE_DATABASE)
 	end
 end
 

@@ -462,9 +462,9 @@ function TechMissionsController:global_keydown(element, event)
 		self.ShowAll = not self.ShowAll
 		self:reloadList()
 	elseif keys.UP and keys.Ctrl then
-		self:change_tech_state(element, 1)
+		self:change_tech_state(element, self.STATE_DATABASE)
 	elseif keys.DOWN and keys.Ctrl then
-		self:change_tech_state(element, 3)
+		self:change_tech_state(element, self.STATE_CUTSCENE)
 	elseif keys.TAB then
 		local newSection = Topics.simulator.tabkey:send(self.SectionIndex)
 		self:change_section(newSection)
