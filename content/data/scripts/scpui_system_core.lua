@@ -19,6 +19,11 @@ ScpuiSystem = {}
 ScpuiSystem.constants = {
 	NUM_FONT_SIZES = 40,
 	INITIALIZED = false,
+	Dialog_Constants = {
+		BUTTON_TYPE_POSITIVE = 1,
+		BUTTON_TYPE_NEGATIVE = 2,
+		BUTTON_TYPE_NEUTRAL = 3
+	}
 }
 
 ---@type scpui_data
@@ -796,22 +801,32 @@ end
 function ScpuiSystem:finalizeConstants()
 	assert(not ScpuiSystem.constants.INITIALIZED, "SCPUI has already been Initialized!")
 
-	ScpuiSystem.constants.INITIALIZED = true
+	local function makeReadOnly(tbl)
+		local proxy = {}
+		local mt = {
+			__index = tbl,
+			__newindex = function(_, k, _)
+				ba.error("Attempt to modify read-only field '" .. tostring(k) .. "'")
+			end,
+			__pairs = function()
+				return pairs(tbl)
+			end
+		}
 
-    -- Ensure the original constants table exists
-    local original_data = ScpuiSystem.constants or {}
-    ScpuiSystem.constants = {}
+		for k, v in pairs(tbl) do
+			if type(v) == "table" then
+				tbl[k] = makeReadOnly(v) -- recurse into nested tables
+			end
+		end
 
-    -- Set up a proxy with a metatable
-    setmetatable(ScpuiSystem.constants, {
-        __index = original_data, -- Read values from the original table
-        __newindex = function(_, k, _)
-            ba.error("Attempt to modify read-only field '" .. k .. "' in ScpuiSystem.constants")
-        end,
-        __pairs = function()
-            return pairs(original_data) -- Make pairs work on the proxy
-        end
-    })
+		setmetatable(proxy, mt)
+		return proxy
+	end
+
+	ScpuiSystem.constants.INITIALIZED = true -- set before lock
+
+	local original_data = ScpuiSystem.constants
+	ScpuiSystem.constants = makeReadOnly(original_data)
 end
 
 --- Completes the initialization of the SCPUI system. Runs after the preload methods are complete. (After the splash screens)

@@ -485,10 +485,17 @@
 --- @field OEM_PERIOD boolean? True if pressed, nil otherwise
 --- @field OEM_COMMA boolean? True if pressed, nil otherwise
 
+--- SCPUI Dialog Constants
+--- @class dialog_constants
+--- @field BUTTON_TYPE_POSITIVE integer The button type for an positive button
+--- @field BUTTON_TYPE_NEGATIVE integer The button type for a negative button
+--- @field BUTTON_TYPE_NEUTRAL integer The button type for a neutral button
+
 --- SCPUI Constants
 --- @class scpui_constants
 --- @field NUM_FONT_SIZES? number The number of font sizes available in the SCPUI system
 --- @field INITIALIZED? boolean Whether or not SCPUI has been initialized
+--- @field Dialog_Constants dialog_constants The dialog constants for SCPUI
 
 --- SCPUI Global Documentation
 --- @class scpui_data

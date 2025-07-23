@@ -2,7 +2,6 @@
 --Controller for the Medals UI
 -----------------------------------
 
-local Dialogs = require("lib_dialogs")
 local Topics = require("lib_ui_topics")
 local Utils = require('lib_utils')
 
@@ -471,31 +470,6 @@ function MedalsController:accept_pressed()
 	ba.postGameEvent(ba.GameEvents["GS_EVENT_PREVIOUS_STATE"])
 end
 
---- Show a dialog box with the given text and title
---- @param text string the text to display
---- @param title string the title to display
---- @return nil
-function MedalsController:showDialog(text, title, input, buttons, callback)
-	--Create a simple dialog box with the text and title
-
-	local dialog = Dialogs.new()
-		dialog:title(title)
-		dialog:text(text)
-		dialog:input(input)
-		for i = 1, #buttons do
-			dialog:button(buttons[i].Type, buttons[i].Text, buttons[i].Value, buttons[i].Keypress)
-		end
-		dialog:escape("")
-		dialog:show(self.Document.context)
-		:continueWith(function(response)
-            if callback then
-				callback(response)
-			end
-    end)
-	-- Route input to our context until the user dismisses the dialog box.
-	ui.enableInput(self.Document.context)
-end
-
 --- Called by the RML when the join private channel button is pressed. Creates a dialog box to enter the channel name
 --- @return nil
 function MedalsController:showResetAchievementDialog()
@@ -504,13 +478,13 @@ function MedalsController:showResetAchievementDialog()
 	--- @type dialog_button[]
 	local buttons = {}
 	buttons[1] = {
-		Type = Dialogs.BUTTON_TYPE_POSITIVE,
+		Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
 		Text = ba.XSTR("Okay", 888290),
 		Value = "",
 		Keypress = string.sub(ba.XSTR("Okay", 888290), 1, 1)
 	}
 
-	self:showDialog(text, title, true, buttons, function(response)
+	ScpuiSystem:showDialog(self, title, text, true, buttons, function(response)
 		ScpuiSystem:resetAchievements(response)
 		local left_el = self.Document:GetElementById("achievements_left")
 		local right_el = self.Document:GetElementById("achievements_right")

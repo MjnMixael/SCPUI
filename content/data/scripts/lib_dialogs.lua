@@ -8,9 +8,9 @@ local module                = {}
 module.TYPE_SIMPLE          = 1
 
 -- The various button
-module.BUTTON_TYPE_POSITIVE = 1
-module.BUTTON_TYPE_NEGATIVE = 2
-module.BUTTON_TYPE_NEUTRAL  = 3
+module.BUTTON_TYPE_POSITIVE = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE
+module.BUTTON_TYPE_NEGATIVE = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_NEGATIVE
+module.BUTTON_TYPE_NEUTRAL  = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_NEUTRAL
 
 -- Regular or Death dialog style. Other styles can be added later if desired.
 module.STYLE_REGULAR         = 1
