@@ -696,7 +696,19 @@ end
 --- Extracts the base mod ID from the mod root
 --- @return string The sanitized mod ID without versioning
 function ScpuiSystem:getModId()
+
+	if ScpuiSystem.data.table_flags.ModId then
+		return ScpuiSystem.data.table_flags.ModId
+	end
+
     local modRoot = ba.getModRootName()
+
+	-- Fallback if empty string is returned
+    if not modRoot or modRoot == "" then
+        ba.warning("getModRootName() returned an empty string; using fallback mod ID.")
+        modRoot = "unknown_mod"
+    end
+
     -- Remove trailing semantic version if present (e.g., "-2.1.1")
 	local baseID = modRoot:match("^(.-)-?%d*%.?%d*%.?%d*$")
 
@@ -707,6 +719,8 @@ function ScpuiSystem:getModId()
 
 	-- Sanitize the baseID by removing invalid characters for JSON keys
 	baseID = baseID:gsub("[^%w_]", "_")
+
+	ScpuiSystem.data.table_flags.ModId = baseID
 
 	return baseID
 end

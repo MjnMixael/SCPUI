@@ -43,6 +43,13 @@ function ScpuiSystem:parseScpuiTable(data)
 
 	if parse.optionalString("#Settings") then
 
+		if parse.optionalString("$Mod ID:") then
+			local baseID = parse.getString()
+			baseID = baseID:gsub("[^%w_]", "_")
+
+			ScpuiSystem.data.table_flags.ModId = baseID
+		end
+
 		if parse.optionalString("$Hide Multiplayer:") then
 			ScpuiSystem.data.table_flags.HideMulti = parse.getBoolean()
 		end
