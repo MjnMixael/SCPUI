@@ -725,7 +725,7 @@ function ShipSelectController:updateSlotImage(element, img)
 end
 
 --- Called when a ship slot is clicked on. Sets the selected ship to the slot's ship
---- @param entry ship_loadout_info the ship entry. Currently unused as it seems unreliable
+--- @param entry ship_loadout_info? the ship entry. Currently unused as it seems unreliable
 --- @param slot number the slot number
 --- @return nil
 function ShipSelectController:selectShipInSlot(entry, slot)
@@ -805,7 +805,7 @@ end
 
 --- Called when a ship is dragged from a slot over another slot or the ship pool. Tries to replace the target slot's ship with the dragged ship or return the dragged ship to the pool.
 --- @param element Element the element being dragged
---- @param entry ship_loadout_info the ship entry. Currently unused.
+--- @param entry ship_loadout_info? the ship entry. Currently unused.
 --- @param slot number the slot number
 --- @return nil
 function ShipSelectController:dragFromSlotToSlotOrPool(element, entry, slot)
