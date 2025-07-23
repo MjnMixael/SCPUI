@@ -1,5 +1,5 @@
 -- Lua Stub File
--- Generated for FSO v24.3.0 (FS2_Open Scripting)
+-- Generated for FSO v24.3.0.20250721_86622e1ce (FS2_Open Scripting)
 
 -- Lua Version: Lua 5.1.5
 ---@meta
@@ -38,6 +38,7 @@ animation_handle = {}
 --- @class animation_handle
 --- @field start fun(self: self, forwards?: boolean, resetOnStart?: boolean, completeInstant?: boolean, pause?: boolean): boolean # Triggers an animation. Forwards controls the direction of the animation. ResetOnStart will cause the animation to play from its initial state, as opposed to its current state. CompleteInstant will immediately complete the animation. Pause will instead stop the animation at the current state.
 --- @field getTime fun(self: self): number # Returns the total duration of this animation, unaffected by the speed set, in seconds.
+--- @field setSpeed fun(self: self, speedMultiplier?: number): nil # Sets the speed multiplier at which an animation runs. Anything other than 1 will not work in multiplayer.
 --- @field stopNextLoop fun(self: self): nil # Will stop this looping animation on its next repeat.
 
 -- asteroid: Asteroid handle
@@ -164,6 +165,15 @@ color = {}
 --- @field Green number # The 'green' value,  The 'green' value of the color in the range from 0 to 255
 --- @field Blue number # The 'blue' value,  The 'blue' value of the color in the range from 0 to 255
 --- @field Alpha number # The 'alpha' value,  The 'alpha' or opacity value of the color in the range from 0 to 255. 0 is totally transparent, 255 is completely opaque.
+
+-- comm_item: Comm Item handle
+comm_item = {}
+--- @class comm_item
+--- @field Name string # The comm item name,  The name of the comm item
+--- @field Active boolean # The active status,  Whether or not the item is active
+--- @field getMenuTitle fun(self: self): string # Gets the current title of the menu. Will be the same for all currently valid comm items.
+--- @field selectItem fun(self: self): boolean # Selects the item and either proceeds to the next menu or issues the order
+--- @field isValid fun(self: self): boolean # Detect if the handle is valid
 
 -- control: Control handle
 control = {}
@@ -324,18 +334,6 @@ enumeration = {}
 --- @field IntValue number # Integer (index) value of the enum,  # DEPRECATED 23.0.0: Deprecated in favor of Value --  Internal value of the enum.  Probably not useful unless this enum is a bitfield or corresponds to a #define somewhere else in the source code.
 --- @field Value number # Integer value of the enum,  Internal bitfield value of the enum. -1 if the enum is not a bitfield
 
--- event: Mission event handle
-event = {}
---- @class event
---- @field Name string Mission event name
---- @field DirectiveText string Directive text
---- @field DirectiveKeypressText string Raw directive keypress text, as seen in FRED.
---- @field Interval number # Repeat time, or 0 if invalid handle,  Time for event to repeat (in seconds)
---- @field ObjectCount number # Repeat count, or 0 if invalid handle,  Number of objects left for event
---- @field RepeatCount number # Repeat count, or 0 if invalid handle,  Event repeat count
---- @field Score number # Event score, or 0 if invalid handle,  Event score
---- @field isValid fun(self: self): boolean # Detects whether handle is valid
-
 -- execution_context: An execution context for asynchronous operations
 execution_context = {}
 --- @class execution_context
@@ -409,6 +407,7 @@ font = {}
 --- @class font
 --- @field Filename string Name of font (including extension)<br><b>Important:</b>This variable is deprecated. Use <i>Name</i> instead.
 --- @field Name string Name of font (including extension)
+--- @field FamilyName string Family Name of font. Bitmap fonts always return 'Volition Font'.
 --- @field Height number # Font height, or 0 if the handle is invalid,  Height of font (in pixels)
 --- @field TopOffset number # Font top offset, or 0 if the handle is invalid,  The offset this font has from the baseline of textdrawing downwards. (in pixels)
 --- @field BottomOffset number # Font bottom offset, or 0 if the handle is invalid,  The space (in pixels) this font skips downwards after drawing a line of text
@@ -428,11 +427,13 @@ gamestate = {}
 gauge_config = {}
 --- @class gauge_config
 --- @field Name string # The name,  The name of this gauge
+--- @field isCustom boolean # True if custom, false otherwise,  If the gauge is custom or builtin
 --- @field CurrentColor color # The gauge color or nil if the gauge is invalid,  Gets the current color of the gauge. If setting the color, gauges that use IFF for color cannot be set.
 --- @field ShowGaugeFlag boolean # True if on, false if otherwise,  Gets the current status of the show gauge flag.
 --- @field PopupGaugeFlag boolean # True if on, false otherwise,  Gets the current status of the popup gauge flag.
 --- @field CanPopup boolean # True if can popup, false otherwise,  Gets whether or not the gauge can have the popup flag.
 --- @field UsesIffForColor boolean # True if uses IFF, false otherwise,  Gets whether or not the gauge uses IFF for color.
+--- @field isCustomGauge boolean # True if custom, false otherwise,  Gets whether or not the gauge is a custom gauge.
 --- @field setSelected fun(self: self, param2: boolean): nil # Sets if the gauge is the currently selected gauge for drawing as selected.
 --- @field isValid fun(self: self): boolean # Detects whether handle is valid
 
@@ -478,6 +479,13 @@ hotkey_ship = {}
 --- @field removeHotkey fun(self: self, Key: number): nil # Removes a hotkey from the ship in the list. 1-8 correspond to F5-F12. Returns nothing.
 --- @field clearHotkeys fun(self: self): nil # Clears all hotkeys from the ship in the list. Returns nothing.
 
+-- hud_color_preset: Hud preset handle
+hud_color_preset = {}
+--- @class hud_color_preset
+--- @field Name string # The name,  The name of this preset
+--- @field Color color # color,  The name of this preset
+--- @field isValid fun(self: self): boolean # Detects whether handle is valid
+
 -- hud_preset: Hud preset handle
 hud_preset = {}
 --- @class hud_preset
@@ -501,8 +509,9 @@ HudGauge = {}
 --- @field getOriginAndOffset fun(self: self): number, number, number, number # Returns the origin and offset of the specified HUD gauge as specified in the table.
 --- @field getCoords fun(self: self): boolean, number, number # Returns the coordinates of the specified HUD gauge as specified in the table.
 --- @field isHiRes fun(self: self): boolean # Returns whether this is a hi-res HUD gauge, determined by whether the +Filename property is prefaced with "2_".  Not all gauges have such a filename.
---- @field getColor fun(self: self): number, number, number, number # Returns the current color used by this HUD gauge.
---- @field setColor fun(self: self, param2: number, param3: number, param4: number, param5?: number): nil # Sets the current color used by this HUD gauge.  Numbers must be 0-255 in red/green/blue/alpha components; alpha is optional.
+--- @field getColor fun(self: self): number, number, number, number, color # Gets the active 2D drawing color. False to return raw rgb, true to return a color object. Defaults to false.
+--- @field setColor fun(self: self, param2: number | color, Green?: number, Blue?: number, Alpha?: number): nil # Sets the current color used by this HUD gauge.  Numbers must be 0-255 in red/green/blue/alpha components; alpha is optional.
+--- @field setRenderOverride fun(self: self, param2: boolean): boolean # Sets a rendering override to enable or disable rendering of this gauge. This takes precedence over all other gauge toggles!
 --- @field RenderFunction aliasFunc_1 # Render function or nil if no action is set or handle is invalid,  For scripted HUD gauges, the function that will be called for rendering the HUD gauge
 
 -- HudGaugeDrawFunctions: Handle to the rendering functions used for HUD gauges. Do not keep a reference to this since these are only useful inside the rendering callback of a HUD gauge.
@@ -646,7 +655,19 @@ message_entry = {}
 --- @field Color color # The color,  The color of the message entry.
 --- @field Text string # The text,  The text of the message entry
 
--- mission_goal: Mission objective handle
+-- mission_event: Mission event handle
+mission_event = {}
+--- @class mission_event
+--- @field Name string Mission event name
+--- @field DirectiveText string Directive text
+--- @field DirectiveKeypressText string Raw directive keypress text, as seen in FRED.
+--- @field Interval number # Repeat time, or 0 if invalid handle,  Time for event to repeat (in seconds)
+--- @field ObjectCount number # Repeat count, or 0 if invalid handle,  Number of objects left for event
+--- @field RepeatCount number # Repeat count, or 0 if invalid handle,  Event repeat count
+--- @field Score number # Event score, or 0 if invalid handle,  Event score
+--- @field isValid fun(self: self): boolean # Detects whether handle is valid
+
+-- mission_goal: Mission goal handle
 mission_goal = {}
 --- @class mission_goal
 --- @field Name string # The goal name,  The name of the goal
@@ -849,6 +870,9 @@ order = {}
 --- @field getType fun(self: self): enumeration # Gets the type of the order.
 --- @field Target object # Target object or invalid object handle if order handle is invalid or order requires no target.,  Target of the order. Value may also be a deriviative of the 'object' class, such as 'ship'.
 --- @field TargetSubsystem subsystem # Target subsystem, or invalid subsystem handle if order handle is invalid or order requires no subsystem target.,  Target subsystem of the order.
+--- @field WaypointList waypointlist # Waypoint list, or invalid handle if order handle is invalid or if this is not a waypoints order.,  Waypoint list of the order.
+--- @field WaypointIndex number # Waypoint index, or invalid 0 if order handle is invalid or if this is not a waypoints order.,  Waypoint index of the order.
+--- @field WaypointsInReverse boolean # Waypoint-reverse flag, or invalid false if order handle is invalid or if this is not a waypoints order.,  Waypoint-reverse flag of the order.
 --- @field isValid fun(self: self): boolean # Detects whether handle is valid
 
 -- orientation: Orientation matrix object
@@ -890,6 +914,7 @@ parse_object = {}
 --- @field Orientation orientation # The orientation,  The orientation of the parsed ship.
 --- @field ShipClass shipclass # The ship class,  The ship class of the parsed ship.
 --- @field Team team # The team,  The team of the parsed ship.
+--- @field TeamColor string # The name of the team color or empty if not set or invalid.,  The team color
 --- @field InitialHull number # The initial hull,  The initial hull percentage of this parsed ship.
 --- @field InitialShields number # The initial shields,  The initial shields percentage of this parsed ship.
 --- @field MainStatus parse_subsystem # The subsystem handle or invalid handle if there were no changes to the main status,  Gets the "subsystem" status of the ship itself. This is a special subsystem that represents the primary and secondary weapons and the AI class.
@@ -933,12 +958,13 @@ particle = {}
 --- @field TracerLength number # The radius or -1 on error,  The tracer legth of the particle
 --- @field AttachedObject object # Attached object or invalid object handle on error,  The object this particle is attached to. If valid the position will be relative to this object and the velocity will be ignored.
 --- @field isValid fun(self: self): boolean # Detects whether this handle is valid
---- @field setColor fun(self: self, r: number, g: number, b: number): nil # Sets the color for a particle.  If the particle does not support color, the function does nothing.  (Currently only debug particles support color.)
+--- @field setColor fun(self: self, r: number, g: number, b: number): nil # DEPRECATED 25.0.0: Debug particles are deprecated as of FSO 25.0.0! Use particles with a solid-color bitmap instead! --  # Sets the color for a particle.  If the particle does not support color, the function does nothing.  (Currently only debug particles support color.)
 
 -- persona: Persona handle
 persona = {}
 --- @class persona
 --- @field Name string # The name or empty string on error,  The name of the persona
+--- @field Index number # The index of the persona,  No description available.
 --- @field isValid fun(self: self): boolean # Detect if the handle is valid
 
 -- physics: Physics handle
@@ -960,7 +986,7 @@ physics = {}
 --- @field SlideAccelerationTime number # Sliding acceleration time, or 0 if handle is invalid,  Time to accelerate to maximum slide velocity
 --- @field SlideDecelerationTime number # Sliding deceleration time, or 0 if handle is invalid,  Time to decelerate from maximum slide speed
 --- @field Velocity vector # Object velocity, or null vector if handle is invalid,  Object world velocity (World vector). Setting this value may have minimal effect unless the $Fix scripted velocity game settings flag is used.
---- @field VelocityDamping number # Damping, or 0 if handle is invalid,  Damping, the natural period (1 / omega) of the dampening effects on top of the acceleration model. Called 'side_slip_time_const' in code base.
+--- @field VelocityDamping number # Damping, or 0 if handle is invalid,  Damping, the natural period (1 / omega) of the dampening effects on top of the acceleration model. Called 'side_slip_time_const' in code base. 
 --- @field VelocityDesired vector # Desired velocity, or null vector if handle is invalid,  Desired velocity (World vector)
 --- @field VelocityMax vector # Maximum velocity, or null vector if handle is invalid,  Object max local velocity (Local vector)
 --- @field VerticalThrust number # Vertical thrust amount, or 0 if handle is invalid,  Vertical thrust amount (-1 - 1), used primarily for thruster graphics and does not affect any physical behavior
@@ -1000,7 +1026,7 @@ player = {}
 preset = {}
 --- @class preset
 --- @field Name string # The name,  The name of the preset
---- @field clonePreset fun(self: self, Name: string): boolean # Clones the preset into a new preset with the specified name. Sets it as the active preset
+--- @field clonePreset fun(self: self, Name: string, overwrite?: boolean): boolean # Clones the preset into a new preset with the specified name. Sets it as the active preset
 --- @field deletePreset fun(self: self): boolean # Deletes the preset file entirely. Cannot delete a currently active preset.
 
 -- promise: A promise that represents an operation that will return a value at some point in the future
@@ -1096,6 +1122,7 @@ ship = {}
 --- @class ship : object
 --- @field [string | number] subsystem # Array of ship subsystems
 --- @operator len(): number # Number of subsystems on ship
+--- @field getSubsystemList fun(self: self): subsystem[] # Get the list of subsystems on this ship
 --- @field setFlag fun(self: self, set_it: boolean, flag_name: string): nil # Sets or clears one or more flags - this function can accept an arbitrary number of flag arguments.  The flag names can be any string that the alter-ship-flag SEXP operator supports.
 --- @field getFlag fun(self: self, flag_name: string): boolean # Checks whether one or more flags are set - this function can accept an arbitrary number of flag arguments.  The flag names can be any string that the alter-ship-flag SEXP operator supports.
 --- @field ShieldArmorClass string # Armor class name, or empty string if none is set,  Current Armor class of the ships' shield
@@ -1123,7 +1150,8 @@ ship = {}
 --- @field Target object # Target object, or invalid object handle if no target or ship handle is invalid,  Target of ship. Value may also be a deriviative of the 'object' class, such as 'ship'.
 --- @field TargetSubsystem subsystem # Target subsystem, or invalid subsystem handle if no target or ship handle is invalid,  Target subsystem of ship.
 --- @field Team team # Ship team, or invalid team handle if ship handle is invalid,  Ship's team
---- @field PersonaIndex number # The index of the persona from messages.tbl, 0 if no persona is set,  Persona index
+--- @field PersonaIndex number # The index of the persona from messages.tbl, 0 if no persona is set,  # DEPRECATED 25.0.0: Deprecated in favor of Persona --  Persona index
+--- @field Persona persona # Persona handle or invalid handle on error,  The persona of the ship, if any
 --- @field Textures modelinstancetextures # Ship textures, or invalid shiptextures handle if ship handle is invalid,  Gets ship textures
 --- @field FlagAffectedByGravity boolean # True if flag is set, false if flag is not set and nil on error,  Checks for the "affected-by-gravity" flag
 --- @field Disabled boolean # true if ship is disabled, false otherwise,  The disabled state of this ship
@@ -1135,6 +1163,9 @@ ship = {}
 --- @field EtsWeaponIndex number # Ships ETS Weapon index value, 0 to MAX_ENERGY_INDEX,  (SET not implemented, see EtsSetIndexes)
 --- @field Orders shiporders # Ship orders, or invalid handle if ship handle is invalid,  Array of ship orders
 --- @field WaypointSpeedCap number # The limit on the ship's speed for traversing waypoints.  -1 indicates no speed cap.  0 will be returned if handle is invalid.,  Waypoint speed cap
+--- @field getWaypointList fun(self: self): waypointlist # Waypoint list
+--- @field getWaypointIndex fun(self: self): number # Waypoint index
+--- @field getWaypointsInReverse fun(self: self): boolean # Whether the waypoint path is being traveled in reverse
 --- @field ArrivalLocation string # Arrival location, or nil if handle is invalid,  The ship's arrival location
 --- @field DepartureLocation string # Departure location, or nil if handle is invalid,  The ship's departure location
 --- @field ArrivalAnchor string # Arrival anchor, or nil if handle is invalid,  The ship's arrival anchor
@@ -1149,8 +1180,8 @@ ship = {}
 --- @field turnTowardsOrientation fun(self: self, target: orientation, respectDifficulty?: boolean, turnrateModifier?: vector): nil # turns the ship towards the specified orientation during this frame
 --- @field getCenterPosition fun(self: self): vector # Returns the position of the ship's physical center, which may not be the position of the origin of the model
 --- @field kill fun(self: self, Killer?: object, Hitpos?: vector): boolean # Kills the ship. Set "Killer" to a ship (or a weapon fired by that ship) to credit it for the kill in the mission log. Set it to the ship being killed to self-destruct. Set "Hitpos" to the world coordinates of the weapon impact.
---- @field checkVisibility fun(self: self, viewer?: ship): number # checks if a ship can appear on the viewer's radar. If a viewer is not provided it assumes the viewer is the player.
---- @field addShipEffect fun(self: self, name: string, durationMillis: number): boolean # Activates an effect for this ship. Effect names are defined in Post_processing.tbl, and need to be implemented in the main shader. This functions analogous to the ship-effect sexp. NOTE: only one effect can be active at any time, adding new effects will override effects already in progress.
+--- @field checkVisibility fun(self: self, viewer?: ship): number # checks if a ship can appear on the viewer's radar. If a viewer is not provided it assumes the viewer is the player. 
+--- @field addShipEffect fun(self: self, name: string, durationMillis: number): boolean # Activates an effect for this ship. Effect names are defined in Post_processing.tbl, and need to be implemented in the main shader. This functions analogous to the ship-effect sexp. NOTE: only one effect can be active at any time, adding new effects will override effects already in progress. 
 --- @field hasShipExploded fun(self: self): number # Checks if the ship explosion event has already happened
 --- @field isArrivingWarp fun(self: self): boolean # Checks if the ship is arriving via warp.  This includes both stage 1 (when the portal is opening) and stage 2 (when the ship is moving through the portal).
 --- @field isDepartingWarp fun(self: self): boolean # Checks if the ship is departing via warp
@@ -1165,11 +1196,11 @@ ship = {}
 --- @field doManeuver fun(self: self, Duration: number, Heading: number, Pitch: number, Bank: number, ApplyAllRotation: boolean, Vertical: number, Sideways: number, Forward: number, ApplyAllMovement: boolean, ManeuverBitfield: number): boolean # Sets ship maneuver over the defined time period
 --- @field triggerAnimation fun(self: self, Type: string, Subtype?: number, Forwards?: boolean, Instant?: boolean): boolean # DEPRECATED 22.0.0: To account for the new animation tables, please use triggerSubmodelAnimation() --  # Triggers an animation. Type is the string name of the animation type, Subtype is the subtype number, such as weapon bank #, Forwards and Instant are boolean, defaulting to true & false respectively.<br><strong>IMPORTANT: Function is in testing and should not be used with official mod releases</strong>
 --- @field triggerSubmodelAnimation fun(self: self, type: string, triggeredBy: string, forwards?: boolean, resetOnStart?: boolean, completeInstant?: boolean, pause?: boolean): boolean # Triggers an animation. If used often with the same type / triggeredBy, consider using getSubmodelAnimation for performance reasons. Type is the string name of the animation type, triggeredBy is a closer specification which animation should trigger. See *-anim.tbm specifications. Forwards controls the direction of the animation. ResetOnStart will cause the animation to play from its initial state, as opposed to its current state. CompleteInstant will immediately complete the animation. Pause will instead stop the animation at the current state.
---- @field getSubmodelAnimation fun(self: self, type: string, triggeredBy: string): animation_handle # Gets an animation handle. Type is the string name of the animation type, triggeredBy is a closer specification which animation should trigger. See *-anim.tbm specifications.
---- @field stopLoopingSubmodelAnimation fun(self: self, type: string, triggeredBy: string): boolean # Stops a currently looping animation after it has finished its current loop. If used often with the same type / triggeredBy, consider using getSubmodelAnimation for performance reasons. Type is the string name of the animation type, triggeredBy is a closer specification which animation was triggered. See *-anim.tbm specifications.
+--- @field getSubmodelAnimation fun(self: self, type: string, triggeredBy: string): animation_handle # Gets an animation handle. Type is the string name of the animation type, triggeredBy is a closer specification which animation should trigger. See *-anim.tbm specifications. 
+--- @field stopLoopingSubmodelAnimation fun(self: self, type: string, triggeredBy: string): boolean # Stops a currently looping animation after it has finished its current loop. If used often with the same type / triggeredBy, consider using getSubmodelAnimation for performance reasons. Type is the string name of the animation type, triggeredBy is a closer specification which animation was triggered. See *-anim.tbm specifications. 
 --- @field setAnimationSpeed fun(self: self, type: string, triggeredBy: string, speedMultiplier?: number): nil # Sets the speed multiplier at which an animation runs. If used often with the same type / triggeredBy, consider using getSubmodelAnimation for performance reasons. Anything other than 1 will not work in multiplayer. Type is the string name of the animation type, triggeredBy is a closer specification which animation should trigger. See *-anim.tbm specifications.
 --- @field getSubmodelAnimationTime fun(self: self, type: string, triggeredBy: string): number # Gets time that animation will be done. If used often with the same type / triggeredBy, consider using getSubmodelAnimation for performance reasons.
---- @field updateSubmodelMoveable fun(self: self, name: string, values: table): boolean # Updates a moveable animation. Name is the name of the moveable. For what values needs to contain, please refer to the table below, depending on the type of the moveable:Orientation:  	Three numbers, x, y, z rotation respectively, in degrees  Rotation:  	Three numbers, x, y, z rotation respectively, in degrees  Axis Rotation:  	One number, rotation angle in degrees  Inverse Kinematics:  	Three required numbers: x, y, z position target relative to base, in 1/100th meters  	Three optional numbers: x, y, z rotation target relative to base, in degrees
+--- @field updateSubmodelMoveable fun(self: self, name: string, values: table): boolean # Updates a moveable animation. Name is the name of the moveable. For what values needs to contain, please refer to the table below, depending on the type of the moveable:Orientation:  	Three numbers, x, y, z rotation respectively, in degrees  Rotation:  	Three numbers, x, y, z rotation respectively, in degrees  Axis Rotation:  	One number, rotation angle in degrees  Inverse Kinematics:  	Three required numbers: x, y, z position target relative to base, in 1/100th meters  	Three optional numbers: x, y, z rotation target relative to base, in degrees  
 --- @field warpIn fun(self: self): boolean # Warps ship in
 --- @field warpOut fun(self: self): boolean # Warps ship out
 --- @field canWarp fun(self: self): boolean # Checks whether ship has a working subspace drive, is allowed to use it, and is not disabled or limited by subsystem strength.
@@ -1194,9 +1225,10 @@ ship = {}
 --- @field setDocked fun(self: self, dockee_ship: ship, docker_point?: string | number, dockee_point?: string | number): boolean # Immediately docks this ship with another ship.
 --- @field setUndocked fun(self: self, ...: ship): number # Immediately undocks one or more dockee ships from this ship.
 --- @field jettison fun(self: self, jettison_speed: number, ...: ship): number # Jettisons one or more dockee ships from this ship at the specified speed.
---- @field AddElectricArc fun(self: self, firstPoint: vector, secondPoint: vector, duration: number, width: number): number # Creates an electric arc on the ship between two points in the ship's reference frame, for the specified duration in seconds, and the specified width in meters.
+--- @field AddElectricArc fun(self: self, firstPoint: vector, secondPoint: vector, duration: number, width: number, segment_depth?: number, persistent_points?: boolean): number # Creates an electric arc on the ship between two points in the ship's reference frame, for the specified duration in seconds, and the specified width in meters.  Optionally, specify the segment depth (the number of times the spark is divided) and whether to generate a set of arc points that will persist from frame to frame.
 --- @field DeleteElectricArc fun(self: self, index: number): nil # Removes the specified electric arc from the ship.
---- @field ModifyElectricArc fun(self: self, index: number, firstPoint: vector, secondPoint: vector, width?: number): nil # Sets the endpoints (in the ship's reference frame) and width of the specified electric arc on the ship, .
+--- @field ModifyElectricArc fun(self: self, index: number, firstPoint: vector, secondPoint: vector, width?: number, segment_depth?: number, persistent_points?: boolean): nil # Sets the endpoints (in the ship's reference frame), width, and segment depth of the specified electric arc on the ship, plus whether the arc has persistent points.  If this arc already had a collection of persistent points and it still does after this function is called, the points will be regenerated.
+--- @field ModifyElectricArcPoints fun(self: self, index: number, points: table, width?: number): nil # Sets the collection of persistent points to be used by this arc, as well as optionally the arc's width.  The table of points should consist of Vectors (e.g. created with ba.createVector()), arrays with three elements each, or tables with 'x'/'X', 'y'/'Y', and 'z'/'Z' pairs.  There must be at least two points.
 
 -- ship_registry_entry: Ship entry handle
 ship_registry_entry = {}
@@ -1245,7 +1277,7 @@ shipclass = {}
 --- @field Type shiptype # Ship type, or invalid handle if shipclass handle is invalid,  Ship class type
 --- @field AltName string # Alternate string or empty string if handle is invalid,  Alternate name for ship class
 --- @field VelocityMax vector # Maximum velocity, or null vector if handle is invalid,  Ship's lateral and forward speeds
---- @field VelocityDamping number # Damping, or 0 if handle is invalid,  Damping, the natural period (1 / omega) of the dampening effects on top of the acceleration model.
+--- @field VelocityDamping number # Damping, or 0 if handle is invalid,  Damping, the natural period (1 / omega) of the dampening effects on top of the acceleration model. 
 --- @field RearVelocityMax number # Speed, or 0 if handle is invalid,  The maximum rear velocity of the ship
 --- @field ForwardAccelerationTime number # Forward acceleration time, or 0 if handle is invalid,  Forward acceleration time
 --- @field ForwardDecelerationTime number # Forward deceleration time, or 0 if handle is invalid,  Forward deceleration time
@@ -1266,10 +1298,10 @@ shipclass = {}
 --- @field hasCustomStrings fun(self: self): boolean # Detects whether the ship has any custom strings
 --- @field isValid fun(self: self): boolean # Detects whether handle is valid
 --- @field isInTechroom fun(self: self): boolean # Gets whether or not the ship class is available in the techroom
---- @field renderTechModel fun(self: self, X1: number, Y1: number, X2: number, Y2: number, RotationPercent?: number, PitchPercent?: number, BankPercent?: number, Zoom?: number, Lighting?: boolean): boolean # Draws ship model as if in techroom. True for regular lighting, false for flat lighting.
---- @field renderTechModel2 fun(self: self, X1: number, Y1: number, X2: number, Y2: number, Orientation?: orientation, Zoom?: number): boolean # Draws ship model as if in techroom
---- @field renderSelectModel fun(self: self, restart: boolean, x: number, y: number, width?: number, height?: number, currentEffectSetting?: number, zoom?: number): boolean # Draws the 3D select ship model with the chosen effect at the specified coordinates. Restart should be true on the first frame this is called and false on subsequent frames. Valid selection effects are 1 (fs1) or 2 (fs2), defaults to the mod setting or the model's setting. Zoom is a multiplier to the model's closeup_zoom value.
---- @field renderOverheadModel fun(self: self, x: number, y: number, width?: number, height?: number, param6?: number | table, selectedWeapon?: number, hoverSlot?: number, bank1_x?: number, bank1_y?: number, bank2_x?: number, bank2_y?: number, bank3_x?: number, bank3_y?: number, bank4_x?: number, bank4_y?: number, bank5_x?: number, bank5_y?: number, bank6_x?: number, bank6_y?: number, bank7_x?: number, bank7_y?: number, style?: number): boolean # Draws the 3D overhead ship model with the lines pointing from bank weapon selections to bank firepoints. SelectedSlot refers to loadout ship slots 1-12 where wing 1 is 1-4, wing 2 is 5-8, and wing 3 is 9-12. SelectedWeapon is the index into weapon classes. HoverSlot refers to the bank slots 1-7 where 1-3 are primaries and 4-6 are secondaries. Lines will be drawn from any bank containing the SelectedWeapon to the firepoints on the model of that bank. Similarly, lines will be drawn from the bank defined by HoverSlot to the firepoints on the model of that slot. Line drawing for HoverSlot takes precedence over line drawing for SelectedWeapon. Set either or both to -1 to stop line drawing. The bank coordinates are the coordinates from which the lines for that bank will be drawn. It is expected that primary slots will be on the left of the ship model and secondaries will be on the right. The lines have a hard-coded curve expecing to be drawn from those directions. Style can be 0 or 1. 0 for the ship to be drawn stationary from top down, 1 for the ship to be rotating.
+--- @field renderTechModel fun(self: self, X1: number, Y1: number, X2: number, Y2: number, RotationPercent?: number, PitchPercent?: number, BankPercent?: number, Zoom?: number, Lighting?: boolean, TeamColor?: string): boolean # Draws ship model as if in techroom. True for regular lighting, false for flat lighting.
+--- @field renderTechModel2 fun(self: self, X1: number, Y1: number, X2: number, Y2: number, Orientation?: orientation, Zoom?: number, TeamColor?: string): boolean # Draws ship model as if in techroom
+--- @field renderSelectModel fun(self: self, restart: boolean, x: number, y: number, width?: number, height?: number, currentEffectSetting?: number, zoom?: number, TeamColor?: string): boolean # Draws the 3D select ship model with the chosen effect at the specified coordinates. Restart should be true on the first frame this is called and false on subsequent frames. Valid selection effects are 1 (fs1) or 2 (fs2), defaults to the mod setting or the model's setting. Zoom is a multiplier to the model's closeup_zoom value.
+--- @field renderOverheadModel fun(self: self, x: number, y: number, width?: number, height?: number, param6?: number | table, selectedWeapon?: number, hoverSlot?: number, bank1_x?: number, bank1_y?: number, bank2_x?: number, bank2_y?: number, bank3_x?: number, bank3_y?: number, bank4_x?: number, bank4_y?: number, bank5_x?: number, bank5_y?: number, bank6_x?: number, bank6_y?: number, bank7_x?: number, bank7_y?: number, style?: number, TeamColor?: string): boolean # Draws the 3D overhead ship model with the lines pointing from bank weapon selections to bank firepoints. SelectedSlot refers to loadout ship slots 1-12 where wing 1 is 1-4, wing 2 is 5-8, and wing 3 is 9-12. SelectedWeapon is the index into weapon classes. HoverSlot refers to the bank slots 1-7 where 1-3 are primaries and 4-6 are secondaries. Lines will be drawn from any bank containing the SelectedWeapon to the firepoints on the model of that bank. Similarly, lines will be drawn from the bank defined by HoverSlot to the firepoints on the model of that slot. Line drawing for HoverSlot takes precedence over line drawing for SelectedWeapon. Set either or both to -1 to stop line drawing. The bank coordinates are the coordinates from which the lines for that bank will be drawn. It is expected that primary slots will be on the left of the ship model and secondaries will be on the right. The lines have a hard-coded curve expecing to be drawn from those directions. Style can be 0 or 1. 0 for the ship to be drawn stationary from top down, 1 for the ship to be rotating.
 --- @field isModelLoaded fun(self: self, Load?: boolean): boolean # Checks if the model used for this shipclass is loaded or not and optionally loads the model, which might be a slow operation.
 --- @field isPlayerAllowed fun(self: self): boolean # Detects whether the ship has the player allowed flag
 --- @field getShipClassIndex fun(self: self): number # Gets the index value of the ship class
@@ -1414,6 +1446,8 @@ subsystem = {}
 --- @field ArmorClass string # Armor class name, or empty string if none is set,  Current Armor class
 --- @field AWACSIntensity number # AWACS intensity, or 0 if handle is invalid,  Subsystem AWACS intensity
 --- @field AWACSRadius number # AWACS radius, or 0 if handle is invalid,  Subsystem AWACS radius
+--- @field Submodel submodel # Submodel handle, or invalid submodel handle if this subsystem does not have a submodel, or if the subsystem handle is invalid,  The submodel corresponding to this subsystem, if one exists
+--- @field SubmodelInstance submodel_instance # Submodel instance handle, or invalid submodel instance handle if this subsystem does not have a submodel instance, or if the subsystem handle is invalid,  The submodel instance corresponding to this subsystem, if one exists
 --- @field Orientation orientation # Subsystem orientation, or identity orientation if handle is invalid,  Orientation of subobject or turret base
 --- @field GunOrientation orientation # Gun orientation, or null orientation if handle is invalid,  Orientation of turret gun
 --- @field TranslationOffset vector # Offset, or zero vector if handle is not valid,  Gets or sets the translated submodel instance offset of the subsystem or turret base.  This is relative to the existing submodel offset to its parent; a non-translated submodel will have a TranslationOffset of zero.
@@ -1424,9 +1458,10 @@ subsystem = {}
 --- @field GunPosition vector # Gun position, or null vector if subsystem handle is invalid,  Subsystem gun position with regards to main ship (Local vector)
 --- @field Name string # Subsystem name, or an empty string if handle is invalid,  Subsystem name
 --- @field NameOnHUD string # Subsystem name on HUD, or an empty string if handle is invalid,  Subsystem name as it would be displayed on the HUD
+--- @field CanonicalName string # Canonical subsystem name, or an empty string if handle is invalid,  Canonical subsystem name that can be used to reference this subsystem in a SEXP or script
 --- @field NumFirePoints number # Number of fire points, or 0 if handle is invalid,  Number of firepoints
 --- @field FireRateMultiplier number # Firing rate multiplier, or 0 if handle is invalid,  Factor by which turret's rate of fire is multiplied.  This can also be set with the turret-set-rate-of-fire SEXP.  As with the SEXP, assigning a negative value will cause this to be reset to default.
---- @field getModelName fun(self: self): string # Returns the original name of the subsystem in the model file
+--- @field getModelName fun(self: self): string # Returns the original name of the subsystem as defined in the ship class, which could possibly correspond to a submodel in the model file.  This is the same as CanonicalName.
 --- @field PrimaryBanks weaponbanktype # Primary banks, or invalid weaponbanktype handle if subsystem handle is invalid,  Array of primary weapon banks
 --- @field SecondaryBanks weaponbanktype # Secondary banks, or invalid weaponbanktype handle if subsystem handle is invalid,  Array of secondary weapon banks
 --- @field Target object # Targeted object, or invalid object handle if subsystem handle is invalid,  Object targeted by this subsystem. If used to set a new target or clear it, AI targeting will be switched off.
@@ -1505,12 +1540,13 @@ thrusters = {}
 -- timespan: A difference between two time stamps
 timespan = {}
 --- @class timespan
---- @field getSeconds fun(self: self): number # Gets the value of this timestamp in seconds
+--- @field getSeconds fun(self: self): number # Gets the value of this timespan in seconds
 
--- timestamp: A real time time stamp of unspecified precision and resolution.
+-- timestamp: A real-time timestamp of unspecified precision and resolution.
 timestamp = {}
 --- @class timestamp
 --- @operator sub(timestamp): timespan # Computes the difference between two timestamps
+--- @field getSeconds fun(self: self): number # Gets the value of this timestamp in seconds
 
 -- tracing_category: A category for tracing engine performance
 tracing_category = {}
@@ -1536,7 +1572,8 @@ vector = {}
 --- @field getInterpolated fun(self: self, Final: vector, Factor: number): vector # Returns vector that has been interpolated to Final by Factor (0.0-1.0)
 --- @field rotationalInterpolate fun(self: self, final: vector, t: number): vector # Interpolates between this (initial) vector and a second one, using t as the multiplier of progress between them, rotating around their cross product vector.  Intended values for t are [0.0f, 1.0f], but values outside this range are allowed.
 --- @field getOrientation fun(self: self): orientation # Returns orientation object representing the direction of the vector. Does not require vector to be normalized.  Note: the orientation is constructed with the vector as the forward vector (fvec).  You can also specify up (uvec) and right (rvec) vectors as optional arguments.
---- @field getMagnitude fun(self: self): number # Returns the magnitude of a vector (Total regardless of direction)
+--- @field getMagnitude fun(self: self): number # Returns the magnitude of a vector (Length regardless of direction)
+--- @field getMagnitudeSquared fun(self: self): number # Returns the magnitude squared of a vector
 --- @field getDistance fun(self: self, otherPos: vector): number # Distance
 --- @field getDistanceSquared fun(self: self, otherPos: vector): number # Distance squared
 --- @field getDotProduct fun(self: self, OtherVector: vector): number # Returns dot product of vector object with vector argument
@@ -1554,6 +1591,7 @@ vector = {}
 waypoint = {}
 --- @class waypoint : object
 --- @field getList fun(self: self): waypointlist # Returns the waypoint list
+--- @field getIndex fun(self: self): number # Returns the index of this waypoint in its list
 
 -- waypointlist: waypointlist handle
 waypointlist = {}
@@ -1896,10 +1934,20 @@ io = {}
 --- @field restartLog fun(): nil # Closes and reopens the fs2_open.log
 engine = {}
 
+--- GlobalVariables: Library of global values
+--- @class GlobalVariables
+--- @field MAX_PILOTS number # The maximum number of pilots,  Gets the maximum number of possible pilots.
+--- @field MAX_SHIPS_PER_WING number # A maximum number of ships,  The maximum ships that can be in a wing
+--- @field MAX_WING_SLOTS number # A maximum number of ships,  The maximum ships that can be in a loadout wing
+--- @field MAX_WING_BLOCKS number # A maximum number of wings,  The maximum wings that can be in a loadout
+--- @field MAX_SHIP_PRIMARY_BANKS number # A maximum number of primary banks,  The maximum primary banks a ship can have
+--- @field MAX_SHIP_SECONDARY_BANKS number # A maximum number of secondary banks,  The maximum secondary banks a ship can have
+gl = {}
+
 --- Graphics: Graphics Library
 --- @class Graphics
 --- @field Cameras camera[] # Gets camera - Ship handle, or invalid ship handle if index was invalid
---- @field Fonts number[] # Number of loaded fonts - Number of loaded fonts
+--- @field Fonts font[] # Array of loaded fonts - Font handle, or invalid font handle if index is invalid
 --- @field CurrentFont font Current font
 --- @field PostEffects string[] # Gets the name of the specified post-processing index - post-processing name or empty string on error
 --- @field setPostEffect fun(name: string, value?: number, red?: number, green?: number, blue?: number): boolean # Sets the intensity of the specified post-processing effect. Optionally sets RGB values for effects that use them (valid values are 0.0 to 1.0)
@@ -1918,30 +1966,33 @@ engine = {}
 --- @field getCenterOffsetX fun(): number # Gets X offset of center monitor
 --- @field getCenterOffsetY fun(): number # Gets Y offset of center monitor
 --- @field getCurrentCamera fun(param1?: boolean): camera # Gets the current camera handle, if argument is <i>true</i> then it will also return the main camera when no custom camera is in use
+--- @field getEyePosition fun(): vector # Where the viewer's eye is at in World coordinates
+--- @field getEyeOrientation fun(): orientation # Where the viewer's eye is pointing in World coordinates
+--- @field getEyeFOV fun(visible_fov?: boolean): number # What the viewer's FOV is, in radians.  If visible_fov is true, the visible field of view (for culling) is returned; if false, the camera field of view (for rendering) is returned.  For non-VR setups, these two numbers are the same.
 --- @field getVectorFromCoords fun(X?: number, Y?: number, Depth?: number, normalize?: boolean): vector # Returns a vector through screen coordinates x and y. If depth is specified, vector is extended to Depth units into spaceIf normalize is true, vector will be normalized.
 --- @field setTarget fun(Texture?: texture): boolean # If texture is specified, sets current rendering surface to a texture.Otherwise, sets rendering surface back to screen.
 --- @field setCamera fun(Camera?: camera): boolean # Sets current camera, or resets camera if none specified
---- @field setColor fun(param1: number | color, Green?: number, Blue?: number, Alpha?: number): nil # Sets 2D drawing color; each color number should be from 0 (darkest) to 255 (brightest)
---- @field getColor fun(param1?: boolean): number, number, number, number, color # Gets the active 2D drawing color. False to return raw rgb, true to return a color object. Defaults to false.
---- @field setLineWidth fun(width?: number): boolean # Sets the line width for lines. This call might fail if the specified width is not supported by the graphics implementation. Then the width will be the nearest supported value.
---- @field drawCircle fun(Radius: number, X: number, Y: number, Filled?: boolean): nil # Draws a circle
---- @field drawArc fun(Radius: number, X: number, Y: number, StartAngle: number, EndAngle: number, Filled?: boolean): nil # Draws an arc
---- @field drawCurve fun(X: number, Y: number, Radius: number): nil # Draws a curve
---- @field drawGradientLine fun(X1: number, Y1: number, X2: number, Y2: number): nil # Draws a line from (x1,y1) to (x2,y2) with the CurrentColor that steadily fades out
---- @field drawLine fun(X1: number, Y1: number, X2: number, Y2: number): nil # Draws a line from (x1,y1) to (x2,y2) with CurrentColor
---- @field drawPixel fun(X: number, Y: number): nil # Sets pixel to CurrentColor
---- @field drawPolygon fun(Texture: texture, Position?: vector, Orientation?: orientation, Width?: number, Height?: number): nil # Draws a polygon. May not work properly in hooks other than On Object Render.
---- @field drawRectangle fun(X1: number, Y1: number, X2: number, Y2: number, Filled?: boolean, angle?: number): nil # Draws a rectangle with CurrentColor. May be rotated by passing the angle parameter in radians.
---- @field drawRectangleCentered fun(X: number, Y: number, Width: number, Height: number, Filled?: boolean, angle?: number): nil # Draws a rectangle centered at X,Y with CurrentColor. May be rotated by passing the angle parameter in radians.
---- @field drawSphere fun(Radius?: number, Position?: vector): boolean # Draws a sphere with radius Radius at world vector Position. May not work properly in hooks other than On Object Render.
---- @field draw3dLine fun(origin: vector, destination: vector, translucent?: boolean, thickness?: number, thicknessEnd?: number): nil # Draws a line from origin to destination. The line may be translucent or solid. Translucent lines will NOT use the alpha value, instead being more transparent the darker the color is. The thickness at the start can be different from the thickness at the end, to draw a line that tapers or expands.
+--- @field setColor fun(param1: number | color, Green?: number, Blue?: number, Alpha?: number): nil # Sets 2D drawing color for the active context; each color number should be from 0 (darkest) to 255 (brightest)
+--- @field getColor fun(param1?: boolean): number, number, number, number, color # Gets the active 2D drawing color from the active context. False to return raw rgb, true to return a color object. Defaults to false.
+--- @field setLineWidth fun(width?: number): boolean # Sets the line width for lines for the active context. This call might fail if the specified width is not supported by the graphics implementation. Then the width will be the nearest supported value.
+--- @field drawCircle fun(Radius: number, X: number, Y: number, Filled?: boolean): nil # Draws a circle using active context values (like color or width).
+--- @field drawArc fun(Radius: number, X: number, Y: number, StartAngle: number, EndAngle: number, Filled?: boolean): nil # Draws an arc using active context values (like color or width).
+--- @field drawCurve fun(X: number, Y: number, Radius: number): nil # Draws a curve using active context values (like color or width).
+--- @field drawGradientLine fun(X1: number, Y1: number, X2: number, Y2: number): nil # Draws a line from (x1,y1) to (x2,y2) that steadily fades out using active context values (like color or width).
+--- @field drawLine fun(X1: number, Y1: number, X2: number, Y2: number): nil # Draws a line from (x1,y1) to (x2,y2) using active context values (like color or width).
+--- @field drawPixel fun(X: number, Y: number): nil # Draws a pixel using active context values (like color or width).
+--- @field drawPolygon fun(Texture: texture, Position?: vector, Orientation?: orientation, Width?: number, Height?: number): nil # Draws a polygon using active context values (like color or width). May not work properly in hooks other than On Object Render.
+--- @field drawRectangle fun(X1: number, Y1: number, X2: number, Y2: number, Filled?: boolean, angle?: number): nil # Draws a rectangle using active context values (like color or width). May be rotated by passing the angle parameter in radians.
+--- @field drawRectangleCentered fun(X: number, Y: number, Width: number, Height: number, Filled?: boolean, angle?: number): nil # Draws a rectangle centered at X,Y using active context values (like color or width). May be rotated by passing the angle parameter in radians.
+--- @field drawSphere fun(Radius?: number, Position?: vector): boolean # Draws a sphere with radius Radius at world vector Position using active context values (like color). May not work properly in hooks other than On Object Render.
+--- @field draw3dLine fun(origin: vector, destination: vector, translucent?: boolean, thickness?: number, thicknessEnd?: number): nil # Draws a line from origin to destination using active context values (like color). The line may be translucent or solid. Translucent lines will NOT use the alpha value, instead being more transparent the darker the color is. The thickness at the start can be different from the thickness at the end, to draw a line that tapers or expands.
 --- @field drawModel fun(model: model, position: vector, orientation: orientation): number # Draws the given model with the specified position and orientation.  Note: this method does NOT use CurrentResizeMode.
 --- @field drawModelOOR fun(Model: model, Position: vector, Orientation: orientation, Flags?: number): number # Draws the given model with the specified position and orientation
---- @field drawTargetingBrackets fun(Object: object, draw?: boolean, padding?: number): number, number, number, number # Gets the edge positions of targeting brackets for the specified object. The brackets will only be drawn if draw is true or the default value of draw is used. Brackets are drawn with the current color. The brackets will have a padding (distance from the actual bounding box); the default value (used elsewhere in FS2) is 5.  Note: this method does NOT use CurrentResizeMode.
---- @field drawSubsystemTargetingBrackets fun(subsys: subsystem, draw?: boolean, setColor?: boolean): number, number, number, number # Gets the edge position of the targeting brackets drawn for a subsystem as if they were drawn on the HUD. Only actually draws the brackets if <i>draw</i> is true, optionally sets the color the as if it was drawn on the HUD
---- @field drawOffscreenIndicator fun(Object: object, draw?: boolean, setColor?: boolean): number, number # Draws an off-screen indicator for the given object. The indicator will not be drawn if draw=false, but the coordinates will be returned in either case. The indicator will be drawn using the current color if setColor=true and using the IFF color of the object if setColor=false.
---- @field drawString fun(Message: string | boolean, X1?: number, Y1?: number, X2?: number, Y2?: number): number # Draws a string. Use x1/y1 to control position, x2/y2 to limit textbox size.Text will automatically move onto new lines, if x2/y2 is specified.Additionally, calling drawString with only a string argument will automaticallydraw that string below the previously drawn string (or 0,0 if no stringshave been drawn yet
---- @field drawStringResized fun(ResizeMode: enumeration, Message: string | boolean, X1?: number, Y1?: number, X2?: number, Y2?: number): number # Draws a string, scaled according to the GR_RESIZE_* parameter. Use x1/y1 to control position, x2/y2 to limit textbox size.Text will automatically move onto new lines, if x2/y2 is specified, however the line spacing will probably not be correct.Additionally, calling drawString with only a string argument will automaticallydraw that string below the previously drawn string (or 0,0 if no stringshave been drawn yet
+--- @field drawTargetingBrackets fun(Object: object, draw?: boolean, padding?: number): number, number, number, number # Gets the edge positions of targeting brackets for the specified object. The brackets will only be drawn if draw is true or the default value of draw is used. Brackets are drawn with the current active context color. The brackets will have a padding (distance from the actual bounding box); the default value (used elsewhere in FS2) is 5.  Note: this method does NOT use CurrentResizeMode.
+--- @field drawSubsystemTargetingBrackets fun(subsys: subsystem, draw?: boolean, setColor?: boolean): number, number, number, number # Gets the edge position of the targeting brackets drawn for a subsystem as if they were drawn on the HUD. Only actually draws the brackets if <i>draw</i> is true, optionally sets the color if it was drawn on the HUD using active context color
+--- @field drawOffscreenIndicator fun(Object: object, draw?: boolean, setColor?: boolean): number, number # Draws an off-screen indicator for the given object. The indicator will not be drawn if draw=false, but the coordinates will be returned in either case. The indicator will be drawn using the current active context color. if setColor=true and using the IFF color of the object if setColor=false.
+--- @field drawString fun(Message: string | boolean, X1?: number, Y1?: number, X2?: number, Y2?: number): number # Draws a string. Use x1/y1 to control position, x2/y2 to limit textbox size.Text will automatically move onto new lines, if x2/y2 is specified.Additionally, calling drawString with only a string argument will automaticallydraw that string below the previously drawn string (or 0,0 if no stringshave been drawn yet. Uses active context values (like color and font).
+--- @field drawStringResized fun(ResizeMode: enumeration, Message: string | boolean, X1?: number, Y1?: number, X2?: number, Y2?: number): number # Draws a string, scaled according to the GR_RESIZE_* parameter. Use x1/y1 to control position, x2/y2 to limit textbox size.Text will automatically move onto new lines, if x2/y2 is specified, however the line spacing will probably not be correct.Additionally, calling drawString with only a string argument will automaticallydraw that string below the previously drawn string (or 0,0 if no stringshave been drawn yet. Uses active context values (like color and font).
 --- @field setScreenScale fun(width: number, height: number, zoom_x?: number, zoom_y?: number, max_x?: number, max_y?: number, center_x?: number, center_y?: number, force_stretch?: boolean): nil # Calls gr_set_screen_scale with the specified parameters.  This is useful for adjusting the drawing of graphics or text to be the same apparent size regardless of resolution.
 --- @field resetScreenScale fun(): nil # Rolls back the most recent call to setScreenScale.
 --- @field getStringWidth fun(String: string): number # Gets string width
@@ -1960,7 +2011,7 @@ engine = {}
 --- @field hasViewmode fun(param1: enumeration): boolean # Specifies if the current viemode has the specified flag, see VM_* enumeration
 --- @field setClip fun(x: number, y: number, width: number, height: number, ResizeMode?: enumeration): boolean # Sets the clipping region to the specified rectangle. Most drawing functions are able to handle the offset.
 --- @field resetClip fun(): boolean # Resets the clipping region that might have been set
---- @field openMovie fun(name: string, looping?: boolean): movie_player # Opens the movie with the specified name. If the name has an extension it will be removed. This function will try all movie formats supported by the engine and use the first that is found.
+--- @field openMovie fun(name: string, looping?: boolean, withAudio?: boolean): movie_player # Opens the movie with the specified name. If the name has an extension it will be removed. This function will try all movie formats supported by the engine and use the first that is found.
 --- @field createPersistentParticle fun(Position: vector, Velocity: vector, Lifetime: number, Radius: number, Type?: enumeration, TracerLength?: number, Reverse?: boolean, Texture?: texture, AttachedObject?: object): particle # Creates a persistent particle. Persistent variables are handled specially by the engine so that this function can return a handle to the caller. Only use this if you absolutely need it. Use createParticle if the returned handle is not required. Use PARTICLE_* enumerations for type.Reverse reverse animation, if one is specifiedAttached object specifies object that Position will be (and always be) relative to.
 --- @field createParticle fun(Position: vector, Velocity: vector, Lifetime: number, Radius: number, Type?: enumeration, TracerLength?: number, Reverse?: boolean, Texture?: texture, AttachedObject?: object): boolean # Creates a non-persistent particle. Use PARTICLE_* enumerations for type.Reverse reverse animation, if one is specifiedAttached object specifies object that Position will be (and always be) relative to.
 --- @field killAllParticles fun(): nil # Clears all particles from a mission
@@ -1968,6 +2019,7 @@ engine = {}
 --- @field freeAllModels fun(): nil # Releases all loaded models and frees the memory. Intended for use in UI situations and not within missions. Do not use after mission parse. Use at your own risk!
 --- @field createColor fun(Red: number, Green: number, Blue: number, Alpha?: number): color # Creates a color object. Values are capped 0-255. Alpha defaults to 255.
 --- @field isVR fun(): boolean # Queries whether or not FSO is currently trying to render to a head-mounted VR display.
+--- @field FsoContextOverride boolean # True if using FSO's internal context, false if using the lua context,  Whether or not the lua graphics system uses FSO's context or its own. This affects things like the current color, line width, and font. Use with caution.
 gr = {}
 
 --- HookVariables: Hook variables repository
@@ -1989,7 +2041,9 @@ gr = {}
 --- @field NewStage? number
 --- @field Camera? camera
 --- @field Campaign? string
+--- @field Mission? string
 --- @field Cheat? string
+--- @field OptionsAccepted? boolean
 --- @field CountermeasuresLeft? number
 --- @field Countermeasure? weapon
 --- @field Killer? object
@@ -1997,31 +2051,38 @@ gr = {}
 --- @field IsDeathPopup? boolean
 --- @field Submit? fun(result: number | string | nil): nil
 --- @field Freeze? boolean
+--- @field Text? string
 --- @field Choices? table
 --- @field Title? string
---- @field Text? string
 --- @field IsTimeStopped? boolean
 --- @field IsStateRunning? boolean
 --- @field IsInputPopup? boolean
 --- @field AllowedInput? string
 --- @field DeathMessage? string
 --- @field Player? object
+--- @field Sender? ship
+--- @field Recipient? oswpt
+--- @field Subsystem? subsystem
+--- @field Order? enumeration
+--- @field Name? string
 --- @field SourceType? number
 --- @field Key? string
 --- @field RawKey? string
 --- @field TimeHeld? number
 --- @field WasOverridden? boolean
 --- @field Progress? number
---- @field Name? string
 --- @field Message? string
 --- @field SenderString? string
 --- @field Builtin? boolean
---- @field Sender? ship
 --- @field MessageHandle? message
+--- @field Description? string
+--- @field Type? number
+--- @field State? boolean
 --- @field MouseWheelY? number
 --- @field MouseWheelX? number
 --- @field Filename? string
 --- @field ViaTechRoom? boolean
+--- @field TabNumber? number
 --- @field Pain_Type? number
 --- @field Parent? object
 --- @field ShipSubmodel? submodel
@@ -2031,7 +2092,6 @@ gr = {}
 --- @field Method? ship
 --- @field OldState? gamestate
 --- @field NewState? gamestate
---- @field Subsystem? subsystem
 --- @field Wing? wing
 --- @field Waypointlist? waypointlist
 --- @field WeaponB? weapon
@@ -2065,9 +2125,11 @@ hu = {}
 --- @field evaluateNumericSEXP fun(param1: string): number # Runs the defined SEXP script, and returns the result as a number
 --- @field runSEXP fun(param1: string): boolean # Runs the defined SEXP script within a `when` operator
 --- @field Asteroids asteroid[] # Gets asteroid - Asteroid handle, or invalid handle if invalid index specified
+--- @field CommItems comm_item[] # Gets comm items - Comm Item handle, or invalid handle if invalid index specified
 --- @field Debris debris[] # Array of debris in the current mission - Debris handle, or invalid debris handle if index wasn't valid
 --- @field EscortShips ship[] # Gets escort ship at specified index on escort list - Specified ship, or invalid ship handle if invalid index
---- @field Events event[] # Indexes events list - Event handle, or invalid event handle if index was invalid
+--- @field Events mission_event[] # Indexes mission events list - Event handle, or invalid event handle if index was invalid
+--- @field Goals mission_goal[] # Indexes mission goals list - Goal handle, or invalid goal handle if index was invalid
 --- @field SEXPVariables sexpvariable[] # Array of SEXP variables. Note that you can set a sexp variable using the array, eg 'SEXPVariables["newvariable"] = "newvalue"' - Handle to SEXP variable, or invalid sexpvariable handle if index was invalid
 --- @field ShipRegistry ship_registry_entry[] # Gets ship registry entry - Ship registry entry handle, or invalid handle if index was invalid
 --- @field Ships ship[] # Gets ship - Ship handle, or invalid ship handle if index was invalid
@@ -2086,10 +2148,12 @@ hu = {}
 --- @field sendMessage fun(sender: string | ship, message: message, delay?: number, priority?: enumeration, fromCommand?: boolean): boolean # Sends a message from the given source or ship with the given priority, or optionally sends it from the mission's command source.<br>If delay is specified, the message will be delayed by the specified time in seconds.<br>If sender is <i>nil</i> the message will not have a sender.  If sender is a ship object the message will be sent from the ship; if sender is a string the message will have a non-ship source even if the string is a ship name.
 --- @field sendTrainingMessage fun(message: message, time: number, delay?: number): boolean # Sends a training message to the player. <i>time</i> is the amount in seconds to display the message, only whole seconds are used!
 --- @field sendPlainMessage fun(message: string): boolean # Sends a plain text message without it being present in the mission message list
+--- @field sendBuiltinMessage fun(sender: ship, subject: ship, type_or_type_name: enumeration | string): boolean # Sends one of the builtin messages from the given source or ship, taking the message subject into account.The subject can be nil or it can be the target of the message like a response to a destroy order.The type must be one of the BUILTIN_MESSAGE enumerations or a string matching a custom built-in message defined in messages.tbl.
 --- @field addMessageToScrollback fun(message: string, source?: team | enumeration): boolean # Adds a string to the message log scrollback without sending it as a message first. Source should be either the team handle or one of the SCROLLBACK_SOURCE enumerations.
 --- @field createShip fun(Name?: string, Class?: shipclass, Orientation?: orientation, Position?: vector, Team?: team, ShowInMissionLog?: boolean): ship # Creates a ship and returns a handle to it using the specified name, class, world orientation, and world position; and logs it in the mission log unless specified otherwise
 --- @field createDebris fun(source?: ship | shipclass | model | submodel | nil, submodel_index_or_name?: string | nil, position?: vector, param4?: orientation, create_flags?: enumeration, hitpoints?: number, spark_timeout_seconds?: number, param8?: team, explosion_center?: vector, explosion_force_multiplier?: number): debris # Creates a chunk or shard of debris with the specified parameters.  Vectors are in world coordinates.  Any parameter can be nil or negative to specify defaults.  A nil source will create generic or vaporized debris; submodel_index_or_name will be disregarded if source is submodel and can be nil to spawn random generic or vaporized debris; position defaults to 0,0,0; orientation defaults to the source orientation or a random orientation for non-ship sources or for generic/vaporized debris; create_flags can be any combination of DC_IS_HULL, DC_VAPORIZE, DC_SET_VELOCITY, or DC_FIRE_HOOK; hitpoints defaults to 1/8 source ship hitpoints or 10 hitpoints if there is no source ship; explosion_center and explosion_force_multiplier are only applicable for DC_SET_VELOCITY
---- @field createWaypoint fun(Position?: vector, List?: waypointlist): waypoint # Creates a waypoint
+--- @field createWaypointList fun(name?: string): waypointlist # Creates a waypoint list.  If a name is not specified, the list will have a default name.  Be sure to populate the list with at least one waypoint before using it!
+--- @field createWaypoint fun(Position?: vector, List?: waypointlist): waypoint # Creates a waypoint.  If Position is not specified, the waypoint will be at (0,0,0).  If List is not specified, a new list will be created and the waypoint will be added to it.
 --- @field createWeapon fun(Class?: weaponclass, Orientation?: orientation, WorldPosition?: vector, Parent?: object, GroupId?: number): weapon # Creates a weapon and returns a handle to it. 'Group' is used for lighting grouping purposes; for example, quad lasers would only need to act as one light source.  Use generateWeaponGroupId() if you need a group.
 --- @field generateWeaponGroupId fun(): number # Generates a weapon group ID to be used with createWeapon.  This is only needed for weapons that should share a light source, such as quad lasers.  Group IDs may be reused by the engine.
 --- @field createWarpeffect fun(WorldPosition: vector, PointTo: vector, radius: number, duration: number, Class: fireballclass, WarpOpenSound: soundentry, WarpCloseSound: soundentry, WarpOpenDuration?: number, WarpCloseDuration?: number, Velocity?: vector, Use3DModel?: boolean): fireball # Creates a warp-effect fireball and returns a handle to it.
@@ -2151,8 +2215,8 @@ hu = {}
 --- @field setMusicScore fun(score: enumeration, name: string): nil # Sets the music.tbl entry for the specified mission music score
 --- @field hasLineOfSight fun(from: vector, to: vector, excludedObjects?: table, testForShields?: boolean, testForHull?: boolean, threshold?: number): boolean # Checks whether the to-position is in line of sight from the from-position, disregarding specific excluded objects and objects with a radius of less then threshold.
 --- @field getLineOfSightFirstIntersect fun(from: vector, to: vector, excludedObjects?: table, testForShields?: boolean, testForHull?: boolean, threshold?: number): boolean, number, object # Checks whether the to-position is in line of sight from the from-position and returns the distance and intersecting object to the first interruption of the line of sight, disregarding specific excluded objects and objects with a radius of less then threshold.
---- @field getSpecialSubmodelAnimation fun(target: string, type: string, triggeredBy: string): animation_handle # Gets an animation handle. Target is the object that should be animated (one of "cockpit", "skybox"), type is the string name of the animation type, triggeredBy is a closer specification which animation should trigger. See *-anim.tbm specifications.
---- @field updateSpecialSubmodelMoveable fun(target: string, name: string, values: table): boolean # Updates a moveable animation. Name is the name of the moveable. For what values needs to contain, please refer to the table below, depending on the type of the moveable:Orientation:  	Three numbers, x, y, z rotation respectively, in degrees  Rotation:  	Three numbers, x, y, z rotation respectively, in degrees  Axis Rotation:  	One number, rotation angle in degrees  Inverse Kinematics:  	Three required numbers: x, y, z position target relative to base, in 1/100th meters  	Three optional numbers: x, y, z rotation target relative to base, in degrees
+--- @field getSpecialSubmodelAnimation fun(target: string, type: string, triggeredBy: string): animation_handle # Gets an animation handle. Target is the object that should be animated (one of "cockpit", "skybox"), type is the string name of the animation type, triggeredBy is a closer specification which animation should trigger. See *-anim.tbm specifications. 
+--- @field updateSpecialSubmodelMoveable fun(target: string, name: string, values: table): boolean # Updates a moveable animation. Name is the name of the moveable. For what values needs to contain, please refer to the table below, depending on the type of the moveable:Orientation:  	Three numbers, x, y, z rotation respectively, in degrees  Rotation:  	Three numbers, x, y, z rotation respectively, in degrees  Axis Rotation:  	One number, rotation angle in degrees  Inverse Kinematics:  	Three required numbers: x, y, z position target relative to base, in 1/100th meters  	Three optional numbers: x, y, z rotation target relative to base, in degrees  
 --- @field LuaEnums LuaEnum[] # Gets a handle of a Lua Enum - Lua Enum handle or invalid handle on error
 --- @field addLuaEnum fun(name: string): LuaEnum # Adds an enum with the given name if it's unique.
 --- @field LuaSEXPs LuaSEXP[] # Gets a handle of a Lua SEXP - Lua SEXP handle or invalid handle on error
@@ -2235,7 +2299,7 @@ utf8 = {}
 
 --- PilotSelect: API for accessing values specific to the Pilot Select UI.
 --- @class PilotSelect
---- @field MAX_PILOTS number # The maximum number of pilots,  Gets the maximum number of possible pilots.
+--- @field MAX_PILOTS number # The maximum number of pilots,  # DEPRECATED 25.0.0: This variable has moved to the GlobalVariabls library. --  Gets the maximum number of possible pilots.
 --- @field WarningCount number # The maximum number of pilots,  The amount of warnings caused by the mod while loading.
 --- @field ErrorCount number # The maximum number of pilots,  The amount of errors caused by the mod while loading.
 --- @field enumeratePilots fun(): table # Lists all pilots available for the pilot selection<br>
@@ -2256,6 +2320,7 @@ ui.PilotSelect = {}
 --- @field startMusic fun(): nil # Starts the mainhall music.
 --- @field stopMusic fun(Fade?: boolean): nil # Stops the mainhall music. True to fade, false to stop immediately.
 --- @field toggleHelp fun(param1: boolean): nil # Sets the mainhall F1 help overlay to display. True to display, false to hide
+--- @field setMainhall fun(mainhall: string, enforce: boolean): nil # The name of the mainhall to try to set. Will immediately change if the player is currently in the mainhall menu. Use enforce to set this as the mainhall on next mainhall load if setting from outside the mainhall menu. NOTE: If enforce is true then the player will always return back to this mainhall forever. Call this with a blank string and enforce false to unset enforce without changing the current mainhall that is loaded.
 ui.MainHall = {}
 
 --- Barracks: API for accessing values specific to the Barracks UI.
@@ -2355,7 +2420,7 @@ ui.FictionViewer = {}
 --- @field sendWeaponRequestPacket fun(FromBank: number, ToBank: number, fromPoolWepIdx: number, toPoolWepIdx: number, shipSlot: number): nil # Sends a request to the host to change a ship slot.
 ui.ShipWepSelect = {}
 
---- Credits:
+--- Credits: 
 --- @class Credits
 --- @field Music string # The music filename,  The credits music filename
 --- @field NumImages number # The number of images,  The total number of credits images
@@ -2412,7 +2477,7 @@ ui.MissionLog = {}
 --- @field clearAll fun(): boolean # Clears all control bindings.
 --- @field resetToPreset fun(): boolean # Resets all control bindings to the current preset defaults.
 --- @field usePreset fun(PresetName: string): boolean # Uses a defined preset if it can be found.
---- @field createPreset fun(Name: string): boolean # Creates a new preset with the given name. Returns true if successful, false otherwise.
+--- @field createPreset fun(Name: string, overwrite?: boolean): boolean # Creates a new preset with the given name. Returns true if successful, false otherwise.
 --- @field undoLastChange fun(): nil # Reverts the last change to the control bindings
 --- @field searchBinds fun(): number # Waits for a keypress to search for. Returns index into Control Configs if the key matches a bind. Should run On Frame.
 --- @field acceptBinding fun(): boolean # Accepts changes to the keybindings. Returns true if successful, false if there are key conflicts or the preset needs to be saved.
@@ -2424,15 +2489,20 @@ ui.ControlConfig = {}
 
 --- HudConfig: API for accessing data related to the HUD Config UI.
 --- @class HudConfig
---- @field initHudConfig fun(X?: number, Y?: number, Width?: number): nil # Initializes the HUD Configuration data. Must be used before HUD Configuration data accessed. X and Y are the coordinates where the HUD preview will be drawn when drawHudConfig is used. Width is the pixel width to draw the gauges preview.
+--- @field initHudConfig fun(X?: number, Y?: number, Width?: number, height?: number): nil # Initializes the HUD Configuration data. Must be used before HUD Configuration data accessed. X and Y are the coordinates where the HUD preview will be drawn when drawHudConfig is used. Width is the pixel width to draw the gauges preview. Height is the pixel height to draw the gauges preview.
 --- @field closeHudConfig fun(Save: boolean): nil # If True then saves the gauge configuration, discards if false. Defaults to false. Then cleans up memory. Should be used when finished accessing HUD Configuration.
 --- @field drawHudConfig fun(MouseX?: number, MouseY?: number): gauge_config # Draws the HUD for the HUD Config UI. Should be called On Frame.
+--- @field getCurrentHudName fun(): string # Returns the name of the current HUD configuration.
 --- @field selectAllGauges fun(Toggle: boolean): nil # Sets all gauges as selected. True for select all, False to unselect all. Defaults to False.
+--- @field selectNoGauges fun(): nil # Sets no gauges as selected.
+--- @field selectNextHud fun(): nil # Selects the next available HUD
+--- @field selectPrevHud fun(): nil # Selects the previous available HUD
 --- @field setToDefault fun(Filename: string): nil # Sets all gauges to the defined default. If no filename is provided then 'hud_3.hcf' is used.
 --- @field saveToPreset fun(Filename: string): nil # Saves all gauges to the file with the name provided. Filename should not include '.hcf' extension and not be longer than 28 characters.
 --- @field usePresetFile fun(Filename: string): nil # Sets all gauges to the provided preset file settings.
 --- @field GaugeConfigs gauge_config[] # Array of built-in gauge configs - gauge_config handle, or invalid handle if index is invalid
 --- @field GaugePresets hud_preset[] # Array of HUD Preset files - hud_preset handle, or invalid handle if index is invalid
+--- @field GaugeColorPresets hud_color_preset[] # Array of HUD Color Presets - hud_color_preset handle, or invalid handle if index is invalid
 ui.HudConfig = {}
 
 --- PauseScreen: API for accessing data related to the Pause Screen UI.
@@ -2605,6 +2675,10 @@ FLIGHTMODE_FLIGHTCURSOR = enumeration
 FLIGHTMODE_SHIPLOCKED = enumeration
 --- @const ORDER_ATTACK
 ORDER_ATTACK = enumeration
+--- @const ORDER_ATTACK_WING
+ORDER_ATTACK_WING = enumeration
+--- @const ORDER_ATTACK_SHIP_CLASS
+ORDER_ATTACK_SHIP_CLASS = enumeration
 --- @const ORDER_ATTACK_ANY
 ORDER_ATTACK_ANY = enumeration
 --- @const ORDER_DEPART
@@ -2627,6 +2701,8 @@ ORDER_FLY_TO = enumeration
 ORDER_FORM_ON_WING = enumeration
 --- @const ORDER_GUARD
 ORDER_GUARD = enumeration
+--- @const ORDER_GUARD_WING
+ORDER_GUARD_WING = enumeration
 --- @const ORDER_IGNORE_SHIP
 ORDER_IGNORE_SHIP = enumeration
 --- @const ORDER_IGNORE_SHIP_NEW
@@ -2649,12 +2725,8 @@ ORDER_UNDOCK = enumeration
 ORDER_WAYPOINTS = enumeration
 --- @const ORDER_WAYPOINTS_ONCE
 ORDER_WAYPOINTS_ONCE = enumeration
---- @const ORDER_ATTACK_WING
-ORDER_ATTACK_WING = enumeration
---- @const ORDER_GUARD_WING
-ORDER_GUARD_WING = enumeration
---- @const ORDER_ATTACK_SHIP_CLASS
-ORDER_ATTACK_SHIP_CLASS = enumeration
+--- @const ORDER_LUA
+ORDER_LUA = enumeration
 --- @const PARTICLE_DEBUG
 PARTICLE_DEBUG = enumeration
 --- @const PARTICLE_BITMAP
@@ -2961,6 +3033,130 @@ COMMIT_MULTI_NOT_ALL_ASSIGNED = enumeration
 COMMIT_MULTI_NO_PRIMARY = enumeration
 --- @const COMMIT_MULTI_NO_SECONDARY
 COMMIT_MULTI_NO_SECONDARY = enumeration
+--- @const SQUAD_MESSAGE_ATTACK_TARGET
+SQUAD_MESSAGE_ATTACK_TARGET = enumeration
+--- @const SQUAD_MESSAGE_DISABLE_TARGET
+SQUAD_MESSAGE_DISABLE_TARGET = enumeration
+--- @const SQUAD_MESSAGE_DISARM_TARGET
+SQUAD_MESSAGE_DISARM_TARGET = enumeration
+--- @const SQUAD_MESSAGE_PROTECT_TARGET
+SQUAD_MESSAGE_PROTECT_TARGET = enumeration
+--- @const SQUAD_MESSAGE_IGNORE_TARGET
+SQUAD_MESSAGE_IGNORE_TARGET = enumeration
+--- @const SQUAD_MESSAGE_FORMATION
+SQUAD_MESSAGE_FORMATION = enumeration
+--- @const SQUAD_MESSAGE_COVER_ME
+SQUAD_MESSAGE_COVER_ME = enumeration
+--- @const SQUAD_MESSAGE_ENGAGE_ENEMY
+SQUAD_MESSAGE_ENGAGE_ENEMY = enumeration
+--- @const SQUAD_MESSAGE_CAPTURE_TARGET
+SQUAD_MESSAGE_CAPTURE_TARGET = enumeration
+--- @const SQUAD_MESSAGE_REARM_REPAIR_ME
+SQUAD_MESSAGE_REARM_REPAIR_ME = enumeration
+--- @const SQUAD_MESSAGE_ABORT_REARM_REPAIR
+SQUAD_MESSAGE_ABORT_REARM_REPAIR = enumeration
+--- @const SQUAD_MESSAGE_STAY_NEAR_ME
+SQUAD_MESSAGE_STAY_NEAR_ME = enumeration
+--- @const SQUAD_MESSAGE_STAY_NEAR_TARGET
+SQUAD_MESSAGE_STAY_NEAR_TARGET = enumeration
+--- @const SQUAD_MESSAGE_KEEP_SAFE_DIST
+SQUAD_MESSAGE_KEEP_SAFE_DIST = enumeration
+--- @const SQUAD_MESSAGE_DEPART
+SQUAD_MESSAGE_DEPART = enumeration
+--- @const SQUAD_MESSAGE_DISABLE_SUBSYSTEM
+SQUAD_MESSAGE_DISABLE_SUBSYSTEM = enumeration
+--- @const SQUAD_MESSAGE_LUA_AI
+SQUAD_MESSAGE_LUA_AI = enumeration
+--- @const BUILTIN_MESSAGE_ATTACK_TARGET
+BUILTIN_MESSAGE_ATTACK_TARGET = enumeration
+--- @const BUILTIN_MESSAGE_DISABLE_TARGET
+BUILTIN_MESSAGE_DISABLE_TARGET = enumeration
+--- @const BUILTIN_MESSAGE_DISARM_TARGET
+BUILTIN_MESSAGE_DISARM_TARGET = enumeration
+--- @const BUILTIN_MESSAGE_ATTACK_SUBSYSTEM
+BUILTIN_MESSAGE_ATTACK_SUBSYSTEM = enumeration
+--- @const BUILTIN_MESSAGE_PROTECT_TARGET
+BUILTIN_MESSAGE_PROTECT_TARGET = enumeration
+--- @const BUILTIN_MESSAGE_FORM_ON_MY_WING
+BUILTIN_MESSAGE_FORM_ON_MY_WING = enumeration
+--- @const BUILTIN_MESSAGE_COVER_ME
+BUILTIN_MESSAGE_COVER_ME = enumeration
+--- @const BUILTIN_MESSAGE_IGNORE
+BUILTIN_MESSAGE_IGNORE = enumeration
+--- @const BUILTIN_MESSAGE_ENGAGE
+BUILTIN_MESSAGE_ENGAGE = enumeration
+--- @const BUILTIN_MESSAGE_WARP_OUT
+BUILTIN_MESSAGE_WARP_OUT = enumeration
+--- @const BUILTIN_MESSAGE_DOCK_YES
+BUILTIN_MESSAGE_DOCK_YES = enumeration
+--- @const BUILTIN_MESSAGE_YESSIR
+BUILTIN_MESSAGE_YESSIR = enumeration
+--- @const BUILTIN_MESSAGE_NOSIR
+BUILTIN_MESSAGE_NOSIR = enumeration
+--- @const BUILTIN_MESSAGE_NO_TARGET
+BUILTIN_MESSAGE_NO_TARGET = enumeration
+--- @const BUILTIN_MESSAGE_CHECK_6
+BUILTIN_MESSAGE_CHECK_6 = enumeration
+--- @const BUILTIN_MESSAGE_PLAYER_DIED
+BUILTIN_MESSAGE_PLAYER_DIED = enumeration
+--- @const BUILTIN_MESSAGE_PRAISE
+BUILTIN_MESSAGE_PRAISE = enumeration
+--- @const BUILTIN_MESSAGE_HIGH_PRAISE
+BUILTIN_MESSAGE_HIGH_PRAISE = enumeration
+--- @const BUILTIN_MESSAGE_BACKUP
+BUILTIN_MESSAGE_BACKUP = enumeration
+--- @const BUILTIN_MESSAGE_HELP
+BUILTIN_MESSAGE_HELP = enumeration
+--- @const BUILTIN_MESSAGE_WINGMAN_SCREAM
+BUILTIN_MESSAGE_WINGMAN_SCREAM = enumeration
+--- @const BUILTIN_MESSAGE_PRAISE_SELF
+BUILTIN_MESSAGE_PRAISE_SELF = enumeration
+--- @const BUILTIN_MESSAGE_REARM_REQUEST
+BUILTIN_MESSAGE_REARM_REQUEST = enumeration
+--- @const BUILTIN_MESSAGE_REPAIR_REQUEST
+BUILTIN_MESSAGE_REPAIR_REQUEST = enumeration
+--- @const BUILTIN_MESSAGE_PRIMARIES_LOW
+BUILTIN_MESSAGE_PRIMARIES_LOW = enumeration
+--- @const BUILTIN_MESSAGE_REARM_PRIMARIES
+BUILTIN_MESSAGE_REARM_PRIMARIES = enumeration
+--- @const BUILTIN_MESSAGE_REARM_WARP
+BUILTIN_MESSAGE_REARM_WARP = enumeration
+--- @const BUILTIN_MESSAGE_ON_WAY
+BUILTIN_MESSAGE_ON_WAY = enumeration
+--- @const BUILTIN_MESSAGE_ALREADY_ON_WAY
+BUILTIN_MESSAGE_ALREADY_ON_WAY = enumeration
+--- @const BUILTIN_MESSAGE_REPAIR_DONE
+BUILTIN_MESSAGE_REPAIR_DONE = enumeration
+--- @const BUILTIN_MESSAGE_REPAIR_ABORTED
+BUILTIN_MESSAGE_REPAIR_ABORTED = enumeration
+--- @const BUILTIN_MESSAGE_SUPPORT_KILLED
+BUILTIN_MESSAGE_SUPPORT_KILLED = enumeration
+--- @const BUILTIN_MESSAGE_ALL_ALONE
+BUILTIN_MESSAGE_ALL_ALONE = enumeration
+--- @const BUILTIN_MESSAGE_ARRIVE_ENEMY
+BUILTIN_MESSAGE_ARRIVE_ENEMY = enumeration
+--- @const BUILTIN_MESSAGE_OOPS
+BUILTIN_MESSAGE_OOPS = enumeration
+--- @const BUILTIN_MESSAGE_HAMMER_SWINE
+BUILTIN_MESSAGE_HAMMER_SWINE = enumeration
+--- @const BUILTIN_MESSAGE_AWACS_75
+BUILTIN_MESSAGE_AWACS_75 = enumeration
+--- @const BUILTIN_MESSAGE_AWACS_25
+BUILTIN_MESSAGE_AWACS_25 = enumeration
+--- @const BUILTIN_MESSAGE_STRAY_WARNING
+BUILTIN_MESSAGE_STRAY_WARNING = enumeration
+--- @const BUILTIN_MESSAGE_STRAY_WARNING_FINAL
+BUILTIN_MESSAGE_STRAY_WARNING_FINAL = enumeration
+--- @const BUILTIN_MESSAGE_INSTRUCTOR_HIT
+BUILTIN_MESSAGE_INSTRUCTOR_HIT = enumeration
+--- @const BUILTIN_MESSAGE_INSTRUCTOR_ATTACK
+BUILTIN_MESSAGE_INSTRUCTOR_ATTACK = enumeration
+--- @const BUILTIN_MESSAGE_ALL_CLEAR
+BUILTIN_MESSAGE_ALL_CLEAR = enumeration
+--- @const BUILTIN_MESSAGE_PERMISSION
+BUILTIN_MESSAGE_PERMISSION = enumeration
+--- @const BUILTIN_MESSAGE_STRAY
+BUILTIN_MESSAGE_STRAY = enumeration
 
 --- dkjson is a built-in lua method for encoding and decoding values to/from json files
 --- call dkjson with <local json = require('dkjson')>
