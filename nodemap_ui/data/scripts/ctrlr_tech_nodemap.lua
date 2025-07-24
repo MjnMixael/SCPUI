@@ -3,7 +3,6 @@
 -----------------------------------
 
 local DataSaver = require("lib_data_saver")
-local Dialogs = require("lib_dialogs")
 local Topics = require("lib_ui_topics")
 local Utils = require("lib_utils")
 
@@ -530,30 +529,6 @@ function TechNodeMapController:selectEntry(entry, button)
 	Topics.nodemap.selectEntry:send(self)
 end
 
---- Show a dialog box
---- @param text string The text to show in the dialog
---- @param title string The title of the dialog
---- @param buttons dialog_button[] The buttons to show in the dialog
---- @return nil
-function TechNodeMapController:showDialog(text, title, buttons)
-	--Create a simple dialog box with the text and title
-
-	local dialog = Dialogs.new()
-		dialog:title(title)
-		dialog:text(text)
-		dialog:escape("")
-		dialog:clickescape(true)
-		for i = 1, #buttons do
-			dialog:button(buttons[i].Type, buttons[i].Text, buttons[i].Value, buttons[i].Keypress)
-		end
-		dialog:background("#00000080")
-		dialog:show(self.Document.context)
-		:continueWith(function(response)
-    end)
-	-- Route input to our context until the user dismisses the dialog box.
-	ui.enableInput(self.Document.context)
-end
-
 --- Called by the RML to show the description in a dialog box
 --- @return nil
 function TechNodeMapController:breakout_reader()
@@ -562,12 +537,14 @@ function TechNodeMapController:breakout_reader()
 	---@type dialog_button[]
 	local buttons = {}
 	buttons[1] = {
-		Type = Dialogs.BUTTON_TYPE_POSITIVE,
+		Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
 		Text = ba.XSTR("Close", 11625),
 		Value = "",
 		Keypress = string.sub(ba.XSTR("Close", 11625), 1, 1)
 	}
-	self:showDialog(text, title, buttons)
+
+	-- originally ran this also.. dialog:background("#00000080").. but ScpuiSystem's show dialog does not support it
+	ScpuiSystem:showDialog(self, title, text, buttons, false, "", true, nil, "#00000080")
 end
 
 --- Clear the description element of all text

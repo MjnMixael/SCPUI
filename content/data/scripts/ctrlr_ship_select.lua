@@ -2,7 +2,6 @@
 --Controller for the Ship Select UI
 -----------------------------------
 
-local Dialogs = require("lib_dialogs")
 local LoadoutHandler = require("lib_loadout_handler")
 local Topics = require("lib_ui_topics")
 local Utils = require("lib_utils")
@@ -435,12 +434,19 @@ function ShipSelectController:show_breakout_reader()
 	--- @type dialog_button[]
 	local buttons = {}
 	buttons[1] = {
-		Type = Dialogs.BUTTON_TYPE_POSITIVE,
+		Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
 		Text = ba.XSTR("Close", 888110),
 		Value = "",
 		Keypress = string.sub(ba.XSTR("Close", 888110), 1, 1)
 	}
-	self:showDialog(text, title, buttons)
+
+	ScpuiSystem.data.memory.model_rendering.SavedIndex = ScpuiSystem.data.memory.model_rendering.Class
+	ScpuiSystem.data.memory.model_rendering.Class = nil
+
+	ScpuiSystem:showDialog(self, title, text, buttons, nil, "", true, nil, nil, function(response)
+			ScpuiSystem.data.memory.model_rendering.Class = ScpuiSystem.data.memory.model_rendering.SavedIndex
+			ScpuiSystem.data.memory.model_rendering.SavedIndex = nil
+    end)
 end
 
 --- Change a ship's pool icon to the highlighted version and also do the same for the ship slots
@@ -900,33 +906,6 @@ function ShipSelectController:dragNameToSlot(element, slot)
 		ui.ShipWepSelect.sendShipRequestPacket(1, 1, slot, self.NameActiveSlot, -1)
 		self.NameReplace = nil
 	end
-end
-
---- Shows a dialog box. Here it's only used to show the ship's description
---- @param text string the text to display
---- @param title string the title of the dialog
---- @param buttons dialog_button[] the buttons to display
---- @return nil
-function ShipSelectController:showDialog(text, title, buttons)
-	--Create a simple dialog box with the text and title
-
-	ScpuiSystem.data.memory.model_rendering.SavedIndex = ScpuiSystem.data.memory.model_rendering.Class
-	ScpuiSystem.data.memory.model_rendering.Class = nil
-
-	local dialog = Dialogs.new()
-		dialog:title(title)
-		dialog:text(text)
-		dialog:escape("")
-		for i = 1, #buttons do
-			dialog:button(buttons[i].Type, buttons[i].Text, buttons[i].Value, buttons[i].Keypress)
-		end
-		dialog:show(self.Document.context)
-		:continueWith(function(response)
-			ScpuiSystem.data.memory.model_rendering.Class = ScpuiSystem.data.memory.model_rendering.SavedIndex
-			ScpuiSystem.data.memory.model_rendering.SavedIndex = nil
-    end)
-	-- Route input to our context until the user dismisses the dialog box.
-	ui.enableInput(self.Document.context)
 end
 
 --- Called when the reset button is pressed. Resets the loadout to the default

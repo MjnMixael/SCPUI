@@ -2,7 +2,6 @@
 --Shared Controller for all Multi Controllers
 -----------------------------------
 
-local Dialogs = require("lib_dialogs")
 local Topics = require("lib_ui_topics")
 local Utils = require("lib_utils")
 
@@ -131,38 +130,15 @@ function AbstractMultiController:getPlayerStats(name)
 	---@type dialog_button[]
 	local buttons = {}
 	buttons[1] = {
-		Type = Dialogs.BUTTON_TYPE_POSITIVE,
+		Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
 		Text = ba.XSTR("Okay", 888290),
 		Value = "",
 		Keypress = string.sub(ba.XSTR("Okay", 888290), 1, 1)
 	}
 
-	self:showDialog(text, title, false, buttons)
-end
-
---- Show a dialog box
---- @param text string The text to display in the dialog box
---- @param title string The title of the dialog box
---- @param input boolean Whether the dialog box should have an input field
---- @param buttons dialog_button[] The buttons to display in the dialog box
---- @return nil
-function AbstractMultiController:showDialog(text, title, input, buttons)
-	--Create a simple dialog box with the text and title
-
-	local dialog = Dialogs.new()
-		dialog:title(title)
-		dialog:text(text)
-		dialog:input(input)
-		for i = 1, #buttons do
-			dialog:button(buttons[i].Type, buttons[i].Text, buttons[i].Value, buttons[i].Keypress)
-		end
-		dialog:escape("")
-		dialog:show(self.Document.context)
-		:continueWith(function(response)
-            ScpuiSystem.data.memory.multiplayer_general.DialogResponse = response
-    end)
-	-- Route input to our context until the user dismisses the dialog box.
-	ui.enableInput(self.Document.context)
+	ScpuiSystem:showDialog(self, title, text, buttons, nil, nil, nil, nil, nil, function(response)
+		ScpuiSystem.data.memory.multiplayer_general.DialogResponse = response
+	end)
 end
 
 --- Add a heading to the player stats

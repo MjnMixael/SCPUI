@@ -2,7 +2,6 @@
 --Controller for the HUD Config UI
 -----------------------------------
 
-local Dialogs = require("lib_dialogs")
 local Topics = require("lib_ui_topics")
 
 local class = require("lib_class")
@@ -278,13 +277,15 @@ function HudConfigController:savePreset(name)
 		--- @type dialog_button[]
 		local buttons = {}
 		buttons[1] = {
-			Type = Dialogs.BUTTON_TYPE_POSITIVE,
+			Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
 			Text = ba.XSTR("Okay", 888290),
 			Value = "",
 			Keypress = string.sub(ba.XSTR("Okay", 888290), 1, 1)
 		}
 
-		self:showDialog(text, title, false, buttons)
+		ScpuiSystem:showDialog(self, title, text, buttons, nil, nil, nil, nil, nil, function(response)
+            self:dialogReponse(response)
+        end)
 	end
 
 end
@@ -652,33 +653,6 @@ function HudConfigController:mouse_move(element, event)
 
 end
 
---- Show a dialog box
---- @param text string The dialog text
---- @param title string The dialog title
---- @param input boolean Whether the dialog should have an input field
---- @param buttons dialog_button[] The dialog buttons
---- @return nil
-function HudConfigController:showDialog(text, title, input, buttons)
-	--Create a simple dialog box with the text and title
-
-	ScpuiSystem.data.memory.hud_config.Draw = false
-
-	local dialog = Dialogs.new()
-		dialog:title(title)
-		dialog:text(text)
-		dialog:input(input)
-		for i = 1, #buttons do
-			dialog:button(buttons[i].Type, buttons[i].Text, buttons[i].Value, buttons[i].Keypress)
-		end
-		dialog:escape("")
-		dialog:show(self.Document.context)
-		:continueWith(function(response)
-			self:dialogResponse(response)
-    end)
-	-- Route input to our context until the user dismisses the dialog box.
-	ui.enableInput(self.Document.context)
-end
-
 --- Create a dialog box to get a preset name
 --- @return nil
 function HudConfigController:get_preset_input()
@@ -690,13 +664,15 @@ function HudConfigController:get_preset_input()
 	--- @type dialog_button[]
 	local buttons = {}
 	buttons[1] = {
-		Type = Dialogs.BUTTON_TYPE_POSITIVE,
+		Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
 		Text = ba.XSTR("Okay", 888290),
 		Value = "",
 		Keypress = string.sub(ba.XSTR("Okay", 888290), 1, 1)
 	}
 
-	self:showDialog(text, title, true, buttons)
+	ScpuiSystem:showDialog(self, title, text, buttons, true, nil, nil, nil, nil, function(response)
+		self:dialogReponse(response)
+	end)
 end
 
 --- Handle dialog responses

@@ -490,6 +490,8 @@
 --- @field BUTTON_TYPE_POSITIVE integer The button type for an positive button
 --- @field BUTTON_TYPE_NEGATIVE integer The button type for a negative button
 --- @field BUTTON_TYPE_NEUTRAL integer The button type for a neutral button
+--- @field DIALOG_STYLE_REGULAR integer The dialog style for a regular dialog
+--- @field DIALOG_STYLE_DEATH integer The dialog style for a death dialog
 
 --- SCPUI Constants
 --- @class scpui_constants
@@ -534,7 +536,7 @@
 
 --- SCPUI Dialog Button
 --- @class dialog_button
---- @field Type integer The type of button to display, one of the dialog.BUTTON_TYPEs
+--- @field Type integer The type of button to display, one of the dialog_constants.BUTTON_TYPE_ enumerations
 --- @field Text string The text to display on the button
 --- @field Value any The value to return when the button is clicked
 --- @field Keypress? string The keypress to use for the button

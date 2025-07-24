@@ -3,7 +3,6 @@
 -----------------------------------
 
 local AsyncUtil = require("lib_async")
-local Dialogs = require("lib_dialogs")
 local Topics = require("lib_ui_topics")
 
 local Class = require("lib_class")
@@ -56,7 +55,7 @@ function TechMissionsController:initialize(document)
 	---Load the desired font size from the save file
 	self.Document:GetElementById("main_background"):SetClass(("base_font" .. ScpuiSystem:getFontPixelSize()), true)
 
-	self:showDialog("Building missions list...", "Mission Simulator")
+	ScpuiSystem:showDialog(self, "Building missions list...", "Please wait while the mission list is being built.")
 
 	async.run(function()
 		async.await(AsyncUtil.wait_for(0.001))
@@ -81,22 +80,6 @@ function TechMissionsController:initialize(document)
 
 	end, async.OnFrameExecutor)
 
-end
-
---- Show a dialog box
---- @param text string The text to display in the dialog box
---- @param title string The title of the dialog box
---- @return nil
-function TechMissionsController:showDialog(text, title)
-	--Create a simple dialog box with the text and title
-
-	local dialog = Dialogs.new()
-		dialog:title(title)
-		dialog:text(text)
-		dialog:show(self.Document.context)
-		:continueWith(function()end)
-	-- Route input to our context until the user dismisses the dialog box.
-	ui.enableInput(self.Document.context)
 end
 
 --- Called by the RML to change the tech room game state

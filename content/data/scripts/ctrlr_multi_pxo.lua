@@ -2,7 +2,6 @@
 --Controller for the Multi PXO UI
 -----------------------------------
 
-local Dialogs = require("lib_dialogs")
 local Topics = require("lib_ui_topics")
 
 local Class = require("lib_class")
@@ -85,7 +84,7 @@ function PXOController:join_private_pressed()
 	--- @type dialog_button[]
 	local buttons = {}
 	buttons[1] = {
-		Type = Dialogs.BUTTON_TYPE_POSITIVE,
+		Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
 		Text = ba.XSTR("Okay", 888290),
 		Value = "",
 		Keypress = string.sub(ba.XSTR("Okay", 888290), 1, 1)
@@ -118,7 +117,7 @@ function PXOController:find_pilot_pressed()
 	--- @type dialog_button[]
 	local buttons = {}
 	buttons[1] = {
-		Type = Dialogs.BUTTON_TYPE_POSITIVE,
+		Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
 		Text = ba.XSTR("Okay", 888290),
 		Value = "",
 		Keypress = string.sub(ba.XSTR("Okay", 888290), 1, 1)
@@ -151,20 +150,20 @@ function PXOController:getPlayerChannel(player_name)
 		}
 		text = text .. "<br></br>Join channel?"
 		buttons[1] = {
-			Type = Dialogs.BUTTON_TYPE_POSITIVE,
+			Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
 			Text = ba.XSTR("Yes", 888296),
 			Value = true,
 			Keypress = string.sub(ba.XSTR("Yes", 888296), 1, 1)
 		}
 		buttons[2] = {
-			Type = Dialogs.BUTTON_TYPE_NEGATIVE,
+			Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_NEGATIVE,
 			Text = ba.XSTR("No", 888298),
 			Value = false,
 			Keypress = string.sub(ba.XSTR("No", 888298), 1, 1)
 		}
 	else
 		buttons[1] = {
-			Type = Dialogs.BUTTON_TYPE_POSITIVE,
+			Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
 			Text = ba.XSTR("Okay", 888290),
 			Value = false,
 			Keypress = string.sub(ba.XSTR("Okay", 888290), 1, 1)
@@ -222,7 +221,7 @@ function PXOController:motd_pressed()
 	--- @type dialog_button[]
 	local buttons = {}
 	buttons[1] = {
-		Type = Dialogs.BUTTON_TYPE_POSITIVE,
+		Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
 		Text = ba.XSTR("Okay", 888290),
 		Value = "",
 		Keypress = string.sub(ba.XSTR("Okay", 888290), 1, 1)

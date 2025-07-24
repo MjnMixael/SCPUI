@@ -2,7 +2,6 @@
 --Controller for the Weapon Select UI
 -----------------------------------
 
-local Dialogs = require("lib_dialogs")
 local LoadoutHandler = require("lib_loadout_handler")
 local Topics = require("lib_ui_topics")
 local Utils = require("lib_utils")
@@ -498,12 +497,16 @@ function WeaponSelectController:show_breakout_reader()
 	--- @type dialog_button[]
 	local buttons = {}
 	buttons[1] = {
-		Type = Dialogs.BUTTON_TYPE_POSITIVE,
+		Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
 		Text = ba.XSTR("Close", 888110),
 		Value = "",
 		Keypress = string.sub(ba.XSTR("Close", 888110), 1, 1)
 	}
-	self:showDialog(text, title, buttons)
+
+	self:pauseRendering()
+	ScpuiSystem:showDialog(self, title, text, buttons, nil, "", true, nil, nil, function(response)
+		self:resumeRendering()
+	end)
 end
 
 --- Sets the weapon as the selected weapon
@@ -1214,13 +1217,16 @@ function WeaponSelectController:dragWeaponFromPoolToSlot(element, entry, weapon_
 			---@type dialog_button[]
 			local buttons = {}
 			buttons[1] = {
-				Type = Dialogs.BUTTON_TYPE_POSITIVE,
+				Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
 				Text = ba.XSTR("Okay", 888290),
 				Value = "",
 				Keypress = string.sub(ba.XSTR("Ok", 888286), 1, 1)
 			}
 
-			self:showDialog(text, title, buttons)
+			self:pauseRendering()
+			ScpuiSystem:showDialog(self, title, text, buttons, nil, nil, nil, nil, nil, function(response)
+				self:resumeRendering()
+			end)
 			return
 		end
 
@@ -1315,13 +1321,16 @@ function WeaponSelectController:drag_from_slot_to_slot_or_pool(element, slot)
 			---@type dialog_button[]
 			local buttons = {}
 			buttons[1] = {
-				Type = Dialogs.BUTTON_TYPE_POSITIVE,
+				Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
 				Text = ba.XSTR("Okay", 888290),
 				Value = "",
 				Keypress = string.sub(ba.XSTR("Ok", 888286), 1, 1)
 			}
 
-			self:showDialog(text, title, buttons)
+			self:pauseRendering()
+			ScpuiSystem:showDialog(self, title, text, buttons, nil, nil, nil, nil, nil, function(response)
+				self:resumeRendering()
+			end)
 			return
 		end
 
@@ -1366,34 +1375,21 @@ function WeaponSelectController:copy_to_wing()
 	end
 end
 
---- Show a dialog box
---- @param text string The text to display in the dialog
---- @param title string The title of the dialog
---- @param buttons dialog_button[] The buttons to display in the dialog
-function WeaponSelectController:showDialog(text, title, buttons)
-	--Create a simple dialog box with the text and title
-
+--- Pause rendering the models
+--- @return nil
+function WeaponSelectController:pauseRendering()
 	ScpuiSystem.data.memory.model_rendering.Class = nil
 	ScpuiSystem.data.memory.model_rendering.OverheadSave = ScpuiSystem.data.memory.model_rendering.OverheadClass
 	ScpuiSystem.data.memory.model_rendering.OverheadClass = nil
+end
 
-	local dialog = Dialogs.new()
-		dialog:title(title)
-		dialog:text(text)
-		dialog:escape("")
-		for i = 1, #buttons do
-			dialog:button(buttons[i].Type, buttons[i].Text, buttons[i].Value, buttons[i].Keypress)
-		end
-		dialog:show(self.Document.context)
-		:continueWith(function(response)
-			ScpuiSystem.data.memory.model_rendering.Class = ScpuiSystem.data.memory.model_rendering.SavedIndex
-			ScpuiSystem.data.memory.model_rendering.SavedIndex = nil
-			ScpuiSystem.data.memory.model_rendering.OverheadClass = ScpuiSystem.data.memory.model_rendering.OverheadSave
-			ScpuiSystem.data.memory.model_rendering.OverheadSave = nil
-        --do nothing
-    end)
-	-- Route input to our context until the user dismisses the dialog box.
-	ui.enableInput(self.Document.context)
+--- Resume rendering the models
+--- @return nil
+function WeaponSelectController:resumeRendering()
+	ScpuiSystem.data.memory.model_rendering.Class = ScpuiSystem.data.memory.model_rendering.SavedIndex
+	ScpuiSystem.data.memory.model_rendering.SavedIndex = nil
+	ScpuiSystem.data.memory.model_rendering.OverheadClass = ScpuiSystem.data.memory.model_rendering.OverheadSave
+	ScpuiSystem.data.memory.model_rendering.OverheadSave = nil
 end
 
 --- Called by the RML when the reset button is pressed

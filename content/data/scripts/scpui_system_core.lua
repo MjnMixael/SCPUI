@@ -22,7 +22,9 @@ ScpuiSystem.constants = {
 	Dialog_Constants = {
 		BUTTON_TYPE_POSITIVE = 1,
 		BUTTON_TYPE_NEGATIVE = 2,
-		BUTTON_TYPE_NEUTRAL = 3
+		BUTTON_TYPE_NEUTRAL = 3,
+		DIALOG_STYLE_REGULAR = 1,
+		DIALOG_STYLE_DEATH = 2,
 	}
 }
 

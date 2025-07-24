@@ -2,7 +2,6 @@
 --Controller for the Pilot Select UI, Shared with the Barracks Controller
 -----------------------------------
 
-local Dialogs = require("lib_dialogs")
 local Topics = require("lib_ui_topics")
 local Utils = require("lib_utils")
 
@@ -118,12 +117,18 @@ function PilotSelectController:initialize(document)
                                                           .. " or support for these problems, as they are caused by the mod's data files, not FreeSpace Open's"
                                                           .. " source code.", -1),
                                           ui.PilotSelect.WarningCount + ui.PilotSelect.ErrorCount)
-            local builder = Dialogs.new()
-            builder:title(ba.XSTR("Warning!", 888395))
-            builder:text(text)
-            builder:escape(false)
-            builder:button(Dialogs.BUTTON_TYPE_POSITIVE, ba.XSTR("Ok", 888286), false, "o")
-            builder:show(self.Document.context)
+
+            local title = ba.XSTR("Warning", 888395)
+            --- @type dialog_button[]
+            local buttons = {}
+            buttons[1] = {
+                Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
+                Text = ba.XSTR("Ok", 888286),
+                Value = "",
+                Keypress = string.sub(ba.XSTR("Ok", 888286), 1, 1)
+            }
+
+            ScpuiSystem:showDialog(self, title, text, buttons)
         end
     end
 
@@ -203,11 +208,17 @@ function PilotSelectController:commit_pressed()
     if self.SelectedPilotName == nil then
         ui.playElementSound(button, "click", "error")
 
-        local builder = Dialogs.new()
-        builder:text(ba.XSTR("You must select a valid pilot first", 888397))
-        builder:escape(false)
-        builder:button(Dialogs.BUTTON_TYPE_POSITIVE, ba.XSTR("Ok", 888286), false, "o")
-        builder:show(self.Document.context)
+        local text = ba.XSTR("You must select a valid pilot first", 888397)
+        --- @type dialog_button[]
+        local buttons = {}
+        buttons[1] = {
+            Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
+            Text = ba.XSTR("Ok", 888286),
+            Value = "",
+            Keypress = string.sub(ba.XSTR("Ok", 888286), 1, 1)
+        }
+
+        ScpuiSystem:showDialog(self, "", text, buttons)
         return
     end
 
@@ -225,12 +236,17 @@ end
 --- Show a dialog indicating that the selected pilot was created with a different language
 --- @return nil
 function PilotSelectController:showWrongPilotLanguageDialog()
-    local builder = Dialogs.new()
-    builder:text(ba.XSTR("Selected pilot was created with a different language to the currently active language." ..
-                                 "\n\nPlease select a different pilot or change the language", -1))
-    builder:escape(false)
-    builder:button(Dialogs.BUTTON_TYPE_POSITIVE, ba.XSTR("Ok", 888286), false, "o")
-    builder:show(self.Document.context)
+    local text = ba.XSTR("Selected pilot was created with a different language to the currently active language.\n\nPlease select a different pilot or change the language", -1)
+    --- @type dialog_button[]
+    local buttons = {}
+    buttons[1] = {
+        Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
+        Text = ba.XSTR("Ok", 888286),
+        Value = "",
+        Keypress = string.sub(ba.XSTR("Ok", 888286), 1, 1)
+    }
+
+    ScpuiSystem:showDialog(self, "", text, buttons)
 end
 
 --- Set the player mode to single or multi. Returns true if the mode was changed
@@ -423,14 +439,25 @@ function PilotSelectController:actualPilotCreate(element, callsign, clone_from)
     if Utils.table.contains(self.pilots, callsign, function(left, right)
         return left:lower() == right:lower()
     end) then
-        local builder = Dialogs.new()
-        builder:title(ba.XSTR("Warning", 888284))
-        builder:text(ba.XSTR("A duplicate pilot exists\nOverwrite?", 888401))
-        builder:escape(false)
-        builder:button(Dialogs.BUTTON_TYPE_POSITIVE, ba.XSTR("Yes", 888296), true, "y")
-        builder:button(Dialogs.BUTTON_TYPE_NEGATIVE, ba.XSTR("No", 888298), false, "n")
-        builder:show(self.Document.context):continueWith(function(result)
-            if not result then
+        local title = ba.XSTR("Warning", 888284)
+        local text = ba.XSTR("A duplicate pilot exists\nOverwrite?", 888401)
+        --- @type dialog_button[]
+        local buttons = {}
+        buttons[1] = {
+            Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
+            Text = ba.XSTR("Yes", 888296),
+            Value = "",
+            Keypress = string.sub(ba.XSTR("Yes", 888296), 1, 1)
+        }
+        buttons[2] = {
+            Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_NEGATIVE,
+            Text = ba.XSTR("No", 888298),
+            Value = "",
+            Keypress = string.sub(ba.XSTR("No", 888298), 1, 1)
+        }
+
+        ScpuiSystem:showDialog(self, title, text, buttons, nil, nil, nil, nil, nil, function(response)
+            if not response then
                 return
             end
             self:finishPilotCreate(element, callsign, clone_from, true)
@@ -486,25 +513,42 @@ function PilotSelectController:delete_player(element)
     end
 
     if self.CurrentMode == "multi" then
-        local builder = Dialogs.new()
-        builder:title(ba.XSTR("Disabled!", 888404))
-        builder:text(ba.XSTR("Multi and single player pilots are now identical. Deleting a multi-player pilot will also delete" ..
+        local title = ba.XSTR("Disabled!", 888404)
+        local text = ba.XSTR("Multi and single player pilots are now identical. Deleting a multi-player pilot will also delete" ..
                                      " all single-player data for that pilot.\n\nAs a safety precaution, pilots can only be deleted from the" ..
-                                     " single-player menu.", -1))
-        builder:escape(false)
-        builder:button(Dialogs.BUTTON_TYPE_POSITIVE, ba.XSTR("Ok", 888286), false, "o")
-        builder:show(self.Document.context)
+                                     " single-player menu.", -1)
+        --- @type dialog_button[]
+        local buttons = {}
+        buttons[1] = {
+            Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
+            Text = ba.XSTR("Ok", 888286),
+            Value = "",
+            Keypress = string.sub(ba.XSTR("Ok", 888286), 1, 1)
+        }
+
+        ScpuiSystem:showDialog(self, title, text, buttons)
         return
     end
 
-    local builder = Dialogs.new()
-    builder:title(ba.XSTR("Warning!", 888395))
-    builder:text(ba.XSTR("Are you sure you wish to delete this pilot?", 888407))
-    builder:escape(false)
-    builder:button(Dialogs.BUTTON_TYPE_POSITIVE, "Yes", true, "y")
-    builder:button(Dialogs.BUTTON_TYPE_NEGATIVE, "No", false, "n")
-    builder:show(self.Document.context):continueWith(function(result)
-        if not result then
+    local title = ba.XSTR("Warning!" , 888395)
+    local text = ba.XSTR("Are you sure you wish to delete this pilot?", 888407)
+    --- @type dialog_button[]
+    local buttons = {}
+    buttons[1] = {
+        Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
+        Text = ba.XSTR("Yes", 888296),
+        Value = "",
+        Keypress = string.sub(ba.XSTR("Yes", 888296), 1, 1)
+    }
+    buttons[2] = {
+        Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_NEGATIVE,
+        Text = ba.XSTR("No", 888297),
+        Value = "",
+        Keypress = string.sub(ba.XSTR("No", 888297), 1, 1)
+    }
+
+    ScpuiSystem:showDialog(self, title, text, buttons, nil, nil, nil, nil, nil, function(response)
+        if not response then
             return
         end
 
@@ -517,12 +561,17 @@ function PilotSelectController:delete_player(element)
         end
 
         if not ui.PilotSelect.deletePilot(pilot) then
-            local builder = Dialogs.new()
-            builder:title(ba.XSTR("Error", 888408))
-            builder:text(ba.XSTR("Failed to delete pilot file. File may be read-only.", 888409))
-            builder:escape(false)
-            builder:button(Dialogs.BUTTON_TYPE_POSITIVE, ba.XSTR("Ok", 888286), false, string.sub(ba.XSTR("Ok", 888286), 1, 1))
-            builder:show(self.Document.context)
+            local title = ba.XSTR("Error", 888408)
+            local text = ba.XSTR("Failed to delete pilot file. File may be read-only.", 888409)
+            --- @type dialog_button[]
+            local buttons = {}
+            buttons[1] = {
+                Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
+                Text = ba.XSTR("Ok", 888286),
+                Value = "",
+                Keypress = string.sub(ba.XSTR("Ok", 888286), 1, 1)
+            }
+            ScpuiSystem:showDialog(self, title, text, buttons)
             return
         end
 

@@ -3,7 +3,6 @@
 -----------------------------------
 
 local AsyncUtil = require("lib_async")
-local Dialogs = require("lib_dialogs")
 local Topics = require("lib_ui_topics")
 local Utils = require("lib_utils")
 
@@ -801,34 +800,6 @@ function TechDatabaseController:selectEntry(entry)
 	end
 end
 
---- Show a dialog box
---- @param text string The text to display
---- @param title string The title of the dialog
---- @param buttons dialog_button[] The buttons to display
-function TechDatabaseController:showDialog(text, title, buttons)
-	--Create a simple dialog box with the text and title
-
-	ScpuiSystem.data.memory.model_rendering.SavedIndex = ScpuiSystem.data.memory.model_rendering.Class
-	ScpuiSystem.data.memory.model_rendering.Class = nil
-
-	local dialog = Dialogs.new()
-		dialog:title(title)
-		dialog:text(text)
-		dialog:escape("")
-		dialog:clickescape(true)
-		for i = 1, #buttons do
-			dialog:button(buttons[i].Type, buttons[i].Text, buttons[i].Value, buttons[i].Keypress)
-		end
-		dialog:background("#00000080")
-		dialog:show(self.Document.context)
-		:continueWith(function(response)
-			ScpuiSystem.data.memory.model_rendering.Class = ScpuiSystem.data.memory.model_rendering.SavedIndex
-			ScpuiSystem.data.memory.model_rendering.SavedIndex = nil
-    end)
-	-- Route input to our context until the user dismisses the dialog box.
-	ui.enableInput(self.Document.context)
-end
-
 --- Show the current entry's description in a dialog box
 --- @return nil
 function TechDatabaseController:show_breakout_reader()
@@ -837,12 +808,19 @@ function TechDatabaseController:show_breakout_reader()
 	--- @type dialog_button[]
 	local buttons = {}
 	buttons[1] = {
-		Type = Dialogs.BUTTON_TYPE_POSITIVE,
+		Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
 		Text = ba.XSTR("Close", 888110),
 		Value = "",
 		Keypress = string.sub(ba.XSTR("Close", 888110), 1, 1)
 	}
-	self:showDialog(text, title, buttons)
+
+	ScpuiSystem.data.memory.model_rendering.SavedIndex = ScpuiSystem.data.memory.model_rendering.Class
+	ScpuiSystem.data.memory.model_rendering.Class = nil
+
+	ScpuiSystem:showDialog(self, title, text, buttons, nil, "", true, nil, nil, function(response)
+		ScpuiSystem.data.memory.model_rendering.Class = ScpuiSystem.data.memory.model_rendering.SavedIndex
+		ScpuiSystem.data.memory.model_rendering.SavedIndex = nil
+	end)
 end
 
 --- Called by the RML when the mouse moves over the tech model preview element

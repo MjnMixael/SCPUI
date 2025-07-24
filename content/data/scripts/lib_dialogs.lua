@@ -13,8 +13,8 @@ module.BUTTON_TYPE_NEGATIVE = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE
 module.BUTTON_TYPE_NEUTRAL  = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_NEUTRAL
 
 -- Regular or Death dialog style. Other styles can be added later if desired.
-module.STYLE_REGULAR         = 1
-module.STYLE_DEATH           = 2
+module.STYLE_REGULAR        = ScpuiSystem.constants.Dialog_Constants.DIALOG_STYLE_REGULAR
+module.STYLE_DEATH          = ScpuiSystem.constants.Dialog_Constants.DIALOG_STYLE_DEATH
 
 module.BUTTON_MAPPING       = {
     [module.BUTTON_TYPE_POSITIVE] = "button_positive",

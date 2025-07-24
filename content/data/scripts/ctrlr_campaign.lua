@@ -2,7 +2,6 @@
 --Controller for the Campaign Select UI
 -----------------------------------
 
-local Dialogs = require("lib_dialogs")
 local Topics = require("lib_ui_topics")
 
 local Class = require("lib_class")
@@ -181,14 +180,25 @@ function CampaignController:restart_pressed(element)
     local campaign = self:getCampaignByName(self.Selection)
     assert(campaign ~= nil)
 
-    local builder = Dialogs.new()
-    builder:title(ba.XSTR("Warning", 888284));
-    builder:text(ba.XSTR("This will cause all progress in your\nCurrent campaign to be lost", 888285))
-	builder:escape(false)
-    builder:button(Dialogs.BUTTON_TYPE_POSITIVE, ba.XSTR("Ok", 888286), true, string.sub(ba.XSTR("Ok", 888286), 1, 1))
-    builder:button(Dialogs.BUTTON_TYPE_NEGATIVE, ba.XSTR("Cancel", 888091), false, string.sub(ba.XSTR("Cancel", 888091), 1, 1))
-    builder:show(self.Document.context):continueWith(function(accepted)
-        if not accepted then
+    local title = ba.XSTR("Warning", 888284)
+    local text = ba.XSTR("This will cause all progress in your\nCurrent campaign to be lost", 888285)
+    ---@type dialog_button[]
+    local buttons = {}
+    buttons[1] = {
+        Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
+        Text = ba.XSTR("Ok", 888286),
+        Value = true,
+        Keypress = string.sub(ba.XSTR("Ok", 888286), 1, 1)
+    }
+    buttons[2] = {
+        Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_NEGATIVE,
+        Text = ba.XSTR("Cancel", 888091),
+        Value = false,
+        Keypress = string.sub(ba.XSTR("Cancel", 888091), 1, 1)
+    }
+
+    ScpuiSystem:showDialog(self, title, text, buttons, nil, nil, nil, nil, nil, function(response)
+        if not response then
             ui.playElementSound(element, "click", "error")
             return
         end

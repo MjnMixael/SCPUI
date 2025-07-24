@@ -3,7 +3,6 @@
 -----------------------------------
 
 local Topics = require("lib_ui_topics")
-local Dialogs = require("lib_dialogs")
 
 local Class = require("lib_class")
 
@@ -72,29 +71,6 @@ function LoopBriefController:deny_pressed()
 	ba.postGameEvent(ba.GameEvents["GS_EVENT_START_GAME"])
 end
 
---- Show a dialog box
---- @param text string The text to display in the dialog box
---- @param title string The title of the dialog box
-function LoopBriefController:showDialog(text, title)
-	--Create a simple dialog box with the text and title
-
-	Dialogs.new()
-		:title(title)
-		:text(text)
-		:button(Dialogs.BUTTON_TYPE_POSITIVE, ba.XSTR("Accept", 888014), true, string.sub(ba.XSTR("Accept", 888014), 1, 1))
-		:button(Dialogs.BUTTON_TYPE_NEGATIVE, ba.XSTR("Decline", 888354), false, string.sub(ba.XSTR("Decline", 888354), 1, 1))
-		:show(self.Document.context)
-		:continueWith(function(accepted)
-        if not accepted then
-            self:deny_pressed()
-            return
-        end
-        self:accept_pressed()
-    end)
-	-- Route input to our context until the user dismisses the dialog box.
-	ui.enableInput(self.Document.context)
-end
-
 --- Global keydown function handles all keypresses
 --- @param element Element The main document element
 --- @param event Event The event that was triggered
@@ -105,6 +81,13 @@ function LoopBriefController:global_keydown(element, event)
 		local text = ba.XSTR("You must either Accept or Decline before returning to the Main Hall", 888356)
 		local title = ""
 		self:showDialog(text, title)
+		ScpuiSystem:showDialog(self, title, text, nil, nil, nil, nil, nil, nil, function(response)
+            if not response then
+				self:deny_pressed()
+				return
+			end
+			self:accept_pressed()
+        end)
     end
 end
 

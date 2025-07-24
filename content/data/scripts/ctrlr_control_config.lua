@@ -3,7 +3,6 @@
 -----------------------------------
 
 local AsyncUtil = require("lib_async")
-local Dialogs = require("lib_dialogs")
 local Topics = require("lib_ui_topics")
 local Utils = require("lib_utils")
 
@@ -199,7 +198,7 @@ function ControlConfigController:getPresetInput(preset_type)
 	---@type dialog_button[]
 	local buttons = {}
 	buttons[1] = {
-		Type = Dialogs.BUTTON_TYPE_POSITIVE,
+		Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
 		Text = ba.XSTR("Okay", 888290),
 		Value = "",
 		Keypress = string.sub(ba.XSTR("Okay", 888290), 1, 1)
@@ -261,7 +260,7 @@ function ControlConfigController:newPreset(name, overwrite)
 				---@type dialog_button[]
 				local buttons = {}
 				buttons[1] = {
-					Type = Dialogs.BUTTON_TYPE_POSITIVE,
+					Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
 					Text = ba.XSTR("Okay", 888290),
 					Value = "",
 					Keypress = string.sub(ba.XSTR("Okay", 888290), 1, 1)
@@ -281,7 +280,7 @@ function ControlConfigController:newPreset(name, overwrite)
 				---@type dialog_button[]
 				local buttons = {}
 				buttons[1] = {
-					Type = Dialogs.BUTTON_TYPE_POSITIVE,
+					Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
 					Text = ba.XSTR("Okay", 888290),
 					Value = "",
 					Keypress = string.sub(ba.XSTR("Okay", 888290), 1, 1)
@@ -301,13 +300,13 @@ function ControlConfigController:newPreset(name, overwrite)
 				---@type dialog_button[]
 				local buttons = {}
 				buttons[1] = {
-					Type = Dialogs.BUTTON_TYPE_POSITIVE,
+					Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
 					Text = ba.XSTR("Yes", 888296),
 					Value = name,
 					Keypress = string.sub(ba.XSTR("Yes", 888296), 1, 1)
 				}
 				buttons[2] = {
-					Type = Dialogs.BUTTON_TYPE_NEGATIVE,
+					Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_NEGATIVE,
 					Text = ba.XSTR("No", 888298),
 					Value = false,
 					Keypress = string.sub(ba.XSTR("No", 888298), 1, 1)
@@ -370,7 +369,7 @@ function ControlConfigController:clonePreset(name, overwrite)
 			---@type dialog_button[]
 			local buttons = {}
 			buttons[1] = {
-				Type = Dialogs.BUTTON_TYPE_POSITIVE,
+				Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
 				Text = ba.XSTR("Okay", 888290),
 				Value = "",
 				Keypress = string.sub(ba.XSTR("Okay", 888290), 1, 1)
@@ -390,7 +389,7 @@ function ControlConfigController:clonePreset(name, overwrite)
 			---@type dialog_button[]
 			local buttons = {}
 			buttons[1] = {
-				Type = Dialogs.BUTTON_TYPE_POSITIVE,
+				Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
 				Text = ba.XSTR("Okay", 888290),
 				Value = "",
 				Keypress = string.sub(ba.XSTR("Okay", 888290), 1, 1)
@@ -410,13 +409,13 @@ function ControlConfigController:clonePreset(name, overwrite)
 			---@type dialog_button[]
 			local buttons = {}
 			buttons[1] = {
-				Type = Dialogs.BUTTON_TYPE_POSITIVE,
+				Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
 				Text = ba.XSTR("Yes", 888296),
 				Value = name,
 				Keypress = string.sub(ba.XSTR("Yes", 888296), 1, 1)
 			}
 			buttons[2] = {
-				Type = Dialogs.BUTTON_TYPE_NEGATIVE,
+				Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_NEGATIVE,
 				Text = ba.XSTR("No", 888298),
 				Value = false,
 				Keypress = string.sub(ba.XSTR("No", 888298), 1, 1)
@@ -444,13 +443,13 @@ function ControlConfigController:verify_delete()
 	---@type dialog_button[]
 	local buttons = {}
 	buttons[1] = {
-		Type = Dialogs.BUTTON_TYPE_POSITIVE,
+		Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
 		Text = ba.XSTR("Yes", 888296),
 		Value = true,
 		Keypress = string.sub(ba.XSTR("Yes", 888296), 1, 1)
 	}
 	buttons[2] = {
-		Type = Dialogs.BUTTON_TYPE_NEGATIVE,
+		Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_NEGATIVE,
 		Text = ba.XSTR("No", 888298),
 		Value = false,
 		Keypress = string.sub(ba.XSTR("No", 888298), 1, 1)
@@ -906,13 +905,13 @@ function ControlConfigController:clear_all()
 	---@type dialog_button[]
 	local buttons = {}
 	buttons[1] = {
-		Type = Dialogs.BUTTON_TYPE_POSITIVE,
+		Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
 		Text = ba.XSTR("Yes", 888296),
 		Value = true,
 		Keypress = string.sub(ba.XSTR("Yes", 888296), 1, 1)
 	}
 	buttons[2] = {
-		Type = Dialogs.BUTTON_TYPE_NEGATIVE,
+		Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_NEGATIVE,
 		Text = ba.XSTR("No", 888298),
 		Value = false,
 		Keypress = string.sub(ba.XSTR("No", 888298), 1, 1)
@@ -978,7 +977,7 @@ function ControlConfigController:exit_pressed(element)
 		---@type dialog_button[]
 		local buttons = {}
 		buttons[1] = {
-			Type = Dialogs.BUTTON_TYPE_POSITIVE,
+			Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
 			Text = ba.XSTR("Okay", 888290),
 			Value = true,
 			Keypress = string.sub(ba.XSTR("Okay", 888290), 1, 1)
@@ -1000,13 +999,13 @@ function ControlConfigController:exit_pressed(element)
 		---@type dialog_button[]
 		local buttons = {}
 		buttons[1] = {
-			Type = Dialogs.BUTTON_TYPE_POSITIVE,
+			Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
 			Text = ba.XSTR("Yes", 888296),
 			Value = true,
 			Keypress = string.sub(ba.XSTR("Yes", 888296), 1, 1)
 		}
 		buttons[2] = {
-			Type = Dialogs.BUTTON_TYPE_NEGATIVE,
+			Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_NEGATIVE,
 			Text = ba.XSTR("No", 888298),
 			Value = false,
 			Keypress = string.sub(ba.XSTR("No", 888298), 1, 1)
@@ -1031,7 +1030,7 @@ function ControlConfigController:exit_pressed(element)
 			---@type dialog_button[]
 			local buttons = {}
 			buttons[1] = {
-				Type = Dialogs.BUTTON_TYPE_POSITIVE,
+				Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
 				Text = ba.XSTR("Okay", 888290),
 				Value = true,
 				Keypress = string.sub(ba.XSTR("Okay", 888290), 1, 1)
@@ -1106,35 +1105,12 @@ function ControlConfigController:maybeShowDialogs()
 		local dialogInput = Utils.copy(ScpuiSystem.data.memory.control_config.NextDialog.Input) --- @type boolean
 		local dialogButtons = Utils.copy(ScpuiSystem.data.memory.control_config.NextDialog.Buttons_List) --- @type dialog_button[]
 
-		self:showDialog(dialogText, dialogTitle, dialogInput, dialogButtons)
+		ScpuiSystem:showDialog(self, dialogTitle, dialogText, dialogButtons, dialogInput, "", nil, nil, nil, function(response)
+			ScpuiSystem.data.memory.control_config.DialogResponse = response
+		end)
 
 		ScpuiSystem.data.memory.control_config.NextDialog = nil
 	end
-end
-
---- Setup a dialog prompt to show to the player
---- @param text string The text to display in the dialog
---- @param title string The title of the dialog
---- @param input boolean Whether the dialog should have an input field
---- @param buttons dialog_button[] The buttons to display in the dialog
---- @return nil
-function ControlConfigController:showDialog(text, title, input, buttons)
-	--Create a simple dialog box with the text and title
-
-	local dialog = Dialogs.new()
-		dialog:title(title)
-		dialog:text(text)
-		dialog:input(input)
-		for i = 1, #buttons do
-			dialog:button(buttons[i].Type, buttons[i].Text, buttons[i].Value, buttons[i].Keypress)
-		end
-		dialog:escape("")
-		dialog:show(self.Document.context)
-		:continueWith(function(response)
-			ScpuiSystem.data.memory.control_config.DialogResponse = response
-    end)
-	-- Route input to our context until the user dismisses the dialog box.
-	ui.enableInput(self.Document.context)
 end
 
 --- Handle the response from the dialog prompts
@@ -1233,7 +1209,7 @@ function ControlConfigController:bindKey(idx, item)
 			---@type dialog_button[]
 			local buttons = {}
 			buttons[1] = {
-				Type = Dialogs.BUTTON_TYPE_POSITIVE,
+				Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
 				Text = ba.XSTR("Okay", 888290),
 				Value = "",
 				Keypress = string.sub(ba.XSTR("Okay", 888290), 1, 1)

@@ -3,7 +3,6 @@
 -----------------------------------
 
 local AsyncUtil = require("lib_async")
-local Dialogs = require("lib_dialogs")
 local Topics = require("lib_ui_topics")
 
 local Class = require("lib_class")
@@ -512,29 +511,6 @@ function DebriefingController:startMusic()
     end, async.OnFrameExecutor)
 end
 
---- Show a dialog box
---- @param text string The text to display
---- @param title string The title of the dialog box
---- @param buttons dialog_button[] The buttons to display
---- @return nil
-function DebriefingController:showDialog(text, title, buttons)
-    --Create a simple dialog box with the text and title
-
-    local dialog = Dialogs.new()
-        dialog:title(title)
-        dialog:text(text)
-        dialog:escape("cancel")
-        for i = 1, #buttons do
-            dialog:button(buttons[i].Type, buttons[i].Text, buttons[i].Value, buttons[i].Keypress)
-        end
-        dialog:show(self.Document.context)
-        :continueWith(function(response)
-            self:dialogReponse(response)
-        end)
-    -- Route input to our context until the user dismisses the dialog box.
-    ui.enableInput(self.Document.context)
-end
-
 --- Handle the dialog response
 --- @param response string The response from the dialog box
 --- @return nil
@@ -627,25 +603,27 @@ function DebriefingController:offerSkipDialog()
 
 
     buttons[1] = {
-        Type = Dialogs.BUTTON_TYPE_NEGATIVE,
+        Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_NEGATIVE,
         Text = ba.XSTR("Do Not Skip This Mission", 888316),
         Value = "cancel",
         Keypress = self:getCharacterAtWord(ba.XSTR("Do Not Skip This Mission", 888316), 2)
     }
     buttons[2] = {
-        Type = Dialogs.BUTTON_TYPE_POSITIVE,
+        Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
         Text = ba.XSTR("Advance To The Next Mission", 888318),
         Value = "skip",
         Keypress = self:getCharacterAtWord(ba.XSTR("Advance To The Next Mission", 888318), 1)
     }
     buttons[3] = {
-        Type = Dialogs.BUTTON_TYPE_NEUTRAL,
+        Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_NEUTRAL,
         Text = ba.XSTR("Don't Show Me This Again", 888320),
         Value = "optout",
         Keypress = self:getCharacterAtWord(ba.XSTR("Don't Show Me This Again", 888320), 1)
     }
 
-    self:showDialog(text, title, buttons)
+    ScpuiSystem:showDialog(self, title, text, buttons, nil, nil, nil, nil, nil, function(response)
+        self:dialogReponse(response)
+    end)
 end
 
 --- A paging button was pressed, so set the appropriate page
@@ -759,19 +737,21 @@ function DebriefingController:replay_pressed(element)
         ---@type dialog_button[]
         local buttons = {}
         buttons[1] = {
-            Type = Dialogs.BUTTON_TYPE_NEGATIVE,
+            Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_NEGATIVE,
             Text = ba.XSTR("Cancel", 888091),
             Value = "cancel",
             Keypress = self:getCharacterAtWord(ba.XSTR("Cancel", 888091), 1)
         }
         buttons[2] = {
-            Type = Dialogs.BUTTON_TYPE_POSITIVE,
+            Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
             Text = ba.XSTR("Replay", 888325),
             Value = "replay",
             Keypress = self:getCharacterAtWord(ba.XSTR("Replay", 888325), 1)
         }
 
-        self:showDialog(text, title, buttons)
+        ScpuiSystem:showDialog(self, title, text, buttons, nil, nil, nil, nil, nil, function(response)
+            self:dialogReponse(response)
+        end)
     end
 end
 
@@ -790,25 +770,27 @@ function DebriefingController:accept_pressed(element)
         ---@type dialog_button[]
         local buttons = {}
         buttons[1] = {
-            Type = Dialogs.BUTTON_TYPE_NEUTRAL,
+            Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_NEUTRAL,
             Text = ba.XSTR("Return to Debriefing", 888329),
             Value = "cancel",
             Keypress = self:getCharacterAtWord(ba.XSTR("Return to Debriefing", 888329), 3)
         }
         buttons[2] = {
-            Type = Dialogs.BUTTON_TYPE_NEUTRAL,
+            Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_NEUTRAL,
             Text = ba.XSTR("Go to Flight Deck", 888331),
             Value = "quit",
             Keypress = self:getCharacterAtWord(ba.XSTR("Go to Flight Deck", 888331), 1)
         }
         buttons[3] = {
-            Type = Dialogs.BUTTON_TYPE_NEUTRAL,
+            Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_NEUTRAL,
             Text = ba.XSTR("Replay Mission", 888058),
             Value = "replay",
             Keypress = self:getCharacterAtWord(ba.XSTR("Replay Mission", 888058), 1)
         }
 
-        self:showDialog(text, title, buttons)
+        ScpuiSystem:showDialog(self, title, text, buttons, nil, nil, nil, nil, nil, function(response)
+            self:dialogReponse(response)
+        end)
     else
 
         Topics.debrief.accept:send()
@@ -866,44 +848,48 @@ function DebriefingController:global_keydown(element, event)
             ---@type dialog_button[]
             local buttons = {}
             buttons[1] = {
-                Type = Dialogs.BUTTON_TYPE_NEGATIVE,
+                Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_NEGATIVE,
                 Text = ba.XSTR("No", 888298),
                 Value = "cancel",
                 Keypress = self:getCharacterAtWord(ba.XSTR("No", 888298), 1)
             }
             buttons[2] = {
-                Type = Dialogs.BUTTON_TYPE_POSITIVE,
+                Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
                 Text = ba.XSTR("Yes", 888296),
                 Value = "quit",
                 Keypress = self:getCharacterAtWord(ba.XSTR("Yes", 888296), 1)
             }
 
-            self:showDialog(text, title, buttons)
+            ScpuiSystem:showDialog(self, title, text, buttons, nil, nil, nil, nil, nil, function(response)
+                self:dialogReponse(response)
+            end)
         else
             local text = ba.XSTR("Accept this mission outcome?", 888340)
             local title = ""
             ---@type dialog_button[]
             local buttons = {}
             buttons[1] = {
-                Type = Dialogs.BUTTON_TYPE_NEGATIVE,
+                Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_NEGATIVE,
                 Text = ba.XSTR("Cancel", 888091),
                 Value = "cancel",
                 Keypress = self:getCharacterAtWord(ba.XSTR("Cancel", 888091), 1)
             }
             buttons[2] = {
-                Type = Dialogs.BUTTON_TYPE_POSITIVE,
+                Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
                 Text = ba.XSTR("Yes", 888296),
                 Value = "acceptquit",
                 Keypress = self:getCharacterAtWord(ba.XSTR("Yes", 888296), 1)
             }
             buttons[3] = {
-                Type = Dialogs.BUTTON_TYPE_NEUTRAL,
+                Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_NEUTRAL,
                 Text = ba.XSTR("No, retry later", 888345),
                 Value = "quit",
                 Keypress = self:getCharacterAtWord(ba.XSTR("No, retry later", 888345), 1)
             }
 
-            self:showDialog(text, title, buttons)
+            ScpuiSystem:showDialog(self, title, text, buttons, nil, nil, nil, nil, nil, function(response)
+                self:dialogReponse(response)
+            end)
         end
     end
 end
