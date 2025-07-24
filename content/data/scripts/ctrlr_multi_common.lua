@@ -136,7 +136,14 @@ function AbstractMultiController:getPlayerStats(name)
 		Keypress = string.sub(ba.XSTR("Okay", 888290), 1, 1)
 	}
 
-	ScpuiSystem:showDialog(self, title, text, buttons, nil, nil, nil, nil, nil, function(response)
+	---@type dialog_setup
+	local params = {
+		Title = title,
+		Text = text,
+		Buttons = buttons,
+	}
+
+	ScpuiSystem:showDialog(self, params, function(response)
 		ScpuiSystem.data.memory.multiplayer_general.DialogResponse = response
 	end)
 end

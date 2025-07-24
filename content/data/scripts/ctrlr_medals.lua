@@ -484,7 +484,17 @@ function MedalsController:showResetAchievementDialog()
 		Keypress = string.sub(ba.XSTR("Okay", 888290), 1, 1)
 	}
 
-	ScpuiSystem:showDialog(self, title, text, buttons, true, "", true, nil, nil, function(response)
+	--- @type dialog_setup
+	local params = {
+		Title = title,
+		Text = text,
+		Buttons = buttons,
+		Input = true,
+		EscapeValue = "",
+		ClickEscape = true,
+	}
+
+	ScpuiSystem:showDialog(self, params, function(response)
 		ScpuiSystem:resetAchievements(response)
 		local left_el = self.Document:GetElementById("achievements_left")
 		local right_el = self.Document:GetElementById("achievements_right")

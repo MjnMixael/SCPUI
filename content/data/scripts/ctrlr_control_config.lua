@@ -1105,7 +1105,16 @@ function ControlConfigController:maybeShowDialogs()
 		local dialogInput = Utils.copy(ScpuiSystem.data.memory.control_config.NextDialog.Input) --- @type boolean
 		local dialogButtons = Utils.copy(ScpuiSystem.data.memory.control_config.NextDialog.Buttons_List) --- @type dialog_button[]
 
-		ScpuiSystem:showDialog(self, dialogTitle, dialogText, dialogButtons, dialogInput, "", nil, nil, nil, function(response)
+		---@type dialog_setup
+		local params = {
+			Title = dialogTitle,
+			Text = dialogText,
+			Buttons_List = dialogButtons,
+			Input = dialogInput,
+			EscapeValue = "",
+		}
+
+		ScpuiSystem:showDialog(self, params, function(response)
 			ScpuiSystem.data.memory.control_config.DialogResponse = response
 		end)
 

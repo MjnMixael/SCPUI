@@ -80,8 +80,14 @@ function LoopBriefController:global_keydown(element, event)
     if keys.ESCAPE then
 		local text = ba.XSTR("You must either Accept or Decline before returning to the Main Hall", 888356)
 		local title = ""
-		self:showDialog(text, title)
-		ScpuiSystem:showDialog(self, title, text, nil, nil, nil, nil, nil, nil, function(response)
+
+		--- @type dialog_setup
+		local params = {
+			Title = title,
+			Text = text,
+		}
+
+		ScpuiSystem:showDialog(self, params, function(response)
             if not response then
 				self:deny_pressed()
 				return

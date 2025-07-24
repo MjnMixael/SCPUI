@@ -6,33 +6,29 @@ local Dialogs = require("lib_dialogs")
 
 --- Shows a custom SCPUI dialog box
 --- @param context_or_caller scpui_context | Context This should be the active UI Class and contain .Document or a valid context
---- @param title string Title of the dialog (required)
---- @param text string Main text content (required)
---- @param buttons dialog_button[]? Array of button configs (optional, defaults to empty)
---- @param input boolean? Whether to show an input field (optional, defaults to false)
---- @param escape_value any? Value to return when the dialog is closed with the escape key (optional, defaults to nil)
---- @param allow_click_escape boolean? Whether to allow clicking outside the dialog to close it (optional, defaults to false)
---- @param style integer? The style of the dialog. Should be one of the dialog_constants.DIALOG_STYLE_ enumerations (optional, defaults to regular)
---- @param background string? Sets a background color for the entire screen behind the dialog (optional, defaults to clear)
+--- @param params dialog_setup The params table
 --- @param callback fun(result: string?)? Function to call when the dialog completes (optional)
 --- @return nil
-function ScpuiSystem:showDialog(context_or_caller, title, text, buttons, input, escape_value, allow_click_escape, style, background, callback)
+function ScpuiSystem:showDialog(context_or_caller, params, callback)
     local context = context_or_caller.Document and context_or_caller.Document.context or context_or_caller
     if not context then
         error("showDialog expected a RocketContext or scpui_context with .Document.context")
     end
 
+    if not params.Title then error("Missing required dialog Title") end
+    if not params.Text then error("Missing required dialog Text") end
+
 	local dialog = Dialogs.new()
 
-    dialog:style(style or ScpuiSystem.constants.Dialog_Constants.DIALOG_STYLE_REGULAR)
-    dialog:title(title)
-    dialog:text(text)
-    dialog:input(input or false)
-    dialog:escape(escape_value)
-    dialog:clickescape(allow_click_escape or false)
-    dialog:background(background or "#00000000") -- Default to clear background
+    dialog:style(params.Style or ScpuiSystem.constants.Dialog_Constants.DIALOG_STYLE_REGULAR)
+    dialog:title(params.Title)
+    dialog:text(params.Text)
+    dialog:input(params.Input or false)
+    dialog:escape(params.EscapeValue)
+    dialog:clickescape(params.ClickEscape or false)
+    dialog:background(params.BackgroundColor or "#00000000") -- Default to clear background
 
-    buttons = buttons or {}
+    local buttons = params.Buttons_List or {}
     for i = 1, #buttons do
         dialog:button(buttons[i].Type, buttons[i].Text, buttons[i].Value, buttons[i].Keypress)
     end

@@ -567,15 +567,15 @@
 
 --- SCPUI Dialog Setup
 --- @class dialog_setup
---- @field Type? integer The type of dialog to create. Always 1
---- @field Buttons_List dialog_button[] The buttons to display on the dialog
---- @field Title string The title of the dialog
---- @field Text string The text of the dialog
---- @field Input boolean True if the dialog should have an input box, false otherwise
---- @field EscapeValue boolean? True if the dialog should have an escape value, false otherwise
---- @field ClickEscape boolean? True if the dialog should have a click escape, false otherwise
---- @field Style? integer 1 for regular dialog, 2 for death dialog
---- @field BackgroundColor? string The background color of the dialog
+--- @field Type integer? The type of dialog to create. Always 1 for now
+--- @field Buttons_List dialog_button[]? Array of button configs (optional, defaults to empty)
+--- @field Title string Title of the dialog (required)
+--- @field Text string Main text content (required)
+--- @field Input boolean? Whether to show an input field (optional, defaults to false)
+--- @field EscapeValue any? Value to return when the dialog is closed with the escape key (optional, defaults to nil)
+--- @field ClickEscape boolean? Whether to allow clicking outside the dialog to close it (optional, defaults to false)
+--- @field Style integer? The style of the dialog. Should be one of the dialog_constants.DIALOG_STYLE_ enumerations (optional, defaults to regular)
+--- @field BackgroundColor string? Sets a background color for the entire screen behind the dialog (optional, defaults to clear)
 
 --- SCPUI Keywords table
 --- @class scpui_keywords

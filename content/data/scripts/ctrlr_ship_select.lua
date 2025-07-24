@@ -443,7 +443,16 @@ function ShipSelectController:show_breakout_reader()
 	ScpuiSystem.data.memory.model_rendering.SavedIndex = ScpuiSystem.data.memory.model_rendering.Class
 	ScpuiSystem.data.memory.model_rendering.Class = nil
 
-	ScpuiSystem:showDialog(self, title, text, buttons, nil, "", true, nil, nil, function(response)
+	---@type dialog_setup
+	local params = {
+		Title = title,
+		Text = text,
+		Buttons_List = buttons,
+		EscapeValue = "",
+		ClickEscape = true,
+	}
+
+	ScpuiSystem:showDialog(self, params, function(response)
 			ScpuiSystem.data.memory.model_rendering.Class = ScpuiSystem.data.memory.model_rendering.SavedIndex
 			ScpuiSystem.data.memory.model_rendering.SavedIndex = nil
     end)

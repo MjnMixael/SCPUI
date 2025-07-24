@@ -128,7 +128,14 @@ function PilotSelectController:initialize(document)
                 Keypress = string.sub(ba.XSTR("Ok", 888286), 1, 1)
             }
 
-            ScpuiSystem:showDialog(self, title, text, buttons)
+            --- @type dialog_setup
+            local params = {
+                Title = title,
+                Text = text,
+                Buttons = buttons,
+            }
+
+            ScpuiSystem:showDialog(self, params)
         end
     end
 
@@ -218,7 +225,14 @@ function PilotSelectController:commit_pressed()
             Keypress = string.sub(ba.XSTR("Ok", 888286), 1, 1)
         }
 
-        ScpuiSystem:showDialog(self, "", text, buttons)
+        --- @type dialog_setup
+        local params = {
+            Title = "",
+            Text = text,
+            Buttons = buttons,
+        }
+
+        ScpuiSystem:showDialog(self, params)
         return
     end
 
@@ -246,7 +260,14 @@ function PilotSelectController:showWrongPilotLanguageDialog()
         Keypress = string.sub(ba.XSTR("Ok", 888286), 1, 1)
     }
 
-    ScpuiSystem:showDialog(self, "", text, buttons)
+    --- @type dialog_setup
+    local params = {
+        Title = "",
+        Text = text,
+        Buttons = buttons,
+    }
+
+    ScpuiSystem:showDialog(self, params)
 end
 
 --- Set the player mode to single or multi. Returns true if the mode was changed
@@ -456,7 +477,14 @@ function PilotSelectController:actualPilotCreate(element, callsign, clone_from)
             Keypress = string.sub(ba.XSTR("No", 888298), 1, 1)
         }
 
-        ScpuiSystem:showDialog(self, title, text, buttons, nil, nil, nil, nil, nil, function(response)
+        ---@type dialog_setup
+        local params = {
+            Title = title,
+            Text = text,
+            Buttons = buttons,
+        }
+
+        ScpuiSystem:showDialog(self, params, function(response)
             if not response then
                 return
             end
@@ -526,7 +554,14 @@ function PilotSelectController:delete_player(element)
             Keypress = string.sub(ba.XSTR("Ok", 888286), 1, 1)
         }
 
-        ScpuiSystem:showDialog(self, title, text, buttons)
+        --- @type dialog_setup
+        local params = {
+            Title = title,
+            Text = text,
+            Buttons = buttons,
+        }
+
+        ScpuiSystem:showDialog(self, params)
         return
     end
 
@@ -547,7 +582,14 @@ function PilotSelectController:delete_player(element)
         Keypress = string.sub(ba.XSTR("No", 888297), 1, 1)
     }
 
-    ScpuiSystem:showDialog(self, title, text, buttons, nil, nil, nil, nil, nil, function(response)
+    ---@type dialog_setup
+    local params = {
+        Title = title,
+        Text = text,
+        Buttons = buttons,
+    }
+
+    ScpuiSystem:showDialog(self, params, function(response)
         if not response then
             return
         end
@@ -571,7 +613,15 @@ function PilotSelectController:delete_player(element)
                 Value = "",
                 Keypress = string.sub(ba.XSTR("Ok", 888286), 1, 1)
             }
-            ScpuiSystem:showDialog(self, title, text, buttons)
+
+            --- @type dialog_setup
+            local params = {
+                Title = title,
+                Text = text,
+                Buttons = buttons,
+            }
+
+            ScpuiSystem:showDialog(self, params)
             return
         end
 

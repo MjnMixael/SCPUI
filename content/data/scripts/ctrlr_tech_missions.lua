@@ -55,7 +55,13 @@ function TechMissionsController:initialize(document)
 	---Load the desired font size from the save file
 	self.Document:GetElementById("main_background"):SetClass(("base_font" .. ScpuiSystem:getFontPixelSize()), true)
 
-	ScpuiSystem:showDialog(self, "Building missions list...", "Please wait while the mission list is being built.")
+	---@type dialog_setup
+	local params = {
+		Title = "Loading missions",
+		Text = "Please wait while the mission list is being built.",
+	}
+
+	ScpuiSystem:showDialog(self, params)
 
 	async.run(function()
 		async.await(AsyncUtil.wait_for(0.001))

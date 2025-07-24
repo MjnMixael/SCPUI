@@ -503,8 +503,17 @@ function WeaponSelectController:show_breakout_reader()
 		Keypress = string.sub(ba.XSTR("Close", 888110), 1, 1)
 	}
 
+	---@type dialog_setup
+	local params = {
+		Title = title,
+		Text = text,
+		Buttons = buttons,
+		EscapeValue = "",
+		ClickEscape = true
+	}
+
 	self:pauseRendering()
-	ScpuiSystem:showDialog(self, title, text, buttons, nil, "", true, nil, nil, function(response)
+	ScpuiSystem:showDialog(self, params, function(response)
 		self:resumeRendering()
 	end)
 end
@@ -1225,8 +1234,15 @@ function WeaponSelectController:dragWeaponFromPoolToSlot(element, entry, weapon_
 				Keypress = string.sub(ba.XSTR("Ok", 888286), 1, 1)
 			}
 
+			---@type dialog_setup
+			local params = {
+				Title = title,
+				Text = text,
+				Buttons = buttons,
+			}
+
 			self:pauseRendering()
-			ScpuiSystem:showDialog(self, title, text, buttons, nil, nil, nil, nil, nil, function(response)
+			ScpuiSystem:showDialog(self, params, function(response)
 				self:resumeRendering()
 			end)
 			return
@@ -1329,8 +1345,15 @@ function WeaponSelectController:drag_from_slot_to_slot_or_pool(element, slot)
 				Keypress = string.sub(ba.XSTR("Ok", 888286), 1, 1)
 			}
 
+			---@type dialog_setup
+			local params = {
+				Title = title,
+				Text = text,
+				Buttons = buttons,
+			}
+
 			self:pauseRendering()
-			ScpuiSystem:showDialog(self, title, text, buttons, nil, nil, nil, nil, nil, function(response)
+			ScpuiSystem:showDialog(self, params, function(response)
 				self:resumeRendering()
 			end)
 			return

@@ -543,8 +543,19 @@ function TechNodeMapController:breakout_reader()
 		Keypress = string.sub(ba.XSTR("Close", 11625), 1, 1)
 	}
 
+	---@type dialog_setup
+	local params = {
+		Title = title,
+		Text = text,
+		Buttons = buttons,
+		Input = false,
+		EscapeValue = "",
+		ClickEscape = true,
+		BackgroundColor = "#00000080"
+	}
+
 	-- originally ran this also.. dialog:background("#00000080").. but ScpuiSystem's show dialog does not support it
-	ScpuiSystem:showDialog(self, title, text, buttons, false, "", true, nil, "#00000080")
+	ScpuiSystem:showDialog(self, params)
 end
 
 --- Clear the description element of all text

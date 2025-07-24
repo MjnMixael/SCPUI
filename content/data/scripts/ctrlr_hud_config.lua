@@ -283,7 +283,14 @@ function HudConfigController:savePreset(name)
 			Keypress = string.sub(ba.XSTR("Okay", 888290), 1, 1)
 		}
 
-		ScpuiSystem:showDialog(self, title, text, buttons, nil, nil, nil, nil, nil, function(response)
+		--- @type dialog_setup
+		local params = {
+			Title = title,
+			Text = text,
+			Buttons = buttons,
+		}
+
+		ScpuiSystem:showDialog(self, params, function(response)
             self:dialogReponse(response)
         end)
 	end
@@ -670,7 +677,15 @@ function HudConfigController:get_preset_input()
 		Keypress = string.sub(ba.XSTR("Okay", 888290), 1, 1)
 	}
 
-	ScpuiSystem:showDialog(self, title, text, buttons, true, nil, nil, nil, nil, function(response)
+	--- @type dialog_setup
+	local params = {
+		Title = title,
+		Text = text,
+		Buttons = buttons,
+		Input = true,
+	}
+
+	ScpuiSystem:showDialog(self, params, function(response)
 		self:dialogReponse(response)
 	end)
 end

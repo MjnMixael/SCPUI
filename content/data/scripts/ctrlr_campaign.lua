@@ -197,7 +197,14 @@ function CampaignController:restart_pressed(element)
         Keypress = string.sub(ba.XSTR("Cancel", 888091), 1, 1)
     }
 
-    ScpuiSystem:showDialog(self, title, text, buttons, nil, nil, nil, nil, nil, function(response)
+    ---@type dialog_setup
+    local params = {
+        Buttons_List = buttons,
+        Title = title,
+        Text = text,
+    }
+
+    ScpuiSystem:showDialog(self, params, function(response)
         if not response then
             ui.playElementSound(element, "click", "error")
             return

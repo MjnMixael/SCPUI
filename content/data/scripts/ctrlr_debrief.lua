@@ -621,7 +621,14 @@ function DebriefingController:offerSkipDialog()
         Keypress = self:getCharacterAtWord(ba.XSTR("Don't Show Me This Again", 888320), 1)
     }
 
-    ScpuiSystem:showDialog(self, title, text, buttons, nil, nil, nil, nil, nil, function(response)
+    ---@type dialog_setup
+    local params = {
+        Title = title,
+        Text = text,
+        Buttons = buttons,
+    }
+
+    ScpuiSystem:showDialog(self, params, function(response)
         self:dialogReponse(response)
     end)
 end
@@ -749,7 +756,14 @@ function DebriefingController:replay_pressed(element)
             Keypress = self:getCharacterAtWord(ba.XSTR("Replay", 888325), 1)
         }
 
-        ScpuiSystem:showDialog(self, title, text, buttons, nil, nil, nil, nil, nil, function(response)
+        ---@type dialog_setup
+        local params = {
+            Title = title,
+            Text = text,
+            Buttons = buttons,
+        }
+
+        ScpuiSystem:showDialog(self, params, function(response)
             self:dialogReponse(response)
         end)
     end
@@ -788,7 +802,14 @@ function DebriefingController:accept_pressed(element)
             Keypress = self:getCharacterAtWord(ba.XSTR("Replay Mission", 888058), 1)
         }
 
-        ScpuiSystem:showDialog(self, title, text, buttons, nil, nil, nil, nil, nil, function(response)
+        ---@type dialog_setup
+        local params = {
+            Title = title,
+            Text = text,
+            Buttons = buttons,
+        }
+
+        ScpuiSystem:showDialog(self, params, function(response)
             self:dialogReponse(response)
         end)
     else
@@ -860,7 +881,14 @@ function DebriefingController:global_keydown(element, event)
                 Keypress = self:getCharacterAtWord(ba.XSTR("Yes", 888296), 1)
             }
 
-            ScpuiSystem:showDialog(self, title, text, buttons, nil, nil, nil, nil, nil, function(response)
+            --- @type dialog_setup
+            local params = {
+                Title = title,
+                Text = text,
+                Buttons = buttons,
+            }
+
+            ScpuiSystem:showDialog(self, params, function(response)
                 self:dialogReponse(response)
             end)
         else
@@ -887,7 +915,14 @@ function DebriefingController:global_keydown(element, event)
                 Keypress = self:getCharacterAtWord(ba.XSTR("No, retry later", 888345), 1)
             }
 
-            ScpuiSystem:showDialog(self, title, text, buttons, nil, nil, nil, nil, nil, function(response)
+            --- @type dialog_setup
+            local params = {
+                Title = title,
+                Text = text,
+                Buttons = buttons,
+            }
+
+            ScpuiSystem:showDialog(self, params, function(response)
                 self:dialogReponse(response)
             end)
         end
