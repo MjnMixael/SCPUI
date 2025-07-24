@@ -1,5 +1,5 @@
 -- Lua Stub File
--- Generated for FSO v24.3.0.20250721_86622e1ce (FS2_Open Scripting)
+-- Generated for FSO v24.3.0 (FS2_Open Scripting)
 
 -- Lua Version: Lua 5.1.5
 ---@meta
@@ -2244,6 +2244,7 @@ multi = {}
 --- @field readIPAddressTable fun(): table # Gets the current multiplayer IP Address list as a table
 --- @field writeIPAddressTable fun(param1: table): boolean # Saves the table to the multiplayer IP Address list
 --- @field verifyIPAddress fun(param1: string): boolean # Verifies if a string is a valid IP address
+--- @field isInGameOptionsEnabled fun(): boolean # Returns whether or not in-game options flag is enabled.
 opt = {}
 
 --- Parsing: Engine parsing library
