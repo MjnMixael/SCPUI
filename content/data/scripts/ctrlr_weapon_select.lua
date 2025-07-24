@@ -708,7 +708,9 @@ function WeaponSelectController:selectShip(ship_index, callsign, slot)
 
 		self:highlightCompatibleWeapons()
 
+		-- selectShip is kinda superceded by selectSlot.. but we'll keep both for backwards compatibility for now
 		Topics.weaponselect.selectShip:send({self, ship_index})
+		Topics.weaponselect.selectSlot:send({self, slot})
 
 		if self.Overhead3d then
 			ScpuiSystem.data.memory.model_rendering.OverheadClass = ship_index

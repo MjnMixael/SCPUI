@@ -534,6 +534,8 @@ function ShipSelectController:selectShip(entry, slot)
 
 	end
 
+	Topics.shipselect.selectSlot:send({self, slot})
+
 end
 
 --- Builds the ship stats info for the selected ship and displays it

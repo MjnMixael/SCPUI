@@ -226,6 +226,7 @@ local topics = {
 		initialize = Topic(nil), --Runs arbitrary script and expects no return value. Sends the context
 		poolentry = Topic(true), --Runs arbitrary script and expects a boolean return for whether or not the pool item can be made draggable. Sends the UI context, the pool element and the entry
 		selectShip = Topic(nil), --Runs arbitrary script and expects no return value. Sends the context and the selected ship.
+		selectSlot = Topic(nil), --Runs arbitrary script and expects no return value. Sends the context and the selected slot.
 		entryInfo = Topic(nil), --Runs arbitrary script and expects no return value. Sends the ship entry and the stats UI element
 		unload = Topic(nil) --Runs arbitrary script and expects no return value. Sends the document context
 	},
@@ -233,6 +234,7 @@ local topics = {
 		initialize = Topic(nil), --Runs arbitrary script and expects no return value. Sends the context.
 		entryInfo = Topic(nil), --Runs arbitrary script and expects no return value. Sends the weapon entry and the stats UI element
 		selectShip = Topic(nil), --Runs arbitrary script and expects no return value. Sends the context and the selected ship.
+		selectSlot = Topic(nil), --Runs arbitrary script and expects no return value. Sends the context and the selected slot.
 		unload = Topic(nil) --Runs arbitrary script and expects no return value. Sends the document context
 	},
 	techroom = { --All tech room UIs!
