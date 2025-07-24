@@ -50,6 +50,17 @@ function ScpuiSystem:parseScpuiTable(data)
 			ScpuiSystem.data.table_flags.ModId = baseID
 		end
 
+		if parse.optionalString("$Default FSO Font Name:") then
+			local font_name = parse.getString()
+			local font = gr.Fonts[font_name]
+
+			if font:isValid() then
+				ScpuiSystem.data.DefaultFsoFont = font
+			else
+				ba.warning("SCPUI could not find FSO font with name '" .. font_name .. "'. Using default font instead.")
+			end
+		end
+
 		if parse.optionalString("$Hide Multiplayer:") then
 			ScpuiSystem.data.table_flags.HideMulti = parse.getBoolean()
 		end

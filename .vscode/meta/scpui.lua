@@ -505,6 +505,7 @@
 --- @field CurrentDoc ui_replacement? The currently loaded document, if any
 --- @field LoadDoc ui_replacement? The document to to use during the loading screen, if any
 --- @field Active boolean Whether or not SCPUI is active at all
+--- @field DefaultFsoFont font The default FSO font used by SCPUI to get the base pixel size from
 --- @field FontValue? number The current font value for SCPUI based on FSO's default font pixel height
 --- @field CurrentBaseFontClass? string The current base font class name that is set
 --- @field Replacements_List ui_replacement[] Table of Game states and their corresponding SCPUI documents. Key is the game state, value is a table with [markup] as the document name. This allows setting the current document to the value of the table which immediately sets the correct document to the current game state.

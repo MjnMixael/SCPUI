@@ -31,6 +31,7 @@ ScpuiSystem.constants = {
 ---@type scpui_data
 ScpuiSystem.data = {
 	Active = true,
+	DefaultFsoFont = gr.Fonts[1],
 	Replacements_List = {},
 	Backgrounds_List = {},
 	Brief_Backgrounds_List = {},

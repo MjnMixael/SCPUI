@@ -161,7 +161,7 @@ end
 --- @return string size The font size to use as a string
 function ScpuiSystem:getFontPixelSize(val)
 	local vmin = math.min(gr.getScreenWidth(), gr.getScreenHeight())
-	local font_pixels = gr.Fonts[1].Height
+	local font_pixels = ScpuiSystem.data.DefaultFsoFont.Height
 
 	local size = vmin * (font_pixels/1000) --Gets roughly 12px font on 1080p
 	-- Lua has no math.round(); math.floor(x + 0.5) is the idiomatic replacement.
