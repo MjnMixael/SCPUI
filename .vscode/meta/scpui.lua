@@ -495,6 +495,7 @@
 
 --- SCPUI Constants
 --- @class scpui_constants
+--- @field VERSION string The current version of SCPUI
 --- @field NUM_FONT_SIZES? number The number of font sizes available in the SCPUI system
 --- @field INITIALIZED? boolean Whether or not SCPUI has been initialized
 --- @field Dialog_Constants dialog_constants The dialog constants for SCPUI

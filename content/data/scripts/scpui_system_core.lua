@@ -17,6 +17,7 @@ ScpuiSystem = {}
 
 --- @type scpui_constants
 ScpuiSystem.constants = {
+	VERSION = version,
 	NUM_FONT_SIZES = 40,
 	INITIALIZED = false,
 	Dialog_Constants = {
@@ -107,7 +108,7 @@ end
 function ScpuiSystem:init()
 	assert(not ScpuiSystem.constants.INITIALIZED, "SCPUI has already been Initialized!")
 
-	ba.print("SCPUI Core (v" .. version .. ") is initializing. Standby...\n")
+	ba.print("SCPUI Core (v" .. ScpuiSystem.constants.VERSION .. ") is initializing. Standby...\n")
 
 	if (ba.isEngineVersionAtLeast(25, 0, 0) and not opt.isInGameOptionsEnabled()) then
 		ba.error("SCPUI requires in-game options to be enabled! Please enable them in your game settings table.\n")

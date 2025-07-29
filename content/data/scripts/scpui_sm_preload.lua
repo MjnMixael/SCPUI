@@ -47,7 +47,6 @@ local function drawSplash()
 	end
 
 	--save the current color and set to white
-	local r, g, b, a = gr.getColor()
 	gr.setColor(255, 255, 255, 255)
 
 	--calculate the number of dots to append
@@ -75,7 +74,7 @@ local function drawSplash()
 	if ScpuiSystem.data.memory.splash_screen.Image_List[img].A < 0 then
 		ScpuiSystem.data.memory.splash_screen.Image_List[img].A = 0
 	end
-	a = ScpuiSystem.data.memory.splash_screen.Image_List[img].A
+	local a = ScpuiSystem.data.memory.splash_screen.Image_List[img].A
 
 	local text = ScpuiSystem.data.memory.splash_screen.Text .. dots
 
@@ -92,6 +91,15 @@ local function drawSplash()
 
     -- Send the coordinates to the topic and allow modifications
     text_coords = Topics.preload.loadingTextCoords:send(text_coords)
+
+	if ScpuiSystem.data.memory.splash_screen.Index == 2 then
+		local version_string = "v" .. ScpuiSystem.constants.VERSION
+		local version_y = (gr.getCenterHeight() / 2) + (h / 2) + (gr.Fonts[1].Height + 5)
+		local version_x = (gr.getCenterWidth() / 2) + (w / 2) - gr.getStringWidth(version_string) - 5
+		gr.setColor(255, 255, 255, math.floor(a * 255 + 0.5))
+		gr.drawString(version_string, version_x, version_y)
+		gr.setColor(255, 255, 255, 255) -- Reset color to white for the next draw
+	end
 
 	if ScpuiSystem.data.table_flags.DrawSplashText then
 		if ScpuiSystem.data.memory.splash_screen.TD then
@@ -115,9 +123,6 @@ local function drawSplash()
 			end
 		end
 	end
-
-	--reset the color back to what it was.
-	gr.setColor(r, g, b, a)
 
 end
 
@@ -321,7 +326,7 @@ local function prepareSplash()
 	file = "SCPUI.png"
 
 	--scale the image
-	scale = math.min((gr.getScreenWidth() * 0.8)/gr.getImageWidth(file), (gr.getScreenHeight() * 0.8)/gr.getImageHeight(file))
+	scale = math.min((gr.getScreenWidth() * 0.5)/gr.getImageWidth(file), (gr.getScreenHeight() * 0.5)/gr.getImageHeight(file))
 
 	w = gr.getImageWidth(file) * scale
 	h = gr.getImageHeight(file) * scale
@@ -342,7 +347,7 @@ local function prepareSplash()
 	--save the text data
 	ScpuiSystem.data.memory.splash_screen.Text = text
 	ScpuiSystem.data.memory.splash_screen.TX = x - (tw / 2)
-	ScpuiSystem.data.memory.splash_screen.TY = h + (h * 0.01)
+	ScpuiSystem.data.memory.splash_screen.TY = gr.getScreenHeight() - (gr.getScreenHeight() * 0.2)
 	ScpuiSystem.data.memory.splash_screen.TW = tw
 	ScpuiSystem.data.memory.splash_screen.F = 1
 	ScpuiSystem.data.memory.splash_screen.TD = false
