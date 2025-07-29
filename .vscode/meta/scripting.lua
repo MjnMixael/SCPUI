@@ -1,5 +1,5 @@
 -- Lua Stub File
--- Generated for FSO v24.3.0 (FS2_Open Scripting)
+-- Generated for FSO v24.3.0.20250729_bbb838a33 (FS2_Open Scripting)
 
 -- Lua Version: Lua 5.1.5
 ---@meta
@@ -914,7 +914,7 @@ parse_object = {}
 --- @field Orientation orientation # The orientation,  The orientation of the parsed ship.
 --- @field ShipClass shipclass # The ship class,  The ship class of the parsed ship.
 --- @field Team team # The team,  The team of the parsed ship.
---- @field TeamColor string # The name of the team color or empty if not set or invalid.,  The team color
+--- @field TeamColor teamcolor # The team color handle or nil if not set or invalid.,  The team color. Setting the team color here will not be reflected in the mission if the ship is already created. You must do that on the Ship object instead.
 --- @field InitialHull number # The initial hull,  The initial hull percentage of this parsed ship.
 --- @field InitialShields number # The initial shields,  The initial shields percentage of this parsed ship.
 --- @field MainStatus parse_subsystem # The subsystem handle or invalid handle if there were no changes to the main status,  Gets the "subsystem" status of the ship itself. This is a special subsystem that represents the primary and secondary weapons and the AI class.
@@ -965,6 +965,8 @@ persona = {}
 --- @class persona
 --- @field Name string # The name or empty string on error,  The name of the persona
 --- @field Index number # The index of the persona,  No description available.
+--- @field CustomData table # The persona's custom data table or nil if an error occurs.,  Gets the custom data table for this persona
+--- @field hasCustomData fun(self: self): boolean # Detects whether the persona has any custom data
 --- @field isValid fun(self: self): boolean # Detect if the handle is valid
 
 -- physics: Physics handle
@@ -986,7 +988,7 @@ physics = {}
 --- @field SlideAccelerationTime number # Sliding acceleration time, or 0 if handle is invalid,  Time to accelerate to maximum slide velocity
 --- @field SlideDecelerationTime number # Sliding deceleration time, or 0 if handle is invalid,  Time to decelerate from maximum slide speed
 --- @field Velocity vector # Object velocity, or null vector if handle is invalid,  Object world velocity (World vector). Setting this value may have minimal effect unless the $Fix scripted velocity game settings flag is used.
---- @field VelocityDamping number # Damping, or 0 if handle is invalid,  Damping, the natural period (1 / omega) of the dampening effects on top of the acceleration model. Called 'side_slip_time_const' in code base. 
+--- @field VelocityDamping number # Damping, or 0 if handle is invalid,  Damping, the natural period (1 / omega) of the dampening effects on top of the acceleration model. Called 'side_slip_time_const' in code base.
 --- @field VelocityDesired vector # Desired velocity, or null vector if handle is invalid,  Desired velocity (World vector)
 --- @field VelocityMax vector # Maximum velocity, or null vector if handle is invalid,  Object max local velocity (Local vector)
 --- @field VerticalThrust number # Vertical thrust amount, or 0 if handle is invalid,  Vertical thrust amount (-1 - 1), used primarily for thruster graphics and does not affect any physical behavior
@@ -1150,6 +1152,7 @@ ship = {}
 --- @field Target object # Target object, or invalid object handle if no target or ship handle is invalid,  Target of ship. Value may also be a deriviative of the 'object' class, such as 'ship'.
 --- @field TargetSubsystem subsystem # Target subsystem, or invalid subsystem handle if no target or ship handle is invalid,  Target subsystem of ship.
 --- @field Team team # Ship team, or invalid team handle if ship handle is invalid,  Ship's team
+--- @field TeamColor teamcolor # The team color handle or nil if not set or invalid.,  The team color. Note that setting the team color here is instant. If you need a fade, then use the sexp.
 --- @field PersonaIndex number # The index of the persona from messages.tbl, 0 if no persona is set,  # DEPRECATED 25.0.0: Deprecated in favor of Persona --  Persona index
 --- @field Persona persona # Persona handle or invalid handle on error,  The persona of the ship, if any
 --- @field Textures modelinstancetextures # Ship textures, or invalid shiptextures handle if ship handle is invalid,  Gets ship textures
@@ -1180,8 +1183,8 @@ ship = {}
 --- @field turnTowardsOrientation fun(self: self, target: orientation, respectDifficulty?: boolean, turnrateModifier?: vector): nil # turns the ship towards the specified orientation during this frame
 --- @field getCenterPosition fun(self: self): vector # Returns the position of the ship's physical center, which may not be the position of the origin of the model
 --- @field kill fun(self: self, Killer?: object, Hitpos?: vector): boolean # Kills the ship. Set "Killer" to a ship (or a weapon fired by that ship) to credit it for the kill in the mission log. Set it to the ship being killed to self-destruct. Set "Hitpos" to the world coordinates of the weapon impact.
---- @field checkVisibility fun(self: self, viewer?: ship): number # checks if a ship can appear on the viewer's radar. If a viewer is not provided it assumes the viewer is the player. 
---- @field addShipEffect fun(self: self, name: string, durationMillis: number): boolean # Activates an effect for this ship. Effect names are defined in Post_processing.tbl, and need to be implemented in the main shader. This functions analogous to the ship-effect sexp. NOTE: only one effect can be active at any time, adding new effects will override effects already in progress. 
+--- @field checkVisibility fun(self: self, viewer?: ship): number # checks if a ship can appear on the viewer's radar. If a viewer is not provided it assumes the viewer is the player.
+--- @field addShipEffect fun(self: self, name: string, durationMillis: number): boolean # Activates an effect for this ship. Effect names are defined in Post_processing.tbl, and need to be implemented in the main shader. This functions analogous to the ship-effect sexp. NOTE: only one effect can be active at any time, adding new effects will override effects already in progress.
 --- @field hasShipExploded fun(self: self): number # Checks if the ship explosion event has already happened
 --- @field isArrivingWarp fun(self: self): boolean # Checks if the ship is arriving via warp.  This includes both stage 1 (when the portal is opening) and stage 2 (when the ship is moving through the portal).
 --- @field isDepartingWarp fun(self: self): boolean # Checks if the ship is departing via warp
@@ -1196,11 +1199,11 @@ ship = {}
 --- @field doManeuver fun(self: self, Duration: number, Heading: number, Pitch: number, Bank: number, ApplyAllRotation: boolean, Vertical: number, Sideways: number, Forward: number, ApplyAllMovement: boolean, ManeuverBitfield: number): boolean # Sets ship maneuver over the defined time period
 --- @field triggerAnimation fun(self: self, Type: string, Subtype?: number, Forwards?: boolean, Instant?: boolean): boolean # DEPRECATED 22.0.0: To account for the new animation tables, please use triggerSubmodelAnimation() --  # Triggers an animation. Type is the string name of the animation type, Subtype is the subtype number, such as weapon bank #, Forwards and Instant are boolean, defaulting to true & false respectively.<br><strong>IMPORTANT: Function is in testing and should not be used with official mod releases</strong>
 --- @field triggerSubmodelAnimation fun(self: self, type: string, triggeredBy: string, forwards?: boolean, resetOnStart?: boolean, completeInstant?: boolean, pause?: boolean): boolean # Triggers an animation. If used often with the same type / triggeredBy, consider using getSubmodelAnimation for performance reasons. Type is the string name of the animation type, triggeredBy is a closer specification which animation should trigger. See *-anim.tbm specifications. Forwards controls the direction of the animation. ResetOnStart will cause the animation to play from its initial state, as opposed to its current state. CompleteInstant will immediately complete the animation. Pause will instead stop the animation at the current state.
---- @field getSubmodelAnimation fun(self: self, type: string, triggeredBy: string): animation_handle # Gets an animation handle. Type is the string name of the animation type, triggeredBy is a closer specification which animation should trigger. See *-anim.tbm specifications. 
---- @field stopLoopingSubmodelAnimation fun(self: self, type: string, triggeredBy: string): boolean # Stops a currently looping animation after it has finished its current loop. If used often with the same type / triggeredBy, consider using getSubmodelAnimation for performance reasons. Type is the string name of the animation type, triggeredBy is a closer specification which animation was triggered. See *-anim.tbm specifications. 
+--- @field getSubmodelAnimation fun(self: self, type: string, triggeredBy: string): animation_handle # Gets an animation handle. Type is the string name of the animation type, triggeredBy is a closer specification which animation should trigger. See *-anim.tbm specifications.
+--- @field stopLoopingSubmodelAnimation fun(self: self, type: string, triggeredBy: string): boolean # Stops a currently looping animation after it has finished its current loop. If used often with the same type / triggeredBy, consider using getSubmodelAnimation for performance reasons. Type is the string name of the animation type, triggeredBy is a closer specification which animation was triggered. See *-anim.tbm specifications.
 --- @field setAnimationSpeed fun(self: self, type: string, triggeredBy: string, speedMultiplier?: number): nil # Sets the speed multiplier at which an animation runs. If used often with the same type / triggeredBy, consider using getSubmodelAnimation for performance reasons. Anything other than 1 will not work in multiplayer. Type is the string name of the animation type, triggeredBy is a closer specification which animation should trigger. See *-anim.tbm specifications.
 --- @field getSubmodelAnimationTime fun(self: self, type: string, triggeredBy: string): number # Gets time that animation will be done. If used often with the same type / triggeredBy, consider using getSubmodelAnimation for performance reasons.
---- @field updateSubmodelMoveable fun(self: self, name: string, values: table): boolean # Updates a moveable animation. Name is the name of the moveable. For what values needs to contain, please refer to the table below, depending on the type of the moveable:Orientation:  	Three numbers, x, y, z rotation respectively, in degrees  Rotation:  	Three numbers, x, y, z rotation respectively, in degrees  Axis Rotation:  	One number, rotation angle in degrees  Inverse Kinematics:  	Three required numbers: x, y, z position target relative to base, in 1/100th meters  	Three optional numbers: x, y, z rotation target relative to base, in degrees  
+--- @field updateSubmodelMoveable fun(self: self, name: string, values: table): boolean # Updates a moveable animation. Name is the name of the moveable. For what values needs to contain, please refer to the table below, depending on the type of the moveable:Orientation:  	Three numbers, x, y, z rotation respectively, in degrees  Rotation:  	Three numbers, x, y, z rotation respectively, in degrees  Axis Rotation:  	One number, rotation angle in degrees  Inverse Kinematics:  	Three required numbers: x, y, z position target relative to base, in 1/100th meters  	Three optional numbers: x, y, z rotation target relative to base, in degrees
 --- @field warpIn fun(self: self): boolean # Warps ship in
 --- @field warpOut fun(self: self): boolean # Warps ship out
 --- @field canWarp fun(self: self): boolean # Checks whether ship has a working subspace drive, is allowed to use it, and is not disabled or limited by subsystem strength.
@@ -1277,7 +1280,7 @@ shipclass = {}
 --- @field Type shiptype # Ship type, or invalid handle if shipclass handle is invalid,  Ship class type
 --- @field AltName string # Alternate string or empty string if handle is invalid,  Alternate name for ship class
 --- @field VelocityMax vector # Maximum velocity, or null vector if handle is invalid,  Ship's lateral and forward speeds
---- @field VelocityDamping number # Damping, or 0 if handle is invalid,  Damping, the natural period (1 / omega) of the dampening effects on top of the acceleration model. 
+--- @field VelocityDamping number # Damping, or 0 if handle is invalid,  Damping, the natural period (1 / omega) of the dampening effects on top of the acceleration model.
 --- @field RearVelocityMax number # Speed, or 0 if handle is invalid,  The maximum rear velocity of the ship
 --- @field ForwardAccelerationTime number # Forward acceleration time, or 0 if handle is invalid,  Forward acceleration time
 --- @field ForwardDecelerationTime number # Forward deceleration time, or 0 if handle is invalid,  Forward deceleration time
@@ -1298,10 +1301,10 @@ shipclass = {}
 --- @field hasCustomStrings fun(self: self): boolean # Detects whether the ship has any custom strings
 --- @field isValid fun(self: self): boolean # Detects whether handle is valid
 --- @field isInTechroom fun(self: self): boolean # Gets whether or not the ship class is available in the techroom
---- @field renderTechModel fun(self: self, X1: number, Y1: number, X2: number, Y2: number, RotationPercent?: number, PitchPercent?: number, BankPercent?: number, Zoom?: number, Lighting?: boolean, TeamColor?: string): boolean # Draws ship model as if in techroom. True for regular lighting, false for flat lighting.
---- @field renderTechModel2 fun(self: self, X1: number, Y1: number, X2: number, Y2: number, Orientation?: orientation, Zoom?: number, TeamColor?: string): boolean # Draws ship model as if in techroom
---- @field renderSelectModel fun(self: self, restart: boolean, x: number, y: number, width?: number, height?: number, currentEffectSetting?: number, zoom?: number, TeamColor?: string): boolean # Draws the 3D select ship model with the chosen effect at the specified coordinates. Restart should be true on the first frame this is called and false on subsequent frames. Valid selection effects are 1 (fs1) or 2 (fs2), defaults to the mod setting or the model's setting. Zoom is a multiplier to the model's closeup_zoom value.
---- @field renderOverheadModel fun(self: self, x: number, y: number, width?: number, height?: number, param6?: number | table, selectedWeapon?: number, hoverSlot?: number, bank1_x?: number, bank1_y?: number, bank2_x?: number, bank2_y?: number, bank3_x?: number, bank3_y?: number, bank4_x?: number, bank4_y?: number, bank5_x?: number, bank5_y?: number, bank6_x?: number, bank6_y?: number, bank7_x?: number, bank7_y?: number, style?: number, TeamColor?: string): boolean # Draws the 3D overhead ship model with the lines pointing from bank weapon selections to bank firepoints. SelectedSlot refers to loadout ship slots 1-12 where wing 1 is 1-4, wing 2 is 5-8, and wing 3 is 9-12. SelectedWeapon is the index into weapon classes. HoverSlot refers to the bank slots 1-7 where 1-3 are primaries and 4-6 are secondaries. Lines will be drawn from any bank containing the SelectedWeapon to the firepoints on the model of that bank. Similarly, lines will be drawn from the bank defined by HoverSlot to the firepoints on the model of that slot. Line drawing for HoverSlot takes precedence over line drawing for SelectedWeapon. Set either or both to -1 to stop line drawing. The bank coordinates are the coordinates from which the lines for that bank will be drawn. It is expected that primary slots will be on the left of the ship model and secondaries will be on the right. The lines have a hard-coded curve expecing to be drawn from those directions. Style can be 0 or 1. 0 for the ship to be drawn stationary from top down, 1 for the ship to be rotating.
+--- @field renderTechModel fun(self: self, X1: number, Y1: number, X2: number, Y2: number, RotationPercent?: number, PitchPercent?: number, BankPercent?: number, Zoom?: number, Lighting?: boolean, TeamColor?: teamcolor): boolean # Draws ship model as if in techroom. True for regular lighting, false for flat lighting.
+--- @field renderTechModel2 fun(self: self, X1: number, Y1: number, X2: number, Y2: number, Orientation?: orientation, Zoom?: number, TeamColor?: teamcolor): boolean # Draws ship model as if in techroom
+--- @field renderSelectModel fun(self: self, restart: boolean, x: number, y: number, width?: number, height?: number, currentEffectSetting?: number, zoom?: number, TeamColor?: teamcolor): boolean # Draws the 3D select ship model with the chosen effect at the specified coordinates. Restart should be true on the first frame this is called and false on subsequent frames. Valid selection effects are 1 (fs1) or 2 (fs2), defaults to the mod setting or the model's setting. Zoom is a multiplier to the model's closeup_zoom value.
+--- @field renderOverheadModel fun(self: self, x: number, y: number, width?: number, height?: number, param6?: number | table, selectedWeapon?: number, hoverSlot?: number, bank1_x?: number, bank1_y?: number, bank2_x?: number, bank2_y?: number, bank3_x?: number, bank3_y?: number, bank4_x?: number, bank4_y?: number, bank5_x?: number, bank5_y?: number, bank6_x?: number, bank6_y?: number, bank7_x?: number, bank7_y?: number, style?: number, TeamColor?: teamcolor): boolean # Draws the 3D overhead ship model with the lines pointing from bank weapon selections to bank firepoints. SelectedSlot refers to loadout ship slots 1-12 where wing 1 is 1-4, wing 2 is 5-8, and wing 3 is 9-12. SelectedWeapon is the index into weapon classes. HoverSlot refers to the bank slots 1-7 where 1-3 are primaries and 4-6 are secondaries. Lines will be drawn from any bank containing the SelectedWeapon to the firepoints on the model of that bank. Similarly, lines will be drawn from the bank defined by HoverSlot to the firepoints on the model of that slot. Line drawing for HoverSlot takes precedence over line drawing for SelectedWeapon. Set either or both to -1 to stop line drawing. The bank coordinates are the coordinates from which the lines for that bank will be drawn. It is expected that primary slots will be on the left of the ship model and secondaries will be on the right. The lines have a hard-coded curve expecing to be drawn from those directions. Style can be 0 or 1. 0 for the ship to be drawn stationary from top down, 1 for the ship to be rotating.
 --- @field isModelLoaded fun(self: self, Load?: boolean): boolean # Checks if the model used for this shipclass is loaded or not and optionally loads the model, which might be a slow operation.
 --- @field isPlayerAllowed fun(self: self): boolean # Detects whether the ship has the player allowed flag
 --- @field getShipClassIndex fun(self: self): number # Gets the index value of the ship class
@@ -1501,6 +1504,14 @@ team = {}
 --- @field isValid fun(self: self): boolean # Detects whether handle is valid
 --- @field getBreedName fun(self: self): string # Gets the FreeSpace type name
 --- @field attacks fun(self: self, param2: team): boolean # Checks the IFF status of another team
+
+-- teamcolor: Team color handle
+teamcolor = {}
+--- @class teamcolor
+--- @field Name string # Team color name, or empty string if handle is invalid,  The team color name
+--- @field BaseColor color # Team color base color, or nil if handle is invalid,  Team color base color
+--- @field StripeColor color # Team color stripe color, or nil if handle is invalid,  Team color stripe color
+--- @field isValid fun(self: self): boolean # Detects whether handle is valid
 
 -- texture: Texture handle
 texture = {}
@@ -2215,8 +2226,8 @@ hu = {}
 --- @field setMusicScore fun(score: enumeration, name: string): nil # Sets the music.tbl entry for the specified mission music score
 --- @field hasLineOfSight fun(from: vector, to: vector, excludedObjects?: table, testForShields?: boolean, testForHull?: boolean, threshold?: number): boolean # Checks whether the to-position is in line of sight from the from-position, disregarding specific excluded objects and objects with a radius of less then threshold.
 --- @field getLineOfSightFirstIntersect fun(from: vector, to: vector, excludedObjects?: table, testForShields?: boolean, testForHull?: boolean, threshold?: number): boolean, number, object # Checks whether the to-position is in line of sight from the from-position and returns the distance and intersecting object to the first interruption of the line of sight, disregarding specific excluded objects and objects with a radius of less then threshold.
---- @field getSpecialSubmodelAnimation fun(target: string, type: string, triggeredBy: string): animation_handle # Gets an animation handle. Target is the object that should be animated (one of "cockpit", "skybox"), type is the string name of the animation type, triggeredBy is a closer specification which animation should trigger. See *-anim.tbm specifications. 
---- @field updateSpecialSubmodelMoveable fun(target: string, name: string, values: table): boolean # Updates a moveable animation. Name is the name of the moveable. For what values needs to contain, please refer to the table below, depending on the type of the moveable:Orientation:  	Three numbers, x, y, z rotation respectively, in degrees  Rotation:  	Three numbers, x, y, z rotation respectively, in degrees  Axis Rotation:  	One number, rotation angle in degrees  Inverse Kinematics:  	Three required numbers: x, y, z position target relative to base, in 1/100th meters  	Three optional numbers: x, y, z rotation target relative to base, in degrees  
+--- @field getSpecialSubmodelAnimation fun(target: string, type: string, triggeredBy: string): animation_handle # Gets an animation handle. Target is the object that should be animated (one of "cockpit", "skybox"), type is the string name of the animation type, triggeredBy is a closer specification which animation should trigger. See *-anim.tbm specifications.
+--- @field updateSpecialSubmodelMoveable fun(target: string, name: string, values: table): boolean # Updates a moveable animation. Name is the name of the moveable. For what values needs to contain, please refer to the table below, depending on the type of the moveable:Orientation:  	Three numbers, x, y, z rotation respectively, in degrees  Rotation:  	Three numbers, x, y, z rotation respectively, in degrees  Axis Rotation:  	One number, rotation angle in degrees  Inverse Kinematics:  	Three required numbers: x, y, z position target relative to base, in 1/100th meters  	Three optional numbers: x, y, z rotation target relative to base, in degrees
 --- @field LuaEnums LuaEnum[] # Gets a handle of a Lua Enum - Lua Enum handle or invalid handle on error
 --- @field addLuaEnum fun(name: string): LuaEnum # Adds an enum with the given name if it's unique.
 --- @field LuaSEXPs LuaSEXP[] # Gets a handle of a Lua SEXP - Lua SEXP handle or invalid handle on error
@@ -2273,6 +2284,7 @@ parse = {}
 --- @field isDecalSystemActive fun(): boolean # Returns whether the decal system is able to work on the current machine
 --- @field DecalOptionActive boolean # true if active, false if inactive,  Gets or sets whether the decal option is active (note, decals will only work if the decal system is able to work on the current machine)
 --- @field WingFormations wingformation[] # Array of wing formations - Wing formation handle, or invalid handle if name is invalid
+--- @field TeamColors teamcolor[] # Array of team colors - Team color handle, or invalid handle if name is invalid
 tb = {}
 
 --- Testing: Experimental or testing stuff
@@ -2421,7 +2433,7 @@ ui.FictionViewer = {}
 --- @field sendWeaponRequestPacket fun(FromBank: number, ToBank: number, fromPoolWepIdx: number, toPoolWepIdx: number, shipSlot: number): nil # Sends a request to the host to change a ship slot.
 ui.ShipWepSelect = {}
 
---- Credits: 
+--- Credits:
 --- @class Credits
 --- @field Music string # The music filename,  The credits music filename
 --- @field NumImages number # The number of images,  The total number of credits images
