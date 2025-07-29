@@ -40,31 +40,16 @@ function HudConfigController:init()
 	self.PreviousAlphaValue = 0 --- @type number Previous alpha value
 	self.PromptControl = nil --- @type number Used to control the prompt dialog
 
-	--- Setup our built-in presets
-	--green
-	self.PresetColors[1] = {
-		Name = "green",
-		R = 0,
-		G = 255,
-		B = 0,
-		A = 255
-	}
-	--amber
-	self.PresetColors[2] = {
-		Name = "amber",
-		R = 255,
-		G = 297,
-		B = 0,
-		A = 255
-	}
-	--blue
-	self.PresetColors[3] = {
-		Name = "blue",
-		R = 67,
-		G = 123,
-		B = 203,
-		A = 255
-	}
+	--- Initialize the color presets from the UI config
+	for i = 1, #ui.HudConfig.GaugeColorPresets do
+		self.PresetColors[i] = {
+			Name = ui.HudConfig.GaugeColorPresets[i].Name,
+			R = ui.HudConfig.GaugeColorPresets[i].Color.Red,
+			G = ui.HudConfig.GaugeColorPresets[i].Color.Green,
+			B = ui.HudConfig.GaugeColorPresets[i].Color.Blue,
+			A = ui.HudConfig.GaugeColorPresets[i].Color.Alpha
+		}
+	end
 
 	--- Make sure to clear the memory data
 	ScpuiSystem.data.memory.hud_config = {
