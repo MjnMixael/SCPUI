@@ -42,3 +42,25 @@ function ScpuiSystem:showDialog(context_or_caller, params, callback)
 	-- Route input to our context until the user dismisses the dialog box.
 	ui.enableInput(context)
 end
+
+--- Shows a simple SCPUI dialog box with a single "OK" button and no callback
+--- @param context_or_caller scpui_context | Context This should be the active UI Class and contain .Document or a valid context
+--- @param title string The title of the dialog
+--- @param text string The text content of the dialog
+--- @return nil
+function ScpuiSystem:showSimpleDialog(context_or_caller, title, text)
+    local context = context_or_caller.Document and context_or_caller.Document.context or context_or_caller
+    if not context then
+        error("showSimpleDialog expected a RocketContext or scpui_context with .Document.context")
+    end
+
+    local params = {
+        Title = title,
+        Text = text,
+        Buttons_List = {
+            { Type = Dialogs.BUTTON_TYPE_POSITIVE, Text = ba.XSTR("Ok", 888286), Value = true, Keypress = string.sub(ba.XSTR("Ok", 888286), 1, 1) }
+        }
+    }
+
+    self:showDialog(context, params)
+end
