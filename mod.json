@@ -19,7 +19,7 @@
   "attachments": [],
   "first_release": null,
   "last_update": null,
-  "cmdline": "-output_scripting",
+  "cmdline": "-output_scripting -output_script_lua",
   "mod_flag": [
     "UITest",
     "MVPS"
@@ -35,7 +35,7 @@
       "dependencies": [
         {
           "id": "FSO",
-          "version": "24.3.0-20250721",
+          "version": "24.3.0-20250729",
           "packages": []
         },
         {
