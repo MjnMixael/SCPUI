@@ -488,7 +488,7 @@ function MedalsController:showResetAchievementDialog()
 	local params = {
 		Title = title,
 		Text = text,
-		Buttons = buttons,
+		Buttons_List = buttons,
 		Input = true,
 		EscapeValue = "",
 		ClickEscape = true,

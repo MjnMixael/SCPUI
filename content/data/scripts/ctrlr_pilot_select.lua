@@ -132,7 +132,7 @@ function PilotSelectController:initialize(document)
             local params = {
                 Title = title,
                 Text = text,
-                Buttons = buttons,
+                Buttons_List = buttons,
             }
 
             ScpuiSystem:showDialog(self, params)
@@ -229,7 +229,7 @@ function PilotSelectController:commit_pressed()
         local params = {
             Title = "",
             Text = text,
-            Buttons = buttons,
+            Buttons_List = buttons,
         }
 
         ScpuiSystem:showDialog(self, params)
@@ -264,7 +264,7 @@ function PilotSelectController:showWrongPilotLanguageDialog()
     local params = {
         Title = "",
         Text = text,
-        Buttons = buttons,
+        Buttons_List = buttons,
     }
 
     ScpuiSystem:showDialog(self, params)
@@ -481,7 +481,7 @@ function PilotSelectController:actualPilotCreate(element, callsign, clone_from)
         local params = {
             Title = title,
             Text = text,
-            Buttons = buttons,
+            Buttons_List = buttons,
         }
 
         ScpuiSystem:showDialog(self, params, function(response)
@@ -558,7 +558,7 @@ function PilotSelectController:delete_player(element)
         local params = {
             Title = title,
             Text = text,
-            Buttons = buttons,
+            Buttons_List = buttons,
         }
 
         ScpuiSystem:showDialog(self, params)
@@ -586,7 +586,7 @@ function PilotSelectController:delete_player(element)
     local params = {
         Title = title,
         Text = text,
-        Buttons = buttons,
+        Buttons_List = buttons,
     }
 
     ScpuiSystem:showDialog(self, params, function(response)
@@ -618,7 +618,7 @@ function PilotSelectController:delete_player(element)
             local params = {
                 Title = title,
                 Text = text,
-                Buttons = buttons,
+                Buttons_List = buttons,
             }
 
             ScpuiSystem:showDialog(self, params)

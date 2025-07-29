@@ -287,7 +287,7 @@ function HudConfigController:savePreset(name)
 		local params = {
 			Title = title,
 			Text = text,
-			Buttons = buttons,
+			Buttons_List = buttons,
 		}
 
 		ScpuiSystem:showDialog(self, params, function(response)
@@ -681,7 +681,7 @@ function HudConfigController:get_preset_input()
 	local params = {
 		Title = title,
 		Text = text,
-		Buttons = buttons,
+		Buttons_List = buttons,
 		Input = true,
 	}
 

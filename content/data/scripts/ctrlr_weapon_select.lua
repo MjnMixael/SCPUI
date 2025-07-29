@@ -507,7 +507,7 @@ function WeaponSelectController:show_breakout_reader()
 	local params = {
 		Title = title,
 		Text = text,
-		Buttons = buttons,
+		Buttons_List = buttons,
 		EscapeValue = "",
 		ClickEscape = true
 	}
@@ -1238,7 +1238,7 @@ function WeaponSelectController:dragWeaponFromPoolToSlot(element, entry, weapon_
 			local params = {
 				Title = title,
 				Text = text,
-				Buttons = buttons,
+				Buttons_List = buttons,
 			}
 
 			self:pauseRendering()
@@ -1349,7 +1349,7 @@ function WeaponSelectController:drag_from_slot_to_slot_or_pool(element, slot)
 			local params = {
 				Title = title,
 				Text = text,
-				Buttons = buttons,
+				Buttons_List = buttons,
 			}
 
 			self:pauseRendering()

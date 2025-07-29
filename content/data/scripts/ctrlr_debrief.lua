@@ -625,7 +625,7 @@ function DebriefingController:offerSkipDialog()
     local params = {
         Title = title,
         Text = text,
-        Buttons = buttons,
+        Buttons_List = buttons,
     }
 
     ScpuiSystem:showDialog(self, params, function(response)
@@ -760,7 +760,7 @@ function DebriefingController:replay_pressed(element)
         local params = {
             Title = title,
             Text = text,
-            Buttons = buttons,
+            Buttons_List = buttons,
         }
 
         ScpuiSystem:showDialog(self, params, function(response)
@@ -806,7 +806,7 @@ function DebriefingController:accept_pressed(element)
         local params = {
             Title = title,
             Text = text,
-            Buttons = buttons,
+            Buttons_List = buttons,
         }
 
         ScpuiSystem:showDialog(self, params, function(response)
@@ -885,7 +885,7 @@ function DebriefingController:global_keydown(element, event)
             local params = {
                 Title = title,
                 Text = text,
-                Buttons = buttons,
+                Buttons_List = buttons,
             }
 
             ScpuiSystem:showDialog(self, params, function(response)
@@ -919,7 +919,7 @@ function DebriefingController:global_keydown(element, event)
             local params = {
                 Title = title,
                 Text = text,
-                Buttons = buttons,
+                Buttons_List = buttons,
             }
 
             ScpuiSystem:showDialog(self, params, function(response)

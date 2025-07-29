@@ -821,7 +821,7 @@ function TechDatabaseController:show_breakout_reader()
 	local params = {
 		Title = title,
 		Text = text,
-		Buttons = buttons,
+		Buttons_List = buttons,
 		EscapeValue = "",
 		ClickEscape = true,
 	}

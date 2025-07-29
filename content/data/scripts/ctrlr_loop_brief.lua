@@ -81,10 +81,26 @@ function LoopBriefController:global_keydown(element, event)
 		local text = ba.XSTR("You must either Accept or Decline before returning to the Main Hall", 888356)
 		local title = ""
 
+		--- @type dialog_button[]
+		local buttons = {}
+		buttons[1] = {
+			Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_POSITIVE,
+			Text = ba.XSTR("Accept", 888014),
+			Value = true,
+			Keypress = string.sub(ba.XSTR("Accept", 888014), 1, 1)
+		}
+		buttons[2] = {
+			Type = ScpuiSystem.constants.Dialog_Constants.BUTTON_TYPE_NEGATIVE,
+			Text = ba.XSTR("Decline", 888354),
+			Value = false,
+			Keypress = string.sub(ba.XSTR("Decline", 888354), 1, 1)
+		}
+
 		--- @type dialog_setup
 		local params = {
 			Title = title,
 			Text = text,
+			Buttons_List = buttons,
 		}
 
 		ScpuiSystem:showDialog(self, params, function(response)

@@ -547,7 +547,7 @@ function TechNodeMapController:breakout_reader()
 	local params = {
 		Title = title,
 		Text = text,
-		Buttons = buttons,
+		Buttons_List = buttons,
 		Input = false,
 		EscapeValue = "",
 		ClickEscape = true,

@@ -140,7 +140,7 @@ function AbstractMultiController:getPlayerStats(name)
 	local params = {
 		Title = title,
 		Text = text,
-		Buttons = buttons,
+		Buttons_List = buttons,
 	}
 
 	ScpuiSystem:showDialog(self, params, function(response)
