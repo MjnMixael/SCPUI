@@ -315,6 +315,39 @@ function ScpuiSystem:loadPlugins()
     end
 end
 
+--- Makes all loaded methods in ScpuiSystem read-only
+--- @return nil
+function ScpuiSystem:finalizeMethods()
+	assert(not ScpuiSystem.constants.INITIALIZED, "SCPUI has already been Initialized!")
+
+	local locked = {}
+	local rawSystem = ScpuiSystem
+
+	for k, v in pairs(rawSystem) do
+		if type(v) == "function" then
+			locked[k] = true
+		end
+	end
+
+	local proxy = {}
+	local mt = {
+		__index = rawSystem,
+		__newindex = function(_, k, v)
+			if locked[k] then
+				ba.warning("Attempt to overwrite locked SCPUI method: " .. tostring(k) .. ". New value will be ignored.")
+			else
+				rawSystem[k] = v
+			end
+		end,
+		__pairs = function()
+			return pairs(rawSystem)
+		end
+	}
+
+	setmetatable(proxy, mt)
+	ScpuiSystem = proxy
+end
+
 --- Get the current SCPUI document definition
 --- @param state string The current state key
 --- @return ui_replacement? The current SCPUI document definition
@@ -857,7 +890,7 @@ function ScpuiSystem:finalizeConstants()
 		local mt = {
 			__index = tbl,
 			__newindex = function(_, k, _)
-				ba.error("Attempt to modify read-only field '" .. tostring(k) .. "'")
+				ba.warning("Attempt to modify read-only SCPUI field '" .. tostring(k) .. "', new value will be ignored.")
 			end,
 			__pairs = function()
 				return pairs(tbl)
@@ -883,6 +916,7 @@ end
 --- Completes the initialization of the SCPUI system. Runs after the preload methods are complete. (After the splash screens)
 --- @return nil
 function ScpuiSystem:completeInitialization()
+	ScpuiSystem:finalizeMethods()
 	ScpuiSystem:finalizeConstants()
 
 	ba.print("SCPUI initialization complete!\n")
