@@ -121,6 +121,17 @@ function ScpuiSystem:init()
 
 	self:loadPlugins()
 
+	-- Check that the default font scales correctly
+	if ba.isEngineVersionAtLeast(25, 0, 0) and ScpuiSystem.data.DefaultFsoFont then
+		if not ScpuiSystem.data.DefaultFsoFont:hasAutoSize() then
+			ba.error("Default font for SCPUI needs to have auto-sizing enabled! (+Auto Size: true)\n")
+		end
+
+		if not ScpuiSystem.data.DefaultFsoFont:hasCanScale() then
+			ba.error("Default font for SCPUI needs to have scaling enabled! (+Can Scale: true)\n")
+		end
+	end
+
 	-- Set up the in-game font multiplier option if it exists
 	if ba.isEngineVersionAtLeast(24, 3, 0) then
 		---@return option | nil
