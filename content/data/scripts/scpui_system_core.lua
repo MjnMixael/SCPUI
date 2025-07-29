@@ -208,6 +208,35 @@ function ScpuiSystem:loadExtensions()
         return
     end
 
+	local function makeExtensionReadOnly(ext)
+		local locked_keys = {
+			Name = true,
+			Version = true,
+			Key = true,
+			Submodule = true,
+			init = true,
+			postInit = true,
+		}
+
+		return setmetatable({}, {
+			__index = ext,
+			__newindex = function(_, k, v)
+				if locked_keys[k] then
+					ba.warning("Attempt to modify read-only SCPUI extension field '" .. k .. "', new value will be ignored.")
+				else
+					ext[k] = v -- allow dynamic fields to be added
+				end
+			end,
+			__pairs = function()
+				return pairs(ext)
+			end
+		})
+	end
+
+	local function disabledInit()
+		ba.warning("Cannot initialize an extension that has already been initialized!")
+	end
+
     for _, filename in ipairs(files) do
         if string.find(filename, extension_prefix) then
             local module_name = filename:match(extension_prefix .. "(.-).lua")
@@ -242,8 +271,11 @@ function ScpuiSystem:loadExtensions()
 						end
 
 						-- Prevent double initializing
-						ScpuiSystem.extensions[extension.Key].init = nil
-						ScpuiSystem.extensions[extension.Key].postInit = nil
+						ScpuiSystem.extensions[extension.Key].init = disabledInit
+						ScpuiSystem.extensions[extension.Key].postInit = disabledInit
+
+						-- Lock the extension to prevent further modifications to protected fields
+						ScpuiSystem.extensions[extension.Key] = makeExtensionReadOnly(ScpuiSystem.extensions[extension.Key])
                     end
                 else
                     ba.warning("SCPUI Error loading extension " .. module_path .. ": " .. tostring(extension) .. "\n")
