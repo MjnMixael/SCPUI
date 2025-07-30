@@ -113,49 +113,49 @@ function ScpuiSystem:parseScpuiTable(data)
 
 	if parse.optionalString("#State Replacement") then
 
-	while parse.optionalString("$State:") do
-		local state = parse.getString()
+		while parse.optionalString("$State:") do
+			local state = parse.getString()
 
-		if state == "GS_STATE_SCRIPTING" or state == "GS_STATE_SCRIPTING_MISSION" then
-			local mission_state = state == "GS_STATE_SCRIPTING_MISSION"
-			parse.requiredString("+Substate:")
-			state = parse.getString()
-			parse.requiredString("+Markup:")
-			local markup = parse.getString()
-			ba.print("SCPUI found definition for script substate " .. state .. " : " .. markup .. "\n")
-			ScpuiSystem.data.Replacements_List[state] = {
-				Markup = markup
-			}
+			if state == "GS_STATE_SCRIPTING" or state == "GS_STATE_SCRIPTING_MISSION" then
+				local mission_state = state == "GS_STATE_SCRIPTING_MISSION"
+				parse.requiredString("+Substate:")
+				state = parse.getString()
+				parse.requiredString("+Markup:")
+				local markup = parse.getString()
+				ba.print("SCPUI found definition for script substate " .. state .. " : " .. markup .. "\n")
+				ScpuiSystem.data.Replacements_List[state] = {
+					Markup = markup
+				}
 
-			if mission_state then
-				---@type LuaEnum
-				local enum = mn.LuaEnums["SCPUI_Menus"]
-				enum:addEnumItem(state)
-				enum:removeEnumItem("<none>")
+				if mission_state then
+					---@type LuaEnum
+					local enum = mn.LuaEnums["SCPUI_Menus"]
+					enum:addEnumItem(state)
+					enum:removeEnumItem("<none>")
+				end
+			else
+				parse.requiredString("+Markup:")
+				local markup = parse.getString()
+				ba.print("SCPUI found definition for game state " .. state .. " : " .. markup .. "\n")
+				ScpuiSystem.data.Replacements_List[state] = {
+					Markup = markup
+				}
 			end
-		else
-			parse.requiredString("+Markup:")
-			local markup = parse.getString()
-			ba.print("SCPUI found definition for game state " .. state .. " : " .. markup .. "\n")
-			ScpuiSystem.data.Replacements_List[state] = {
-				Markup = markup
-			}
-		end
-	end
-
-	if parse.optionalString("#Background Replacement") then
-
-		while parse.optionalString("$Campaign Background:") do
-			parse.requiredString("+Campaign Filename:")
-			local campaign = Utils.strip_extension(parse.getString())
-
-			parse.requiredString("+RCSS Class Name:")
-			local classname = parse.getString()
-
-			ScpuiSystem.data.Backgrounds_List[campaign] = classname
 		end
 
-	end
+		if parse.optionalString("#Background Replacement") then
+
+			while parse.optionalString("$Campaign Background:") do
+				parse.requiredString("+Campaign Filename:")
+				local campaign = Utils.strip_extension(parse.getString())
+
+				parse.requiredString("+RCSS Class Name:")
+				local classname = parse.getString()
+
+				ScpuiSystem.data.Backgrounds_List[campaign] = classname
+			end
+
+		end
 
 	end
 
