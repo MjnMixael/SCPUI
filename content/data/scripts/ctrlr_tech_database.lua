@@ -119,7 +119,7 @@ function TechDatabaseController:LoadData()
 
 	local list_ships = tb.ShipClasses
 	local i = 1
-	while (i < #list_ships) do
+	while (i <= #list_ships) do
 		if list_ships[i]:hasCustomData() and list_ships[i].CustomData["HideInTechRoom"] == "true" then
 			ba.print("Skipping ship " .. list_ships[i].Name .. " in the tech room list!\n")
 		else
@@ -150,7 +150,7 @@ function TechDatabaseController:LoadData()
 
 	local list_weapons = tb.WeaponClasses
 	local j = 1
-	while (j < #list_weapons) do
+	while (j <= #list_weapons) do
 		if list_weapons[j]:hasCustomData() and list_weapons[j].CustomData["HideInTechRoom"] == "true" then
 			ba.print("Skipping weapon " .. list_weapons[j].Name .. " in the tech room list!\n")
 		else
@@ -186,7 +186,7 @@ function TechDatabaseController:LoadData()
 
 	local list_intel = tb.IntelEntries
 	local k = 1
-	while (k < #list_intel) do
+	while (k <= #list_intel) do
 		--- @type scpui_tech_database_entry
 		local intel = {
 			Name = tostring(list_intel[k].Name),
