@@ -193,16 +193,19 @@ function TechMissionsController:change_section(section)
 			local i = 0
 			local j = 1
 			while (i ~= #m_list) do
-				self.Missions_List[j] = {
-					Name = m_list[i].Name,
-					Filename = m_list[i].Filename,
-					Description = m_list[i].Description:gsub("\n", ""),
-					Author = m_list[i].Author,
-					Visible = m_list[i].isVisible,
-					Key = '',
-					Index = 0
-				}
-				j = j + 1
+				local file = m_list[i].Filename
+				if Topics.simulator.listCampaign:send(file) == true then
+					self.Missions_List[j] = {
+						Name = m_list[i].Name,
+						Filename = m_list[i].Filename,
+						Description = m_list[i].Description:gsub("\n", ""),
+						Author = m_list[i].Author,
+						Visible = m_list[i].isVisible,
+						Key = '',
+						Index = 0
+					}
+					j = j + 1
+				end
 				i = i + 1
 			end
 		else

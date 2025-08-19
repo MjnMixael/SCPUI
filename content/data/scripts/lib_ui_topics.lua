@@ -268,6 +268,7 @@ local topics = {
 	simulator = {
 		initialize = Topic(nil), --Runs arbitrary script and expects no return value. Sends the context
 		listSingle = Topic(true), --Return true or false if the mission should be listed as a single mission. Sends the mission filename
+		listCampaign = Topic(true), --Return true or false if the mission should be listed as a campaign mission. Sends the mission filename
 		createitem = Topic(nil), --Runs arbitrary script and expects no return value. Sends the element being created
 		newsection = Topic(nil), --Runs arbitrary script and expects no return value. Sends the context and the section value
 		sectionname = Topic(nil), --Runs arbitrary script and expects a string return for the mission list internal name. Sends the section index.
