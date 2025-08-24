@@ -624,17 +624,7 @@ function TechDatabaseController:createListItemElement(entry, index, selectable, 
 
 	local li_el = self.Document:CreateElement("li")
 
-	local new_el = "<span style=\"color:red;margin-right:10;\">NEW!</span>"
-	local vis_name = "<span>" .. entry.DisplayName .. "</span>"
-
-	--Maybe append "NEW!" to non-heading entries
-	if ScpuiSystem.data.table_flags.DatabaseShowNew then
-		if heading == false and not self:isSeen(entry.Name) then
-			vis_name = new_el .. vis_name
-		end
-	end
-
-	li_el.inner_rml = vis_name
+	li_el.inner_rml = ScpuiSystem:createListItemHeader(entry.DisplayName, self:isSeen(entry.Name))
 	li_el.id = entry.Name
 
 	if heading == true then
@@ -725,14 +715,14 @@ function TechDatabaseController:selectEntry(entry)
 			local previous_entry = self.Document:GetElementById(self.SelectedEntry.Key)
 			if previous_entry then
 				previous_entry:SetPseudoClass("checked", false)
-				previous_entry.inner_rml = "<span>" .. self.SelectedEntry.DisplayName .. "</span>"
-				self:setSeen(self.SelectedEntry.Name)
 			end
 		end
 
 		local this_entry = self.Document:GetElementById(entry.Key)
 		self.SelectedEntry = entry
 		this_entry:SetPseudoClass("checked", true)
+		this_entry.inner_rml = "<span>" .. self.SelectedEntry.DisplayName .. "</span>"
+		self:setSeen(self.SelectedEntry.Name)
 
 		--Headings can be made selectable. If so, then custom code is required
 		if entry.Heading == true then

@@ -93,6 +93,34 @@ function ScpuiSystem:parseScpuiTable(data)
 			ScpuiSystem.data.table_flags.DatabaseShowNew = parse.getBoolean()
 		end
 
+		if parse.optionalString("$New In Database Class:") then
+			local raw = parse.getString()
+
+			--- Sanitize the class name
+			--- @param s string the string to sanitize
+			--- @return string joined the sanitized string
+			local function sanitizeClassList(s)
+				s = tostring(s or "")
+				s = s:match("^%s*(.-)%s*$") or "" -- trim
+				if s == "" then return "" end
+
+				-- keep only [A-Za-z0-9_-] tokens, allow spaces between classes
+				local tokens = {}
+				for token in s:gmatch("[%w_-]+") do
+				tokens[#tokens+1] = token
+				end
+				-- dedupe while preserving order
+				local seen, uniq = {}, {}
+				for _, t in ipairs(tokens) do
+				if not seen[t] then seen[t] = true; uniq[#uniq+1] = t end
+				end
+				local joined = table.concat(uniq, " ")
+				return joined
+			end
+
+			ScpuiSystem.data.table_flags.DatabaseNewClass = sanitizeClassList(raw)
+		end
+
 		if parse.optionalString("$Minimum Splash Time:") then
 			ScpuiSystem.data.table_flags.MinSplashTime = parse.getInt()
 		end

@@ -96,6 +96,31 @@ function ScpuiSystem:pauseAllAudio(toggle)
 	Topics.Scpui.pauseAudio:send(toggle)
 end
 
+--- Creates a list item header and apples "New!" and the "new class" based on mod settings
+--- @param text string The text to display in the header.
+--- @param unread boolean? Whether the entry is unread.
+--- @return string out The formatted header string.
+function ScpuiSystem:createListItemHeader(text, unread)
+
+	-- Open the title span; only add the class if a class is provided
+	local open = "<span>"
+	if unread and ScpuiSystem.data.table_flags.DatabaseNewClass then
+		open = '<span class="' .. ScpuiSystem.data.table_flags.DatabaseNewClass .. '">'
+	end
+
+	-- Title part
+	local out = open .. text .. "</span>"
+
+	local new = ba.XSTR("NEW!", 888549)
+
+	-- Optional NEW! badge
+	if ScpuiSystem.data.table_flags.DatabaseShowNew and unread then
+		out = '<span style="color:red;margin-right:10px;">' .. new .. '</span>' .. out
+	end
+
+	return out
+end
+
 --- Gets the absolute left position of an element
 --- @param element table The element to get the absolute left position of.
 --- @return number

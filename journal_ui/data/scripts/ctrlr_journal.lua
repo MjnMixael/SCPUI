@@ -28,8 +28,6 @@ function JournalController:initialize(document)
 
     self.Document = document
 
-    self.new = {"NEW", 888548}
-
     ---Load background choice
     self.Document:GetElementById("main_background"):SetClass(ScpuiSystem:getBackgroundClass(), true)
 
@@ -97,11 +95,7 @@ function JournalController:createJournalListItemElement(entry, unread)
 
     local li_el = self.Document:CreateElement("li")
 
-    if unread then
-        li_el.inner_rml = "<span id=newstatus>" .. ba.XSTR(self.new[1], self.new[2]) .. "</span>" .. entry.Display
-    else
-        li_el.inner_rml = entry.Display
-    end
+    li_el.inner_rml = ScpuiSystem:createListItemHeader(entry.Display, unread)
     li_el:SetClass("journallist_element", true)
     li_el:AddEventListener("click", function(_, _, _)
         self:selectEntry(entry.Key)
