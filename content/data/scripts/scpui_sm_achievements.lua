@@ -151,8 +151,9 @@ function ScpuiSystem:resetAchievements(name)
 
     local nameLower = string.lower(name)
 
-    -- Handle "all" reset (case-insensitive)
-    if nameLower == "all" then
+    -- Handle "all" reset (case-insensitive, translated)
+    local all_text = ba.XSTR("all", 888571)
+    if nameLower == "all_text" then
         ScpuiSystem.data.Achievements.Completed_Achievements = {}
         ba.print("SCPUI: All achievements have been reset!\n")
         ScpuiSystem:saveAchievementsToFile()

@@ -106,6 +106,8 @@
 ;;ctrlr_loop_brief.lua
 888354, "Decline"
 888356, "You must either Accept or Decline before returning to the Main Hall"
+;;ctrlr_medals.lua
+888571, "all"
 ;;medals.rml
 888078, "Ribbons"
 888563, "Achievements"
@@ -337,6 +339,6 @@
 888569, "Type of System: "
 888570, "Controlling Faction: "
 
-;;Next available ID: 888571
+;;Next available ID: 888572
 
 #end
