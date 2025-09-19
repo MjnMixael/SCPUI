@@ -517,7 +517,8 @@
 --- @field FontValue? number The current font value for SCPUI based on FSO's default font pixel height
 --- @field CurrentBaseFontClass? string The current base font class name that is set
 --- @field Replacements_List ui_replacement[] Table of Game states and their corresponding SCPUI documents. Key is the game state, value is a table with [markup] as the document name. This allows setting the current document to the value of the table which immediately sets the correct document to the current game state.
---- @field Backgrounds_List table<string, string> Table of campaign background replacement rcss classes. Key is the campaign filename, value is the rcss class name.
+--- @field Backgrounds_List_Campaign table<string, string> Table of campaign background replacement rcss classes. Key is the campaign filename, value is the rcss class name.
+--- @field Backgrounds_List_Mainhall table<string, string> Table of mainhall background replacement rcss classes. Key is the mainhall name, value is the rcss class name.
 --- @field Brief_Backgrounds_List table<string, table<string, string>> This table is used to determine which background image to display during mission briefings. The structure: Outer keys: mission names (strings), Inner keys: either "default" (string) for the default background or a tring representation of a briefing stage number (e.g., "1", "2"), Values: filenames (strings).
 --- @field Preload_Coroutines preload_coroutine[] The preload coroutines to run during SCPUI's splash screen startup.
 --- @field Medal_Info medal_info[] The medal information for SCPUI to use when displaying medals.

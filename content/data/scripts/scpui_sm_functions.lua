@@ -294,14 +294,20 @@ end
 --- Gets the background rcss class to use based on the current campaign. Returns "general_bg" if no class is found.
 --- @return string class The rcss class to use to set the background image
 function ScpuiSystem:getBackgroundClass()
+
 	local campaign_filename = ba.getCurrentPlayer():getCampaignFilename()
-	local bgclass = self.data.Backgrounds_List[campaign_filename]
+	local campaign_bgclass = self.data.Backgrounds_List_Campaign[campaign_filename]
 
-	if not bgclass then
-		bgclass = "general_bg"
+	local mainhall_name = ba.getCurrentPlayer():getMainHallName()
+	local mainhall_bgclass = self.data.Backgrounds_List_Mainhall[mainhall_name]
+
+	if mainhall_bgclass then
+		return mainhall_bgclass
+	elseif campaign_bgclass then
+		return campaign_bgclass
+	else
+		return "general_bg"
 	end
-
-	return bgclass
 end
 
 --- Gets background file to use for the briefing map. Returns "br-black.png" if no file is found.
