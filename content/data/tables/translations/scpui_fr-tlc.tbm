@@ -1,7 +1,5 @@
 #French
 
-;;addon_journal-sct.tbm
-888549, "Nouveau !"
 ;;barracks.rml
 888000, "Quartiers"
 888001, "Multi"
@@ -20,7 +18,7 @@
 888014, "Accepter"
 888015, "Aide"
 888016, "Options"
-;;briefing.lua
+;;ctrlr_briefing.lua
 888280, "Passer Formation"
 888281, "Quitter Série"
 888279, "Sélection du chargement non disponible"
@@ -28,7 +26,7 @@
 ;;briefing.rml
 888017, "Lancer"
 888018, "Briefing" ;multiplayer
-888020, "Sélection des Armes"
+888020, "Sélection des armes"
 888021, "Cliquez ici pour modifier la sélection des vaisseaux ou des armes"
 888022, "Objectifs Principaux"
 888023, "Objectifs Secondaires"
@@ -38,21 +36,21 @@
 888027, "Continuer"
 888028, "Cliquez ici pour commencer la mission"
 888019, "Sélection des vaisseaux"
-;;briefingCommon.lua
+;;ctrlr_briefing_common.lua
 888283, "Phase %d sur %d"
-;;campaign.lua
+;;ctrlr_campaign.lua
 888284, "Avertissement"
 888285, "Cela entrainera la perte de tous les progrès réalisés dans la campagne en cours."
 888286, "ok"
 ;;campaign.rml
 888031, "Redémarrer la campagne"
-;;cmd_brief.rml
+;;ctrlr_command_brief.rml
 888034, "Passer au briefing de la mission"
-;;controlconfig.lua
+;;ctrlr_control_config.lua
 888296, "Oui"
 888298, "Non"
 888290, "Ok"
-;;controlconfig.rml
+;;control_config.rml
 888037, "Ciblage"
 888038, "Vaisseau"
 888039, "Armes"
@@ -69,7 +67,7 @@
 888050, "Sauvegarder le préréglage"
 888051, "Cloner le préréglage"
 888052, "Supprimer le préréglage"
-;;debrief.lua
+;;ctrlr_debrief.lua
 888335, "Cette mission s'est soldée par un échec, et vous devrez la reprendre lorsque vous poursuivrez la campagne.\n\nRetourner sur le pont ?"
 888331, "Aller au Pont d'Envol"
 888329, "Retourner au Débriefing"
@@ -84,6 +82,7 @@
 888318, "Avancer à la prochaine mission"
 888345, "Non, réessayer plus tard"
 888340, "Accepter l'issue de cette mission ?"
+888562, "Victoires en mission par type de vaisseau"
 ;;debrief.rml
 888055, "Compte-rendu"
 888056, "Statistiques"
@@ -91,9 +90,9 @@
 888058, "Rejouer la Mission"
 888059, "Recommendations"
 888060, "Voir les conseils pour améliorer vos performances"
-;;game_paused.lua
+;;ctrlr_game_paused.lua
 888347, "LE JEU EST EN PAUSE"
-;;hotkeyconfig.rml
+;;hotkey_config.rml
 888065, "Réinitialiser"
 888066, "Retirer"
 888067, "Défaut"
@@ -104,18 +103,18 @@
 888072, "Utiliser la Valeur par Défaut"
 888073, "Tout Sélectionner"
 888074, "Sauvegarder comme Préréglage"
-;;journal-sct.tbm
-888550, "Journal"
-;;journal.lua
-888548, "NOUVEAU"
-;;journal.rml
-888546, "Veuillez faire une sélection ci-dessous."
-;;loop_brief.lua
+;;ctrlr_loop_brief.lua
 888354, "Refuser"
 888356, "Vous devez accepter ou refuser avant de retourner dans le Hall Principal"
+;;ctrlr_medals.lua
+888571, "tous"
 ;;medals.rml
 888078, "Rubans"
-;;missionlog.rml
+888563, "Succès"
+888564, "Succès cachés"
+888565, "Tapez le nom du succès pour réinitialiser la progression ou tapez $quotetous$quote pour réinitialiser tous les succès."
+888566, "Réinitialiser succès"
+;;mission_log.rml
 888082, "Objectifs"
 888083, "Messages"
 888084, "Évènements"
@@ -168,7 +167,7 @@
 888144, "Autoriser un Rang Supérieur à"
 ;;multi_sync.rml
 888150, "Lancer"
-;;options.lua
+;;ctrlr_options.lua
 888390, "Quitter le jeu ?"
 888385, "Redémarrage nécessaire"
 888381, "Adresse IP déjà répertoriée !"
@@ -225,7 +224,7 @@
 888199, "Mode Solo"
 888201, "Copyright © 1999, Volition, Inc. Tous droits réservés."
 888200, "Mode Multijoueur"
-;;pilotSelect.lua
+;;ctrlr_pilot_select.lua
 888404, "Désactivé !"
 888408, "Erreur"
 888409, "Échec de la suppression du fichier du pilote. Le fichier peut être en lecture seule."
@@ -258,7 +257,7 @@
 888209, "Cliquez ici pour revenir au briefing ou changer la sélection d'armes"
 888210, "Lire la Description"
 888211, "Choisissez un nouveau type de vaisseau en faisant glisser son icône sur l'un des emplacements d'escadrille disponibles"
-;;shipselect.lua
+;;ctrlr_ship_select.lua
 888424, "Soutes à Missiles"
 888425, "Fabricant"
 888421, "Résistance de la Coque"
@@ -277,7 +276,7 @@
 888221, "Cinématiques"
 ;;tech_cutscenes.rml
 888228, "Jouer"
-;;tech_database.lua
+;;ctrlr_tech_database.lua
 888551, "Principal"
 888552, "Secondaire"
 ;;tech_database.rml
@@ -310,7 +309,7 @@
 888270, "Choisissez un nouveau type d'arme en faisant glisser son icône sur l'un des emplacements d'arme disponibles"
 888269, "Copier pour l'escadrille"
 888267, "Cliquez ici pour revenir au briefing ou modifier la sélection des vaisseaux"
-;;weaponselect.lua
+;;ctrlr_weapon_select.lua
 888441, "Utilisation de l'énergie"
 888442, "W"
 888443, "Cadence de Tir"
@@ -325,7 +324,21 @@
 888431, "Portée"
 888558, "Taille du chargement"
 888559, "Traduction française par Achille"
+888560, "wookiejedi"
+888561, "WoolieWool"
+;;scpui_jrnl_sm_def_topics.lua
+888549, "Nouveau !"
+;;scpui_ext_journal.lua
+888550, "Journal"
+;;journal.rml
+888546, "Veuillez sélectionner un article ci-dessous."
+;;ctrlr_tech_nodemap.lua
+888548, "Aucune sélection"
+888567, "Veuillez sélectionner un objet"
+888568, "Système : "
+888569, "Type de système : "
+888570, "Contrôlé par la Faction : "
 
-;;Next available ID: 888560
+;;Next available ID: 888572
 
 #end
