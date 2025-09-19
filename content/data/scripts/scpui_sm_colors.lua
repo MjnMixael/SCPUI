@@ -44,7 +44,10 @@ local function parseKeywords(data, inherited_affixes)
         parse.stop()
         parse.readFileText(data, "data/tables")
         if not parse.skipToString("#Default") then
-            ba.error(data .. " is missing a valid language section!")
+            parse.stop()
+            ba.print(data .. " is missing a valid language section!")
+            -- Just return the inherited affixes
+            return inherited_affixes
         end
     end
 
