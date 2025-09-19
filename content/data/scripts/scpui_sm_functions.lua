@@ -101,24 +101,51 @@ end
 --- @param unread boolean? Whether the entry is unread.
 --- @return string out The formatted header string.
 function ScpuiSystem:createListItemHeader(text, unread)
+    local flags = (ScpuiSystem.data and ScpuiSystem.data.table_flags) or {}
 
-	-- Open the title span; only add the class if a class is provided
-	local open = "<span>"
-	if unread and ScpuiSystem.data.table_flags.DatabaseNewClass then
-		open = '<span class="' .. ScpuiSystem.data.table_flags.DatabaseNewClass .. '">'
-	end
+    -- Title <span> (optionally classed when unread)
+    local title_class = (unread and flags.DatabaseUnreadItemClass) or nil
+    local title_open  = title_class and ('<span class="' .. title_class .. '">') or '<span>'
+    local title_html  = title_open .. text .. '</span>'
 
-	-- Title part
-	local out = open .. text .. "</span>"
+    -- Determine if any badge should be shown
+    local show_icon   = unread and flags.DatabaseUnreadShowIcon
+    local show_string = unread and flags.DatabaseUnreadShowString
+    local show_badge  = (show_icon or show_string) and true or false
+    if not show_badge then
+        return title_html
+    end
 
-	local new = ba.XSTR("NEW!", 888549)
+    -- Build badge inner content (icon and/or string)
+    local parts = {}
 
-	-- Optional NEW! badge
-	if ScpuiSystem.data.table_flags.DatabaseShowNew and unread then
-		out = '<span style="color:red;margin-right:10px;">' .. new .. '</span>' .. out
-	end
+    if show_icon and flags.DatabaseUnreadIconFile and flags.DatabaseUnreadIconFile ~= "" then
+        local icon_class = flags.DatabaseUnreadIconClass
+        local icon_attr  = icon_class and (' class="' .. icon_class .. '"') or ''
+        -- Note: color/tinting is expected via RCSS class if needed
+        table.insert(parts, '<img' .. icon_attr .. ' src="' .. flags.DatabaseUnreadIconFile .. '"/>')
+    end
 
-	return out
+    if show_string then
+        local str_text  = flags.DatabaseUnreadStringText or ba.XSTR("NEW!", 888549)
+        local str_class = flags.DatabaseUnreadStringClass
+        local str_attr  = str_class and (' class="' .. str_class .. '"') or ''
+        table.insert(parts, '<span' .. str_attr .. '>' .. str_text .. '</span>')
+    end
+
+    -- Wrap badge pieces in a container for spacing and positioning
+	-- TODO: right positining doesn't really work so I've disabled the table parser for now. Fix me
+    local pos         = (flags.DatabaseUnreadBadgePosition or "left"):lower()
+    local is_right    = (pos == "right")
+    local spacing_css = is_right and 'float:right;margin-left:10px;' or 'margin-right:10px;'
+    local badge_html  = '<span style="' .. spacing_css .. '">' .. table.concat(parts, ' ') .. '</span>'
+
+    -- Compose. With float:right the order visually won’t shift the title.
+    if is_right then
+        return badge_html .. title_html
+    else
+        return badge_html .. title_html
+    end
 end
 
 --- Gets the absolute left position of an element

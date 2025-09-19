@@ -624,7 +624,7 @@ function TechDatabaseController:createListItemElement(entry, index, selectable, 
 
 	local li_el = self.Document:CreateElement("li")
 
-	li_el.inner_rml = ScpuiSystem:createListItemHeader(entry.DisplayName, self:isSeen(entry.Name))
+	li_el.inner_rml = ScpuiSystem:createListItemHeader(entry.DisplayName, not self:isSeen(entry.Name))
 	li_el.id = entry.Name
 
 	if heading == true then

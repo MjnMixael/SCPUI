@@ -89,36 +89,73 @@ function ScpuiSystem:parseScpuiTable(data)
 			ScpuiSystem.data.table_flags.IconDimensions.weapon.Height = parse.getInt()
 		end
 
-		if parse.optionalString("$Show New In Database:") then
-			ScpuiSystem.data.table_flags.DatabaseShowNew = parse.getBoolean()
-		end
+		--- Sanitize the class name
+		--- @param s string the string to sanitize
+		--- @return string joined the sanitized string
+		local function sanitizeClassList(s)
+			s = tostring(s or "")
+			s = s:match("^%s*(.-)%s*$") or "" -- trim
+			if s == "" then return "" end
 
-		if parse.optionalString("$New In Database Class:") then
-			local raw = parse.getString()
-
-			--- Sanitize the class name
-			--- @param s string the string to sanitize
-			--- @return string joined the sanitized string
-			local function sanitizeClassList(s)
-				s = tostring(s or "")
-				s = s:match("^%s*(.-)%s*$") or "" -- trim
-				if s == "" then return "" end
-
-				-- keep only [A-Za-z0-9_-] tokens, allow spaces between classes
-				local tokens = {}
-				for token in s:gmatch("[%w_-]+") do
+			-- keep only [A-Za-z0-9_-] tokens, allow spaces between classes
+			local tokens = {}
+			for token in s:gmatch("[%w_-]+") do
 				tokens[#tokens+1] = token
-				end
-				-- dedupe while preserving order
-				local seen, uniq = {}, {}
-				for _, t in ipairs(tokens) do
+			end
+			-- dedupe while preserving order
+			local seen, uniq = {}, {}
+			for _, t in ipairs(tokens) do
 				if not seen[t] then seen[t] = true; uniq[#uniq+1] = t end
-				end
-				local joined = table.concat(uniq, " ")
-				return joined
 			end
 
-			ScpuiSystem.data.table_flags.DatabaseNewClass = sanitizeClassList(raw)
+			local joined = table.concat(uniq, " ")
+			return joined
+		end
+
+		if parse.optionalString("$Database Unread Show String Badge:") then
+			ScpuiSystem.data.table_flags.DatabaseUnreadShowString = parse.getBoolean()
+		end
+
+		if parse.optionalString("$Database Unread String Badge Class:") then
+			local raw = parse.getString()
+			ScpuiSystem.data.table_flags.DatabaseUnreadStringClass = sanitizeClassList(raw)
+		end
+
+		if parse.optionalString("$Database Unread String Badge Text:") then
+			ScpuiSystem.data.table_flags.DatabaseUnreadStringText = parse.getString()
+		end
+
+		if parse.optionalString("$Database Unread Show Icon Badge:") then
+			ScpuiSystem.data.table_flags.DatabaseUnreadShowIcon = parse.getBoolean()
+		end
+
+		if parse.optionalString("$Database Unread Icon Badge Class:") then
+			local raw = parse.getString()
+			ScpuiSystem.data.table_flags.DatabaseUnreadIconClass = sanitizeClassList(raw)
+		end
+
+		if parse.optionalString("$Database Unread Icon Badge Filename:") then
+			ScpuiSystem.data.table_flags.DatabaseUnreadIconFile = parse.getString()
+		end
+
+		if parse.optionalString("$Database Unread Badge Position:") then
+			local raw = parse.getString()
+			if raw:lower() == "right" then
+				ScpuiSystem.data.table_flags.DatabaseUnreadBadgePosition = "right"
+			elseif raw:lower() == "left" then
+				ScpuiSystem.data.table_flags.DatabaseUnreadBadgePosition = "left"
+			else
+				ba.warning("SCPUI parsed invalid Database Unread Badge Position: " .. raw .. ". Defaulting to 'left'.")
+				ScpuiSystem.data.table_flags.DatabaseUnreadBadgePosition = "left"
+			end
+
+			ba.warning("SCPUI Database Unread Badge Position parsing is currently not supported. Defaulting to 'left'.")
+			ScpuiSystem.data.table_flags.DatabaseUnreadBadgePosition = "left"
+		end
+
+		if parse.optionalString("$Database Unread Item Class:") then
+			local raw = parse.getString()
+			ScpuiSystem.data.table_flags.DatabaseUnreadItemClass = sanitizeClassList(raw)
 		end
 
 		if parse.optionalString("$Minimum Splash Time:") then

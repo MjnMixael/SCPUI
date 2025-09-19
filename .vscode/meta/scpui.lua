@@ -110,8 +110,14 @@
 --- @field DisableInMulti boolean True if SCPUI should render in multiplayer, false otherwise
 --- @field HideMulti boolean True if SCPUI should hide multiplayer menus and options, false otherwise
 --- @field DataSaverMultiplier integer A numeric multiplier used to generate SCPUI's save data hash. Generally this is not needed but can be useful if there are conflicts between mods.
---- @field DatabaseShowNew boolean True if SCPUI should show the "NEW!" text in the database, false otherwise
---- @field DatabaseNewClass string? The optional class to set for new entrie titles in the database
+--- @field DatabaseUnreadShowString boolean True if SCPUI should show the "NEW!" text in the database, false otherwise
+--- @field DatabaseUnreadStringClass string? The optional class to set for new entrie titles in the database
+--- @field DatabaseUnreadStringText string The optional text to use for new entries in the database. Default is "NEW!"
+--- @field DatabaseUnreadShowIcon boolean True if SCPUI should show an icon badge for new entries in the database, false otherwise
+--- @field DatabaseUnreadIconClass string? The optional class to set for new entry icons in the database
+--- @field DatabaseUnreadIconFile string? The icon file to use for new entry icons in the database
+--- @field DatabaseUnreadBadgePosition string The position to place the unread icon badge. Either left or right. Default is left.
+--- @field DatabaseUnreadItemClass string? The optional class to set for new entry container in the database
 --- @field IconDimensions icon_dimensions The dimensions of the icons used in ship and weapon select
 --- @field MinSplashTime number The minimum time in seconds the splash screen should be displayed
 --- @field FadeSplashImages boolean True if SCPUI should fade the splash images, false otherwise
