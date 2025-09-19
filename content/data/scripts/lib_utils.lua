@@ -38,33 +38,18 @@ end
 --- @return table<string, number> result The parsed XSTR
 function utils.parseCustomXSTR(text)
 
-	local input_string = text
-	local result = {}
+	local str_val, num_str = text:match('%(%s*"([^"]*)"%s*,%s*(-?%d+)%s*%)')
 
-	-- Remove the leading and trailing parentheses
-	text = string.gsub(text, "^%(", "")
-	text = string.gsub(text, "%)$", "")
-
-	-- Extract the values inside quotation marks
-	local quoated_value = string.match(input_string, '"([^"]+)"')
-
-	-- Extract the number after the comma
-	local number_value = tonumber(string.match(input_string, ',%s*(-?%d+)'))
-
-	if not quoated_value then
-		ba.warning("Could not find the string in the xstr '" .. input_string .. "'. Expected it to be contained within quotation marks.")
-		quoated_value = ""
-	end
-
-	if not number_value then
-		ba.warning("Could not find the number in the xstr '" .. input_string .. "'. Expected it to be a valid number after a comma.")
-		number_value = -1
-	end
-
-	table.insert(result, quoated_value)
-	table.insert(result, number_value)
-
-	return result
+    if str_val and num_str then
+        ba.print("Parsed custom xstr: " .. str_val .. " with id " .. num_str .. "\n")
+        local result = {}
+        table.insert(result, str_val)
+        table.insert(result, tonumber(num_str))
+        return result
+    else
+        ba.warning("Could not parse the xstr '" .. text .. "'. Expected format: (\"string\", number)")
+        return {text, -1}
+    end
 
 end
 
