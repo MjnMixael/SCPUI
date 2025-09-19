@@ -230,7 +230,7 @@ function SystemMapController:autoLoadSystem()
 
 	--Find a match
 	if mission_name ~= "" then
-		for key, value in pairs(self.Config) do
+		for key, value in pairs(self.Config.Missions) do
 			if mission_name == key then
 				system_name = value
 			end
