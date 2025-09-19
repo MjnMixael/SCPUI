@@ -1,7 +1,5 @@
 #default
 
-;;addon_journal-sct.tbm
-888549, "New!"
 ;;barracks.rml
 888000, "Barracks"
 888001, "Multi"
@@ -20,7 +18,7 @@
 888014, "Accept"
 888015, "Help"
 888016, "Options"
-;;briefing.lua
+;;ctrlr_briefing.lua
 888280, "Skip Training"
 888281, "Exit Loop"
 888279, "Loadout selection not available"
@@ -38,21 +36,21 @@
 888027, "Continue"
 888028, "Click here to begin the mission"
 888019, "Ship Selection"
-;;briefingCommon.lua
+;;ctrlr_briefing_common.lua
 888283, "Stage %d of %d"
-;;campaign.lua
+;;ctrlr_campaign.lua
 888284, "Warning"
 888285, "This will cause all progress in your\nCurrent campaign to be lost"
 888286, "Ok"
 ;;campaign.rml
 888031, "Restart Campaign"
-;;cmd_brief.rml
+;;ctrlr_command_brief.rml
 888034, "Proceed to the mission briefing"
-;;controlconfig.lua
+;;ctrlr_control_config.lua
 888296, "Yes"
 888298, "No"
 888290, "Okay"
-;;controlconfig.rml
+;;control_config.rml
 888037, "Targeting"
 888038, "Ship"
 888039, "Weapons"
@@ -69,7 +67,7 @@
 888050, "Save Preset"
 888051, "Clone Preset"
 888052, "Delete Preset"
-;;debrief.lua
+;;ctrlr_debrief.lua
 888335, "Because this mission was a failure, you must replay this mission when you continue your campaign.\n\nReturn to the Flight Deck?"
 888331, "Go to Flight Deck"
 888329, "Return to Debriefing"
@@ -92,9 +90,9 @@
 888058, "Replay Mission"
 888059, "Recommendations"
 888060, "See advice on improving your performance"
-;;game_paused.lua
+;;ctrlr_game_paused.lua
 888347, "GAME IS PAUSED"
-;;hotkeyconfig.rml
+;;hotkey_config.rml
 888065, "Reset"
 888066, "Clear"
 888067, "Default"
@@ -105,13 +103,7 @@
 888072, "Use Default"
 888073, "Select All"
 888074, "Save as Preset"
-;;journal-sct.tbm
-888550, "Journal"
-;;journal.lua
-888548, "NEW"
-;;journal.rml
-888546, "Please make a selection below."
-;;loop_brief.lua
+;;ctrlr_loop_brief.lua
 888354, "Decline"
 888356, "You must either Accept or Decline before returning to the Main Hall"
 ;;medals.rml
@@ -120,7 +112,7 @@
 888564, "Hidden Achievements"
 888565, "Type the name of the achievement to reset progress or type 'all' to reset all achievements."
 888566, "Reset Achievement"
-;;missionlog.rml
+;;mission_log.rml
 888082, "Objectives"
 888083, "Messages"
 888084, "Events"
@@ -173,7 +165,7 @@
 888144, "Allow Rank Above"
 ;;multi_sync.rml
 888150, "Launch"
-;;options.lua
+;;ctrlr_options.lua
 888390, "Exit Game?"
 888385, "Restart required"
 888381, "IP Address already listed!"
@@ -230,7 +222,7 @@
 888199, "Single Player Mode"
 888201, "Copyright © 1999, Volition, Inc.  All rights reserved."
 888200, "Multi Player Mode"
-;;pilotSelect.lua
+;;ctrlr_pilot_select.lua
 888404, "Disabled!"
 888408, "Error"
 888409, "Failed to delete pilot file. File may be read-only."
@@ -263,7 +255,7 @@
 888209, "Click here to return to the briefing or change weapon selection"
 888210, "Read Description"
 888211, "Choose a new ship type by dragging its icon over one of the available wing slots"
-;;shipselect.lua
+;;ctrlr_ship_select.lua
 888424, "Missile Banks"
 888425, "Manufacturer"
 888421, "Hull Strength"
@@ -282,7 +274,7 @@
 888221, "Cutscenes"
 ;;tech_cutscenes.rml
 888228, "Play"
-;;tech_database.lua
+;;ctrlr_tech_database.lua
 888551, "Primary"
 888552, "Secondary"
 ;;tech_database.rml
@@ -315,7 +307,7 @@
 888270, "Choose a new weapon type by dragging its icon over one of the available weapon slots"
 888269, "Copy to wing"
 888267, "Click here to return to the briefing or change ship selection"
-;;weaponselect.lua
+;;ctrlr_weapon_select.lua
 888441, "Power Use"
 888442, "W"
 888443, "Rate of Fire"
@@ -332,7 +324,19 @@
 888559, "French translation by Achille"
 888560, "wookiejedi"
 888561, "WoolieWool"
+;;scpui_jrnl_sm_def_topics.lua
+888549, "New!"
+;;scpui_ext_journal.lua
+888550, "Journal"
+;;journal.rml
+888546, "Please make a selection below."
+;;ctrlr_tech_nodemap.lua
+888548, "No Selection"
+888567, "Please make a selection."
+888568, "System: "
+888569, "Type of System: "
+888570, "Controlling Faction: "
 
-;;Next available ID: 888567
+;;Next available ID: 888571
 
 #end

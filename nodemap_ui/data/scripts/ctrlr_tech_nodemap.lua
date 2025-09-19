@@ -20,7 +20,7 @@ function TechNodeMapController:init()
 	self.HelpShown = false ---@type boolean whether the help text is shown
 	self.Nodes = {} ---@type node_map_line[] the lines between nodes
 	self.Scale = 1 ---@type number the scale factor to fit the map on the screen
-	self.Selected = "No Selection" ---@type string the currently selected node
+	self.Selected = ba.XSTR("No Selection", 888548) ---@type string the currently selected node
 	self.SelectedNodeBtn = nil ---@type Element the currently selected node button
 	self.Width = 0 ---@type number the width of the map
 	self.Height = 0 ---@type number the height of the map
@@ -32,7 +32,7 @@ function TechNodeMapController:init()
 	self.Texture = nil ---@type texture the texture for the map to draw lines to
 	self.Url = "" ---@type string the URL of the texture for the map to send to librocket
 	self.Key = 0 ---@type number the key for the game progression
-	self.SelectedText = "Please make a selection." ---@type string the text of the selected node
+	self.SelectedText = ba.XSTR("Please make a selection.", 888567) ---@type string the text of the selected node
 	self.MainMapElement = nil ---@type Element the main map element
 
 	ScpuiSystem.data.memory.model_rendering = nil
@@ -513,9 +513,9 @@ function TechNodeMapController:selectEntry(entry, button)
 	end
 
 	entry.ImageElement:SetAttribute("src", bitmap .. "_h")
-	local text_name = "<span class=\"white\">System: </span>" .. entry.DisplayName .. "<br/>"
-	local text_type = "<span class=\"white\">Type of System: </span>" .. entry.SysType .. "<br/>"
-	local text_faction = "<span class=\"white\">Controlling Faction: </span>" .. faction .. "<br/><br/>"
+	local text_name = "<span class=\"white\">" .. ba.XSTR("System: ", 888568) .. "</span>" .. entry.DisplayName .. "<br/>"
+	local text_type = "<span class=\"white\">" .. ba.XSTR("Type of System: ", 888569) .. "</span>" .. entry.SysType .. "<br/>"
+	local text_faction = "<span class=\"white\">" .. ba.XSTR("Controlling Faction: ", 888570) .. "</span>" .. faction .. "<br/><br/>"
 	local text = "<p>" .. text_name .. text_type .. text_faction .. description .. "</p>"
 	self.Document:GetElementById("map_desc").inner_rml = text
 	self.Document:GetElementById("map_desc").scroll_top = 0
