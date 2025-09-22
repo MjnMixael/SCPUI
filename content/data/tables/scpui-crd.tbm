@@ -24,5 +24,7 @@ XSTR("wookiejedi", 888560)
 XSTR("WoolieWool", 888561)
 
 XSTR("French translation by Achille", 888559)
+XSTR("German translation by Belisarius", 888572)
+XSTR("Polish translation by Shiv", 888573)
 
 #end
