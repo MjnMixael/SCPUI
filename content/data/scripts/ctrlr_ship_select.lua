@@ -573,7 +573,7 @@ function ShipSelectController:displayShipInfo(entry)
 	end
 
 	local array    = {
-		{ba.XSTR("Class", 888414), entry.Name},
+		{ba.XSTR("Class", 888414), Topics.ships.name:send(tb.ShipClasses[self.SelectedShipName])},
 		{ba.XSTR("Type", 888116), entry.Type},
 		{ba.XSTR("Length", 888416), entry.Length},
 		{ba.XSTR("Max Velocity", 888417), entry.Velocity .. ' (' .. entry.AfterburnerVelocity .. ba.XSTR(" m/s with afterburner", 888418) .. ')'},
