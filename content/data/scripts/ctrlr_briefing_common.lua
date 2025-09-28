@@ -521,6 +521,8 @@ function AbstractBriefingController:initializeStage(stage_idx, briefing_text, au
 			end
         end
     end, async.OnFrameExecutor, execution_context)
+
+	Topics.briefcommon.stageChanged:send(self, stage_idx)
 end
 
 return AbstractBriefingController

@@ -130,7 +130,8 @@ local topics = {
 		unload = Topic(nil) --Runs arbitrary script and expects no return value. Sends the document context
 	},
 	briefcommon = {
-		initialize = Topic(nil) --Runs arbitrary script and expects no return value. Sends the document context
+		initialize = Topic(nil), --Runs arbitrary script and expects no return value. Sends the document context
+		stageChanged = Topic(nil) --Runs arbitrary script when the stage changes and expects no return value. Sends the document context and the stage index
 	},
 	fictionviewer = {
 		initialize = Topic(nil), --Runs arbitrary script and expects no return value. Sends the context
