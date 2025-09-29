@@ -155,6 +155,9 @@ function DebriefingController:initialize(document)
 
 	Topics.debrief.initialize:send(self)
 
+    -- We initialize in a state so send that out, too
+    Topics.debrief.stateChanged:send(self)
+
 end
 
 --- Start playing the debriefing audio at stage 0
@@ -689,6 +692,8 @@ function DebriefingController:debrief_pressed(element)
 
         self.RecommendVisible = false
     end
+
+    Topics.debrief.stateChanged:send(self)
 end
 
 --- The stats button was pressed so switch to the stats text
@@ -710,6 +715,8 @@ function DebriefingController:stats_pressed(element)
 
         self.RecommendVisible = false
     end
+
+    Topics.debrief.stateChanged:send(self)
 end
 
 --- The recommend button was pressed so toggle the recommendations on or off

@@ -162,7 +162,8 @@ local topics = {
 		accept = Topic(nil), --Runs arbitrary script and expects no return value
 		reject = Topic(nil), --Runs arbitrary script and expects no return value
 		skip = Topic(nil), --Runs arbitrary script and expects no return value
-		unload = Topic(nil) --Runs arbitrary script and expects no return value. Sends the document context
+		unload = Topic(nil), --Runs arbitrary script and expects no return value. Sends the document context
+		stateChanged = Topic(nil) --Runs arbitrary script when the state changes between stats/dialog and expects no return value. Sends the document context
 	},
 	campaign = {
 		initialize = Topic(nil), --Runs arbitrary script and expects no return value. Sends the document context
