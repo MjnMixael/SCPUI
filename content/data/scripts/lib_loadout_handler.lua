@@ -396,7 +396,7 @@ end
 function LoadoutHandler:generateWeaponInfo()
 	local weapon_list = tb.WeaponClasses
 	local i = 1
-	while (i ~= #weapon_list) do
+	while (i <= #weapon_list) do
 		if self:GetWeaponPoolAmount(i) > 0 then
 			if ScpuiSystem.data.Generated_Icons[weapon_list[i].Name] == nil then
 				ba.warning("No generated icon was found for " .. weapon_list[i].Name .. "! Generating one now.")
