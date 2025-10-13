@@ -120,8 +120,6 @@ function ScpuiSystem:init()
 
 	self:loadSubmodules()
 
-	self:loadScpuiTables()
-
 	self:loadExtensions()
 
 	self:loadPlugins()
@@ -180,6 +178,28 @@ function ScpuiSystem:loadSubmodules(prefix)
 
     if not files then
         return
+    end
+
+	-- If we are loading core submodules, move the parser to the front.
+    if not prefix then
+        local parser_file = "scpui_sm_parser.lua"
+        local reordered = {}
+        local rest = {}
+        for _, filename in ipairs(files) do
+            if filename == parser_file then
+                table.insert(reordered, filename)
+            else
+                table.insert(rest, filename)
+            end
+        end
+        if #reordered > 0 then
+            for i = 1, #rest do
+                table.insert(reordered, rest[i])
+            end
+            files = reordered
+        else
+			ba.error("SCPUI Error: Could not find " .. parser_file .. " while loading core submodules!\n")
+		end
     end
 
     for _, filename in ipairs(files) do

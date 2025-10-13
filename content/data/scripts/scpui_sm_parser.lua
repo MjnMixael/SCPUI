@@ -303,3 +303,5 @@ function ScpuiSystem:loadScpuiTables()
 		self:parseScpuiTable(v)
 	end
 end
+
+ScpuiSystem:loadScpuiTables()
