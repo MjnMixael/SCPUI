@@ -1224,7 +1224,7 @@ end
 function LoadoutHandler:GetFirstAllowedWeapon(ship_index, bank, category)
 
 	local i = 1
-	while (i < #tb.WeaponClasses) do
+	while (i <= #tb.WeaponClasses) do
 		if (tb.WeaponClasses[i]:isPrimary() and (category == 1)) or (tb.WeaponClasses[i]:isSecondary() and (category == 2)) then
 			if self:GetWeaponPoolAmount(i) > 0 then
 				local actualBankIdx = self:ConvertBankSlotToBank(ship_index, bank, category, true)
