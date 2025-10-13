@@ -171,6 +171,17 @@ function LoadoutHandler:maybeApplySavedLoadout()
 
 end
 
+--- Calls the icon generator code for this ship or weapon class if no icon frames have been generated yet
+--- @param name string The name of the ship or weapon class to ensure an icon has been generated for
+--- @param is_ship boolean Whether or not this is a ship (true) or weapon (false)
+--- @return nil
+function LoadoutHandler:ensureIconGenerated(name, is_ship)
+    if ScpuiSystem.data.Generated_Icons[name] == nil then
+        ba.print("No generated icon was found for " .. name .. "! Generating one now.")
+        ScpuiSystem:setIconFrames(name, is_ship)
+    end
+end
+
 --- Loads the current loadout data from the game into loadout handler
 --- @return nil
 function LoadoutHandler:getLoadout()
@@ -321,10 +332,7 @@ function LoadoutHandler:generateShipInfo()
 	local i = 1
 	while (i <= #ship_list) do
 		if self:GetShipPoolAmount(i) > 0 then
-			if ScpuiSystem.data.Generated_Icons[ship_list[i].Name] == nil then
-				ba.warning("No generated icon was found for " .. ship_list[i].Name .. "! Generating one now.")
-				ScpuiSystem:setIconFrames(ship_list[i].Name)
-			end
+			self:ensureIconGenerated(ship_list[i].Name, true)
 			self:AppendToShipInfo(i)
 		end
 		i = i + 1
@@ -353,10 +361,7 @@ end
 --- @return ship_loadout_info data The copied ship class data
 function LoadoutHandler:AppendToShipInfo(ship_idx)
 
-	if ScpuiSystem.data.Generated_Icons[tb.ShipClasses[ship_idx].Name] == nil then
-		ba.warning("No generated icon was found for " .. tb.ShipClasses[ship_idx].Name .. "! Generating one now.")
-		ScpuiSystem:setIconFrames(tb.ShipClasses[ship_idx].Name, true)
-	end
+	self:ensureIconGenerated(tb.ShipClasses[ship_idx].Name, true)
 
 	local i = #ScpuiSystem.data.Loadout.Ship_Info + 1
 	ScpuiSystem.data.Loadout.Ship_Info[i] = {
@@ -398,10 +403,7 @@ function LoadoutHandler:generateWeaponInfo()
 	local i = 1
 	while (i <= #weapon_list) do
 		if self:GetWeaponPoolAmount(i) > 0 then
-			if ScpuiSystem.data.Generated_Icons[weapon_list[i].Name] == nil then
-				ba.warning("No generated icon was found for " .. weapon_list[i].Name .. "! Generating one now.")
-				ScpuiSystem:setIconFrames(weapon_list[i].Name)
-			end
+			self:ensureIconGenerated(weapon_list[i].Name, false)
 			self:AppendToWeaponInfo(i)
 		end
 		i = i + 1
@@ -437,10 +439,7 @@ end
 --- @return weapon_loadout_info data The copied weapon class data
 function LoadoutHandler:AppendToWeaponInfo(wep_idx)
 
-	if ScpuiSystem.data.Generated_Icons[tb.WeaponClasses[wep_idx].Name] == nil then
-		ba.warning("No generated icon was found for " .. tb.WeaponClasses[wep_idx].Name .. "! Generating one now.")
-		ScpuiSystem:setIconFrames(tb.WeaponClasses[wep_idx].Name)
-	end
+	self:ensureIconGenerated(tb.WeaponClasses[wep_idx].Name, false)
 
 	local type_v = nil
 	if tb.WeaponClasses[wep_idx]:isPrimary() then
