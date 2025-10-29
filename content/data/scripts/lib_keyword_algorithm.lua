@@ -48,7 +48,7 @@ local function getTerms(s)
   -- First, we'll find pairs of sequences such that the first sequence contains
   -- only word and ' characters, and the second contains only other characters,
   -- allowing empty sequences...
-  local matches = s:gmatch("([%w']*)([^%w']*)")
+  local matches = s:gmatch("([%w'À-ÖØ-öø-ÿ]*)([^%w'À-ÖØ-öø-ÿ]*)")
   -- ...then, we flatten the result, removing empty sequences.
   local terms = {}
   for word, rest in matches do
