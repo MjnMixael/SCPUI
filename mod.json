@@ -35,7 +35,7 @@
       "dependencies": [
         {
           "id": "FSO",
-          "version": "24.3.0-20250918",
+          "version": "25.0.0-RC2",
           "packages": []
         },
         {
