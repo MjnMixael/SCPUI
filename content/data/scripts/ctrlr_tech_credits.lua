@@ -22,6 +22,7 @@ function TechCreditsController:init()
 	self.ScrollRate = 0 --- @type number the rate at which the credits scroll
 	self.CreditsMusicHandle = nil --- @type audio_stream the handle for the credits music
 	self.CreditsTextElement = nil --- @type Element the element containing the credits text
+	self.LoadFailed = false --- @type boolean did loading fail
 
 	ScpuiSystem.data.memory.credits_memory = {
 		Ready = false,
@@ -127,10 +128,18 @@ end
 --- @return nil
 function TechCreditsController:setupCreditsImage()
 	local image_el = self.Document:GetElementById("credits_image")
-	local image_x1 = ScpuiSystem:getAbsoluteLeft(image_el)
-	local image_y1 = ScpuiSystem:getAbsoluteTop(image_el)
+	--local image_x1 = ScpuiSystem:getAbsoluteLeft(image_el)
+	--local image_y1 = ScpuiSystem:getAbsoluteTop(image_el)
 
 	local first_img = "2_Crim00.png"
+
+	if not cf.fileExists(first_img) then
+		if not self.LoadFailed then
+			self.LoadFailed = true
+			ba.warning("TechCreditsController:setupCreditsImage - Could not find image file " .. first_img)
+		end
+		return
+	end
 
 	local w = gr.getImageWidth(first_img) or 50
 	local h = gr.getImageHeight(first_img) or 50
