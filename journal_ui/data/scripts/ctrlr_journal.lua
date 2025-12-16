@@ -220,9 +220,11 @@ end
 --- @return string text the text from the file
 function JournalController:getTextFromFile(file)
 
-	if ba.getCurrentLanguageExtension() ~= "" then
+    -- SCPUI localizes the filename on table parse now so
+    -- let's avoid doing this twice
+	--[[if ba.getCurrentLanguageExtension() ~= "" then
 		file = file .. "-" .. ba.getCurrentLanguageExtension()
-	end
+	end]]--
 
     local this_file = cf.openFile(file,"rb","data/fiction")
     local text = this_file:read("*a")
