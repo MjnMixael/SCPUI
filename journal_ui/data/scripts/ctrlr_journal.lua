@@ -119,7 +119,7 @@ function JournalController:createJournalEntries(section)
 
     for i, v in ipairs(self.Data.Entry_List[section]) do
         local saved_data = (self.SaveData[section] or {})[i]
-        if saved_data and saved_data.Visible then
+        if (saved_data and saved_data.Visible) or v.InitialVis then
             -- Add all the elements
             ba.print("Adding entry " .. i .. ": " .. v.Name .. "\n" )
             list_el:AppendChild(self:createJournalListItemElement(v,saved_data.Unread))
