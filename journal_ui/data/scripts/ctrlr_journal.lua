@@ -118,6 +118,8 @@ function JournalController:createJournalEntries(section)
     self.Data.Visible_List = {}
 
     for i, v in ipairs(self.Data.Entry_List[section]) do
+        ---@cast v scpui_journal_entry
+
         local saved_data = (self.SaveData[section] or {})[i]
         if (saved_data and saved_data.Visible) or v.InitialVis then
             -- Add all the elements
