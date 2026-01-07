@@ -3,6 +3,8 @@
 $TrueType: BankGothic BT Light.ttf
 	+Name: font01
 	+Size: 12
+	+Auto Size: true
+	+Can Scale: true
 
 $TrueType: BankGothic BT Light.ttf
 	+Name: font02
