@@ -57,8 +57,8 @@
 46, ""
 47, "&Non"
 48, "&Oui"
-49, "Attention\nCe pilote existe déjà.\nÉcraser ?"
-50, "*Statistiques Générales"
+49, "Attention\nCe pilote existe déjà.\nL'écraser ?"
+50, "*Statistiques générales"
 51, "Tirs d'armes primaires :"
 52, "Tirs primaires au but :"
 53, "Tirs primaires fratricides :"
@@ -74,10 +74,10 @@
 63, "Contributions :"
 64, "*Victoires par type de vaisseau"
 65, "Attention !\n\nVoulez-vous vraiment effacer ce pilote ? "
-66, "Vous devez créer un pilote un seul joueur."
+66, "Vous devez créer un pilote un joueur."
 67, "Vous devez créer un pilote multijoueur."
 68, "multijoueur"
-69, "un seul joueur"
+69, "un joueur"
 70, "Ceci effacera votre pilote (%s). Continuer ?"
 71, "%d sur %d"
 
@@ -160,8 +160,8 @@
 124, "% tirs secondaires au but"
 125, "% tirs secondaires fratricides"
 126, "Contributions"
-127, "Morts du Joueur"
-128, "Statistiques Générales"
+127, "Morts du joueur"
+128, "Statistiques générales"
 
 ;-------------------------------------------------
 ; File: GameplayHelp.cpp
@@ -190,7 +190,7 @@
 149, "Touches de ciblage élaboré"
 150, "Sélectionner la cible assignée à cette touche"
 151, "Maj-F5...F12"
-152, "Ajouter/Retirer la cible de cette touche"
+152, "Ajouter/retirer la cible de cette touche"
 153, "Alt-Maj-F5...F12"
 154, "Retirer cette touche"
 155, "Messagerie"
@@ -283,10 +283,10 @@
 217, "message"
 218, "dommages"
 219, "%d%%"
-220, "Intégrité de la coque"
+220, "Intégrité de coque"
 221, "<aucun>"
 222, "K.O."
-223, "victimes :"
+223, "victimes:"
 224, "soutien"
 225, "annulé"
 226, "terminé"
@@ -325,9 +325,9 @@
 254, "Réticule"
 255, "Accélération"
 256, "Radar"
-257, "Surveillance de la Cible"
+257, "Surveillance de la cible"
 258, "Lunette"
-259, "Autres Infos sur la Cible"
+259, "Autres infos sur la cible"
 260, "Bouclier de la cible"
 261, "Bouclier du joueur "
 262, "Gestion de l'énergie"
@@ -345,12 +345,12 @@
 274, "Message vidéo"
 275, "Affichage des dégâts"
 276, "Communications"
-277, "Repérage de la Cible"
+277, "Repérage de la cible"
 278, "Mécanismes de défense"
 279, "Angle d'allongement"
 280, "Statut des ailiers"
 281, "Cible hors écran"
-282, "Vaisseaux Détruits"
+282, "Vaisseaux détruits"
 283, "Assaillants"
 
 ;-------------------------------------------------
@@ -361,7 +361,7 @@
 285, "Suivi"
 286, "Vue escorte activée"
 287, "Vue escorte désactivée "
-288, "Liste d'escorte complète (%d vaisseaux)"
+288, "Liste d'escortes complète (%d vaisseaux)"
 
 ;-------------------------------------------------
 ; File: HUDMessage.cpp
@@ -390,19 +390,19 @@
 294, "Escadrilles"
 295, "Tous les chasseurs"
 296, "Renforts"
-297, "Réarmement-Réparation"
+297, "Réarmement-réparation"
 298, "Annuler réarmement"
 299, "Détruisez ma cible"
 300, "Désactivez ma cible"
 301, "Désarmez ma cible"
 302, "Détruisez le sous-système"
-303, "Protégez Ma Cible"
-304, "Ignorez Ma Cible"
-305, "En Formation sur Moi"
-306, "Couvrez-Moi"
+303, "Protégez ma cible"
+304, "Ignorez ma cible"
+305, "En formation sur moi"
+306, "Couvrez-moi"
 307, "Engagez les ennemis"
 308, "Capturez ma cible"
-309, "Réarmez-Moi"
+309, "Réarmez-moi"
 310, "Annulez le réarmement"
 311, "Partez"
 312, "[pght]"
@@ -412,7 +412,7 @@
 316, "Quel message"
 317, "Sélectionner le vaisseau"
 318, "Sélectionner l'escadrille"
-319, "Sélectionner Vaisseau/Escadrille"
+319, "Sélectionner vaisseau/escadrille"
 320, "(*)"
 321, "Quel ordre"
 
@@ -467,11 +467,11 @@
 ;-------------------------------------------------
 
 353, "Quitter FreeSpace 2"
-354, "Baraquements - Gérer vos pilotes FreeSpace 2"
-355, "Salle de Préparation - Commencer ou continuer une campagne"
-356, "Salle Technique - Voir les spécifications des vaisseaux et armements de FreeSpace 2"
+354, "Quartiers - Gérer vos pilotes FreeSpace 2"
+355, "Salle de préparation - Commencer ou continuer la campagne"
+356, "Salle technique - Voir les spécifications des vaisseaux et armements de FreeSpace 2"
 357, "Options - Changer vos options FreeSpace 2"
-358, "Salle des Campagnes - Voir toutes les campagnes disponibles"
+358, "Salle des campagnes - Voir toutes les campagnes disponibles"
 359, "Multijoueur - Lancer ou joindre une partie multijoueur"
 360, "Vous n'avez pas défini le type de connexion Internet. Lancez le programme d'installation, sélectionnez l'option Installation puis l'onglet Réseau pour choisir le type de connexion."
 361, "Winsock n'est pas installé. Il vous faut TCP/IP et Winsock pour jouer à FreeSpace en mode multijoueur."
@@ -479,7 +479,7 @@
 363, "Vous avez sélectionné la Connexion via modem pour vous connecter à l'Internet. Vous n'êtes pas connecté pour l'instant. Connectez-vous à votre prestataire de service Internet avant d'aller plus loin."
 364, "Vous avez indiqué que vous utilisez une connexion LAN pour les parties en réseau. On dirait que vous êtes connecté à votre prestataire de service Internet. Veuillez vous déconnecter, ou choisissez "
 365, "Quitter le jeu ?"
-366, "Les pilotes multijoueurs n'ont pas accès à la salle de campagne"
+366, "Les pilotes multijoueurs n'ont pas accès à la salle des campagnes"
 367, "Pilote mutlijoueur non valide !"
 368, "'Charger mission' invalide pour pilotes multijoueurs"
 369, "Démarrage rapide invalide pour pilotes multijoueurs "
@@ -611,8 +611,8 @@
 440, "Quel tricheur ! Vous ne pouvez valider cette mission !"
 441, "Vous avez échoué à cette mission et ne pouvez continuer. Que voulez-vous faire ? "
 442, "Retour au debriefing"
-443, "Aller sur le Pont"
-444, "&Rejouer la Mission"
+443, "Aller sur le pont"
+444, "&Rejouer la mission"
 445, "%d sur %d"
 446, "Durée de mission"
 447, "Victoires par type de vaisseau"
@@ -707,7 +707,7 @@
 491, "Ce vaisseau n'a qu'une arme principale : %s"
 492, "Ce vaisseau n'a pas d'arme secondaire"
 493, "Ce vaisseau n'a qu'une arme secondaire : %s"
-494, " Escadrille"
+494, " escadrille"
 495, "pas d'ordre"
 496, "atq %s %s"
 497, "Inconnu"
@@ -753,13 +753,13 @@
 514, "Cibler le vaisseau dans le collimateur"
 515, "Cibler l'assaillant de la cible le plus proche"
 516, "Cibler l'auteur de la dernière transmission"
-517, "Désactiver le Ciblage"
+517, "Désactiver le ciblage automatique"
 518, "Cibler le sous-système dans le collimateur"
 519, "Cibler le sous-système suivant"
 520, "Cibler le sous-système précédent"
-521, "Désactiver le Ciblage des Sous-Systèmes"
+521, "Désactiver le ciblage automatique des sous-systèmes"
 522, "Réglage de la vitesse adaptative"
-523, "Activer/Désactiver la vitesse adaptative"
+523, "Activer/désactiver la vitesse adaptative"
 524, "Tirer avec l'arme primaire"
 525, "Tirer avec l'arme secondaire"
 526, "Basculer sur l'arme primaire suivante"
@@ -784,18 +784,18 @@
 545, "Attaquez ma cible"
 546, "Désarmez ma cible"
 547, "Désactivez ma cible"
-548, "Attaquez Le Sous-Système Ciblé"
+548, "Attaquez le sous-système ciblé"
 549, "Capturez ma cible"
 550, "Attaquez l'ennemi"
 551, "En formation sur moi"
 552, "Ignorez ma cible"
 553, "Protégez ma cible"
 554, "Couvrez-moi"
-555, "Retournez à la Base"
+555, "Retournez à la base"
 556, "Réarmez-moi"
 557, "Cibler votre assaillant le plus proche"
 558, "Vue de dos"
-559, "Vue Extérieure"
+559, "Vue extérieure"
 560, "Verrouiller la caméra externe"
 561, "Caméra libre"
 562, "Vue de la cible actuelle"
@@ -808,8 +808,8 @@
 569, "Regarder à droite"
 570, "Portée du radar"
 571, "Affichage des messages aux ailiers"
-572, "Afficher les Objectifs"
-573, "Entrer en Distorsion (Fin de Mission)"
+572, "Afficher les objectifs"
+573, "Entrer en distorsion (fin de mission)"
 574, "Cibler la cible de la cible"
 575, "Postcombustion"
 576, "Augmenter l'énergie des armes"
@@ -819,18 +819,18 @@
 580, "Augmenter l'énergie des réacteurs"
 581, "Diminuer l'énergie des réacteurs"
 582, "Équilibrer les sytèmes d'énergie"
-583, "Équilibrer les Boucliers"
+583, "Équilibrer les boucliers"
 584, "Augmenter l'énergie des boucliers avant"
 585, "Augmenter l'énergie des boucliers arrière"
 586, "Augmenter l'énergie des boucliers de gauche"
 587, "Augmenter l'énergie des boucliers de droite"
 588, "Transfert d'énergie du laser au bouclier"
 589, "Transfert d'énergie du bouclier au laser"
-590, "Afficher la Fenêtre Contextuelle des Dommages"
+590, "Afficher la fenêtre contextuelle des dommages"
 591, "Position inclinée"
-592, "Afficher Carte Nav"
-593, "Ajouter/Supprimer une escorte"
-594, "Vider la Liste d'escorte"
+592, "Afficher carte nav"
+593, "Ajouter/supprimer une escorte"
+594, "Vider la liste d'escortes"
 595, "Cibler le vaisseau d'escorte suivant"
 596, "Cibler le vaisseau de secours le plus proche"
 597, "Cibler la cargaison non scannée suivante"
@@ -844,18 +844,18 @@
 605, "(Multijoueur) Message aux alliés"
 606, "(Multijoueur) Message aux ennemis"
 607, "(Multijoueur) Message à la cible"
-608, "(Multijoueur) Observateur Zoom vers la Cible"
-609, "Augmenter la Compression du Temps"
-610, "Diminuer la Compression du Temps"
-611, "Basculer Contraste Élevé de l'ATH" 
-612, "(Multijoueur) Basculer les Informations du Réseau"
+608, "(Multijoueur) Observateur zoom vers la cible"
+609, "Augmenter la compression du temps"
+610, "Diminuer la compression du temps"
+611, "Basculer contraste élevé de l'ATH"
+612, "(Multijoueur) Basculer les informations du réseau"
 613, "(Multijoueur) Autodestruction";
 614, "Basculer l'ATH"
-615, "Poussée à Droite"
-616, "Poussée à Gauche"
-617, "Poussée en Haut"
-618, "Poussée en Bas"
-619, "Basculer la Vue Cible en Fil de Fer sur l'ATH"
+615, "Poussée à droite"
+616, "Poussée à gauche"
+617, "Poussée en haut"
+618, "Poussée en bas"
+619, "Basculer la vue cible en fil de fer sur l'ATH"
 
 ;-------------------------------------------------
 ; File: GrD3D.cpp
@@ -888,13 +888,13 @@
 ; File: JumpNode.cpp
 ;-------------------------------------------------
 
-632, "Noeud %d"
+632, "Nœud %d"
 
 ;-------------------------------------------------
 ; File: MissionWeaponChoice.cpp
 ;-------------------------------------------------
 
-633, "%s ne peut pas transporter %s armes"
+633, "Un %s ne peut pas transporter les armes %s"
 
 ;-------------------------------------------------
 ; File: chat_api.cpp
@@ -919,7 +919,7 @@
 ; File: multi_campaign.cpp
 ;-------------------------------------------------
 
-643, "La Campagne est terminée. Merci."
+643, "La campagne est terminée. Merci."
 644, "Campagne vaisseau/arsenal\n"
 
 ;-------------------------------------------------
@@ -957,7 +957,7 @@
 668, "essai de validation du pilote..."
 669, "&Ok"
 670, "Pilote refusé par Parallax Online !"
-671, "Nouveau pilote créa et validé !"
+671, "Nouveau pilote créé et validé !"
 672, "Pilote Parallax Online validé !"
 673, "&Quitter"
 674, "&Réessayer"
@@ -995,10 +995,10 @@
 ; File: multi_pinfo.cpp
 ;-------------------------------------------------
 
-689, "Image Invalide "
+689, "Image invalide "
 690, "En attente"
 691, "Transfert de l'image"
-692, "Aucune Image"
+692, "Aucune image"
 693, "Aucun vol"
 
 ;-------------------------------------------------
@@ -1016,7 +1016,7 @@
 702, "Protéger %s"
 703, "Ignorer %s"
 704, "Désarmer %s"
-705, "Neutraliser sous-système %s  (%s)"
+705, "Neutraliser sous-système %s (%s)"
 706, "En formation sur moi"
 707, "Couvrez-moi"
 708, "Attaquer l'ennemi !"
@@ -1025,9 +1025,9 @@
 ; File: multi_strans.cpp
 ;-------------------------------------------------
 
-709, "Transfert Serveur"
+709, "Transfert serveur"
 710, "jeu de "
-711, "Transfert Serveur réussi !"
+711, "Transfert serveur réussi !"
 
 ;-------------------------------------------------
 ; File: multi_voice.cpp
@@ -1083,10 +1083,10 @@
 744, "Maniabilité"
 745, "Blindage"
 746, "Canons"
-747, "Soutes à Missiles"
+747, "Soutes à missiles"
 748, "Fabricant"
-749, "Vaisseaux/Armes verrouillés"
-750, "Vaisseaux/Armes disponibles"
+749, "Vaisseaux/armes verrouillés"
+750, "Vaisseaux/armes disponibles"
 751, "Les joueurs n'ont pas encore été assignés à leur vaisseau."
 752, "Il vous encore des vaisseaux à assigner."
 753, "Certains vaisseaux n'ont pas d'armes principales !"
@@ -1107,7 +1107,7 @@
 763, "<Aucun serveur trouvé>"
 764, "Form"
 765, "Briefing"				; multiplayer
-766, "Debriefing"
+766, "Débriefing"
 767, "Pause"
 768, "En cours"
 769, "Inconnu"
@@ -1146,28 +1146,28 @@
 802, "Chargement de la mission en cours"
 803, "Sélectionner vaisseau de l'interface"
 804, "Compte-rendu"
-805, "Sync Mission "
+805, "Sync mission "
 806, "rejoint la partie"
 807, "a rejoint la partie"
 808, "confirmer"
-809, "Sélectionner Vaisseau "
-810, "Sélectionner Arme"
+809, "Sélectionner vaisseau "
+810, "Sélectionner arme"
 811, "En attente"
 812, "Mission en cours"
-813, "Mission Chargée"
+813, "Mission chargée"
 814, "Chargement des données"
 815, "Prêt au lancement de la mission"
 816, "Infos sur les vaisseaux durant la mission "
 817, "Infos sur les escadrilles durant la mission "
 818, "Points de vies durant la mission"
 819, "Armes durant la mission"
-820, "Données Post Compte-rendu"
+820, "Données post compte-rendu"
 821, "Drapeaux"
 822, "Actualisation résultats Parallax Online"
 823, "Armes"
 824, "Configuration de l'hôte"
-825, "Accepter Debrief"
-826, "Refaire Debrief"
+825, "Accepter débrief"
+826, "Refaire débrief"
 827, "Campagne vaisseau/armement"
 828, "Transfert fichier Mission %d%%"
 829, "Transfert fichier Mission "
@@ -1272,12 +1272,12 @@
 913, "Hôte connecté ? Non"
 914, "> 1 sec"
 915, " ms"
-916, "Serveur Autonome"
-917, "Objectifs Primaires"
-918, "Objectifs Secondaires"
-919, "Objectifs de Bonus"
+916, "Serveur autonome"
+917, "Objectifs principaux"
+918, "Objectifs secondaires"
+919, "Objectifs bonus"
 920, "aucun"
-921, "Vue Arbre "
+921, "Vue arbre "
 922, "Échec de l'ouverture de session du serveur autonome à Parallax Online !"
 923, "Parallax Online !"
 924, "<SERVEUR> %s"
@@ -1287,11 +1287,11 @@
 928, "Aide"
 929, "Arrêter"
 930, "Connexions"
-931, "Multi-Joueur"
-932, "Infos Joueur"
+931, "Multijoueur"
+932, "Infos joueur"
 933, "trucs"
 934, "Dépannage"
-935, "Freespace Autonome"
+935, "Freespace autonome"
 
 ;-------------------------------------------------
 ; File: multi_pxo.cpp
@@ -1421,25 +1421,25 @@
 1010, "Dernier vol"
 1011, "Victimes"
 1012, "Tirs de l'arme principale"
-1013, "Tirs principaux r\x82ussis"
+1013, "Tirs principaux réussis"
 1014, "Tirs de l'arme secondaire"
-1015, "Tirs secondaires r\x82ussis"
+1015, "Tirs secondaires réussis"
 
 ; control_config.cpp
 1016, "Mouvement de lacet avec le joystick"
 1017, "Tangage avec le joystick"
 1018, "Virage incliné avec le joystick"
-1019, "Accélération Absolue avec le Joystick"
-1020, "Accélération Relative avec le Joystick"
-1021, "Axe X Joystick/Souris"
-1022, "Axe Y Joystick/Souris"
-1023, "Axe Z Joystick"
-1024, "Axe rX Joystick"
-1025, "Axe rY Joystick"
-1026, "Axe rZ Joystick"
-1027, "Bouton Gauche"
-1028, "Bouton Droite"
-1029, "Bouton Milieu"
+1019, "Accélération absolue avec le joystick"
+1020, "Accélération relative avec le joystick"
+1021, "Axe X joystick/souris"
+1022, "Axe Y joystick/souris"
+1023, "Axe Z joystick"
+1024, "Axe rX joystick"
+1025, "Axe rY joystick"
+1026, "Axe rZ joystick"
+1027, "Bouton gauche"
+1028, "Bouton droite"
+1029, "Bouton milieu"
 1030, "G/D"
 1031, "H/D"
 1032, "N"
@@ -1523,13 +1523,13 @@
 ; ----------------------------------------------------------
 ; File: Video_tab.cpp
 ; ----------------------------------------------------------
-1084, "Glisser Lorsqu'on Appuye"
-1085, "Basculer le Mode Glissade"
-1086, "Défiler la Cadence de Tir des Armes Primaires"
-1087, "Vue de Dessus"
-1088, "Vue Verrouillée de la Cible"
-1089, "Basculer le Pilotage Automatique"
-1090, "Défiler les Points de Navigation"
+1084, "Planer lorsqu'on appuye"
+1085, "Basculer le mode plané"
+1086, "Défiler la cadence de tir des armes primaires"
+1087, "Vue de dessus"
+1088, "Vue verrouillée de la cible"
+1089, "Basculer le pilotage automatique"
+1090, "Défiler les points de navigation"
 1091, "Textures Direct3D rapides (qualité visuelle inférieure)"
 1092, "Freespace 2 nécessite l'accélération matériel Glide ou Direct3D. Vous ne pourrez pas faire fonctionner Freespace 2 sans cela."
 1093, "Avertissement"
@@ -1543,7 +1543,7 @@
 1097, "Windows NT intègre DirectX.  Si vous utilisez NT 4.0, vous devez installer le Service Pack 3 (SP3) ou une version ultérieure.  Pour des informations détaillées sur les Service Packs NT (y compris les liens de téléchargement), allez sur : \n%s.\n\nVoulez-vous aller sur ce lien ?"
 1098, "Votre version de DirectX est inférieure à 5.0.  Il est recommandé d'installer DirectX 5.0 sur votre système.\n\nVoulez-vous installer DirectX 5.0 ?\n\n"
 1099, "Votre version de DirectX est à jour.\nPour des informations détaillées sur la dernière version de DirectX (y compris les liens de téléchargement), allez sur : \n%s.\n\nVoulez-vous aller sur ce lien ?"
-1100, "Info Version DirectX "
+1100, "Info version DirectX "
 1101, "Votre version DirectX"
 1102, "Le statut de votre version"
 1103, "Freespace 2 nécessite DirectX 3.0 (ou supérieur).  DirectX 6.0 est requis pour Direct3D, le Retour de Force, et Direct Sound 3D."
@@ -1576,13 +1576,13 @@
 1122, "Vous devez permettre à la Configuration de configurer votre carte vidéo avant de jouer Freespace 2.\n\nPour ce faire, appuyez sur le bouton 'Configuration' du menu principal et cliquez sur l'onglet 'Vidéo'.  Ensuite, appuyez sur le bouton 'Détecter les cartes disponibles' et choisissez votre mode vidéo.  Enfin, appuyez sur le bouton 'OK' en bas."
 1123, "DirectX 3.0 ou supérieur requis !"
 1124, "Vous devez installer DirectX 3.0 ou supérieur pour exécuter Freespace 2.\n\nPour ce faire, appuyez sur le bouton 'Configuration' du menu principal et cliquez sur l'onglet 'DirectX' et suivez les instructions."
-1125, "Erreur au Lancement de FreeSpace"
+1125, "Erreur au lancement de FreeSpace"
 1126, "Configuration"
-1127, "Erreur Lancement README.TXT"
+1127, "Erreur lancement README.TXT"
 1128, "Aucun enlever information trouva."
 1129, "Etes-vous sûr de vouloir supprimer Conflict: FreeSpace et tous ses composants ?"
-1130, "Confirmer la supression des fichiers"
-1131, "Erreur au Lancement du Désinstallateur"
+1130, "Confirmer la suppression des fichiers"
+1131, "Erreur au lancement du désinstallateur"
 1132, "Bienvenue sur FreeSpace 2 !"
 1133, "Comme c'est la première fois que vous utilisez FreeSpace 2, vous serez automatiquement dirigé vers la fenêtre de configuration.  \n\nNOTE POUR L'UTILISATEUR:\nIl est important que vous vérifiez chaque section de la fenêtre de configuration et que vous la configuriez à votre convenance.  Appuyez sur le bouton Aide si vous avez des questions sur une section particulière.  Une fois que vous êtes satisfait de vos paramètres, sélectionnez le bouton OK en bas de la fenêtre de configuration pour les enregistrer."
 
@@ -1614,11 +1614,11 @@
 ; File: NetWorkTab.cpp
 ; ----------------------------------------------------------
 1146, "Réseau"
-1147, "Connexion Internet"
+1147, "Connexion internet"
 1148, "Vitesse de conexion"
 1149, "Aucune"
 1150, "Réseau bas débit"
-1151, "LAN/Connexion directe (et AOL)"
+1151, "LAN/connexion directe (et AOL)"
 1152, "Non spécifié"
 1153, "Plus lent que le modem 56K"
 1154, "Modem 56K"
@@ -1725,10 +1725,10 @@
 ; Localize launcher dialog box text
 ; ----------------------------------------------------------
 
-1233, "Freespace 2 Mise à jour Auto"
+1233, "Freespace 2 mise à jour auto"
 1234, "Message du jour :"
-1235, "Votre Version :"
-1236, "Dernière Version :"
+1235, "Votre version :"
+1236, "Dernière version :"
 1237, "Progression :"
 1238, "Statut :"
 1239, "Sélection du site de téléchargement des patchs"
@@ -1739,7 +1739,7 @@
 ; ----------------------------------------------------------
 
 1241, "Mise à jour du lanceur Freespace 2..."
-1242, "Veuillez Patienter"
+1242, "Veuillez patienter"
 1243, "ERREUR : Ce programme a été exécuté à l'extérieur du lanceur Freespace 2 !"
 1244, "ERREUR : Impossible de trouver le fichier :  %s"
 1245, "ERREUR : Impossible d'accéder au fichier :  %s"
@@ -1749,7 +1749,7 @@
 1249, "ERREUR : Le patch n'a pas pu être achevé avec succès."
 1250, "Lancement de l'ancien lanceur Freespace 2..."
 1251, "Lancement du nouveau lanceur Freespace 2..."
-1252, "ERREUR : Le Lanceur n'a pas pu être redémarré."
+1252, "ERREUR : Le lanceur n'a pas pu être redémarré."
 1253, "Erreur de mise à jour du lanceur Freespace 2"
 1254, "Le lanceur n'a pas été mis à jour."
 
@@ -1767,7 +1767,7 @@
 1257, "Coop"
 1258, "Équipe"
 1259, "Dogfight"
-1260, "Rafraichir les Missions"
+1260, "Rafraichir les missions"
 1261, "Infos pilote"
 1262, "Missions"
 1263, "Campagnes"
@@ -1942,7 +1942,7 @@
 1365, "Effets d'impact sur boucliers"
 1366, "Étoiles"
 1367, "Éclairage"
-1368, "Voix de Briefing"
+1368, "Voix de briefing"
 1369, "Volume"
 1370, "Effets"
 1371, "Musique"
@@ -1971,13 +1971,13 @@
 1390, "Muet"
 1391, "Mise à jour objectif"
 1392, "Lan"
-1393, "Images Pilote / Escouade"
+1393, "Images pilote / escouade"
 1394, "Oui"
 1395, "Non"
-1396, "Transférer les Missions"
+1396, "Transférer les missions"
 1397, "/multidata"
 1398, "/missions"
-1399, "Vider le Cache"
+1399, "Vider le cache"
 1400, "Jamais"
 1401, "Avant la partie"
 
@@ -2009,8 +2009,8 @@
 1412, "Partie"							; options screen
 1413, "Retirer"							; control config - delete/clear all
 1414, "Retirer"							; control config - delete/clear selected
-1415, "ATH"							; options - HUD config					
-1416, "Retour"							; PXO 
+1415, "ATH"							; options - HUD config
+1416, "Retour"							; PXO
 1417, "Retour"							; multiplayer host options
 1418, "Retour"							; tech database
 1419, "Retour"							; tech cutscenes
@@ -2052,7 +2052,7 @@
 ; ------------------------------------------------
 ; some recently discovered interface text
 ;
-1434, "Baraquements"				; title for barracks screen
+1434, "Quartiers"				; title for barracks screen
 1435, "Statistiques du pilote"			; area heading in barracks screen
 1436, "Choisir le pilote"			; heading for initial player choice screen
 
@@ -2076,7 +2076,7 @@
 ; ------------------------------------------------
 ; Skip Training button on mission briefing
 ;
-1442, "Passer Formation"
+1442, "Passer l'entrainement"
 
 ; ------------------------------------------------
 ; Demo tips popup dialog
@@ -2107,7 +2107,7 @@
 ; ------------------------------------------------
 ; HUD config screen
 ;
-1453,	"Popup"
+1453, "Popup"
 1454, "Sauvegarder"
 1455, "Orange"
 1456, "Bleu"
@@ -2163,7 +2163,7 @@
 ; ------------------------------------------------
 ; loop exit button
 ;
-1477, "Quitter Série"
+1477, "Quitter la série"
 
 ; ------------------------------------------------
 ; squad war
@@ -2205,7 +2205,7 @@
 1506, "Rejoindre"						; pxo screen - before private
 1507, "Lancement"						; flashing missile launch icon on HUD
 1508, "Fermer"						; on Multi Create screen
-1509, "Niveau de Compétences"		; on Options screen
+1509, "Niveau de compétences"		; on Options screen
 
 ; more misc, added 10/14
 1510, "Alt"							; control config
@@ -2318,7 +2318,7 @@
 1604, "Vous avez sélectionné TCP/IP pour le multijoueur de FreeSpace, mais la socket TCP est déjà utilisée. Vérifiez une autre instance et/ou utilisez l'option de ligne de commande \-port <port_num>\ pour sélectionner un port disponible."
 1605, "Entrer le nom de la mission\n\n* Cela détruira toute progression illégitime dans cette campagne. *"
 1606, "Le fichier de la campagne est actuellement indisponible"
-1607, "&Aller à la Salle de Campagne"
+1607, "&Aller à la salle des campagnes"
 1608, "&Sélectionner un autre pilote"
 1609, "&Quitter le jeu"
 1610, "Émission d'une demande de réarmement pour %s"			; scp exclusive cheat
@@ -2329,7 +2329,7 @@
 1615, "Erreur !\n\nLa campagne demandée nécessite trop de SEXPs et ne peut être chargée.\n\nVeuillez sélectionner une autre campagne dans la Salle de Campagne."
 1616, "Énergie"									; text in ballistic weapon gauge
 1617, "Erreur !\n\nLe fichier de sauvegarde du pilote pour cette campagne n'est pas valide pour le mod actuel.\n\nVeuillez sélectionner une autre campagne ou passer au mod adéquate afin d'utiliser cette campagne."
-1618, "Vous devez Accepter ou Refuser avant de retourner dans le Hall Principal"
+1618, "Vous devez accepter ou refuser avant de retourner dans le hall principal"
 1619, "Erreur !\n\nImpossible de trouver un vaisseau dernièrement utilisé valide !\n\nAvez-vous effectué des missions depuis l'activation de ce mod/campagne ?"
 1620, "Une limite de temps est utilisée dans une partie en coopération.\r\nSélectionnez \'Annuler\' pour revenir à l'écran de sélection de la mission.\r\nSélectionnez \'Oui\'' pour continuer avec cette limite de temps.\r\nSélectionnez \'Non\' pour continuer sans cette limite de temps."
 1621, "Une limite de victimes est utilisée dans une partie en coopération.\r\nSélectionnez \'Annuler\' pour revenir à l'écran de sélection de la mission.\r\nSélectionnez \'Oui\'' pour continuer avec cette limite de victimes.\r\nSélectionnez \'Non\' pour continuer sans cette limite de victimes."
@@ -2341,7 +2341,7 @@
 1627, "Tourelles"									; ship selection info
 1628, "Cet emplacement ne peut pas transporter l'armement %s"
 1629, "%s ne peut pas transporter l'armement %s"
-1630, "%s ne peut pas transporter l'armement %s dans l'emplacement primaire %d"	
+1630, "%s ne peut pas transporter l'armement %s dans l'emplacement primaire %d"
 1631, "%s ne peut pas transporter l'armement %s dans l'emplacement secondaire %d"
 1632, "%s disponibles insuffisants pour armer %s"
 1633, "Pas équipé de contre-mesures"
@@ -2366,17 +2366,17 @@
 1652, "Axe rZ"
 1653, "Bouton X1"
 1654, "Bouton X2"
-1655, "Roue Haut"
-1656, "Roue Bas"
-1657, "Roue Gauche"
-1658, "Roue Droite"
+1655, "Roue haut"
+1656, "Roue bas"
+1657, "Roue gauche"
+1658, "Roue droite"
 1659, "Préréglage : %s"
 1660, "Préréglage : personnalisé"
 1661, "Préréglage Suivant"
 1662, "Impossible d'ouvrir le fichier du pilote %s !"
 1663, "Avertissement !\n\nCe pilote a été créé avec une version différente de FreeSpace.  Si vous continuez, il sera converti en version %i.\n\nVeuillez envisager de cloner le pilote à la place, afin que le pilote original reste compatible avec l'autre version.  Visitez https://wiki.hard-light.net/index.php/Frequently_Asked_Questions pour plus d'informations.\n\nVoulez-vous continuer ?"
 1664, "Remarque !\n\nLe pilote actuellement sélectionné a été converti à partir d'une version antérieure à FSO 22.0.\n\nIl est fortement recommandé de vérifier les affectations des commandes dans l'écran Options -> Config Commandes, ainsi que le mode de saisie de la souris (anciennement Souris Arrêt/Marche) dans l'écran Options."
-1665, "Mode de Saisie de la Souris"
+1665, "Mode de saisie de la souris"
 1666, "Joy-0"
 1667, "A"
 1668, "PLANÉ"
@@ -2396,13 +2396,13 @@
 1678, "Trilinéaire"	; Graphics
 1679, "Plein écran"	; Graphics
 1680, "Minimum"	; Graphics
-1681, "FXAA Faible"	; Graphics
-1682, "FXAA Moyen"	; Graphics
-1683, "FXAA Élevé"	; Graphics
-1684, "SMAA Faible"	; Graphics
-1685, "SMAA Moyen"	; Graphics
-1686, "SMAA Élevé"	; Graphics
-1687, "SMAA Ultra"	; Graphics
+1681, "FXAA faible"	; Graphics
+1682, "FXAA moyen"	; Graphics
+1683, "FXAA élevé"	; Graphics
+1684, "SMAA faible"	; Graphics
+1685, "SMAA moyen"	; Graphics
+1686, "SMAA élevé"	; Graphics
+1687, "SMAA ultra"	; Graphics
 1688, "Ondes de choc"	; Graphics
 1689, "Propulseurs"	; Graphics
 1690, "Tous"	; Graphics
@@ -2418,7 +2418,7 @@
 1700, "Le niveau de compétences pour le jeu."
 1701, "Intensité de l'éclat"	; Graphics
 1702, "Règle l'intensité de l'éclat (nécessite le post-traitement)"	; Graphics
-1703, "Champ de Vision"	; Graphics
+1703, "Champ de vision"	; Graphics
 1704, "Le champ de vision vertical"	; Graphics Info
 1705, "Joystick 0"	; Input
 1706, "Le joystick 0 actuel"	; Input Info
@@ -2428,12 +2428,12 @@
 1710, "Le joystick 2 actuel"	; Input
 1711, "Joystick 3"	; Input
 1712, "Le joystick 3 actuel"	; Input
-1713, "Débris en Mouvement"	; Graphics
+1713, "Débris en mouvement"	; Graphics
 1714, "Active ou désactive les débris en mouvement visibles"	; Graphics Info
 1715, "Niveau de détail de l'éclairage"	; Graphics Info
 1716, "Active ou désactive la lecture vocale dans le briefing."	; Audio
 1717, "Niveau de détail des particules"	; Graphics Info
-1718, "Effets des Tirs sur le Bouclier"	; Graphics
+1718, "Effets des tirs sur le bouclier"	; Graphics
 1719, "Niveau de détail des impacts sur le bouclier"	; Graphics Info
 1720, "Niveau de détail des textures"	; Graphics Info
 1721, "Ultra"	; Graphics
@@ -2443,9 +2443,9 @@
 1725, "Active ou désactive les rayons de lumière (nécessite le post-traitement)"	; Graphics
 1726, "Post-traitement"	; Graphics
 1727, "Contrôle si le post-traitement est activé dans le moteur."	; Graphics Info
-1728, "Retour de Force"	; Input
+1728, "Retour de force"	; Input
 1729, "Active ou désactive le retour de force"	; Input
-1730, "Coup Directionnel"	; Input
+1730, "Coup directionnel"	; Input
 1731, "Active ou désactive l'effet de coup directionnel"	; Input
 1732, "Effets du tampon de trame"	; Graphics
 1733, "Contrôle les effets du tampon de trame qui seront appliqués à la scène"	; Graphics Info
@@ -2454,7 +2454,7 @@
 1736, "Filtrage anistropique"	; Graphics
 1737, "Contrôle la quantité de filtrage anistropique des textures"	; Graphics Info
 1738, "La valeur de luminosité utilisée pour la fenêtre de jeu"	; Graphics Info
-1739, "Détail des Modèles"	; Graphics
+1739, "Détail des modèles"	; Graphics
 1740, "Niveau de détail des modèles"	; Graphics Info
 1741, "Écran principal"	; Graphics
 1742, "L'écran utilisé pour le rendu"	; Graphics Info
@@ -2465,15 +2465,15 @@
 1747, "La sensibilité de la souris"	; Input
 1748, "Résolution"	; Graphics
 1749, "La résolution de rendu"	; Graphics Info
-1750, "Qualité des Ombres"	; Graphics
+1750, "Qualité des ombres"	; Graphics
 1751, "La qualité des ombres"	; Graphics Info
 1752, "Anticrénelage"	; Graphics
 1753, "Contrôle le mode d'anticrénelage du moteur."	; Graphics Info
-1754, "Presence de Discord"	; Other
+1754, "Discord Presence"	; Other
 1755, "Bascule la fonctionnalité Rich Presence de Discord"	; Other Info
-1756, "Force du Retour de Force"	; Input
+1756, "Force du retour de force"	; Input
 1757, "La force relative des effets de retour de force"	; Input Info
-1758, "Anticrénelage Multi-Échantillon"	; Graphics
+1758, "Anticrénelage multi-échantillon"	; Graphics
 1759, "Contrôle si l'anticrénelage multi-échantillon est activé, et avec combien d'échantillons"	; Graphics Info
 1760, "Volume utilisé pour jouer la musique"	; Audio Info
 1761, "Particules Douces"	; Graphics
@@ -2481,29 +2481,29 @@
 1763, "Filtrage des textures"	; Graphics
 1764, "Option de filtrage des textures"	; Graphics Info
 1765, "Utiliser ou non la souris pour voler"	; Input Info
-1766, "Synchronisation Verticale"	; Graphics
+1766, "Synchronisation verticale"	; Graphics
 1767, "Contrôle la façon dont le moteur effectue la synchronisation verticale"	; Graphics Info
-1768, "Flash de Distorsion"	; Graphics
+1768, "Flash de distorsion"	; Graphics
 1769, "Affiche un flash à l'ouverture ou à la fermeture de la distorsion"	; Graphics Info
 1770, "Distorsion 3D"	; Graphics
 1771, "Utiliser un modèle 3D pour les effets de distorsion"	; Graphics Info
 1772, "Mode de la fenêtre"	; Graphics
 1773, "Contrôle la façon dont la fenêtre de jeu est créée"	; Graphics Info
 1774, "Souris"	; Input Settings
-1775, "Basculer le Mode Plané"
-1776, "Défiler la Cadence de Tir des Armes Primaires"
-1777, "Vue de Haut en Bas"
-1778, "Vue Verrouillée sur Cible"
-1779, "Basculer le Pilote Automatique"
-1780, "Défiler le Points de Navigation"
-1781, "Basculer les Ombres Portées de l'ATH"
+1775, "Basculer le mode plané"
+1776, "Défiler la cadence de tir des armes primaires"
+1777, "Vue de haut en bas"
+1778, "Vue verrouillée sur cible"
+1779, "Basculer le pilote automatique"
+1780, "Défiler le points de navigation"
+1781, "Basculer les ombres portées de l'ATH"
 1782, "Éclairage différé"	; Graphics
 1783, "Active ou désactive l'éclairage différé"	; Graphics Info
-1784, "Commande Personnalisée 1"
-1785, "Commande Personnalisée 2"
-1786, "Commande Personnalisée 3"
-1787, "Commande Personnalisée 4"
-1788, "Commande Personnalisée 5"
+1784, "Commande personnalisée 1"
+1785, "Commande personnalisée 2"
+1786, "Commande personnalisée 3"
+1787, "Commande personnalisée 4"
+1788, "Commande personnalisée 5"
 
 ;-------------------------------------------------
 ; Even more additional SCP Features
@@ -2514,19 +2514,19 @@
 1791, "Bonne"	; Ship Selection Menu.
 1792, "Moyenne"	; Ship Selection Menu.
 1793, "Faible"	; Ship Selection Menu.
-1794, "Très Faible"	; Ship Selection Menu.
-1795, "Extrêmement Faible"	; Ship Selection Menu.
+1794, "Très faible"	; Ship Selection Menu.
+1795, "Extrêmement faible"	; Ship Selection Menu.
 1796, "Léger"	; Ship Selection Menu.
 1797, "Médiocre"	; Ship Selection Menu.
 1798, "Moyen"	; Ship Selection Menu.
 1799, "Lourd"	; Ship Selection Menu.
-1800, "Très Lourd"	; Ship Selection Menu.
-1801, "Ultra Lourd"	; Ship Selection Menu.
-1802, "Capital Léger"	; Ship Selection Menu.
-1803, "Capital Moyen"	; Ship Selection Menu.
-1804, "Capital Lourd"	; Ship Selection Menu.
-1805, "Capital Très Lourd"	; Ship Selection Menu.
-1806, "Capital Ultra Lourd"	; Ship Selection Menu.
+1800, "Très lourd"	; Ship Selection Menu.
+1801, "Ultra lourd"	; Ship Selection Menu.
+1802, "Capital léger"	; Ship Selection Menu.
+1803, "Capital moyen"	; Ship Selection Menu.
+1804, "Capital lourd"	; Ship Selection Menu.
+1805, "Capital très lourd"	; Ship Selection Menu.
+1806, "Capital ultra lourd"	; Ship Selection Menu.
 1807, "La langue à afficher" ; Language Info
 
 1808, "Diffusion ou non des parties sur le réseau local"
@@ -2561,15 +2561,15 @@
 1837, "Le dispositif utilisé pour la capture audio"
 1838, "Bascule FOV du cockpit"
 1839, "Utilisation ou non d'un FOV différent pour le rendu du cockpit par rapport au rendu normal"
-1840, "Champ de Vision du Cockpit"
+1840, "Champ de vision du cockpit"
 1841, "Champ de vision vertical pour le rendu du cockpit. Ne fonctionne que si les cockpits sont actifs et que la bascule FOV du cockpit est activée."
 1842, "Mode de vol"
 1843, "Choisissez le style de vol à utiliser pendant le jeu."
-1844, "Vaisseau Verrouillé"
-1845, "Curseur de Vol"
-1846, "Étendue du Curseur de Vol"
+1844, "Vaisseau verrouillé"
+1845, "Curseur de vol"
+1846, "Étendue du curseur de vol"
 1847, "Distance jusqu'où le curseur peut s'éloigner du centre."
-1848, "Zone morte du Curseur de Vol"
+1848, "Zone morte du curseur de vol"
 1849, "Distance à laquelle le curseur doit s'éloigner du centre avant d'être enregistré."
 1850, "%s : <inconnu>"
 1851, "%s : inspection en cours"
