@@ -44,7 +44,7 @@
 								<img src="select.png" class="psuedo_img"></img>
 							</span>
 							<span class="pos button_text_top">
-								<p>Continue</p>
+								<p>XSTR("Continue", 888027)</p>
 							</span>
 						</button>
 					</div>
@@ -59,7 +59,7 @@
 								<img src="decline.png" class="psuedo_img"></img>
 							</span>
 							<span class="neg button_text_top">
-								<p>decline</p>
+								<p>XSTR("Decline", 888354)</p>
 							</span>
 						</button>
 					</div>

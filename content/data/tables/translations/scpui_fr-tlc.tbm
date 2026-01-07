@@ -340,7 +340,12 @@
 888568, "Système : "
 888569, "Type de système : "
 888570, "Contrôlé par la faction : "
+;;ctrlr_control_config.lua
+888574, "CONFLIT!"
+;;system_map.rml
+888575, "Retour"
+888576, "Zoomer sur"
 
-;;Next available ID: 888574
+;;Next available ID: 888577
 
 #end

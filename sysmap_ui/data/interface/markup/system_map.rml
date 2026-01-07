@@ -31,7 +31,7 @@
 					<div id=close_cont>
 						<button id="close_btn" class="close button_1" onclick="controller:close_pressed(element)">
 							<span class="pos">
-								<p>Close</p>
+								<p>XSTR("Close", 888110)</p>
 							</span>
 						</button>
 					</div>
@@ -43,7 +43,7 @@
 					<div id=zoom_cont>
 						<button id="zoom_btn" class="zoom button_1" onclick="controller:zoom_pressed(element)">
 							<span class="pos">
-								<p>Zoom To</p>
+								<p>XSTR("Zoom To", 888576)</p>
 							</span>
 						</button>
 					</div>
@@ -60,7 +60,7 @@
 								<img src="skip-l.png" class="psuedo_img"></img>
 							</span>
 							<span class="pos button_text_top">
-								<p>Back</p>
+								<p>XSTR("Back", 888575)</p>
 							</span>
 						</button>
 					</div>
@@ -77,7 +77,7 @@
 								<img src="select.png" class="psuedo_img"></img>
 							</span>
 							<span class="neg button_text_top">
-								<p>Exit</p>
+								<p>XSTR("Exit", 888102)</p>
 							</span>
 						</button>
 					</div>
