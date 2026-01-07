@@ -245,9 +245,9 @@ function MedalsController:showMedal(idx)
 	local num = math.min(self.PlayerMedals[idx], ui.Medals.Medals_List[idx].NumMods)
 
 	--create the display string
-	local display = medal.Name
+	local display = medal.DisplayName
 	if num > 1 then
-		display = medal.Name .. " (" .. self.PlayerMedals[idx] .. ")"
+		display = medal.DisplayName .. " (" .. self.PlayerMedals[idx] .. ")"
 	end
 
 	--rank is special because reasons
