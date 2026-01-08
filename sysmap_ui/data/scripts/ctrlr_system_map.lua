@@ -275,7 +275,7 @@ function SystemMapController:initializeObjectData(iconTable)
 				local obj = self.Objects[value.ObjectName]
 
 				if obj ~= nil then
-					value.Name = obj.Name
+					value.Name = obj.DisplayName
 					value.Bitmap = obj.Bitmap
 					value.LargeBitmap = obj.LargeBitmap
 					value.ShipClass = obj.ShipClass

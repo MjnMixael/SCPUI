@@ -69,7 +69,7 @@
 								<img src="select.png" class="psuedo_img"></img>
 							</span>
 							<span class="neg button_text_top">
-								<p>Exit</p>
+								<p>XSTR("Exit", 888102)</p>
 							</span>
 						</button>
 					</div>
@@ -84,7 +84,7 @@
 								<img src="help.png" class="psuedo_img"></img>
 							</span>
 							<span class="pos button_text_left">
-								<p>Help</p>
+								<p>XSTR("Help", 888015)</p>
 							</span>
 						</button>
 					</div>
@@ -94,7 +94,7 @@
 								<img src="diamonds.png" class="psuedo_img"></img>
 							</span>
 							<span class="pos button_text_left">
-								<p>Options</p>
+								<p>XSTR("Options", 888016)</p>
 							</span>
 						</button>
 					</div>

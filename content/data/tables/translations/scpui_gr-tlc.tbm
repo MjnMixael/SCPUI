@@ -340,7 +340,12 @@
 888568, "System: "
 888569, "Art des Systems: "
 888570, "Kontrollierende Fraktion: "
+;;ctrlr_control_config.lua
+888574, "KONFLIKT!"
+;;system_map.rml
+888575, "Zurück"
+888576, "Heranzoomen"
 
-;;Next available ID: 888574
+;;Next available ID: 888577
 
 #end

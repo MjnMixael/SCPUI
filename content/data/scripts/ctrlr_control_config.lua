@@ -705,7 +705,7 @@ function ControlConfigController:checkConflict()
 		return
 	end
 
-	self.Document:GetElementById("conflict_warning").inner_rml = "CONFLICT!"
+	self.Document:GetElementById("conflict_warning").inner_rml = ba.XSTR("CONFLICT!", 888574)
 
 	local conflict = ui.ControlConfig.ControlConfigs[self.CurrentControl].Conflicted
 
