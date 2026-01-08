@@ -28,14 +28,15 @@
 
 --- SCPUI Journal Save Data
 --- @class scpui_journal_save_data
+--- @field Key string The key of the journal entry
 --- @field Visible boolean True if the journal entry is visible, false otherwise
 --- @field Unread boolean True if the journal entry is unread, false otherwise
 
 --- Scpui Journal Extension
 --- @class JournalUi
---- @field parseJournalTable fun(self: JournalUi, filename: string): scpui_journal_data Parses a journal table from the specified file.
---- @field loadDataFromFile fun(self: JournalUi): table<number, scpui_journal_save_data[]> Loads the journal save data from disk.
 --- @field saveDataToFile fun(self: JournalUi, data: table<number, scpui_journal_save_data[]>): nil Saves the journal data to disk.
+--- @field getData fun(self: JournalUi): scpui_journal_data? Gets the journal data.
+--- @field getSaveData fun(self: JournalUi): table<number, scpui_journal_save_data[]>? Gets the journal save data.
 --- @field checkNew fun(self: JournalUi): boolean Checks if there are new journal entries.
 --- @field getTitle fun(self: JournalUi): string Returns the title of the journal.
 --- @field doesConfigExist fun(self: JournalUi): boolean Checks if the journal configuration exists on disk.
@@ -50,12 +51,15 @@ local JournalUi = {
 	Key = "JournalUi"
 }
 
+JournalUi.LoadedCampaign = nil --- @type string? the currently loaded campaign filename
 JournalUi.SectionEnum = nil --- @type LuaEnum the enum for a journal section in the sexp operators
 JournalUi.Enum_Lists = {} --- @type LuaEnum[] the enums for the journal entries in the sexp operators
 
 --- Initialize the JournalUi object. Called after the journal extension is registered with SCPUI
 --- @return nil
 function JournalUi:init()
+
+	self.LoadedCampaign = nil
 
 	mn.LuaSEXPs["lua-journal-unlock-article"].Action = function(section, ...)
 
@@ -181,6 +185,14 @@ function JournalUi:parseJournalTable(file, entries_only)
 
 	if parse.optionalString("#Journal Entries") then
 
+		local function normalizeKey(s)
+			s = string.lower(s)
+			s = s:gsub("[^a-z0-9]+", "_")
+			s = s:gsub("_+", "_")
+			s = s:gsub("^_+", ""):gsub("_+$", "")
+			return s
+		end
+
 		while parse.optionalString("$Name:") do
 
 			---@type scpui_journal_entry
@@ -205,9 +217,10 @@ function JournalUi:parseJournalTable(file, entries_only)
 			end
 
 			if parse.optionalString("$Short Title:") then
-				t.Key = parse.getString()
+				t.Key = normalizeKey(parse.getString())
 			else
-				t.Key = new_index
+				-- Generate key from Name
+				t.Key = normalizeKey(t.Name)
 			end
 
 			if parse.requiredString("$File:") then
@@ -229,7 +242,10 @@ function JournalUi:parseJournalTable(file, entries_only)
 
 			new_index = #new_data.Entry_List[t.GroupIndex] + 1
 
-			--t.Name = newIndex .. " - " .. t.GroupIndex .. " - " .. t.Name
+			--- Ensure key is not empty in rare edge cases
+			if t.Key == "" then
+				t.Key = "entry_" .. tostring(new_index)
+			end
 
 			new_data.Entry_List[t.GroupIndex][new_index] = t
 
@@ -252,7 +268,7 @@ function JournalUi:checkLanguage(filename)
 
 	local language = ba.getCurrentLanguageExtension()
 	if language ~= "" then
-		local language_file = filename:gsub(".txt", "") .. "-" .. language .. ".txt"
+		local language_file = filename:gsub("%.txt", "") .. "-" .. language .. ".txt"
 		if cf.fileExists(language_file, "data/fiction", true) then
 			filename = language_file
 		end
@@ -263,26 +279,40 @@ end
 
 --These are only needed for FS2 and not FRED?
 
---- Load the journal data for the current player
---- @return scpui_journal_data? data the loaded journal data
-function JournalUi:loadData()
+--- Ensure the journal data table is loaded
+--- @return boolean loaded whether the journal data is loaded
+function JournalUi:ensureLoaded()
+  if not self:ensureTableLoaded() then
+    return false
+  end
 
-	local player = ba.getCurrentPlayer()
-	local campaign_filename = player:getCampaignFilename()
-
-	self.Data = self:parseJournalTable(campaign_filename .. "-journal.tbl")
-
-	if self.Data then
-		self.SaveData = self:loadDataFromFile()
-	end
-
+  self.SaveData = self:loadDataFromFile()
+  return true
 end
+
+--- Ensure the journal data table is loaded
+--- @return boolean loaded whether the journal data is loaded
+function JournalUi:ensureTableLoaded()
+  local player = ba.getCurrentPlayer()
+  local campaign_filename = player:getCampaignFilename()
+
+  if self.Data and self.LoadedCampaign == campaign_filename then
+    return true
+  end
+
+  self.Data = self:parseJournalTable(campaign_filename .. "-journal.tbl")
+  self.LoadedCampaign = campaign_filename
+
+  return self.Data ~= nil
+end
+
 
 --- Unload the journal data
 --- @return nil
 function JournalUi:unloadData()
 	self.Data = nil
 	self.SaveData = nil
+	self.LoadedCampaign = nil
 end
 
 --- Check if the journal table exists
@@ -304,6 +334,11 @@ end
 --- @return table<number, scpui_journal_save_data[]> config the loaded journal data
 function JournalUi:loadDataFromFile()
 
+	if not self.Data then
+		ba.error("JournalUi:loadDataFromFile called before table was loaded.")
+		return {}
+	end
+
 	local save_location = "journal_" .. ba.getCurrentPlayer():getCampaignFilename()
 	local Datasaver = require("lib_data_saver")
 	local config = Datasaver:loadDataFromFile(save_location, true)
@@ -311,10 +346,33 @@ function JournalUi:loadDataFromFile()
 	if config == nil then
 		config = self:createSaveData()
 		self:saveDataToFile(config)
+		return config
+	end
+
+	if self:reconcileSaveData(config) then
+		self:saveDataToFile(config)
 	end
 
 	return config
 
+end
+
+--- Get the journal data
+--- @return scpui_journal_data? data the journal data
+function JournalUi:getData()
+	if not self:ensureTableLoaded() then
+		return nil
+	end
+	return self.Data
+end
+
+--- Get the journal save data
+--- @return table<number, scpui_journal_save_data[]>? data the journal save data
+function JournalUi:getSaveData()
+	if not self:ensureLoaded() then
+		return nil
+	end
+	return self.SaveData
 end
 
 --- Clear the new flag for all entries and save it
@@ -332,23 +390,14 @@ end
 --- Check if there are any new entries
 --- @return boolean new whether there are new entries
 function JournalUi:checkNew()
-	local t = {}
-
-	local config = self:loadDataFromFile()
-
-	if config ~= nil then
-		t = config
-	else
-		self:loadData()
-		if self.Data then
-			return true
-		else
-			return false
-		end
+	if not self:ensureLoaded() then
+		return false
 	end
 
+	local t = self.SaveData or {}
+
 	for i = 1, #t do
-		for j, v in ipairs(t[i]) do
+		for j = 1, #t[i] do
 			local item = t[i][j]
 			if item and item.Visible == true and item.Unread == true then
 				return true
@@ -357,18 +406,18 @@ function JournalUi:checkNew()
 	end
 
 	return false
-
 end
 
 --- Create the journal save data
 --- @return table<number, scpui_journal_save_data[]> t the created save data
 function JournalUi:createSaveData()
 
-	local t = {}
-
 	if not self.Data then
-		self:loadData()
+		ba.error("JournalUi:createSaveData called before table was loaded.")
+		return {}
 	end
+
+	local t = {}
 
 	for i, section in ipairs(self.Data.Entry_List) do
 
@@ -379,12 +428,12 @@ function JournalUi:createSaveData()
 
 			if not save_section[j] then
 
-				local t = {}
-				t.Key = string.lower(entry.Key)
-				t.Unread = true
-				t.Visible = entry.InitialVis
+				local item = {}
+				item.Key = string.lower(entry.Key)
+				item.Unread = true
+				item.Visible = entry.InitialVis
 
-				save_section[j] = t
+				save_section[j] = item
 
 			end
 
@@ -395,6 +444,76 @@ function JournalUi:createSaveData()
 
 	return t
 
+end
+
+--- Reconcile existing journal save data with the current parsed table.
+--- Adds new entries, preserves existing Visible/Unread, and rebuilds in current table order.
+--- Returns true if config was modified.
+--- @param config table<number, scpui_journal_save_data[]>
+--- @return boolean changed
+function JournalUi:reconcileSaveData(config)
+
+  if not self.Data or not self.Data.Entry_List then
+    return false
+  end
+
+  local changed = false
+
+  for section_index, section_entries in ipairs(self.Data.Entry_List) do
+    if config[section_index] == nil then
+      config[section_index] = {}
+      changed = true
+    end
+
+    -- Lookup existing saved items by key
+    local saved_by_key = {}
+    for _, saved in ipairs(config[section_index]) do
+      if saved and saved.Key then
+        saved_by_key[string.lower(saved.Key)] = saved
+      end
+    end
+
+    -- Rebuild saved list to match current table ordering
+    local rebuilt = {}
+
+    for entry_index, entry in ipairs(section_entries) do
+		local key = string.lower(entry.Key or "")
+		if key == "" then
+			key = "entry_" .. tostring(entry_index)
+			changed = true
+		end
+		local saved = saved_by_key[key]
+
+		if saved == nil then
+			saved = {
+				Key = key,
+				Unread = true,
+				Visible = entry.InitialVis == true
+			}
+			changed = true
+		else
+			-- Ensure required fields exist
+			if saved.Key == nil then
+				saved.Key = key
+				changed = true
+			end
+			if saved.Unread == nil then
+				saved.Unread = true
+				changed = true
+			end
+			if saved.Visible == nil then
+				saved.Visible = entry.InitialVis == true
+				changed = true
+			end
+		end
+
+		rebuilt[entry_index] = saved
+    end
+
+    config[section_index] = rebuilt
+  end
+
+  return changed
 end
 
 --- Save the journal data to disk
@@ -415,7 +534,7 @@ end
 function JournalUi:lockEntry(section, ...)
 
 	--load data
-	self:loadData()
+	if not self:ensureLoaded() then return end
 	--get section
 	local section = self:getGroupIndex(section, self.Data.Section_List)
 	--get key(s)
@@ -429,8 +548,6 @@ function JournalUi:lockEntry(section, ...)
 	end
 	--save
 	self:saveDataToFile(self.SaveData)
-	--unload
-	self:unloadData()
 
 end
 
@@ -441,7 +558,7 @@ end
 function JournalUi:unlockEntry(section, ...)
   local unlocked = false
 	--load data
-	self:loadData()
+	if not self:ensureLoaded() then return false end
 	--get section
 	local section = self:getGroupIndex(section, self.Data.Section_List)
 	--get key(s)
@@ -456,23 +573,24 @@ function JournalUi:unlockEntry(section, ...)
 	end
 	--save
 	self:saveDataToFile(self.SaveData)
-	--unload
-	self:unloadData()
   return unlocked
 end
 
 --- Get the title of the journal UI
 --- @return string title the title of the journal UI
 function JournalUi:getTitle()
-	local player = ba.getCurrentPlayer()
-	local campaign_filename = player:getCampaignFilename()
-	local data = self:parseJournalTable(campaign_filename .. "-journal.tbl")
-	return data.Title
+	if not self:ensureTableLoaded() then
+		return ba.XSTR("Journal", 888550)
+	end
+	return self.Data.Title
 end
 
 --- Clear all journal data and reset to default
 --- @return nil
 function JournalUi:clearAll()
+	if not self:ensureTableLoaded() then
+    	return
+	end
 	local config = self:createSaveData()
 	self:saveDataToFile(config)
 end

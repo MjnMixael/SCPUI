@@ -36,15 +36,10 @@ function JournalController:initialize(document)
 
     self:registerEventHandlers()
 
-    local player = ba.getCurrentPlayer()
-    local campaign_filename = player:getCampaignFilename()
-
-    self.Data = JournalUi:parseJournalTable(campaign_filename .. "-journal.tbl")
-
-    if not self.Data then return end
+    self.Data = JournalUi:getData() or {}
 
     self.Data.Visible_List = {}
-    self.SaveData = JournalUi:loadDataFromFile()
+    self.SaveData = JournalUi:getSaveData() or {}
 
     self.SelectedEntry = nil
 
@@ -121,7 +116,7 @@ function JournalController:createJournalEntries(section)
         ---@cast v scpui_journal_entry
 
         local saved_data = (self.SaveData[section] or {})[i]
-        if (saved_data and saved_data.Visible) or v.InitialVis then
+        if (saved_data and saved_data.Visible) then
             -- Add all the elements
             ba.print("Adding entry " .. i .. ": " .. v.Name .. "\n" )
             list_el:AppendChild(self:createJournalListItemElement(v,saved_data.Unread))
