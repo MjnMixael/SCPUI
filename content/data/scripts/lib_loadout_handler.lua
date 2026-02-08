@@ -1031,6 +1031,9 @@ function LoadoutHandler:AddWeaponToBank(slot, bank, weapon_idx, amount)
 			self:SubtractWeaponFromPool(weapon_idx, amount)
 			ship.Weapons_List[bank] = weapon_idx
 			ship.Amounts_List[bank] = amount
+
+			Topics.loadouts.fillWeaponSlot:send({slot, bank})
+
 			return true
 		end
 	end
@@ -1071,6 +1074,8 @@ function LoadoutHandler:EmptyWeaponBank(slot, bank, only_empty)
 
 		ship.Weapons_List[bank] = -1
 		ship.Amounts_List[bank] = -1
+
+		Topics.loadouts.emptyWeaponSlot:send({slot, bank})
 
 	end
 end
