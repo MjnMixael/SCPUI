@@ -1,5 +1,5 @@
 -- Lua Stub File
--- Generated for FSO v24.3.0.20250729_bbb838a33 (FS2_Open Scripting)
+-- Generated for FSO v25.0.0 (FS2_Open Scripting)
 
 -- Lua Version: Lua 5.1.5
 ---@meta
@@ -411,6 +411,8 @@ font = {}
 --- @field Height number # Font height, or 0 if the handle is invalid,  Height of font (in pixels)
 --- @field TopOffset number # Font top offset, or 0 if the handle is invalid,  The offset this font has from the baseline of textdrawing downwards. (in pixels)
 --- @field BottomOffset number # Font bottom offset, or 0 if the handle is invalid,  The space (in pixels) this font skips downwards after drawing a line of text
+--- @field hasAutoSize fun(self: self): boolean? # True if FSO will auto size this font, false or nil if not
+--- @field hasCanScale fun(self: self): boolean? # True if this font is allowed to scale based on user settings, false or nil if not
 --- @field isValid fun(self: self): boolean? # True if valid, false or nil if not
 
 -- gameevent: Game event
@@ -630,6 +632,7 @@ medal = {}
 --- @class medal
 --- @field isValid fun(self: self): boolean # Detects whether handle is valid
 --- @field Name string # The name,  The name of the medal
+--- @field DisplayName string # The display name,  The display name of the medal
 --- @field Bitmap string # The bitmap,  The bitmap of the medal
 --- @field NumMods number # The number of mods,  The number of mods of the medal
 --- @field FirstMod number # The first mod,  The first mod of the medal. Some start at 1, some start at 0
@@ -873,6 +876,8 @@ order = {}
 --- @field WaypointList waypointlist # Waypoint list, or invalid handle if order handle is invalid or if this is not a waypoints order.,  Waypoint list of the order.
 --- @field WaypointIndex number # Waypoint index, or invalid 0 if order handle is invalid or if this is not a waypoints order.,  Waypoint index of the order.
 --- @field WaypointsInReverse boolean # Waypoint-reverse flag, or invalid false if order handle is invalid or if this is not a waypoints order.,  Waypoint-reverse flag of the order.
+--- @field OverridesWhenAchievable boolean # OverridesWhenAchievable flag, or invalid false if order handle is invalid,  Whether this goal pre-empts all other goals when it is achievable
+--- @field PurgeWhenNewGoalAdded boolean # PurgeWhenNewGoalAdded flag, or invalid false if order handle is invalid,  Whether this goal should be purged (removed) when another goal is assigned
 --- @field isValid fun(self: self): boolean # Detects whether handle is valid
 
 -- orientation: Orientation matrix object
@@ -960,6 +965,25 @@ particle = {}
 --- @field isValid fun(self: self): boolean # Detects whether this handle is valid
 --- @field setColor fun(self: self, r: number, g: number, b: number): nil # DEPRECATED 25.0.0: Debug particles are deprecated as of FSO 25.0.0! Use particles with a solid-color bitmap instead! --  # Sets the color for a particle.  If the particle does not support color, the function does nothing.  (Currently only debug particles support color.)
 
+-- particle_effect: Handle to a tabled particle effect
+particle_effect = {}
+--- @class particle_effect
+--- @field getName fun(self: self): string # Returns the name under which this effect is stored
+--- @field createSource fun(self: self): particle_source # Creates a new particle source, spawning particles as per this particle effect
+
+-- particle_source: Handle to a particle source. Only valid immediately after acquiring.
+particle_source = {}
+--- @class particle_source
+--- @field setNormal fun(self: self, normal: vector): nil # Sets the normal vector of this particle source.
+--- @field setTriggerRadius fun(self: self, triggerRadius: number): nil # Sets the trigger radius of this particle source.
+--- @field setTriggerVelocity fun(self: self, triggerVelocity: number): nil # Sets the trigger velocity of this particle source.
+--- @field createOnCoordinates fun(self: self, position: vector, orientation: orientation, velocity?: vector, orientationOverride?: orientation, orientationOverrideIsRelative?: boolean): boolean # Actually spawns this particle source at the specified position.
+--- @field createOnObject fun(self: self, object: object, offset: vector, orientationOverride?: orientation, orientationOverrideIsRelative?: boolean): boolean # Actually spawns this particle source, attached to the specified object.
+--- @field createOnSubmodel fun(self: self, object: object, submodel: submodel, offset: vector, orientationOverride?: orientation, orientationOverrideIsRelative?: boolean): boolean # Actually spawns this particle source, attached to the specified submodel.
+--- @field createOnTurret fun(self: self, object: object, submodel: submodel, firepoint: number, orientationOverride?: orientation, orientationOverrideIsRelative?: boolean): boolean # Actually spawns this particle source, attached to the specified turret firepoint.
+--- @field createOnBeam fun(self: self, object: object, submodel: submodel, firepoint: number, orientationOverride?: orientation, orientationOverrideIsRelative?: boolean): boolean # Actually spawns this particle source along the length of the beam.
+--- @field createOnParticle fun(self: self, particle: particle, orientationOverride?: orientation, orientationOverrideIsRelative?: boolean): boolean # Actually spawns this particle source, attached to the specified persistent particle.
+
 -- persona: Persona handle
 persona = {}
 --- @class persona
@@ -988,7 +1012,7 @@ physics = {}
 --- @field SlideAccelerationTime number # Sliding acceleration time, or 0 if handle is invalid,  Time to accelerate to maximum slide velocity
 --- @field SlideDecelerationTime number # Sliding deceleration time, or 0 if handle is invalid,  Time to decelerate from maximum slide speed
 --- @field Velocity vector # Object velocity, or null vector if handle is invalid,  Object world velocity (World vector). Setting this value may have minimal effect unless the $Fix scripted velocity game settings flag is used.
---- @field VelocityDamping number # Damping, or 0 if handle is invalid,  Damping, the natural period (1 / omega) of the dampening effects on top of the acceleration model. Called 'side_slip_time_const' in code base.
+--- @field VelocityDamping number # Damping, or 0 if handle is invalid,  Damping, the natural period (1 / omega) of the dampening effects on top of the acceleration model. Called 'side_slip_time_const' in code base. 
 --- @field VelocityDesired vector # Desired velocity, or null vector if handle is invalid,  Desired velocity (World vector)
 --- @field VelocityMax vector # Maximum velocity, or null vector if handle is invalid,  Object max local velocity (Local vector)
 --- @field VerticalThrust number # Vertical thrust amount, or 0 if handle is invalid,  Vertical thrust amount (-1 - 1), used primarily for thruster graphics and does not affect any physical behavior
@@ -1183,8 +1207,8 @@ ship = {}
 --- @field turnTowardsOrientation fun(self: self, target: orientation, respectDifficulty?: boolean, turnrateModifier?: vector): nil # turns the ship towards the specified orientation during this frame
 --- @field getCenterPosition fun(self: self): vector # Returns the position of the ship's physical center, which may not be the position of the origin of the model
 --- @field kill fun(self: self, Killer?: object, Hitpos?: vector): boolean # Kills the ship. Set "Killer" to a ship (or a weapon fired by that ship) to credit it for the kill in the mission log. Set it to the ship being killed to self-destruct. Set "Hitpos" to the world coordinates of the weapon impact.
---- @field checkVisibility fun(self: self, viewer?: ship): number # checks if a ship can appear on the viewer's radar. If a viewer is not provided it assumes the viewer is the player.
---- @field addShipEffect fun(self: self, name: string, durationMillis: number): boolean # Activates an effect for this ship. Effect names are defined in Post_processing.tbl, and need to be implemented in the main shader. This functions analogous to the ship-effect sexp. NOTE: only one effect can be active at any time, adding new effects will override effects already in progress.
+--- @field checkVisibility fun(self: self, viewer?: ship): number # checks if a ship can appear on the viewer's radar. If a viewer is not provided it assumes the viewer is the player. 
+--- @field addShipEffect fun(self: self, name: string, durationMillis: number): boolean # Activates an effect for this ship. Effect names are defined in Post_processing.tbl, and need to be implemented in the main shader. This functions analogous to the ship-effect sexp. NOTE: only one effect can be active at any time, adding new effects will override effects already in progress. 
 --- @field hasShipExploded fun(self: self): number # Checks if the ship explosion event has already happened
 --- @field isArrivingWarp fun(self: self): boolean # Checks if the ship is arriving via warp.  This includes both stage 1 (when the portal is opening) and stage 2 (when the ship is moving through the portal).
 --- @field isDepartingWarp fun(self: self): boolean # Checks if the ship is departing via warp
@@ -1195,15 +1219,15 @@ ship = {}
 --- @field fireSecondary fun(self: self): number # Fires ship secondary bank(s)
 --- @field getAnimationDoneTime fun(self: self, Type: number, Subtype: number): number # DEPRECATED 22.0.0: To account for the new animation tables, please use getSubmodelAnimationTime() --  # Gets time that animation will be done
 --- @field clearOrders fun(self: self): boolean # Clears a ship's orders list
---- @field giveOrder fun(self: self, Order: enumeration, Target?: object, TargetSubsystem?: subsystem, Priority?: number, TargetShipclass?: shipclass): boolean # Uses the goal code to execute orders
+--- @field giveOrder fun(self: self, Order: enumeration, Target?: object, TargetSubsystem?: subsystem, Priority?: number, TargetShipclass?: shipclass, TargetShiptype?: shiptype): boolean # Uses the goal code to execute orders.  NOTE: This function uses a scale from 0.0-1.0 (up to 2.0) rather than the usual 0-100 (up to 200)
 --- @field doManeuver fun(self: self, Duration: number, Heading: number, Pitch: number, Bank: number, ApplyAllRotation: boolean, Vertical: number, Sideways: number, Forward: number, ApplyAllMovement: boolean, ManeuverBitfield: number): boolean # Sets ship maneuver over the defined time period
 --- @field triggerAnimation fun(self: self, Type: string, Subtype?: number, Forwards?: boolean, Instant?: boolean): boolean # DEPRECATED 22.0.0: To account for the new animation tables, please use triggerSubmodelAnimation() --  # Triggers an animation. Type is the string name of the animation type, Subtype is the subtype number, such as weapon bank #, Forwards and Instant are boolean, defaulting to true & false respectively.<br><strong>IMPORTANT: Function is in testing and should not be used with official mod releases</strong>
 --- @field triggerSubmodelAnimation fun(self: self, type: string, triggeredBy: string, forwards?: boolean, resetOnStart?: boolean, completeInstant?: boolean, pause?: boolean): boolean # Triggers an animation. If used often with the same type / triggeredBy, consider using getSubmodelAnimation for performance reasons. Type is the string name of the animation type, triggeredBy is a closer specification which animation should trigger. See *-anim.tbm specifications. Forwards controls the direction of the animation. ResetOnStart will cause the animation to play from its initial state, as opposed to its current state. CompleteInstant will immediately complete the animation. Pause will instead stop the animation at the current state.
---- @field getSubmodelAnimation fun(self: self, type: string, triggeredBy: string): animation_handle # Gets an animation handle. Type is the string name of the animation type, triggeredBy is a closer specification which animation should trigger. See *-anim.tbm specifications.
---- @field stopLoopingSubmodelAnimation fun(self: self, type: string, triggeredBy: string): boolean # Stops a currently looping animation after it has finished its current loop. If used often with the same type / triggeredBy, consider using getSubmodelAnimation for performance reasons. Type is the string name of the animation type, triggeredBy is a closer specification which animation was triggered. See *-anim.tbm specifications.
+--- @field getSubmodelAnimation fun(self: self, type: string, triggeredBy: string): animation_handle # Gets an animation handle. Type is the string name of the animation type, triggeredBy is a closer specification which animation should trigger. See *-anim.tbm specifications. 
+--- @field stopLoopingSubmodelAnimation fun(self: self, type: string, triggeredBy: string): boolean # Stops a currently looping animation after it has finished its current loop. If used often with the same type / triggeredBy, consider using getSubmodelAnimation for performance reasons. Type is the string name of the animation type, triggeredBy is a closer specification which animation was triggered. See *-anim.tbm specifications. 
 --- @field setAnimationSpeed fun(self: self, type: string, triggeredBy: string, speedMultiplier?: number): nil # Sets the speed multiplier at which an animation runs. If used often with the same type / triggeredBy, consider using getSubmodelAnimation for performance reasons. Anything other than 1 will not work in multiplayer. Type is the string name of the animation type, triggeredBy is a closer specification which animation should trigger. See *-anim.tbm specifications.
 --- @field getSubmodelAnimationTime fun(self: self, type: string, triggeredBy: string): number # Gets time that animation will be done. If used often with the same type / triggeredBy, consider using getSubmodelAnimation for performance reasons.
---- @field updateSubmodelMoveable fun(self: self, name: string, values: table): boolean # Updates a moveable animation. Name is the name of the moveable. For what values needs to contain, please refer to the table below, depending on the type of the moveable:Orientation:  	Three numbers, x, y, z rotation respectively, in degrees  Rotation:  	Three numbers, x, y, z rotation respectively, in degrees  Axis Rotation:  	One number, rotation angle in degrees  Inverse Kinematics:  	Three required numbers: x, y, z position target relative to base, in 1/100th meters  	Three optional numbers: x, y, z rotation target relative to base, in degrees
+--- @field updateSubmodelMoveable fun(self: self, name: string, values: table): boolean # Updates a moveable animation. Name is the name of the moveable. For what values needs to contain, please refer to the table below, depending on the type of the moveable:Orientation:  	Three numbers, x, y, z rotation respectively, in degrees  Rotation:  	Three numbers, x, y, z rotation respectively, in degrees  Axis Rotation:  	One number, rotation angle in degrees  Inverse Kinematics:  	Three required numbers: x, y, z position target relative to base, in 1/100th meters  	Three optional numbers: x, y, z rotation target relative to base, in degrees  
 --- @field warpIn fun(self: self): boolean # Warps ship in
 --- @field warpOut fun(self: self): boolean # Warps ship out
 --- @field canWarp fun(self: self): boolean # Checks whether ship has a working subspace drive, is allowed to use it, and is not disabled or limited by subsystem strength.
@@ -1280,7 +1304,7 @@ shipclass = {}
 --- @field Type shiptype # Ship type, or invalid handle if shipclass handle is invalid,  Ship class type
 --- @field AltName string # Alternate string or empty string if handle is invalid,  Alternate name for ship class
 --- @field VelocityMax vector # Maximum velocity, or null vector if handle is invalid,  Ship's lateral and forward speeds
---- @field VelocityDamping number # Damping, or 0 if handle is invalid,  Damping, the natural period (1 / omega) of the dampening effects on top of the acceleration model.
+--- @field VelocityDamping number # Damping, or 0 if handle is invalid,  Damping, the natural period (1 / omega) of the dampening effects on top of the acceleration model. 
 --- @field RearVelocityMax number # Speed, or 0 if handle is invalid,  The maximum rear velocity of the ship
 --- @field ForwardAccelerationTime number # Forward acceleration time, or 0 if handle is invalid,  Forward acceleration time
 --- @field ForwardDecelerationTime number # Forward deceleration time, or 0 if handle is invalid,  Forward deceleration time
@@ -1881,6 +1905,8 @@ bit = {}
 --- @field getNextMissionFilename fun(): string # Gets next mission filename
 --- @field getPrevMissionFilename fun(): string # Gets previous mission filename
 --- @field jumpToMission fun(filename: string, hub?: boolean): boolean # Jumps to a mission based on the filename. Optionally, the player can be sent to a hub mission without setting missions to skipped.
+--- @field CustomData table # The campaign's custom data table,  Gets the custom data table for this campaign
+--- @field hasCustomData fun(): boolean # Detects whether the campaign has any custom data
 ca = {}
 
 --- CFile: CFile FS2 filesystem access
@@ -2226,8 +2252,8 @@ hu = {}
 --- @field setMusicScore fun(score: enumeration, name: string): nil # Sets the music.tbl entry for the specified mission music score
 --- @field hasLineOfSight fun(from: vector, to: vector, excludedObjects?: table, testForShields?: boolean, testForHull?: boolean, threshold?: number): boolean # Checks whether the to-position is in line of sight from the from-position, disregarding specific excluded objects and objects with a radius of less then threshold.
 --- @field getLineOfSightFirstIntersect fun(from: vector, to: vector, excludedObjects?: table, testForShields?: boolean, testForHull?: boolean, threshold?: number): boolean, number, object # Checks whether the to-position is in line of sight from the from-position and returns the distance and intersecting object to the first interruption of the line of sight, disregarding specific excluded objects and objects with a radius of less then threshold.
---- @field getSpecialSubmodelAnimation fun(target: string, type: string, triggeredBy: string): animation_handle # Gets an animation handle. Target is the object that should be animated (one of "cockpit", "skybox"), type is the string name of the animation type, triggeredBy is a closer specification which animation should trigger. See *-anim.tbm specifications.
---- @field updateSpecialSubmodelMoveable fun(target: string, name: string, values: table): boolean # Updates a moveable animation. Name is the name of the moveable. For what values needs to contain, please refer to the table below, depending on the type of the moveable:Orientation:  	Three numbers, x, y, z rotation respectively, in degrees  Rotation:  	Three numbers, x, y, z rotation respectively, in degrees  Axis Rotation:  	One number, rotation angle in degrees  Inverse Kinematics:  	Three required numbers: x, y, z position target relative to base, in 1/100th meters  	Three optional numbers: x, y, z rotation target relative to base, in degrees
+--- @field getSpecialSubmodelAnimation fun(target: string, type: string, triggeredBy: string): animation_handle # Gets an animation handle. Target is the object that should be animated (one of "cockpit", "skybox"), type is the string name of the animation type, triggeredBy is a closer specification which animation should trigger. See *-anim.tbm specifications. 
+--- @field updateSpecialSubmodelMoveable fun(target: string, name: string, values: table): boolean # Updates a moveable animation. Name is the name of the moveable. For what values needs to contain, please refer to the table below, depending on the type of the moveable:Orientation:  	Three numbers, x, y, z rotation respectively, in degrees  Rotation:  	Three numbers, x, y, z rotation respectively, in degrees  Axis Rotation:  	One number, rotation angle in degrees  Inverse Kinematics:  	Three required numbers: x, y, z position target relative to base, in 1/100th meters  	Three optional numbers: x, y, z rotation target relative to base, in degrees  
 --- @field LuaEnums LuaEnum[] # Gets a handle of a Lua Enum - Lua Enum handle or invalid handle on error
 --- @field addLuaEnum fun(name: string): LuaEnum # Adds an enum with the given name if it's unique.
 --- @field LuaSEXPs LuaSEXP[] # Gets a handle of a Lua SEXP - Lua SEXP handle or invalid handle on error
@@ -2285,6 +2311,7 @@ parse = {}
 --- @field DecalOptionActive boolean # true if active, false if inactive,  Gets or sets whether the decal option is active (note, decals will only work if the decal system is able to work on the current machine)
 --- @field WingFormations wingformation[] # Array of wing formations - Wing formation handle, or invalid handle if name is invalid
 --- @field TeamColors teamcolor[] # Array of team colors - Team color handle, or invalid handle if name is invalid
+--- @field ParticleEffects particle_effect[] # Array of particle effects - Particle Effect handle, or invalid handle if name is invalid
 tb = {}
 
 --- Testing: Experimental or testing stuff
@@ -2433,7 +2460,7 @@ ui.FictionViewer = {}
 --- @field sendWeaponRequestPacket fun(FromBank: number, ToBank: number, fromPoolWepIdx: number, toPoolWepIdx: number, shipSlot: number): nil # Sends a request to the host to change a ship slot.
 ui.ShipWepSelect = {}
 
---- Credits:
+--- Credits: 
 --- @class Credits
 --- @field Music string # The music filename,  The credits music filename
 --- @field NumImages number # The number of images,  The total number of credits images
@@ -2692,6 +2719,8 @@ ORDER_ATTACK = enumeration
 ORDER_ATTACK_WING = enumeration
 --- @const ORDER_ATTACK_SHIP_CLASS
 ORDER_ATTACK_SHIP_CLASS = enumeration
+--- @const ORDER_ATTACK_SHIP_TYPE
+ORDER_ATTACK_SHIP_TYPE = enumeration
 --- @const ORDER_ATTACK_ANY
 ORDER_ATTACK_ANY = enumeration
 --- @const ORDER_DEPART
