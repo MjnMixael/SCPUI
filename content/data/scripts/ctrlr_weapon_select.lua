@@ -1260,7 +1260,9 @@ function WeaponSelectController:dragWeaponFromPoolToSlot(element, entry, weapon_
 			return
 		end
 
-		if count > 0 then
+		local allowed = Topics.loadouts.beforeFillWeaponSlot:send({self.currentShipSlot, self.ActiveSlot, weapon_index})
+
+		if count > 0 and allowed == true then
 
 			--return weapons to pool if appropriate
 			LoadoutHandler:EmptyWeaponBank(self.currentShipSlot, self.ActiveSlot)
@@ -1371,8 +1373,10 @@ function WeaponSelectController:drag_from_slot_to_slot_or_pool(element, slot)
 			return
 		end
 
+		local allowed = Topics.loadouts.beforeFillWeaponSlot:send({self.currentShipSlot, drop_slot, slot_weapon})
+
 		--If what is being dragged has an amount greater than 0
-		if slot_amount > 0 then
+		if slot_amount > 0 and allowed == true then
 
 			--return weapons to pool if appropriate
 			LoadoutHandler:EmptyWeaponBank(self.currentShipSlot, drop_slot)
@@ -1403,6 +1407,7 @@ end
 --- Pause rendering the models
 --- @return nil
 function WeaponSelectController:pauseRendering()
+	ScpuiSystem.data.memory.model_rendering.SavedIndex = ScpuiSystem.data.memory.model_rendering.Class
 	ScpuiSystem.data.memory.model_rendering.Class = nil
 	ScpuiSystem.data.memory.model_rendering.OverheadSave = ScpuiSystem.data.memory.model_rendering.OverheadClass
 	ScpuiSystem.data.memory.model_rendering.OverheadClass = nil
