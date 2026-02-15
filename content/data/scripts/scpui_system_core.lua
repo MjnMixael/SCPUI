@@ -108,6 +108,10 @@ if not ba.inMissionEditor() then
 	ScpuiSystem.data.Context = rocket:CreateContext("menuui", Vector2i.new(gr.getScreenWidth(), gr.getScreenHeight()));
 end
 
+if pcall(require, "scpui_dev") then
+    ScpuiSystem.constants.VERSION = ScpuiSystem.constants.VERSION .. "-DEV"
+end
+
 --- Initialize ScpuiSystem and send relevant scpui.tbl files to the parser
 --- @return nil
 function ScpuiSystem:init()
@@ -797,7 +801,7 @@ function ScpuiSystem:getModTitle()
             title = extracted_title
         end
 
-        if title ~= "SCPUI" then
+        if title ~= "SCPUI" and title ~= "SCPUIDEV" then
             ba.warning("It is highly recommended that you set a Mod Title in your game settings.tbl!")
         else
             title = "SCPUI Development Mod"
