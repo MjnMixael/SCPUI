@@ -44,6 +44,7 @@ ScpuiSystem.data = {
 	table_flags = {
 		DisableInMulti = false,
 		HideMulti = false,
+		UseLegacyVolumeSlider = false,
 		DataSaverMultiplier = 1,
 		DatabaseUnreadShowString = true,
 		DatabaseUnreadStringText = ba.XSTR("NEW!", 888549),

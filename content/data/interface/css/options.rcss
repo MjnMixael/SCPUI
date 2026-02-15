@@ -1721,3 +1721,16 @@ input.range sliderarrowinc:active
 	margin: 5px;
 	width: 100%;
 }
+
+/* Optional: per-slider overrides */
+#option_audio_effects_element_range sliderbar {
+    margin-top: 10%;
+}
+
+#option_audio_music_element_range sliderbar {
+    margin-top: 10%;
+}
+
+#option_audio_voice_element_range sliderbar {
+    margin-top: 10%;
+}

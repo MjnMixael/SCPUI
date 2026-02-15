@@ -89,6 +89,10 @@ function ScpuiSystem:parseScpuiTable(data)
 			ScpuiSystem.data.table_flags.IconDimensions.weapon.Height = parse.getInt()
 		end
 
+		if parse.optionalString("$Use Legacy Slider For Volume:") then
+			ScpuiSystem.data.table_flags.UseLegacyVolumeSlider = parse.getBoolean()
+		end
+
 		--- Sanitize the class name
 		--- @param s string the string to sanitize
 		--- @return string joined the sanitized string
