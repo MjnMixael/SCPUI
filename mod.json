@@ -1,28 +1,27 @@
 {
   "mod_source": "nebula",
   "installed": true,
-  "id": "UITest",
-  "title": "Hi-Res Ui Test Mod",
+  "id": "SCPUIDEV",
+  "title": "SCPUI-Development Branch",
   "type": "mod",
   "parent": "FS2",
-  "version": "1.0.0",
+  "version": "999.0.0-DevEnv",
   "private": false,
   "stability": "stable",
-  "description": "",
+  "description": "This is the development branch of SCPUI. Here is where the bleeding edge of SCPUI lives. Use this version only if you need the very latest of what SCPUI has to offer.",
   "notes": null,
   "logo": null,
-  "tile": null,
-  "banner": null,
+  "tile": "kn_images\\954acee62ca6aa6facf0305b1dc2fb0139af511629740125c52ba394add5dfa7.png",
+  "banner": "kn_images\\8a77afce8dd4864288ab92f31e5818069e915842bd392a0b9bad685cefa4026d.png",
   "release_thread": null,
   "videos": [],
-  "screenshots": [],
+  "screenshots": null,
   "attachments": [],
-  "first_release": null,
-  "last_update": null,
+  "first_release": "2026-02-15",
+  "last_update": "2026-02-15",
   "cmdline": "-output_scripting -output_script_lua",
   "mod_flag": [
-    "UITest",
-    "MVPS"
+    "SCPUIDEV"
   ],
   "dev_mode": true,
   "custom_build": null,
@@ -36,11 +35,6 @@
         {
           "id": "FSO",
           "version": "25.0.0",
-          "packages": []
-        },
-        {
-          "id": "MVPS",
-          "version": "4.7.3",
           "packages": []
         }
       ],
