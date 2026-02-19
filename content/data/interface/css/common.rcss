@@ -1,7 +1,7 @@
 body
 {
 	/*font-size: 1em;*/
-	font-charset: U+0020-00FF; /* By default, we specify all the Latin1 chars */
+	font-charset: U+0020-024F; /* Basic Latin + Latin-1 Supplement + Latin Extended-A/B */
 	width: 100%;
 	height: 100%;
 	color: #7b7b7b;
