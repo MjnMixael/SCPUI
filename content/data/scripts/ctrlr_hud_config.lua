@@ -671,7 +671,7 @@ function HudConfigController:get_preset_input()
 	}
 
 	ScpuiSystem:showDialog(self, params, function(response)
-		self:dialogReponse(response)
+		self:dialogResponse(response)
 	end)
 end
 
