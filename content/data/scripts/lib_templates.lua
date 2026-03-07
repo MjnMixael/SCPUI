@@ -97,6 +97,23 @@ local function process_template_directives(element, parameters)
     end
 end
 
+--- Casts input form controls to their specialized element wrapper.
+--- This allows callers of instantiate_template() to read/write properties
+--- such as input.value without requiring manual casts for each use-site.
+--- @param element Element
+--- @return Element
+local function cast_template_element(element)
+    if element == nil then
+        return nil
+    end
+
+    if element.tag_name == "input" then
+        return Element.As.ElementFormControlInput(element)
+    end
+
+    return element
+end
+
 --- Creates a clone of a template element, processes special directives (like <if> conditions) within it, and retrieves specific sub-elements by class name.
 --- @param document Document The document containing the template element.
 --- @param template_id string The ID of the template element to clone.
@@ -119,7 +136,7 @@ function module.instantiate_template(document, template_id, element_id, template
         local templateEls = actual_el:GetElementsByClassName(v)
 
         if #templateEls > 0 then
-            template_els[i] = templateEls[1]
+            template_els[i] = cast_template_element(templateEls[1])
         else
             template_els[i] = nil
         end

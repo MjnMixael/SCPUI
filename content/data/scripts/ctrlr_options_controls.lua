@@ -560,6 +560,20 @@ function AbstractOptionsController:initRangeControl(element, value_el, option, c
 
     local range_el = Element.As.ElementFormControlInput(element)
 
+	--- Ensures range UI value and attribute stay in sync so the thumb is positioned correctly.
+    --- @param input_el ElementFormControlInput
+    --- @param value number | string
+    local function setRangeInputValue(input_el, value)
+        local normalized = tonumber(value)
+        if normalized == nil then
+            return
+        end
+
+        local as_string = tostring(normalized)
+        input_el.value = as_string
+        input_el:SetAttribute("value", as_string)
+    end
+
     element:AddEventListener("change", function(event, _, _)
 		local value = nil
 		if option.Category ~= "Custom" then
@@ -603,7 +617,7 @@ function AbstractOptionsController:initRangeControl(element, value_el, option, c
 	else
 		if option.Key == "Font_Adjustment" then
 			element:AddEventListener("click", function(event, _, _)
-				range_el.value = self.CustomOptions[option.Key].CurrentValue
+				setRangeInputValue(range_el, self.CustomOptions[option.Key].CurrentValue)
 				local new_class = "base_font" .. ScpuiSystem:getFontPixelSize(self.CustomOptions[option.Key].CurrentValue)
 				--Clear the last class
 				self.Document:GetElementById("main_background"):SetClass(ScpuiSystem.data.CurrentBaseFontClass, false)
@@ -619,12 +633,12 @@ function AbstractOptionsController:initRangeControl(element, value_el, option, c
 	if option.Category ~= "Custom" then
 		--- @type ValueDescription | any
 		local this_value = option.Value
-		range_el.value = option:getInterpolantFromValue(this_value)
+		setRangeInputValue(range_el, option:getInterpolantFromValue(this_value))
 	else
 		local thisValue = ScpuiSystem.data.ScpuiOptionValues[option.Key] or option.Value
 		default = option.Value
 		option.Value = thisValue
-		range_el.value = thisValue / option.Max
+		setRangeInputValue(range_el, thisValue / option.Max)
 		range_el.step = (option.Max - option.Min) / 100
 	end
 

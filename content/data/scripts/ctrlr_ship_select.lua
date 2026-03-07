@@ -791,7 +791,9 @@ function ShipSelectController:dragFromPoolToSlot(element, entry, shipIndex)
 			return
 		end
 
-		if count > 0 then
+		local allowed = Topics.loadouts.beforeFillShipSlot:send({self.activeSlot, shipIndex})
+
+		if count > 0 and allowed == true then
 			if target_slot.ShipClassIndex == -1 then
 				LoadoutHandler:TakeShipFromPool(shipIndex)
 			else
@@ -843,6 +845,10 @@ function ShipSelectController:dragFromSlotToSlotOrPool(element, entry, slot)
 
 		--If the target slot already has this ship, then abort!
 		if target_slot.ShipClassIndex == current_slot.ShipClassIndex then
+			return
+		end
+
+		if Topics.loadouts.beforeFillShipSlot:send({slot, current_slot.ShipClassIndex}) ~= true then
 			return
 		end
 

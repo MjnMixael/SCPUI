@@ -109,6 +109,7 @@
 --- @field ModId string? The mod ID for the current mod
 --- @field DisableInMulti boolean True if SCPUI should render in multiplayer, false otherwise
 --- @field HideMulti boolean True if SCPUI should hide multiplayer menus and options, false otherwise
+--- @field UseLegacyVolumeSlider boolean True if SCPUI should use the legacy 10-point slider for volume options instead of the more modern range slider
 --- @field DataSaverMultiplier integer A numeric multiplier used to generate SCPUI's save data hash. Generally this is not needed but can be useful if there are conflicts between mods.
 --- @field DatabaseUnreadShowString boolean True if SCPUI should show the "NEW!" text in the database, false otherwise
 --- @field DatabaseUnreadStringClass string? The optional class to set for new entrie titles in the database

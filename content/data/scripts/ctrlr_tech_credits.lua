@@ -131,9 +131,9 @@ function TechCreditsController:setupCreditsImage()
 	--local image_x1 = ScpuiSystem:getAbsoluteLeft(image_el)
 	--local image_y1 = ScpuiSystem:getAbsoluteTop(image_el)
 
-	local first_img = "2_Crim00.png"
+	local first_img = "2_Crim00.pcx"
 
-	if not cf.fileExists(first_img) then
+	if not cf.fileExists(first_img, "", true) then
 		if not self.LoadFailed then
 			self.LoadFailed = true
 			ba.warning("TechCreditsController:setupCreditsImage - Could not find image file " .. first_img)

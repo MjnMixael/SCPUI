@@ -1,5 +1,5 @@
 -- Version of SCPUI System
-local version = "1.1.0"
+local version = "1.1.0-20260215"
 
 local Utils = require("lib_utils")
 local Topics = require("lib_ui_topics")
@@ -44,6 +44,7 @@ ScpuiSystem.data = {
 	table_flags = {
 		DisableInMulti = false,
 		HideMulti = false,
+		UseLegacyVolumeSlider = false,
 		DataSaverMultiplier = 1,
 		DatabaseUnreadShowString = true,
 		DatabaseUnreadStringText = ba.XSTR("NEW!", 888549),
@@ -105,6 +106,10 @@ end
 
 if not ba.inMissionEditor() then
 	ScpuiSystem.data.Context = rocket:CreateContext("menuui", Vector2i.new(gr.getScreenWidth(), gr.getScreenHeight()));
+end
+
+if pcall(require, "scpui_dev") then
+    ScpuiSystem.constants.VERSION = ScpuiSystem.constants.VERSION .. "-DEV"
 end
 
 --- Initialize ScpuiSystem and send relevant scpui.tbl files to the parser
@@ -796,7 +801,7 @@ function ScpuiSystem:getModTitle()
             title = extracted_title
         end
 
-        if title ~= "SCPUI" then
+        if title ~= "SCPUI" and title ~= "SCPUIDEV" then
             ba.warning("It is highly recommended that you set a Mod Title in your game settings.tbl!")
         else
             title = "SCPUI Development Mod"
