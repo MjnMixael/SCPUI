@@ -146,6 +146,7 @@ local topics = {
 	briefing = {
 		initialize = Topic(nil), --Runs arbitrary script and expects no return value. Sends the UI context.
 		brief_bg = Topic('brief-main-window.png'), --Expects an image file returned, replaces the briefing goals stage BG
+		modelTeamColor = Topic(nil), --Runs arbitrary script and expects a team color name string returned. Sends the mission filename,ship class, and the icon ID
 		unload = Topic(nil) --Runs arbitrary script and expects no return value. Sends the document context
 	},
 	redalert = {
