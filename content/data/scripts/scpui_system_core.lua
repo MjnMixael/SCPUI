@@ -18,7 +18,7 @@ ScpuiSystem = {}
 --- @type scpui_constants
 ScpuiSystem.constants = {
 	VERSION = version,
-	NUM_FONT_SIZES = 40,
+	NUM_FONT_SIZES = 100,
 	INITIALIZED = false,
 	Dialog_Constants = {
 		BUTTON_TYPE_POSITIVE = 1,
