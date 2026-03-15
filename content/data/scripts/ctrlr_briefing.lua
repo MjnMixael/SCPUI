@@ -390,7 +390,23 @@ function BriefingController:drawBriefingMap()
 			end
 			ui.Briefing.renderBriefingModel(ScpuiSystem.data.memory.briefing_map.Pof, ScpuiSystem.data.memory.briefing_map.CloseupZoom, ScpuiSystem.data.memory.briefing_map.CloseupPos, bx1+1, by1+1, bx2-1, by2-1, ScpuiSystem.data.memory.briefing_map.RotationSpeed, -15, 0, 1.1, true, jumpnode)
 		else
-			ship:renderTechModel(bx1+1, by1+1, bx2-1, by2-1, ScpuiSystem.data.memory.briefing_map.RotationSpeed, -15, 0, 1.1)
+			local team_name = Topics.briefing.modelTeamColor:send({
+				mn.getMissionFilename(),
+				ship,
+				ScpuiSystem.data.memory.briefing_map.IconIdentifier
+			})
+
+			---@type teamcolor?
+			local team
+
+			if team_name then
+				team = tb.TeamColors[team_name]
+				if not team:isValid() then
+					team = nil
+				end
+			end
+
+			ship:renderTechModel(bx1+1, by1+1, bx2-1, by2-1, ScpuiSystem.data.memory.briefing_map.RotationSpeed, -15, 0, 1.1, true, team)
 		end
 
 		--set the current color to light grey
