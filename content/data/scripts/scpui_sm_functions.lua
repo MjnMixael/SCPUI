@@ -208,16 +208,11 @@ function ScpuiSystem:maybePlayCutscene(scene)
 	Topics.playcutscene.finish:send(self)
 end
 
---- Sets the base pixel font size for SCPUI to use. Attempts to replicate the font size as it would appear on a 1080p screen.
+--- Sets the base pixel font size for SCPUI to use.
 --- @param val? number The multiplier to adjust the font size by. If nil, the stored value will be used.
 --- @return string size The font size to use as a string
 function ScpuiSystem:getFontPixelSize(val)
-	local vmin = math.min(gr.getScreenWidth(), gr.getScreenHeight())
-	local font_pixels = ScpuiSystem.data.DefaultFsoFont.Height
-
-	local size = vmin * (font_pixels/1000) --Gets roughly 12px font on 1080p
-	-- Lua has no math.round(); math.floor(x + 0.5) is the idiomatic replacement.
-	local pixel_size = math.floor(size + 0.5)
+	local pixel_size = ScpuiSystem.data.DefaultFsoFont.Height -- If autosize works, we can just pull the size directly from FSO.
 
 	local final_size
 
