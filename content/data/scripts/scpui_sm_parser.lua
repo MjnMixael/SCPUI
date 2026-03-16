@@ -249,6 +249,19 @@ function ScpuiSystem:parseScpuiTable(data)
 
 			ScpuiSystem.data.Backgrounds_List_Campaign[campaign] = classname
 		end
+		
+				
+		while parse.optionalString("$Mainhall Background:") do
+				parse.requiredString("+Mainhall Name:")
+				local mainhall = Utils.strip_extension(parse.getString())
+
+				parse.requiredString("+RCSS Class Name:")
+				local classname = parse.getString()
+
+				ScpuiSystem.data.Backgrounds_List_Mainhall[mainhall] = classname
+			end
+
+	end
 
 	end
 
