@@ -252,6 +252,7 @@
 888455, "You are free to copy and redistribute this mod in any medium or format"
 888450, "SCPUI"
 888463, "Axem"
+888577, "Grizzly"
 ;;ship_select.rml
 888214, "Revert to the original ship distribution"
 888209, "Click here to return to the briefing or change weapon selection"
@@ -346,6 +347,6 @@
 888575, "Back"
 888576, "Zoom To"
 
-;;Next available ID: 888577
+;;Next available ID: 888578
 
 #end
