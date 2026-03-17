@@ -279,6 +279,7 @@ function SystemMapController:initializeObjectData(iconTable)
 					value.Bitmap = obj.Bitmap
 					value.LargeBitmap = obj.LargeBitmap
 					value.ShipClass = obj.ShipClass
+					value.PropClass = obj.PropClass
 					value.Description = obj.Description
 					value.UseTechDescription = obj.UseTechDescription
 				end
@@ -602,10 +603,11 @@ function SystemMapController:displayObjectInfo(object)
 		local img_el = self.Document:CreateElement("img")
 		img_el:SetAttribute("src", object.LargeBitmap)
 		object_el:AppendChild(img_el)
-	elseif object.ShipClass then
+	elseif object.ShipClass or object.PropClass then
 		ScpuiSystem.SysMap = {}
 
 		ScpuiSystem.SysMap.Ship = object.ShipClass
+		ScpuiSystem.SysMap.Prop = object.PropClass
 
 		if object.ModelOrientation then
 			ScpuiSystem.SysMap.TechModelOri = ba.createOrientation(math.rad(object.ModelOrientation[1]),math.rad(object.ModelOrientation[2]), math.rad(object.ModelOrientation[3]))
@@ -954,7 +956,16 @@ end
 function SystemMapController:drawModel()
 
 	if ScpuiSystem.SysMap ~= nil then
-		local thisShipClass = tb.ShipClasses[ScpuiSystem.SysMap.Ship]
+		if ScpuiSystem.SysMap.Ship == nil and ScpuiSystem.SysMap.Prop == nil then
+			return
+		end
+
+		local thisObjectClass
+		if ScpuiSystem.SysMap.Ship then
+			thisObjectClass = tb.ShipClasses[ScpuiSystem.SysMap.Ship]
+		else
+			thisObjectClass = tb.PropClasses[ScpuiSystem.SysMap.Prop]
+		end
 
 		ScpuiSystem.SysMap.TechModelOri = SystemMapController:changeTechModelOrientation(ScpuiSystem.SysMap.TechModelOri)
 
@@ -965,7 +976,7 @@ function SystemMapController:drawModel()
 		local w = object_el.offset_width
 		local h = object_el.offset_height
 
-		thisShipClass:renderTechModel2(x, y, x + w, y + h, ScpuiSystem.SysMap.TechModelOri, ScpuiSystem.SysMap.z)
+		thisObjectClass:renderTechModel2(x, y, x + w, y + h, ScpuiSystem.SysMap.TechModelOri, ScpuiSystem.SysMap.z)
 	end
 end
 
