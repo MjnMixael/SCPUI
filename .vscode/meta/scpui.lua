@@ -134,6 +134,7 @@
 --- SCPUI Ship Loadout Info Struct
 --- @class ship_loadout_info
 --- @field Index integer The index of the ship in the ship in Ship Classes
+--- @field ListPriority integer The priority of the ship in the loadout list used to sort the ships in the UI
 --- @field Amount integer The amount of the ship available in the loadout
 --- @field Icon string The icon filename for the ship class
 --- @field Overhead string The overhead filename for the ship class
@@ -158,6 +159,7 @@
 --- SCPUI Weapon Loadout Info Struct
 --- @class weapon_loadout_info
 --- @field Index integer The index of the weapon in the weapon in Weapon Classes
+--- @field ListPriority integer The priority of the weapon in the loadout list used to sort the weapons in the UI
 --- @field Amount integer The amount of the weapon available in the loadout
 --- @field Icon string The icon filename for the weapon class
 --- @field Anim string The animation filename for the weapon class
