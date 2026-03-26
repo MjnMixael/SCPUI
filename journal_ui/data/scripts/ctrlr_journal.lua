@@ -20,6 +20,7 @@ function JournalController:init()
     self.SaveData = {} --- @type table<number, scpui_journal_save_data[]> the journal save data
     self.SelectedEntry = nil --- @type string the selected entry
     self.SelectedSection = nil --- @type number the selected section
+    self.ShowAll = false --- @type boolean Whether to show all entries
 end
 
 --- Called by the RML document
@@ -111,6 +112,7 @@ function JournalController:change_section(section)
             oldbullet:SetPseudoClass("checked", false)
         end
 
+        self.ShowAll = false
         self.SelectedSection = section
         self:createJournalEntries(self.SelectedSection)
         local newbullet = self.Document:GetElementById("btn_"..self.SelectedSection)
@@ -154,7 +156,7 @@ function JournalController:createJournalEntries(section)
         ---@cast v scpui_journal_entry
 
         local saved_data = (self.SaveData[section] or {})[i]
-        if (saved_data and saved_data.Visible) then
+        if (saved_data and (saved_data.Visible or self.ShowAll)) then
             -- Add all the elements
             ba.print("Adding entry " .. i .. ": " .. v.Name .. "\n" )
             list_el:AppendChild(self:createJournalListItemElement(v,saved_data.Unread))
@@ -300,6 +302,9 @@ function JournalController:global_keydown(element, event)
         event:StopPropagation()
         self.Document:Close()
         ScpuiSystem:returnToState(ScpuiSystem.data.LastState)
+    elseif keys.S and keys.Ctrl and keys.Shift then
+        self.ShowAll = not self.ShowAll
+        self:createJournalEntries(self.SelectedSection)
     end
 end
 
