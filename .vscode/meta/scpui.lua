@@ -124,6 +124,7 @@
 --- @field FadeSplashImages boolean True if SCPUI should fade the splash images, false otherwise
 --- @field DrawSplashImages boolean True if SCPUI should draw the splash images, false otherwise
 --- @field DrawSplashText boolean True if SCPUI should draw the splash text, false otherwise
+--- @field AlwaysAllowShowAll boolean True if Ctrl+Shift+S show all entries should be allowed outside of debug mode, false otherwise
 
 --- SCPUI Loadout Icon
 --- @class loadout_icon

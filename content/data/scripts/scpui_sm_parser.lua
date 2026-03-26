@@ -178,6 +178,10 @@ function ScpuiSystem:parseScpuiTable(data)
 			ScpuiSystem.data.table_flags.DrawSplashText = parse.getBoolean()
 		end
 
+		if parse.optionalString("$Always Allow Show All:") then
+			ScpuiSystem.data.table_flags.AlwaysAllowShowAll = parse.getBoolean()
+		end
+
 	end
 
 	if parse.optionalString("#State Replacement") then

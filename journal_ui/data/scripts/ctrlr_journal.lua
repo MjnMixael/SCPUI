@@ -302,7 +302,7 @@ function JournalController:global_keydown(element, event)
         event:StopPropagation()
         self.Document:Close()
         ScpuiSystem:returnToState(ScpuiSystem.data.LastState)
-    elseif keys.S and keys.Ctrl and keys.Shift then
+    elseif keys.S and keys.Ctrl and keys.Shift and (ba.inDebug() or ScpuiSystem.data.table_flags.AlwaysAllowShowAll) then
         self.ShowAll = not self.ShowAll
         self:createJournalEntries(self.SelectedSection)
     end

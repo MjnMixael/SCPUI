@@ -64,6 +64,7 @@ ScpuiSystem.data = {
 		FadeSplashImages = true,
 		DrawSplashImages = true,
 		DrawSplashText = true,
+		AlwaysAllowShowAll = false,
 	},
 	state_init_status = {
 		Debrief = false,

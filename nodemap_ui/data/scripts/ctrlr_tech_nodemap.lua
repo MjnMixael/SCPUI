@@ -618,7 +618,7 @@ function TechNodeMapController:global_keydown(element, event)
 			event:StopPropagation()
 
 			self:exit()
-		elseif keys.S and keys.Ctrl and keys.Shift then
+		elseif keys.S and keys.Ctrl and keys.Shift and (ba.inDebug() or ScpuiSystem.data.table_flags.AlwaysAllowShowAll) then
 			self.ShowAll  = not self.ShowAll
 			self:ReloadList()
 		elseif keys.UP then
