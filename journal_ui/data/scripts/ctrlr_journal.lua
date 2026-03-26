@@ -43,10 +43,48 @@ function JournalController:initialize(document)
 
     self.SelectedEntry = nil
 
-    for i=1, #self.Data.Section_List do
+    local panel = self.Document:GetElementById("top_b_panel_wrapper")
+
+    for i=1, JournalUi.MAX_SECTIONS do
+        local cont_el = self.Document:CreateElement("div")
+        cont_el.id = "bullet_cont"
+
+        local button_el = self.Document:CreateElement("button")
+        button_el.id = "btn_"..i
+        button_el:SetClass("bullet", true)
+        button_el:SetClass("button_1", true)
+
+        local img_span = self.Document:CreateElement("span")
+        img_span.id = "bullet_img"
+        img_span:SetClass("bullet", true)
+        img_span:SetClass("button_img", true)
+
+        local img_el = self.Document:CreateElement("img")
+        img_el:SetAttribute("src", "bullet-r.png")
+        img_el:SetClass("psuedo_img", true)
+
+        img_span:AppendChild(img_el)
+        button_el:AppendChild(img_span)
+
+        local label_span = self.Document:CreateElement("span")
+        label_span.id = "label_"..i
+        label_span:SetClass("pos", true)
+        label_span:SetClass("button_text_right", true)
+
         if self.Data.Section_List[i] then
-            self.Document:GetElementById("label_"..i).inner_rml = "<p>" .. self.Data.Section_List[i].Display .. "</p>"
+            label_span.inner_rml = "<p>" .. self.Data.Section_List[i].Display .. "</p>"
+
+            local section_index = i
+            button_el:AddEventListener("click", function(_, _, _)
+                self:change_section(section_index)
+            end)
+        else
+            cont_el.style.visibility = "hidden"
         end
+
+        button_el:AppendChild(label_span)
+        cont_el:AppendChild(button_el)
+        panel:AppendChild(cont_el)
     end
 
     Topics.journal.initialize:send(self)
@@ -112,7 +150,7 @@ function JournalController:createJournalEntries(section)
     ScpuiSystem:clearEntries(list_el)
     self.Data.Visible_List = {}
 
-    for i, v in ipairs(self.Data.Entry_List[section]) do
+    for i, v in ipairs(self.Data.Entry_List[section] or {}) do
         ---@cast v scpui_journal_entry
 
         local saved_data = (self.SaveData[section] or {})[i]
@@ -205,7 +243,7 @@ end
 --- @param section number the section to search in
 --- @return number? index the index of the key
 function JournalController:getIndexFromKey(key, section)
-    for i,v in ipairs(self.Data.Entry_List[section]) do
+    for i,v in ipairs(self.Data.Entry_List[section] or {}) do
         if v.Key == key then return i end
     end
 

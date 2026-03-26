@@ -164,9 +164,9 @@ div#top_b_panel_wrapper
 	margin-top: 5%;
 }
 
-.button_text_right p
+div#top_b_panel_wrapper .button_text_right p
 {
-	margin-top: -35%;
+	margin-top: -25%;
 	width: 400%;
 	margin-left: 100%;
 }
