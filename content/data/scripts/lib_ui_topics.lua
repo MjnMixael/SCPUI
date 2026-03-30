@@ -66,8 +66,13 @@ local function weaponStats(weapon_class)
 	local volley = Utils.round(swarm_count * corkscrew_count * burst)
 	-- end volley code
 
+	local hull_multiplier = weapon_class.ArmorFactor
+	if weapon_class.Puncture then
+		hull_multiplier = hull_multiplier / 4
+	end
+
 	return {
-		HullDamage = base_damage * weapon_class.ArmorFactor,
+		HullDamage = base_damage * hull_multiplier,
 		ShieldDamage = base_damage * weapon_class.ShieldFactor,
 		SubsystemDamage = base_damage * weapon_class.SubsystemFactor,
 		Velocity = velocity,
