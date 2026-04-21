@@ -783,6 +783,7 @@ function TechDatabaseController:selectEntry(entry)
 
 		--Decide if item is a weapon or a ship
 		if self.SelectedSection == "ships" then
+			self:setupModelRenderTexture()
 
 			async.run(function()
 				async.await(AsyncUtil.wait_for(0.001))
@@ -808,6 +809,7 @@ function TechDatabaseController:selectEntry(entry)
 
 				self:toggleSliders(false)
 			else --If we don't have an anim, then draw the tech model
+				self:setupModelRenderTexture()
 
 				async.run(function()
 					async.await(AsyncUtil.wait_for(0.001))
