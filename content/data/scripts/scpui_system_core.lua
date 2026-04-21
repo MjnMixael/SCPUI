@@ -93,7 +93,7 @@ ScpuiSystem.data = {
 ScpuiSystem.extensions = {}
 
 --keep multiplayer standalone servers lean
-if ba.getCurrentMPStatus() == "MULTIPLAYER_STANDALONE" then
+if ba.inStandalone() then
 	ScpuiSystem.data.Active = nil
 	return
 end
