@@ -67,7 +67,7 @@ local function weaponStats(weapon_class)
 	-- end volley code
 
 	local hull_multiplier = weapon_class.ArmorFactor
-	if weapon_class.Puncture then
+	if ba.isEngineVersionAtLeast(26, 0, 0) and weapon_class.Puncture then
 		hull_multiplier = hull_multiplier / 4
 	end
 
