@@ -49,7 +49,11 @@ function TechDatabaseController:init()
 		Mx = 0,
 		My = 0,
 		Sx = 0,
-		Sy = 0
+		Sy = 0,
+		Texture = nil,
+		Url = nil,
+		RenderWidth = 0,
+		RenderHeight = 0
 	}
 end
 
@@ -87,6 +91,43 @@ function TechDatabaseController:initialize(document)
 	local s_range_el = Element.As.ElementFormControlInput(s_slider_el)
 	s_range_el.value = ScpuiSystem.data.ScpuiOptionValues.Database_Model_Speed or 0.5
 
+	self:setupModelRenderTexture()
+end
+
+--- Initializes or resizes the tech room model render texture and links it to the UI
+--- @return nil
+function TechDatabaseController:setupModelRenderTexture()
+	local model_view = self.Document:GetElementById("tech_view")
+	if not model_view then
+		return
+	end
+
+	local model_w = model_view.offset_width
+	local model_h = model_view.offset_height + 10
+
+	if model_w <= 0 or model_h <= 0 then
+		return
+	end
+
+	local model_memory = ScpuiSystem.data.memory.model_rendering
+	local needs_new_texture = not model_memory.Texture
+		or model_memory.RenderWidth ~= model_w
+		or model_memory.RenderHeight ~= model_h
+
+	if needs_new_texture then
+		model_memory.Texture = gr.createTexture(model_w, model_h)
+		model_memory.Url = ui.linkTexture(model_memory.Texture)
+		model_memory.RenderWidth = model_w
+		model_memory.RenderHeight = model_h
+	end
+
+	if model_view.first_child == nil then
+		local img_el = self.Document:CreateElement("img")
+		img_el:SetAttribute("src", model_memory.Url)
+		model_view:AppendChild(img_el)
+	else
+		model_view.first_child:SetAttribute("src", model_memory.Url)
+	end
 end
 
 --- Iterate over all the ships, weapons, and intel but only grab the necessary data
@@ -706,10 +747,9 @@ function TechDatabaseController:selectEntry(entry)
 		ScpuiSystem.data.memory.model_rendering.RotationSpeed = 40
 
 		local ani_wrapper_element = self.Document:GetElementById("tech_view")
-		if ani_wrapper_element.first_child ~= nil then
-			ani_wrapper_element.first_child:RemoveChild(ani_wrapper_element.first_child.first_child) --yo dawg
+		while ani_wrapper_element.first_child ~= nil do
+			ani_wrapper_element:RemoveChild(ani_wrapper_element.first_child)
 		end
-		ani_wrapper_element:RemoveChild(ani_wrapper_element.first_child)
 
 		if self.SelectedEntry then
 			local previous_entry = self.Document:GetElementById(self.SelectedEntry.Key)
@@ -755,7 +795,11 @@ function TechDatabaseController:selectEntry(entry)
 				local aniEl = self.Document:CreateElement("ani")
 				aniEl:SetAttribute("src", entry.Anim)
 				aniEl:SetClass("anim", true)
-				ani_wrapper_element:ReplaceChild(aniEl, ani_wrapper_element.first_child)
+				if ani_wrapper_element.first_child ~= nil then
+					ani_wrapper_element:ReplaceChild(aniEl, ani_wrapper_element.first_child)
+				else
+					ani_wrapper_element:AppendChild(aniEl)
+				end
 
 				self:toggleSliders(false)
 			else --If we don't have an anim, then draw the tech model
@@ -780,7 +824,11 @@ function TechDatabaseController:selectEntry(entry)
 					anim_element:SetAttribute("src", entry.Anim)
 				end
 				anim_element:SetClass("anim", true)
-				ani_wrapper_element:ReplaceChild(anim_element, ani_wrapper_element.first_child)
+				if ani_wrapper_element.first_child ~= nil then
+					ani_wrapper_element:ReplaceChild(anim_element, ani_wrapper_element.first_child)
+				else
+					ani_wrapper_element:AppendChild(anim_element)
+				end
 			else
 				--Do nothing because we have nothing to do!
 			end
@@ -933,11 +981,15 @@ function TechDatabaseController:drawModel()
 			return
 		end
 
-		-- Get screen coordinates from the SCPUI element position/offset
-		local model_x = ScpuiSystem:getAbsoluteLeft(model_view)
-		local model_y = ScpuiSystem:getAbsoluteTop(model_view) - model_view.offset_top + 2 --Does not include modelView.offset_top because that element's padding is set for anims
 		local model_w = model_view.offset_width
 		local model_h = model_view.offset_height + 10
+
+		-- Ensure the texture exists and matches the current model view size
+		self:setupModelRenderTexture()
+		local model_texture = ScpuiSystem.data.memory.model_rendering.Texture
+		if not model_texture then
+			return
+		end
 
 		-- Sx/Sy are the mouse coordinates when the left button was clicked. Mx/My are the mouse coordinates right now.
 		-- Get the difference to get how far the mouse has been dragged and invert the direction because otherwise it's wrong
@@ -987,7 +1039,10 @@ function TechDatabaseController:drawModel()
 			orient = ScpuiSystem.data.memory.model_rendering.ClickOrientation * orient
 		end
 
-		this_item:renderTechModel2(model_x, model_y, model_x + model_w, model_y + model_h, orient, 1.1)
+		gr.setTarget(model_texture)
+		gr.clearScreen(0, 0, 0, 0)
+		this_item:renderTechModel2(0, 0, model_w, model_h, orient, 1.1)
+		gr.setTarget()
 
 	end
 
@@ -1005,7 +1060,9 @@ end
 function TechDatabaseController:ClearData()
 	ScpuiSystem.data.memory.model_rendering.Class = nil
 	local ani_wrapper_element = self.Document:GetElementById("tech_view")
-	ani_wrapper_element:RemoveChild(ani_wrapper_element.first_child)
+	while ani_wrapper_element.first_child ~= nil do
+		ani_wrapper_element:RemoveChild(ani_wrapper_element.first_child)
+	end
 	self.Document:GetElementById("tech_desc").inner_rml = "<p></p>"
 end
 
