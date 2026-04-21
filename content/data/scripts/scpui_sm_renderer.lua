@@ -13,7 +13,7 @@ end
 --- @param slot_id string A unique slot identifier
 --- @param element Element The element to size/bind against
 --- @param document Document|nil The owning document (needed to create an img child)
---- @param opts table|nil Optional settings. Supports HeightOffset
+--- @param opts table|nil Optional settings. Supports HeightOffset and BindElement
 --- @return table|nil slot The slot data or nil if size is invalid
 function ScpuiSystem:ensureRenderSlot(slot_id, element, document, opts)
 	assert(slot_id and slot_id ~= "", "Render slot id is required")
@@ -23,6 +23,7 @@ function ScpuiSystem:ensureRenderSlot(slot_id, element, document, opts)
 
 	local options = opts or {}
 	local height_offset = options.HeightOffset or 0
+	local bind_element = options.BindElement or element
 
 	local width = element.offset_width
 	local height = element.offset_height + height_offset
@@ -44,13 +45,13 @@ function ScpuiSystem:ensureRenderSlot(slot_id, element, document, opts)
 	slot.Element = element
 	slots[slot_id] = slot
 
-	if document then
-		if element.first_child == nil then
+	if document and bind_element then
+		if bind_element.first_child == nil then
 			local img_el = document:CreateElement("img")
 			img_el:SetAttribute("src", slot.Url)
-			element:AppendChild(img_el)
+			bind_element:AppendChild(img_el)
 		else
-			element.first_child:SetAttribute("src", slot.Url)
+			bind_element.first_child:SetAttribute("src", slot.Url)
 		end
 	end
 
@@ -76,4 +77,3 @@ end
 function ScpuiSystem:endRenderSlot()
 	gr.setTarget()
 end
-

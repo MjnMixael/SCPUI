@@ -537,12 +537,12 @@ function ShipSelectController:selectShip(entry, slot)
 		Topics.shipselect.selectShip:send({self, entry.Index})
 
 		if self.Ship3d or entry.Anim == nil then
-			local model_view = self.Document:GetElementById("ship_view")
-			while model_view.first_child ~= nil do
-				model_view:RemoveChild(model_view.first_child)
+			local model_display = self.Document:GetElementById("ship_view")
+			while model_display.first_child ~= nil do
+				model_display:RemoveChild(model_display.first_child)
 			end
 			ScpuiSystem.data.memory.model_rendering.Class = entry.Index
-			ScpuiSystem.data.memory.model_rendering.Element = model_view
+			ScpuiSystem.data.memory.model_rendering.Element = self.Document:GetElementById("ship_view_wrapper")
 			self:setupModelRenderTexture()
 			ScpuiSystem.data.memory.model_rendering.Start = true
 		else
@@ -569,7 +569,7 @@ function ShipSelectController:setupModelRenderTexture()
 	local model_memory = ScpuiSystem.data.memory.model_rendering
 	local model_view = model_memory.Element
 	if (not model_view) and self and self.Document then
-		model_view = self.Document:GetElementById("ship_view")
+		model_view = self.Document:GetElementById("ship_view_wrapper")
 	end
 	if not model_view then
 		return
@@ -579,7 +579,9 @@ function ShipSelectController:setupModelRenderTexture()
 		"ship_select_model",
 		model_view,
 		(self and self.Document) and self.Document or nil,
-		nil
+		{
+			BindElement = (self and self.Document) and self.Document:GetElementById("ship_view") or nil
+		}
 	)
 	if not slot then
 		return
