@@ -628,6 +628,7 @@ function SystemMapController:displayObjectInfo(object)
 		end
 
 		ScpuiSystem.SysMap.ObjectElement = object_el
+		self:setupCloseupModelRenderTexture()
 	end
 
 
@@ -660,6 +661,37 @@ function SystemMapController:displayObjectInfo(object)
 		end
 	end
 
+end
+
+--- Initializes or resizes the closeup model render texture and links it to the object view
+--- @return nil
+function SystemMapController:setupCloseupModelRenderTexture()
+	if not ScpuiSystem.SysMap then
+		return
+	end
+
+	local object_el = ScpuiSystem.SysMap.ObjectElement
+	if not object_el then
+		object_el = self.Document:GetElementById("object_view")
+	end
+	if not object_el then
+		return
+	end
+
+	local slot = ScpuiSystem:ensureRenderSlot(
+		"system_map_closeup",
+		object_el,
+		self.Document,
+		nil
+	)
+	if not slot then
+		return
+	end
+
+	ScpuiSystem.SysMap.Texture = slot.Texture
+	ScpuiSystem.SysMap.Url = slot.Url
+	ScpuiSystem.SysMap.RenderWidth = slot.Width
+	ScpuiSystem.SysMap.RenderHeight = slot.Height
 end
 
 --- Close the object info
@@ -969,15 +1001,22 @@ function SystemMapController:drawModel()
 
 		ScpuiSystem.SysMap.TechModelOri = SystemMapController:changeTechModelOrientation(ScpuiSystem.SysMap.TechModelOri)
 
-		local object_el = ScpuiSystem.SysMap.ObjectElement
+			local object_el = ScpuiSystem.SysMap.ObjectElement
 
-		local x = ScpuiSystem:getAbsoluteLeft(object_el)
-		local y = ScpuiSystem:getAbsoluteTop(object_el)
-		local w = object_el.offset_width
-		local h = object_el.offset_height
+			self:setupCloseupModelRenderTexture()
+			local w = ScpuiSystem.SysMap.RenderWidth or object_el.offset_width
+			local h = ScpuiSystem.SysMap.RenderHeight or object_el.offset_height
+			if w <= 0 or h <= 0 then
+				return
+			end
 
-		thisObjectClass:renderTechModel2(x, y, x + w, y + h, ScpuiSystem.SysMap.TechModelOri, ScpuiSystem.SysMap.z)
-	end
+			if not ScpuiSystem:beginRenderSlot("system_map_closeup") then
+				return
+			end
+			gr.clearScreen(0, 0, 0, 0)
+			thisObjectClass:renderTechModel2(0, 0, w, h, ScpuiSystem.SysMap.TechModelOri, ScpuiSystem.SysMap.z)
+			ScpuiSystem:endRenderSlot()
+		end
 end
 
 --- And here's where we change the rotation
