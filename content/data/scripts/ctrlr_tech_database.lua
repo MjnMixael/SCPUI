@@ -97,7 +97,11 @@ end
 --- Initializes or resizes the tech room model render texture and links it to the UI
 --- @return nil
 function TechDatabaseController:setupModelRenderTexture()
-	local model_view = self.Document:GetElementById("tech_view")
+	local model_memory = ScpuiSystem.data.memory.model_rendering
+	local model_view = model_memory.Element
+	if (not model_view) and self and self.Document then
+		model_view = self.Document:GetElementById("tech_view")
+	end
 	if not model_view then
 		return
 	end
@@ -109,7 +113,6 @@ function TechDatabaseController:setupModelRenderTexture()
 		return
 	end
 
-	local model_memory = ScpuiSystem.data.memory.model_rendering
 	local needs_new_texture = not model_memory.Texture
 		or model_memory.RenderWidth ~= model_w
 		or model_memory.RenderHeight ~= model_h
@@ -121,12 +124,14 @@ function TechDatabaseController:setupModelRenderTexture()
 		model_memory.RenderHeight = model_h
 	end
 
-	if model_view.first_child == nil then
-		local img_el = self.Document:CreateElement("img")
-		img_el:SetAttribute("src", model_memory.Url)
-		model_view:AppendChild(img_el)
-	else
-		model_view.first_child:SetAttribute("src", model_memory.Url)
+	if self and self.Document then
+		if model_view.first_child == nil then
+			local img_el = self.Document:CreateElement("img")
+			img_el:SetAttribute("src", model_memory.Url)
+			model_view:AppendChild(img_el)
+		else
+			model_view.first_child:SetAttribute("src", model_memory.Url)
+		end
 	end
 end
 
