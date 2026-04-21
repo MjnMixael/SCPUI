@@ -521,9 +521,7 @@ function WeaponSelectController:show_breakout_reader()
 		ClickEscape = true
 	}
 
-	self:pauseRendering()
 	ScpuiSystem:showDialog(self, params, function(response)
-		self:resumeRendering()
 	end)
 end
 
@@ -1323,9 +1321,7 @@ function WeaponSelectController:dragWeaponFromPoolToSlot(element, entry, weapon_
 				Buttons_List = buttons,
 			}
 
-			self:pauseRendering()
 			ScpuiSystem:showDialog(self, params, function(response)
-				self:resumeRendering()
 			end)
 			return
 		end
@@ -1436,9 +1432,7 @@ function WeaponSelectController:drag_from_slot_to_slot_or_pool(element, slot)
 				Buttons_List = buttons,
 			}
 
-			self:pauseRendering()
 			ScpuiSystem:showDialog(self, params, function(response)
-				self:resumeRendering()
 			end)
 			return
 		end
@@ -1484,24 +1478,6 @@ function WeaponSelectController:copy_to_wing()
 		LoadoutHandler:CopyToWing(self.currentShipSlot)
 		self:updateUiElements()
 	end
-end
-
---- Pause rendering the models
---- @return nil
-function WeaponSelectController:pauseRendering()
-	ScpuiSystem.data.memory.model_rendering.SavedIndex = ScpuiSystem.data.memory.model_rendering.Class
-	ScpuiSystem.data.memory.model_rendering.Class = nil
-	ScpuiSystem.data.memory.model_rendering.OverheadSave = ScpuiSystem.data.memory.model_rendering.OverheadClass
-	ScpuiSystem.data.memory.model_rendering.OverheadClass = nil
-end
-
---- Resume rendering the models
---- @return nil
-function WeaponSelectController:resumeRendering()
-	ScpuiSystem.data.memory.model_rendering.Class = ScpuiSystem.data.memory.model_rendering.SavedIndex
-	ScpuiSystem.data.memory.model_rendering.SavedIndex = nil
-	ScpuiSystem.data.memory.model_rendering.OverheadClass = ScpuiSystem.data.memory.model_rendering.OverheadSave
-	ScpuiSystem.data.memory.model_rendering.OverheadSave = nil
 end
 
 --- Called by the RML when the reset button is pressed

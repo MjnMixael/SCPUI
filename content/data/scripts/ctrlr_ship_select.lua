@@ -445,9 +445,6 @@ function ShipSelectController:show_breakout_reader()
 		Keypress = string.sub(ba.XSTR("Close", 888110), 1, 1)
 	}
 
-	ScpuiSystem.data.memory.model_rendering.SavedIndex = ScpuiSystem.data.memory.model_rendering.Class
-	ScpuiSystem.data.memory.model_rendering.Class = nil
-
 	---@type dialog_setup
 	local params = {
 		Title = title,
@@ -458,8 +455,6 @@ function ShipSelectController:show_breakout_reader()
 	}
 
 	ScpuiSystem:showDialog(self, params, function(response)
-			ScpuiSystem.data.memory.model_rendering.Class = ScpuiSystem.data.memory.model_rendering.SavedIndex
-			ScpuiSystem.data.memory.model_rendering.SavedIndex = nil
     end)
 end
 
