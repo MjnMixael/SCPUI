@@ -58,7 +58,16 @@ function WeaponSelectController:init()
 	self.ActiveSlot = 0 --- @type number The active slot that is being dragged onto
 
 	LoadoutHandler:init()
-	ScpuiSystem.data.memory.model_rendering = {}
+	ScpuiSystem.data.memory.model_rendering = {
+		Texture = nil,
+		Url = nil,
+		RenderWidth = 0,
+		RenderHeight = 0,
+		OverheadTexture = nil,
+		OverheadUrl = nil,
+		OverheadRenderWidth = 0,
+		OverheadRenderHeight = 0,
+	}
 end
 
 --- Called by the RML document
@@ -535,13 +544,24 @@ function WeaponSelectController:selectWeapon(entry, slot)
 			self:setupWeaponInfo(entry)
 
 			if self.Weapon3d or entry.Anim == nil then
+				local weapon_view = self.Document:GetElementById("weapon_view")
+				while weapon_view.first_child ~= nil do
+					weapon_view:RemoveChild(weapon_view.first_child)
+				end
 				ScpuiSystem.data.memory.model_rendering.Class = entry.Index
 				ScpuiSystem.data.memory.model_rendering.Element = self.Document:GetElementById("weapon_view_window")
+				self:setupWeaponRenderTexture()
 				ScpuiSystem.data.memory.model_rendering.Start = true
 
 				self:refreshOverheadSlot()
 			else
+				ScpuiSystem.data.memory.model_rendering.Class = nil
 				--the anim is already created so we only need to remove and reset the src
+				local weapon_view = self.Document:GetElementById("weapon_view")
+				while weapon_view.first_child ~= nil do
+					weapon_view:RemoveChild(weapon_view.first_child)
+				end
+				weapon_view:AppendChild(self.AnimEl)
 				self.AnimEl:RemoveAttribute("src")
 				self.AnimEl:SetAttribute("src", entry.Anim)
 			end
@@ -725,6 +745,7 @@ function WeaponSelectController:selectShip(ship_index, callsign, slot)
 			ScpuiSystem.data.memory.model_rendering.OverheadClass = ship_index
 			ScpuiSystem.data.memory.model_rendering.OverheadElement = self.Document:GetElementById("ship_view_wrapper")
 			ScpuiSystem.data.memory.model_rendering.overheadEffect = self.OverheadStyle
+			self:setupOverheadRenderTexture()
 
 			self:refreshOverheadSlot()
 		else
@@ -735,6 +756,67 @@ function WeaponSelectController:selectShip(ship_index, callsign, slot)
 
 	end
 
+end
+
+--- Initializes or resizes the weapon preview model render texture and links it to the UI
+--- @return nil
+function WeaponSelectController:setupWeaponRenderTexture()
+	local model_memory = ScpuiSystem.data.memory.model_rendering
+	local model_view = model_memory.Element
+	if (not model_view) and self and self.Document then
+		model_view = self.Document:GetElementById("weapon_view_window")
+	end
+	if not model_view then
+		return
+	end
+
+	local slot = ScpuiSystem:ensureRenderSlot(
+		"weapon_select_preview",
+		model_view,
+		(self and self.Document) and self.Document or nil,
+		{
+			BindElement = (self and self.Document) and self.Document:GetElementById("weapon_view") or nil
+		}
+	)
+	if not slot then
+		return
+	end
+
+	model_memory.Texture = slot.Texture
+	model_memory.Url = slot.Url
+	model_memory.RenderWidth = slot.Width
+	model_memory.RenderHeight = slot.Height
+end
+
+--- Initializes or resizes the ship overhead render texture and links it to the UI image
+--- @return nil
+function WeaponSelectController:setupOverheadRenderTexture()
+	local model_memory = ScpuiSystem.data.memory.model_rendering
+	local model_view = model_memory.OverheadElement
+	if (not model_view) and self and self.Document then
+		model_view = self.Document:GetElementById("ship_view_wrapper")
+	end
+	if not model_view then
+		return
+	end
+
+	local slot = ScpuiSystem:ensureRenderSlot(
+		"weapon_select_overhead",
+		model_view,
+		nil,
+		nil
+	)
+	if not slot then
+		return
+	end
+
+	model_memory.OverheadTexture = slot.Texture
+	model_memory.OverheadUrl = slot.Url
+	model_memory.OverheadRenderWidth = slot.Width
+	model_memory.OverheadRenderHeight = slot.Height
+	if self.OverheadElement then
+		self.OverheadElement:SetAttribute("src", slot.Url)
+	end
 end
 
 --- Clear the weapon bank slots
@@ -1548,25 +1630,27 @@ function WeaponSelectController:drawSelectModel()
 			return
 		end
 
-		local model_x = ScpuiSystem:getAbsoluteLeft(model_view) --This is pretty messy, but it's functional
-		local model_y = ScpuiSystem:getAbsoluteTop(model_view)
-		local model_w = model_view.offset_width
-		local model_h = model_view.offset_height
+		self:setupWeaponRenderTexture()
+		local model_w = ScpuiSystem.data.memory.model_rendering.RenderWidth or model_view.offset_width
+		local model_h = ScpuiSystem.data.memory.model_rendering.RenderHeight or model_view.offset_height
+		if model_w <= 0 or model_h <= 0 then
+			return
+		end
 
 		--This is just a multiplier to make the rendered model a little bigger
-		--renderSelectModel() has forced centering, so we need to calculate
-		--the screen size so we can move it slightly left and up while it
-		--multiple it's size
+		--renderSelectModel() has forced centering so contract the viewport slightly
 		local val = -0.3
-		local ratio = (gr.getScreenWidth() / gr.getScreenHeight()) * 2
+		local render_w = model_w * (1 + val)
+		local render_h = model_h * (1 + val)
+		local render_x = (model_w - render_w) / 2
+		local render_y = (model_h - render_h) / 2
 
-		--Increase by percentage and move slightly left and up.
-		model_x = model_x * (1 - (val/ratio))
-		model_y = model_y * (1 - val)
-		model_w = model_w * (1 + val)
-		model_h = model_h * (1 + val)
-
-		tb.WeaponClasses[ScpuiSystem.data.memory.model_rendering.Class]:renderSelectModel(ScpuiSystem.data.memory.model_rendering.Start, model_x, model_y, model_w, model_h, -1, 1.3)
+		if not ScpuiSystem:beginRenderSlot("weapon_select_preview") then
+			return
+		end
+		gr.clearScreen(0, 0, 0, 0)
+		tb.WeaponClasses[ScpuiSystem.data.memory.model_rendering.Class]:renderSelectModel(ScpuiSystem.data.memory.model_rendering.Start, render_x, render_y, render_w, render_h, -1, 1.3)
+		ScpuiSystem:endRenderSlot()
 
 		ScpuiSystem.data.memory.model_rendering.Start = false
 
@@ -1600,51 +1684,52 @@ function WeaponSelectController:drawOverheadModel()
 			return
 		end
 
+		self:setupOverheadRenderTexture()
+		local model_w = ScpuiSystem.data.memory.model_rendering.OverheadRenderWidth or model_view.offset_width
+		local model_h = ScpuiSystem.data.memory.model_rendering.OverheadRenderHeight or model_view.offset_height
+		if model_w <= 0 or model_h <= 0 then
+			return
+		end
+
 		local model_x = ScpuiSystem:getAbsoluteLeft(model_view)
 		local model_y = ScpuiSystem:getAbsoluteTop(model_view)
-		local model_w = model_view.offset_width
-		local model_h = model_view.offset_height
 
 		--Get bank coords. This is all super messy but it's the best we can do
 		--without absolute coords available in the librocket Lua API
 		local primary_offset = 15
 		local secondary_offset = -15
 
-		local bank1_x = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[1].offset_left + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[1].parent_node.offset_left + model_x + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[1].offset_width + primary_offset
-		local bank1_y = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[1].offset_top + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[1].parent_node.offset_top + model_y + (ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[1].offset_height / 2)
+		local function getBankCoordinates(index, offset)
+			local el = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[index]
+			local bx = ScpuiSystem:getAbsoluteLeft(el) - model_x + el.offset_width + offset
+			local by = ScpuiSystem:getAbsoluteTop(el) - model_y + (el.offset_height / 2)
+			return bx, by
+		end
 
-		local bank2_x = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[2].offset_left + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[2].parent_node.offset_left + model_x + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[2].offset_width + primary_offset
-		local bank2_y = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[2].offset_top + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[2].parent_node.offset_top + model_y + (ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[2].offset_height / 2)
-
-		local bank3_x = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[3].offset_left + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[3].parent_node.offset_left + model_x + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[3].offset_width + primary_offset
-		local bank3_y = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[3].offset_top + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[3].parent_node.offset_top + model_y + (ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[3].offset_height / 2)
-
-		local bank4_x = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[4].offset_left + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[4].parent_node.offset_left + model_x + secondary_offset
-		local bank4_y = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[4].offset_top + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[4].parent_node.offset_top + model_y + (ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[4].offset_height / 2)
-
-		local bank5_x = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[5].offset_left + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[5].parent_node.offset_left + model_x + secondary_offset
-		local bank5_y = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[5].offset_top + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[5].parent_node.offset_top + model_y + (ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[5].offset_height / 2)
-
-		local bank6_x = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[6].offset_left + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[6].parent_node.offset_left + model_x + secondary_offset
-		local bank6_y = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[6].offset_top + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[6].parent_node.offset_top + model_y + (ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[6].offset_height / 2)
-
-		local bank7_x = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[7].offset_left + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[7].parent_node.offset_left + model_x + secondary_offset
-		local bank7_y = ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[7].offset_top + ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[7].parent_node.offset_top + model_y + (ScpuiSystem.data.memory.model_rendering.Bank_Elements_List[7].offset_height / 2)
+		local bank1_x, bank1_y = getBankCoordinates(1, primary_offset)
+		local bank2_x, bank2_y = getBankCoordinates(2, primary_offset)
+		local bank3_x, bank3_y = getBankCoordinates(3, primary_offset)
+		local bank4_x, bank4_y = getBankCoordinates(4, secondary_offset)
+		local bank5_x, bank5_y = getBankCoordinates(5, secondary_offset)
+		local bank6_x, bank6_y = getBankCoordinates(6, secondary_offset)
+		local bank7_x, bank7_y = getBankCoordinates(7, secondary_offset)
 
 		--This is just a multiplier to make the rendered model a little bigger
 		--renderSelectModel() has forced centering, so we need to calculate
 		--the screen size so we can move it slightly left and up while it
 		--multiple it's size
 		local val = 0.0
-		local ratio = (gr.getScreenWidth() / gr.getScreenHeight()) * 2
+		local render_w = model_w * (1 + val)
+		local render_h = model_h * (1 + val)
+		local render_x = (model_w - render_w) / 2
+		local render_y = (model_h - render_h) / 2
 
-		--Increase by percentage and move slightly left and up.
-		model_x = model_x * (1 - (val/ratio))
-		model_y = model_y * (1 - val)
-		model_w = model_w * (1 + val)
-		model_h = model_h * (1 + val)
-
-		tb.ShipClasses[ScpuiSystem.data.memory.model_rendering.OverheadClass]:renderOverheadModel(model_x, model_y, model_w, model_h, ScpuiSystem.data.memory.model_rendering.Weapons_List, ScpuiSystem.data.memory.model_rendering.Class, ScpuiSystem.data.memory.model_rendering.Hover, bank1_x, bank1_y, bank2_x, bank2_y, bank3_x, bank3_y, bank4_x, bank4_y, bank5_x, bank5_y, bank6_x, bank6_y, bank7_x, bank7_y, ScpuiSystem.data.memory.model_rendering.overheadEffect)
+		if not ScpuiSystem:beginRenderSlot("weapon_select_overhead") then
+			return
+		end
+		gr.clearScreen(0, 0, 0, 0)
+		tb.ShipClasses[ScpuiSystem.data.memory.model_rendering.OverheadClass]:renderOverheadModel(render_x, render_y, render_w, render_h, ScpuiSystem.data.memory.model_rendering.Weapons_List, ScpuiSystem.data.memory.model_rendering.Class, ScpuiSystem.data.memory.model_rendering.Hover, bank1_x, bank1_y, bank2_x, bank2_y, bank3_x, bank3_y, bank4_x, bank4_y, bank5_x, bank5_y, bank6_x, bank6_y, bank7_x, bank7_y, ScpuiSystem.data.memory.model_rendering.overheadEffect)
+		ScpuiSystem:endRenderSlot()
 
 		ScpuiSystem.data.memory.model_rendering.Start = false
 
