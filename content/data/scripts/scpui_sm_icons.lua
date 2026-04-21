@@ -58,16 +58,38 @@ function ScpuiSystem:saveIconCache(cache)
 
 end
 
+--- Compute a fingerprint string for a ship or weapon that captures values relevant to icon generation.
+--- If any of these values change the icon should be regenerated.
+--- @param item string The ship or weapon name
+--- @param is_ship boolean True if the item is a ship, false if it is a weapon
+--- @param gen_3d boolean Whether 3D icon generation is being used for this item
+--- @return string
+function ScpuiSystem:getIconFingerprint(item, is_ship, gen_3d)
+	local pof_name = ""
+	local icon_name = ""
+
+	if is_ship then
+		local model_h = tb.ShipClasses[item].Model
+		if model_h and model_h:isValid() then
+			pof_name = model_h.Filename
+		end
+		icon_name = tb.ShipClasses[item].SelectIconFilename or ""
+	else
+		local model_h = tb.WeaponClasses[item].Model
+		if model_h and model_h:isValid() then
+			pof_name = model_h.Filename
+		end
+		icon_name = tb.WeaponClasses[item].SelectIconFilename or ""
+	end
+
+	return pof_name .. "|" .. icon_name .. "|" .. tostring(gen_3d)
+end
+
 --- Set the icon frames for a ship or weapon
 --- @param item string The ship or weapon name
 --- @param is_ship? boolean True if the item is a ship, false if it is a weapon
 --- @return nil
 function ScpuiSystem:setIconFrames(item, is_ship)
-
-	--If the icon was preloaded, then skip!
-	if ScpuiSystem.data.Generated_Icons[item] ~= nil then
-		return
-	end
 
 	local ship_3d, ship_effect, ship_icon_3d = ui.ShipWepSelect.get3dShipChoices()
 	local weapon_3d, weapon_effect, weapon_icon_3d = ui.ShipWepSelect.get3dWeaponChoices()
@@ -76,6 +98,16 @@ function ScpuiSystem:setIconFrames(item, is_ship)
 
 	if (ship_icon_3d and is_ship) or (weapon_icon_3d and not is_ship) then
 		gen_3d = true
+	end
+
+	local fingerprint = ScpuiSystem:getIconFingerprint(item, is_ship, gen_3d)
+
+	--If the icon was preloaded and the fingerprint matches, then skip!
+	if ScpuiSystem.data.Generated_Icons[item] ~= nil then
+		if ScpuiSystem.data.Generated_Icons[item].Fingerprint == fingerprint then
+			return
+		end
+		ba.print("SCPUI: Icon data changed for " .. item .. ", regenerating icon...\n")
 	end
 
 	---@type loadout_icon
@@ -256,6 +288,7 @@ function ScpuiSystem:setIconFrames(item, is_ship)
 		end
 	end
 
+	icon_details.Fingerprint = fingerprint
 	ScpuiSystem.data.Generated_Icons[item] = icon_details
 
 end

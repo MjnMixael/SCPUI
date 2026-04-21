@@ -121,7 +121,11 @@ function ScpuiSystem:init()
 	ba.print("SCPUI Core (v" .. ScpuiSystem.constants.VERSION .. ") is initializing. Standby...\n")
 
 	if (ba.isEngineVersionAtLeast(25, 0, 0) and not opt.isInGameOptionsEnabled()) then
-		ba.error("SCPUI requires in-game options to be enabled! Please enable them in your game settings table.\n")
+		if ba.inDebug() then
+			ba.warning("In-game options is disabled! The SCPUI options menu will not work correctly!")
+		else
+			ba.error("SCPUI requires in-game options to be enabled! Please enable them in your game settings table.")
+		end
 	end
 
 	self:loadSubmodules()
