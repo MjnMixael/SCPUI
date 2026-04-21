@@ -48,7 +48,12 @@ function ShipSelectController:init()
 	self.Commit = false --- @type boolean Whether the commit to the mission was successful
 
 	LoadoutHandler:init()
-	ScpuiSystem.data.memory.model_rendering = {}
+	ScpuiSystem.data.memory.model_rendering = {
+		Texture = nil,
+		Url = nil,
+		RenderWidth = 0,
+		RenderHeight = 0,
+	}
 end
 
 --- Called by the RML document
@@ -440,9 +445,6 @@ function ShipSelectController:show_breakout_reader()
 		Keypress = string.sub(ba.XSTR("Close", 888110), 1, 1)
 	}
 
-	ScpuiSystem.data.memory.model_rendering.SavedIndex = ScpuiSystem.data.memory.model_rendering.Class
-	ScpuiSystem.data.memory.model_rendering.Class = nil
-
 	---@type dialog_setup
 	local params = {
 		Title = title,
@@ -453,8 +455,6 @@ function ShipSelectController:show_breakout_reader()
 	}
 
 	ScpuiSystem:showDialog(self, params, function(response)
-			ScpuiSystem.data.memory.model_rendering.Class = ScpuiSystem.data.memory.model_rendering.SavedIndex
-			ScpuiSystem.data.memory.model_rendering.SavedIndex = nil
     end)
 end
 
@@ -532,11 +532,22 @@ function ShipSelectController:selectShip(entry, slot)
 		Topics.shipselect.selectShip:send({self, entry.Index})
 
 		if self.Ship3d or entry.Anim == nil then
+			local model_display = self.Document:GetElementById("ship_view")
+			while model_display.first_child ~= nil do
+				model_display:RemoveChild(model_display.first_child)
+			end
 			ScpuiSystem.data.memory.model_rendering.Class = entry.Index
 			ScpuiSystem.data.memory.model_rendering.Element = self.Document:GetElementById("ship_view_wrapper")
+			self:setupModelRenderTexture()
 			ScpuiSystem.data.memory.model_rendering.Start = true
 		else
+			ScpuiSystem.data.memory.model_rendering.Class = nil
 			--the anim is already created so we only need to remove and reset the src
+			local model_view = self.Document:GetElementById("ship_view")
+			while model_view.first_child ~= nil do
+				model_view:RemoveChild(model_view.first_child)
+			end
+			model_view:AppendChild(self.AnimEl)
 			self.AnimEl:RemoveAttribute("src")
 			self.AnimEl:SetAttribute("src", entry.Anim)
 		end
@@ -545,6 +556,36 @@ function ShipSelectController:selectShip(entry, slot)
 
 	Topics.shipselect.selectSlot:send({self, slot})
 
+end
+
+--- Initializes or resizes the ship select model render texture and links it to the UI
+--- @return nil
+function ShipSelectController:setupModelRenderTexture()
+	local model_memory = ScpuiSystem.data.memory.model_rendering
+	local model_view = model_memory.Element
+	if (not model_view) and self and self.Document then
+		model_view = self.Document:GetElementById("ship_view_wrapper")
+	end
+	if not model_view then
+		return
+	end
+
+	local slot = ScpuiSystem:ensureRenderSlot(
+		"ship_select_model",
+		model_view,
+		(self and self.Document) and self.Document or nil,
+		{
+			BindElement = (self and self.Document) and self.Document:GetElementById("ship_view") or nil
+		}
+	)
+	if not slot then
+		return
+	end
+
+	model_memory.Texture = slot.Texture
+	model_memory.Url = slot.Url
+	model_memory.RenderWidth = slot.Width
+	model_memory.RenderHeight = slot.Height
 end
 
 --- Builds the ship stats info for the selected ship and displays it
@@ -1056,25 +1097,27 @@ function ShipSelectController:drawSelectModel()
 			return
 		end
 
-		local model_x = ScpuiSystem:getAbsoluteLeft(model_view) --This is pretty messy, but it's functional
-		local model_y = ScpuiSystem:getAbsoluteTop(model_view)
-		local model_w = model_view.offset_width
-		local model_h = model_view.offset_height
+		self:setupModelRenderTexture()
+		local model_w = ScpuiSystem.data.memory.model_rendering.RenderWidth or model_view.offset_width
+		local model_h = ScpuiSystem.data.memory.model_rendering.RenderHeight or model_view.offset_height
+		if model_w <= 0 or model_h <= 0 then
+			return
+		end
 
 		--This is just a multiplier to make the rendered model a little bigger
-		--renderSelectModel() has forced centering, so we need to calculate
-		--the screen size so we can move it slightly left and up while we
-		--multiple it's size
+		--renderSelectModel() has forced centering so expand the viewport a bit
 		local val = 0.15
-		local ratio = (gr.getScreenWidth() / gr.getScreenHeight()) * 2
+		local render_w = model_w * (1 + val)
+		local render_h = model_h * (1 + val)
+		local render_x = (model_w - render_w) / 2
+		local render_y = (model_h - render_h) / 2
 
-		--Increase by percentage and move slightly left and up.
-		model_x = model_x * (1 - (val/ratio))
-		model_y = model_y * (1 - val)
-		model_w = model_w * (1 + val)
-		model_h = model_h * (1 + val)
-
-		tb.ShipClasses[ScpuiSystem.data.memory.model_rendering.Class]:renderSelectModel(ScpuiSystem.data.memory.model_rendering.Start, model_x, model_y, model_w, model_h, -1, 1.3)
+		if not ScpuiSystem:beginRenderSlot("ship_select_model") then
+			return
+		end
+		gr.clearScreen(0, 0, 0, 0)
+		tb.ShipClasses[ScpuiSystem.data.memory.model_rendering.Class]:renderSelectModel(ScpuiSystem.data.memory.model_rendering.Start, render_x, render_y, render_w, render_h, -1, 1.3)
+		ScpuiSystem:endRenderSlot()
 
 		ScpuiSystem.data.memory.model_rendering.Start = false
 

@@ -49,7 +49,11 @@ function TechDatabaseController:init()
 		Mx = 0,
 		My = 0,
 		Sx = 0,
-		Sy = 0
+		Sy = 0,
+		Texture = nil,
+		Url = nil,
+		RenderWidth = 0,
+		RenderHeight = 0
 	}
 end
 
@@ -87,6 +91,35 @@ function TechDatabaseController:initialize(document)
 	local s_range_el = Element.As.ElementFormControlInput(s_slider_el)
 	s_range_el.value = ScpuiSystem.data.ScpuiOptionValues.Database_Model_Speed or 0.5
 
+	self:setupModelRenderTexture()
+end
+
+--- Initializes or resizes the tech room model render texture and links it to the UI
+--- @return nil
+function TechDatabaseController:setupModelRenderTexture()
+	local model_memory = ScpuiSystem.data.memory.model_rendering
+	local model_view = model_memory.Element
+	if (not model_view) and self and self.Document then
+		model_view = self.Document:GetElementById("tech_view")
+	end
+	if not model_view then
+		return
+	end
+
+	local slot = ScpuiSystem:ensureRenderSlot(
+		"tech_database_model",
+		model_view,
+		(self and self.Document) and self.Document or nil,
+		{HeightOffset = 10}
+	)
+	if not slot then
+		return
+	end
+
+	model_memory.Texture = slot.Texture
+	model_memory.Url = slot.Url
+	model_memory.RenderWidth = slot.Width
+	model_memory.RenderHeight = slot.Height
 end
 
 --- Iterate over all the ships, weapons, and intel but only grab the necessary data
@@ -706,10 +739,18 @@ function TechDatabaseController:selectEntry(entry)
 		ScpuiSystem.data.memory.model_rendering.RotationSpeed = 40
 
 		local ani_wrapper_element = self.Document:GetElementById("tech_view")
-		if ani_wrapper_element.first_child ~= nil then
-			ani_wrapper_element.first_child:RemoveChild(ani_wrapper_element.first_child.first_child) --yo dawg
+		local function ensureModelView()
+			local current_child = ani_wrapper_element.first_child
+			if current_child ~= nil then
+				local current_src = current_child:GetAttribute("src")
+				if current_src ~= ScpuiSystem.data.memory.model_rendering.Url then
+					while ani_wrapper_element.first_child ~= nil do
+						ani_wrapper_element:RemoveChild(ani_wrapper_element.first_child)
+					end
+				end
+			end
+			self:setupModelRenderTexture()
 		end
-		ani_wrapper_element:RemoveChild(ani_wrapper_element.first_child)
 
 		if self.SelectedEntry then
 			local previous_entry = self.Document:GetElementById(self.SelectedEntry.Key)
@@ -738,6 +779,8 @@ function TechDatabaseController:selectEntry(entry)
 
 		--Decide if item is a weapon or a ship
 		if self.SelectedSection == "ships" then
+			-- Ensure the texture-backed view exists when switching to model rendering
+			ensureModelView()
 
 			async.run(function()
 				async.await(AsyncUtil.wait_for(0.001))
@@ -750,15 +793,21 @@ function TechDatabaseController:selectEntry(entry)
 
 		elseif self.SelectedSection == "weapons" then
 
-			if entry.Anim ~= "" and Utils.animExists(entry.Anim) then
+				if entry.Anim ~= "" and Utils.animExists(entry.Anim) then
 
-				local aniEl = self.Document:CreateElement("ani")
-				aniEl:SetAttribute("src", entry.Anim)
-				aniEl:SetClass("anim", true)
-				ani_wrapper_element:ReplaceChild(aniEl, ani_wrapper_element.first_child)
+					local aniEl = self.Document:CreateElement("ani")
+					aniEl:SetAttribute("src", entry.Anim)
+					aniEl:SetClass("anim", true)
+				if ani_wrapper_element.first_child ~= nil then
+					ani_wrapper_element:ReplaceChild(aniEl, ani_wrapper_element.first_child)
+				else
+					ani_wrapper_element:AppendChild(aniEl)
+				end
 
-				self:toggleSliders(false)
-			else --If we don't have an anim, then draw the tech model
+					self:toggleSliders(false)
+				else --If we don't have an anim, then draw the tech model
+					-- Ensure the texture-backed view exists when switching from anim to model rendering
+					ensureModelView()
 
 				async.run(function()
 					async.await(AsyncUtil.wait_for(0.001))
@@ -780,7 +829,11 @@ function TechDatabaseController:selectEntry(entry)
 					anim_element:SetAttribute("src", entry.Anim)
 				end
 				anim_element:SetClass("anim", true)
-				ani_wrapper_element:ReplaceChild(anim_element, ani_wrapper_element.first_child)
+				if ani_wrapper_element.first_child ~= nil then
+					ani_wrapper_element:ReplaceChild(anim_element, ani_wrapper_element.first_child)
+				else
+					ani_wrapper_element:AppendChild(anim_element)
+				end
 			else
 				--Do nothing because we have nothing to do!
 			end
@@ -804,9 +857,6 @@ function TechDatabaseController:show_breakout_reader()
 		Keypress = string.sub(ba.XSTR("Close", 888110), 1, 1)
 	}
 
-	ScpuiSystem.data.memory.model_rendering.SavedIndex = ScpuiSystem.data.memory.model_rendering.Class
-	ScpuiSystem.data.memory.model_rendering.Class = nil
-
 	---@type dialog_setup
 	local params = {
 		Title = title,
@@ -817,8 +867,6 @@ function TechDatabaseController:show_breakout_reader()
 	}
 
 	ScpuiSystem:showDialog(self, params, function(response)
-		ScpuiSystem.data.memory.model_rendering.Class = ScpuiSystem.data.memory.model_rendering.SavedIndex
-		ScpuiSystem.data.memory.model_rendering.SavedIndex = nil
 	end)
 end
 
@@ -933,11 +981,15 @@ function TechDatabaseController:drawModel()
 			return
 		end
 
-		-- Get screen coordinates from the SCPUI element position/offset
-		local model_x = ScpuiSystem:getAbsoluteLeft(model_view)
-		local model_y = ScpuiSystem:getAbsoluteTop(model_view) - model_view.offset_top + 2 --Does not include modelView.offset_top because that element's padding is set for anims
 		local model_w = model_view.offset_width
 		local model_h = model_view.offset_height + 10
+
+		-- Ensure the texture exists and matches the current model view size
+		self:setupModelRenderTexture()
+		local model_texture = ScpuiSystem.data.memory.model_rendering.Texture
+		if not model_texture then
+			return
+		end
 
 		-- Sx/Sy are the mouse coordinates when the left button was clicked. Mx/My are the mouse coordinates right now.
 		-- Get the difference to get how far the mouse has been dragged and invert the direction because otherwise it's wrong
@@ -987,7 +1039,12 @@ function TechDatabaseController:drawModel()
 			orient = ScpuiSystem.data.memory.model_rendering.ClickOrientation * orient
 		end
 
-		this_item:renderTechModel2(model_x, model_y, model_x + model_w, model_y + model_h, orient, 1.1)
+		if not ScpuiSystem:beginRenderSlot("tech_database_model") then
+			return
+		end
+		gr.clearScreen(0, 0, 0, 0)
+		this_item:renderTechModel2(0, 0, model_w, model_h, orient, 1.1)
+		ScpuiSystem:endRenderSlot()
 
 	end
 
@@ -1005,7 +1062,9 @@ end
 function TechDatabaseController:ClearData()
 	ScpuiSystem.data.memory.model_rendering.Class = nil
 	local ani_wrapper_element = self.Document:GetElementById("tech_view")
-	ani_wrapper_element:RemoveChild(ani_wrapper_element.first_child)
+	while ani_wrapper_element.first_child ~= nil do
+		ani_wrapper_element:RemoveChild(ani_wrapper_element.first_child)
+	end
 	self.Document:GetElementById("tech_desc").inner_rml = "<p></p>"
 end
 

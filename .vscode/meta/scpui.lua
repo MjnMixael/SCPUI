@@ -338,6 +338,10 @@
 --- @field Angle? number The angle of the model
 --- @field Speed? number The speed multipler of the model rotation
 --- @field ClickOrientation? orientation The orientation of the model when clicked
+--- @field Texture? texture The render texture used for model draw-to-texture paths
+--- @field Url? string The string url for Texture that can be assigned to librocket elements
+--- @field RenderWidth? integer The width of the current model render texture
+--- @field RenderHeight? integer The height of the current model render texture
 --- @field Weapons_List? integer[] The selected weapons table
 --- @field Bank_Elements_List? Element[] The weapon bank elements
 --- @field OverheadClass? integer The overhead class index
