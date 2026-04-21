@@ -752,8 +752,17 @@ function TechDatabaseController:selectEntry(entry)
 		ScpuiSystem.data.memory.model_rendering.RotationSpeed = 40
 
 		local ani_wrapper_element = self.Document:GetElementById("tech_view")
-		while ani_wrapper_element.first_child ~= nil do
-			ani_wrapper_element:RemoveChild(ani_wrapper_element.first_child)
+		local function ensureModelView()
+			local current_child = ani_wrapper_element.first_child
+			if current_child ~= nil then
+				local current_src = current_child:GetAttribute("src")
+				if current_src ~= ScpuiSystem.data.memory.model_rendering.Url then
+					while ani_wrapper_element.first_child ~= nil do
+						ani_wrapper_element:RemoveChild(ani_wrapper_element.first_child)
+					end
+				end
+			end
+			self:setupModelRenderTexture()
 		end
 
 		if self.SelectedEntry then
@@ -783,7 +792,8 @@ function TechDatabaseController:selectEntry(entry)
 
 		--Decide if item is a weapon or a ship
 		if self.SelectedSection == "ships" then
-			self:setupModelRenderTexture()
+			-- Ensure the texture-backed view exists when switching to model rendering
+			ensureModelView()
 
 			async.run(function()
 				async.await(AsyncUtil.wait_for(0.001))
@@ -796,20 +806,21 @@ function TechDatabaseController:selectEntry(entry)
 
 		elseif self.SelectedSection == "weapons" then
 
-			if entry.Anim ~= "" and Utils.animExists(entry.Anim) then
+				if entry.Anim ~= "" and Utils.animExists(entry.Anim) then
 
-				local aniEl = self.Document:CreateElement("ani")
-				aniEl:SetAttribute("src", entry.Anim)
-				aniEl:SetClass("anim", true)
+					local aniEl = self.Document:CreateElement("ani")
+					aniEl:SetAttribute("src", entry.Anim)
+					aniEl:SetClass("anim", true)
 				if ani_wrapper_element.first_child ~= nil then
 					ani_wrapper_element:ReplaceChild(aniEl, ani_wrapper_element.first_child)
 				else
 					ani_wrapper_element:AppendChild(aniEl)
 				end
 
-				self:toggleSliders(false)
-			else --If we don't have an anim, then draw the tech model
-				self:setupModelRenderTexture()
+					self:toggleSliders(false)
+				else --If we don't have an anim, then draw the tech model
+					-- Ensure the texture-backed view exists when switching from anim to model rendering
+					ensureModelView()
 
 				async.run(function()
 					async.await(AsyncUtil.wait_for(0.001))
