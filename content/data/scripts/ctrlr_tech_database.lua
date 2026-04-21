@@ -106,33 +106,20 @@ function TechDatabaseController:setupModelRenderTexture()
 		return
 	end
 
-	local model_w = model_view.offset_width
-	local model_h = model_view.offset_height + 10
-
-	if model_w <= 0 or model_h <= 0 then
+	local slot = ScpuiSystem:ensureRenderSlot(
+		"tech_database_model",
+		model_view,
+		(self and self.Document) and self.Document or nil,
+		{HeightOffset = 10}
+	)
+	if not slot then
 		return
 	end
 
-	local needs_new_texture = not model_memory.Texture
-		or model_memory.RenderWidth ~= model_w
-		or model_memory.RenderHeight ~= model_h
-
-	if needs_new_texture then
-		model_memory.Texture = gr.createTexture(model_w, model_h)
-		model_memory.Url = ui.linkTexture(model_memory.Texture)
-		model_memory.RenderWidth = model_w
-		model_memory.RenderHeight = model_h
-	end
-
-	if self and self.Document then
-		if model_view.first_child == nil then
-			local img_el = self.Document:CreateElement("img")
-			img_el:SetAttribute("src", model_memory.Url)
-			model_view:AppendChild(img_el)
-		else
-			model_view.first_child:SetAttribute("src", model_memory.Url)
-		end
-	end
+	model_memory.Texture = slot.Texture
+	model_memory.Url = slot.Url
+	model_memory.RenderWidth = slot.Width
+	model_memory.RenderHeight = slot.Height
 end
 
 --- Iterate over all the ships, weapons, and intel but only grab the necessary data
@@ -1057,10 +1044,12 @@ function TechDatabaseController:drawModel()
 			orient = ScpuiSystem.data.memory.model_rendering.ClickOrientation * orient
 		end
 
-		gr.setTarget(model_texture)
+		if not ScpuiSystem:beginRenderSlot("tech_database_model") then
+			return
+		end
 		gr.clearScreen(0, 0, 0, 0)
 		this_item:renderTechModel2(0, 0, model_w, model_h, orient, 1.1)
-		gr.setTarget()
+		ScpuiSystem:endRenderSlot()
 
 	end
 
