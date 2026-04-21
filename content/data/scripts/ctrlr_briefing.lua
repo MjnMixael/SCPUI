@@ -168,11 +168,14 @@ function BriefingController:initialize(document)
 	--The grid needs to be a very specific aspect ratio, so we'll calculate
 	--the percent change here and use that to calculate the height below.
 	local percent_change = ((brief_view_element.offset_width - 888) / 888) * 100
+	local function roundToInt(value)
+		return math.floor(value + 0.5)
+	end
 
-	ScpuiSystem.data.memory.briefing_map.X1 = ScpuiSystem:getAbsoluteLeft(brief_view_element)
-	ScpuiSystem.data.memory.briefing_map.Y1 = ScpuiSystem:getAbsoluteTop(brief_view_element)
-	ScpuiSystem.data.memory.briefing_map.X2 = brief_view_element.offset_width
-	ScpuiSystem.data.memory.briefing_map.Y2 = 371 * ((100 + percent_change)/100)
+	ScpuiSystem.data.memory.briefing_map.X1 = roundToInt(ScpuiSystem:getAbsoluteLeft(brief_view_element))
+	ScpuiSystem.data.memory.briefing_map.Y1 = roundToInt(ScpuiSystem:getAbsoluteTop(brief_view_element))
+	ScpuiSystem.data.memory.briefing_map.X2 = roundToInt(brief_view_element.offset_width)
+	ScpuiSystem.data.memory.briefing_map.Y2 = roundToInt(371 * ((100 + percent_change)/100))
 
 	self:buildGoalsList()
 
