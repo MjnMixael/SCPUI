@@ -298,6 +298,8 @@ function AbstractBriefingController:acceptPressed()
 		end
 	elseif self.BriefState == self.CONTROLLER_FICTION_VIEWER then
 		if Topics.fictionviewer.accept:send(self) then
+			ScpuiSystem:stopMusic()
+			ScpuiSystem.data.memory.CurrentMusicFile = nil
 			ScpuiSystem.data.memory.CutscenePlayed = nil
 			if mn.hasCommandBriefing() then
 				ba.postGameEvent(ba.GameEvents["GS_EVENT_CMD_BRIEF"])
