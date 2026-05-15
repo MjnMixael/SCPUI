@@ -214,10 +214,11 @@ in SCPUI; **if you need any of them, open an issue and they can be added**:
 ## Topic API reference (for mods that want to override in Lua)
 
 If you need behavior that the declarative table can't express, bind a
-listener to one of the loadscreen Topics. Each Topic sends the mission
-filename stem (no extension) as its message. Set `context.value` to your
-override and `context.done = true` to skip the table-driven default at
-priority 9999.
+listener to one of the loadscreen Topics. Each Topic sends the UI context
+(the `LoadScreenController` instance) as its message — pull the mission
+filename from `mn.getMissionFilename()` inside the listener. Set
+`context.value` to your override and `context.done = true` to skip the
+table-driven default at priority 9999.
 
 | Topic | Returns | Use case |
 | --- | --- | --- |
@@ -232,7 +233,7 @@ Example — drive the tip from a SEXP variable:
 ```lua
 local Topics = require("lib_ui_topics")
 
-Topics.loadscreen.tip_text:bind(100, function(mission_stem, context)
+Topics.loadscreen.tip_text:bind(100, function(controller, context)
 	if mn.SEXPVariables["LoadScreenTip"]:isValid() then
 		context.value = mn.SEXPVariables["LoadScreenTip"].Value
 		context.done = true
@@ -245,9 +246,10 @@ styled differently for one mission group:
 
 ```lua
 local Topics = require("lib_ui_topics")
+local Utils = require("lib_utils")
 
 Topics.loadscreen.initialize:bind(100, function(controller, context)
-	local mission = mn.getMissionFilename():gsub('%.fs2$', '')
+	local mission = Utils.strip_extension(mn.getMissionFilename() or "")
 	if mission:sub(1, 8) == "chapter1" then
 		controller.Document:GetElementById("loadscreen_tip"):SetClass("chapter1_tip", true)
 	end

@@ -25,15 +25,15 @@ function LoadScreenController:initialize(document)
 
     self.Document = document
 
-	local mission_stem = mn.getMissionFilename():gsub('%.fs2$', '')
+	local mission_stem = mn.getMissionFilename():gsub('.fs2', '')
 
 	---First set a generic bg
 	self.Document:GetElementById("main_background"):SetClass("loadscreen_default", true)
 	---Then try to set it using the mission filename
-	self.Document:GetElementById("main_background"):SetClass(mission_stem, true)
+	self.Document:GetElementById("main_background"):SetClass(mission_stem)
 	---Allow a Topic listener (e.g., the table-driven default) to replace it with a different class,
 	---enabling random selection from a list or other per-mission strategies.
-	local bg_class_override = Topics.loadscreen.bg_class:send(mission_stem)
+	local bg_class_override = Topics.loadscreen.bg_class:send(self)
 	if bg_class_override then
 		self.Document:GetElementById("main_background"):SetClass(mission_stem, false)
 		self.Document:GetElementById("main_background"):SetClass(bg_class_override, true)
@@ -46,7 +46,7 @@ function LoadScreenController:initialize(document)
 
 	---Populate the tip element if a Topic listener provides one. All styling
 	---of #loadscreen_tip (font, color, position, width) lives in RCSS.
-	local tip_text = Topics.loadscreen.tip_text:send(mission_stem)
+	local tip_text = Topics.loadscreen.tip_text:send(self)
 	if tip_text and tip_text ~= "" then
 		local tip_el = self.Document:GetElementById("loadscreen_tip")
 		tip_el.inner_rml = tip_text
@@ -57,7 +57,7 @@ function LoadScreenController:initialize(document)
 		ScpuiSystem.data.memory.loading_bar.LoadProgress = 0
 	end
 
-	local load_img = Topics.loadscreen.load_bar:send(mission_stem)
+	local load_img = Topics.loadscreen.load_bar:send(self)
 	ScpuiSystem.data.memory.loading_bar.ImageTexture = gr.loadTexture(load_img, true)
 	ScpuiSystem.data.memory.loading_bar.Texture = gr.createTexture(ScpuiSystem.data.memory.loading_bar.ImageTexture:getWidth(), ScpuiSystem.data.memory.loading_bar.ImageTexture:getHeight())
 	ScpuiSystem.data.memory.loading_bar.Url = ui.linkTexture(ScpuiSystem.data.memory.loading_bar.Texture)

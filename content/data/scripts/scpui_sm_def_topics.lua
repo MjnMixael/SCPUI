@@ -5,13 +5,15 @@
 (function()
 
     local Topics = require("lib_ui_topics")
+    local Utils = require("lib_utils")
 
-    --- Look up the load-screen profile for the current mission (sent as a filename stem).
-    --- @param mission_stem string the mission filename without extension
+    --- Look up the load-screen profile for the current mission. Stems match the keys stored
+    --- by the parser, which uses Utils.strip_extension on $Filename: entries.
     --- @return table|nil profile the parsed profile, or nil if no entry is registered
-    local function resolveLoadScreenProfile(mission_stem)
+    local function resolveCurrentLoadScreenProfile()
       local data = ScpuiSystem.data.LoadScreens
       if not data then return nil end
+      local mission_stem = Utils.strip_extension(mn.getMissionFilename() or "")
       local profile_name = data.Missions[mission_stem]
       if not profile_name then return nil end
       local profile = data.Profiles[profile_name]
@@ -24,7 +26,7 @@
 
     --Loading bar image: return the per-profile override if any.
     Topics.loadscreen.load_bar:bind(9999, function(message, context)
-      local profile = resolveLoadScreenProfile(tostring(message or ""))
+      local profile = resolveCurrentLoadScreenProfile()
       if profile and profile.LoadingBarImage then
         context.value = profile.LoadingBarImage
       end
@@ -33,7 +35,7 @@
     --Background class: pick one of the profile's CSS classes at random. To override from a mod,
     --bind at a lower priority, set context.value and context.done = true.
     Topics.loadscreen.bg_class:bind(9999, function(message, context)
-      local profile = resolveLoadScreenProfile(tostring(message or ""))
+      local profile = resolveCurrentLoadScreenProfile()
       if not profile then return end
       local list = profile.BackgroundClasses
       if not list or #list == 0 then return end
@@ -44,7 +46,7 @@
     --All styling is done via RCSS on the #loadscreen_tip element. To override from a mod,
     --bind at a lower priority, set context.value and context.done = true.
     Topics.loadscreen.tip_text:bind(9999, function(message, context)
-      local profile = resolveLoadScreenProfile(tostring(message or ""))
+      local profile = resolveCurrentLoadScreenProfile()
       if not profile then return end
       local tip_names = profile.Tips
       if not tip_names or #tip_names == 0 then return end

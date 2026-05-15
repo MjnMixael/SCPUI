@@ -126,9 +126,9 @@ local topics = {
 	},
 	loadscreen = {
 		initialize = Topic(nil), --Runs arbitrary script and expects no return value. Sends the UI context.
-		load_bar = Topic('LoadingBar'), --Expects an image file returned, replaces the loading screen bar. Should be an animation. Sends the mission filename stem (no extension).
-		bg_class = Topic(nil), --Expects a CSS class name returned (or nil). Replaces the mission-filename background class on the load screen. Sends the mission filename stem (no extension).
-		tip_text = Topic(nil), --Expects a tip string returned (or nil) to populate the #loadscreen_tip element. All tip styling is done via RCSS. Sends the mission filename stem.
+		load_bar = Topic('LoadingBar'), --Expects an image file returned, replaces the loading screen bar. Should be an animation. Sends the UI context.
+		bg_class = Topic(nil), --Expects a CSS class name returned (or nil). Replaces the mission-filename background class on the load screen. Sends the UI context.
+		tip_text = Topic(nil), --Expects a tip string returned (or nil) to populate the #loadscreen_tip element. All tip styling is done via RCSS. Sends the UI context.
 		unload = Topic(nil) --Runs arbitrary script and expects no return value. Sends the document context
 	},
 	briefcommon = {
