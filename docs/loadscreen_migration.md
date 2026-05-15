@@ -23,8 +23,14 @@ features the Axem script provided that SCPUI didn't have natively:
 - `#Loading Text` — named tip strings.
 - `#Loading Screens` — load-screen profiles: which CSS background classes to
   pick from (random selection if more than one), which loading bar to use,
-  tip style, title style, and which tip(s) to draw.
+  and which tip(s) to draw (random if multiple).
 - `#Mission Screens` — mission filename → profile mapping.
+
+The table carries **data only**. Visual styling — fonts, colors, screen
+positions, widths, mission-title layout, loading-bar placement — lives in
+RCSS. Author per-mod overrides in `data/interface/css/load_screen.rcss`
+(or `custom.rcss`) and target the relevant selectors:
+`div#main_background`, `div#title`, `div#loadscreen_tip`, `div#loadingbar`.
 
 Backgrounds remain CSS-class-only. You declare each background image once as
 a CSS class in `data/interface/css/load_screen_bgs.rcss`, then reference the
@@ -36,15 +42,14 @@ class name(s) from a profile.
 | --- | --- |
 | `#General Settings $Scale Zoom: true` | No-op; CSS scales backgrounds automatically. |
 | `#Loading Bars $Name: ... $File: bar.ani` | `$Loading Bar Image: bar.ani` inside a `#Loading Screens` profile. |
-| `#Loading Bars $Origin: / $Offset:` | Override `div#loadingbar` positioning in your mod's RCSS (see below). |
-| `#Loading Text $Name: / $Text: / $Font:` | `#Loading Text $Name: / $Text: / +Font Class:`. The value of `+Font Class:` is an RCSS class name (e.g. `p6`), not an FSO font index. |
+| `#Loading Bars $Origin: / $Offset:` | RCSS rule on `div#loadingbar` in your mod's load-screen CSS. |
+| `#Loading Text $Name: / $Text: / $Font:` | `#Loading Text $Name: / $Text:`. Font is set via RCSS on `div#loadscreen_tip` (or a class on it), not in the table. |
 | `#Loading Screens $Loading Image: random` + `+Image:` list | Multiple `+Background Class:` entries in the profile. One is picked at random per load. |
 | `#Loading Screens $Loading Image: <fixed>` | A single `+Background Class:` entry. |
 | `#Loading Screens +Scaling: true` | No-op; CSS handles scaling. |
-| `#Loading Screens $Text Color: r,g,b,a` | `+Color: r, g, b, a` inside the profile's `$Tip Style:` block. |
-| `#Loading Screens $Text Origin: x, y` | `+Origin: x, y` inside `$Tip Style:`. (Screen-fractional, like the old script.) |
-| `#Loading Screens +Width: N` | `+Width: N` inside `$Tip Style:`. (Pixels.) |
-| `#Loading Screens $Draw Mission Name: true / +Font: / +Origin: / +Offset: / +Justify:` | `$Title Style:` block with `+Font Class:`, `+Origin:`, `+Offset:`, `+Justify:`. |
+| `#Loading Screens $Text Color: r,g,b,a` | RCSS `color:` on `div#loadscreen_tip`. |
+| `#Loading Screens $Text Origin: x, y` / `+Width: N` | RCSS `left: / top: / width:` on `div#loadscreen_tip`. |
+| `#Loading Screens $Draw Mission Name: true / +Font: / +Origin: / +Offset: / +Justify:` | RCSS rule on `div#title` (font class, `left:`, `top:`, `margin:`, `text-align:`). |
 | `#Loading Screens $Loading Text: <name>` | `$Tip: <name>` (one or more; one is picked at random). |
 | `#Mission Screens $Filename: / $Loading Screen:` | Same field names, same shape. `.fs2` extensions are stripped on parse. |
 
@@ -103,7 +108,6 @@ single top-level `#End`:
 
 $Name: Proverbs-1
 $Text: XSTR("...''Ribos is all broken promises buried under miles of military supply chains.''...", -1)
-+Font Class: p6
 
 #Loading Screens
 
@@ -113,16 +117,6 @@ $Loading Bar Image: LB-mogw-pb.ani
 +Background Class: ror_01_bg2
 +Background Class: ror_01_bg3
 +Background Class: ror_01_bg4
-$Tip Style:
-	+Font Class: p6
-	+Color: 192, 192, 255, 255
-	+Origin: 0.03, 0.75
-	+Width: 800
-$Title Style:
-	+Font Class: p5
-	+Origin: 0.65, 0
-	+Offset: 0, 20
-	+Justify: left
 $Tip: Proverbs-1
 
 #Mission Screens
@@ -133,14 +127,39 @@ $Loading Screen: RoR-01
 #End
 ```
 
-### Step 3 (optional) — reposition the loading bar
+### Step 3 — style the tip, title, and loading bar in RCSS
 
-The Axem entry's `MoGW-pale_blue` bar lived at screen-relative origin
-`(1.0, 0.5)` with a pixel offset of `(-26, -210)`. SCPUI's default bar is
-50% wide, centered at the bottom. To reproduce the old layout, add to your
-mod's RCSS (e.g. an override of `load_screen.rcss` or a new linked file):
+All visual styling lives in your mod's load-screen CSS (add it to
+`load_screen.rcss`, `custom.rcss`, or a new RCSS file you link from
+`load_screen.rml`). The Axem entry's combined styling translates to:
 
 ```rcss
+/* Tip text — was $Text Color / $Text Origin / +Width on the screen profile */
+div#loadscreen_tip
+{
+	color: #C0C0FFFF;
+	left: 3%;
+	top: 75%;
+	width: 800px;
+	/* Pick a font via class or font-family. p6 is one of the SCPUI font classes. */
+	font-family: ...;
+	font-size: ...;
+}
+
+/* Mission title — was $Draw Mission Name + Font/Origin/Offset/Justify */
+div#title
+{
+	left: 65%;
+	top: 0;
+	margin-top: 20px;
+	width: auto;
+	text-align: left;
+	/* Override the default p2 class with whatever font you want for the title */
+	font-family: ...;
+	font-size: ...;
+}
+
+/* Loading bar — was #Loading Bars $Origin / $Offset (1.0, 0.5 + -26, -210) */
 div#loadingbar
 {
 	width: auto;
@@ -154,6 +173,11 @@ div#loadingbar
 Note: the old script's pixel offsets assumed 1024×768. They will not be
 pixel-identical at other aspect ratios. If you need an exact reproduction,
 keep the bar at a fixed pixel size and use percentage-only positioning.
+
+If you need styling that varies **per mission** (rather than uniformly
+across the mod), bind `Topics.loadscreen.initialize` from your own script
+and adjust `#loadscreen_tip` / `#title` styles on the document at that
+point — see the Topic API reference below.
 
 ## Three-step recipe for adding a new mission load screen
 
@@ -169,16 +193,18 @@ keep the bar at a fixed pixel size and use percentage-only positioning.
 
 ## Unsupported features
 
-The new sections do not yet provide a 1:1 mapping for every field the Axem
-script supported. The following are deliberately out of scope right now;
-**if you need any of them, open an issue and they can be added**:
+Most of the old script's styling features (text `+Center`/`+Offset:`,
+`$Text Color:`, `$Text Origin:`, `+Width:`, `$Draw Mission Name:` and its
+sub-fields, `+Scaling:` on a loading bar) are not in the new table by
+design — they're set in RCSS instead, which is more flexible.
+
+The following old-script features do not yet have a built-in equivalent
+in SCPUI; **if you need any of them, open an issue and they can be added**:
 
 - `$Image:` under a `#Loading Text` entry (a graphic drawn alongside the tip).
 - `$Variable:` under `#Loading Text` (text pulled from a SEXP variable at
-  runtime).
-- Text `+Center` and `+Offset:` modes other than what `$Tip Style:` exposes.
-- `$Image Origin:` and its `+Offset:` (the tip-image positioning).
-- `+Scaling:` on a `#Loading Bars` entry (the bar inheriting background scale).
+  runtime). Note: this is easy to do today via `Topics.loadscreen.tip_text`
+  — see the example below.
 - The Axem-style `default` mission entry. SCPUI's `.loadscreen_default` CSS
   class already covers fallback rendering when no profile matches.
 
@@ -194,25 +220,33 @@ priority 9999.
 | --- | --- | --- |
 | `Topics.loadscreen.load_bar` | image filename (string) | Per-mission loading bar override. |
 | `Topics.loadscreen.bg_class` | CSS class name (string) | Replace the per-mission background class (e.g., pick based on game state). |
-| `Topics.loadscreen.tip_text` | `{ Text, FontClass, Color, Origin, Offset, Width }` | Provide tip content + style from custom sources (e.g., a SEXP variable). |
-| `Topics.loadscreen.title_style` | `{ FontClass, Origin, Offset, Justify }` | Override the mission title layout. |
-| `Topics.loadscreen.initialize` | — | Side-effect hook fired after the load screen is fully wired up. |
+| `Topics.loadscreen.tip_text` | tip text (string) | Supply the tip text from a custom source (e.g., a SEXP variable). All styling stays in RCSS. |
+| `Topics.loadscreen.initialize` | — | Side-effect hook fired after the load screen is fully wired up — use this for per-mission DOM/style tweaks that RCSS alone can't express. |
 | `Topics.loadscreen.unload` | — | Side-effect hook fired when the load screen is being torn down. |
 
-Example — override the tip text using a SEXP variable:
+Example — drive the tip from a SEXP variable:
 
 ```lua
 local Topics = require("lib_ui_topics")
 
 Topics.loadscreen.tip_text:bind(100, function(mission_stem, context)
 	if mn.SEXPVariables["LoadScreenTip"]:isValid() then
-		context.value = {
-			Text = mn.SEXPVariables["LoadScreenTip"].Value,
-			FontClass = "p6",
-			Origin = { x = 0.03, y = 0.75 },
-			Width = 800,
-		}
+		context.value = mn.SEXPVariables["LoadScreenTip"].Value
 		context.done = true
+	end
+end)
+```
+
+Example — apply a per-mission CSS class to `#loadscreen_tip` so the tip is
+styled differently for one mission group:
+
+```lua
+local Topics = require("lib_ui_topics")
+
+Topics.loadscreen.initialize:bind(100, function(controller, context)
+	local mission = mn.getMissionFilename():gsub('%.fs2$', '')
+	if mission:sub(1, 4) == "RoR_" then
+		controller.Document:GetElementById("loadscreen_tip"):SetClass("ror_tip", true)
 	end
 end)
 ```

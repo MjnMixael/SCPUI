@@ -40,8 +40,8 @@ ScpuiSystem.data = {
 	Preload_Coroutines = {},
 	Medal_Info = {},
 	LoadScreens = {
-		Tips = {},      --- [name] = { Text = string, FontClass = string }
-		Profiles = {},  --- [name] = { LoadingBarImage, BackgroundClasses = {}, Tips = {}, TipStyle = {...}, TitleStyle = {...} }
+		Tips = {},      --- [name] = { Text = string }
+		Profiles = {},  --- [name] = { LoadingBarImage, BackgroundClasses = {}, Tips = {} }
 		Missions = {},  --- [mission_stem] = profile_name
 	},
 	Substate = "none",

@@ -3,7 +3,6 @@
 -----------------------------------
 
 local Topics = require("lib_ui_topics")
-local Utils = require("lib_utils")
 
 local Class = require("lib_class")
 
@@ -43,54 +42,15 @@ function LoadScreenController:initialize(document)
 	---Load the desired font size from the save file
 	self.Document:GetElementById("main_background"):SetClass(("base_font" .. ScpuiSystem:getFontPixelSize()), true)
 
-	local title_el = self.Document:GetElementById("title")
-	title_el.inner_rml = mn.getMissionTitle()
+	self.Document:GetElementById("title").inner_rml = mn.getMissionTitle()
 
-	---Allow per-mission overrides for the title font/origin/offset/justify.
-	local title_style = Topics.loadscreen.title_style:send(mission_stem)
-	if title_style then
-		if title_style.FontClass and title_style.FontClass ~= "" then
-			title_el:SetClass("p2", false)
-			title_el:SetClass(title_style.FontClass, true)
-		end
-		if title_style.Origin then
-			title_el.style.left = tostring((title_style.Origin.x or 0) * 100) .. "%"
-			title_el.style.top = tostring((title_style.Origin.y or 0) * 100) .. "%"
-		end
-		if title_style.Offset then
-			title_el.style["margin-left"] = tostring(title_style.Offset.x or 0) .. "px"
-			title_el.style["margin-top"] = tostring(title_style.Offset.y or 0) .. "px"
-		end
-		if title_style.Justify then
-			title_el.style["text-align"] = title_style.Justify
-			title_el.style.width = "auto"
-		end
-	end
-
-	---Populate the tip element if a Topic listener provides one.
-	local tip = Topics.loadscreen.tip_text:send(mission_stem)
-	local tip_el = self.Document:GetElementById("loadscreen_tip")
-	if tip and tip.Text and tip.Text ~= "" then
-		tip_el.inner_rml = tip.Text
+	---Populate the tip element if a Topic listener provides one. All styling
+	---of #loadscreen_tip (font, color, position, width) lives in RCSS.
+	local tip_text = Topics.loadscreen.tip_text:send(mission_stem)
+	if tip_text and tip_text ~= "" then
+		local tip_el = self.Document:GetElementById("loadscreen_tip")
+		tip_el.inner_rml = tip_text
 		tip_el.style.display = "block"
-		if tip.FontClass and tip.FontClass ~= "" then
-			tip_el:SetClass(tip.FontClass, true)
-		end
-		if tip.Color then
-			local c = tip.Color
-			tip_el.style["color"] = Utils.rgbaToHex(c[1] or 255, c[2] or 255, c[3] or 255, c[4] or 255)
-		end
-		if tip.Origin then
-			tip_el.style.left = tostring((tip.Origin.x or 0) * 100) .. "%"
-			tip_el.style.top = tostring((tip.Origin.y or 0) * 100) .. "%"
-		end
-		if tip.Offset then
-			tip_el.style["margin-left"] = tostring(tip.Offset.x or 0) .. "px"
-			tip_el.style["margin-top"] = tostring(tip.Offset.y or 0) .. "px"
-		end
-		if tip.Width then
-			tip_el.style.width = tostring(tip.Width) .. "px"
-		end
 	end
 
 	if not ScpuiSystem.data.memory.loading_bar.LoadProgress then

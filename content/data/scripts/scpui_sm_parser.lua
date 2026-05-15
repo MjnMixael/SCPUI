@@ -4,22 +4,11 @@
 
 local Utils = require("lib_utils")
 
---- Parse a "x, y, z, ..." list of numbers from a single parsed string.
---- @param raw string the comma-separated value list
---- @return number[] values the parsed numbers (silently drops non-numeric tokens)
-local function parseCsvNumbers(raw)
-	local values = {}
-	for token in tostring(raw or ""):gmatch("[^,%s]+") do
-		local n = tonumber(token)
-		if n then values[#values+1] = n end
-	end
-	return values
-end
-
 --- Parse the load-screen tip / screen-profile / mission-screen sections of the scpui.tbl.
---- These power the table-driven defaults bound in scpui_sm_def_topics.lua. Modders can
---- override any of these declaratively per-mod or programmatically by binding higher-priority
---- listeners on the Topics.loadscreen.* topics.
+--- These power the table-driven defaults bound in scpui_sm_def_topics.lua. All visual
+--- styling (font, color, position, size) is done via RCSS; the table only carries data.
+--- Modders can override the runtime behavior by binding higher-priority listeners on the
+--- Topics.loadscreen.* topics.
 --- @return nil
 function ScpuiSystem:parseLoadScreens()
 
@@ -31,14 +20,8 @@ function ScpuiSystem:parseLoadScreens()
 			parse.requiredString("$Text:")
 			local text = parse.getString()
 
-			local font_class = nil
-			if parse.optionalString("+Font Class:") then
-				font_class = parse.getString()
-			end
-
 			ScpuiSystem.data.LoadScreens.Tips[name] = {
 				Text = text,
-				FontClass = font_class,
 			}
 		end
 	end
@@ -52,8 +35,6 @@ function ScpuiSystem:parseLoadScreens()
 				LoadingBarImage = nil,
 				BackgroundClasses = {},
 				Tips = {},
-				TipStyle = nil,
-				TitleStyle = nil,
 			}
 
 			if parse.optionalString("$Loading Bar Image:") then
@@ -62,60 +43,6 @@ function ScpuiSystem:parseLoadScreens()
 
 			while parse.optionalString("+Background Class:") do
 				profile.BackgroundClasses[#profile.BackgroundClasses+1] = parse.getString()
-			end
-
-			if parse.optionalString("$Tip Style:") then
-				profile.TipStyle = {}
-
-				if parse.optionalString("+Font Class:") then
-					profile.TipStyle.FontClass = parse.getString()
-				end
-
-				if parse.optionalString("+Color:") then
-					profile.TipStyle.Color = parseCsvNumbers(parse.getString())
-				end
-
-				if parse.optionalString("+Origin:") then
-					local o = parseCsvNumbers(parse.getString())
-					profile.TipStyle.Origin = { x = o[1] or 0, y = o[2] or 0 }
-				end
-
-				if parse.optionalString("+Offset:") then
-					local o = parseCsvNumbers(parse.getString())
-					profile.TipStyle.Offset = { x = o[1] or 0, y = o[2] or 0 }
-				end
-
-				if parse.optionalString("+Width:") then
-					profile.TipStyle.Width = parse.getInt()
-				end
-			end
-
-			if parse.optionalString("$Title Style:") then
-				profile.TitleStyle = {}
-
-				if parse.optionalString("+Font Class:") then
-					profile.TitleStyle.FontClass = parse.getString()
-				end
-
-				if parse.optionalString("+Origin:") then
-					local o = parseCsvNumbers(parse.getString())
-					profile.TitleStyle.Origin = { x = o[1] or 0, y = o[2] or 0 }
-				end
-
-				if parse.optionalString("+Offset:") then
-					local o = parseCsvNumbers(parse.getString())
-					profile.TitleStyle.Offset = { x = o[1] or 0, y = o[2] or 0 }
-				end
-
-				if parse.optionalString("+Justify:") then
-					local raw = parse.getString():lower()
-					if raw == "left" or raw == "center" or raw == "right" then
-						profile.TitleStyle.Justify = raw
-					else
-						ba.warning("SCPUI Loading Screens: profile '" .. name .. "' has invalid +Justify: '" .. raw .. "'. Expected left|center|right. Defaulting to left.")
-						profile.TitleStyle.Justify = "left"
-					end
-				end
 			end
 
 			while parse.optionalString("$Tip:") do

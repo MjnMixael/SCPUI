@@ -123,11 +123,11 @@ $State: LOAD_SCREEN
 ;		+Background Filename: background filename with extension
 
 ;;Per-mission loading-screen tip strings. Reference these from #Loading Screens entries.
+;;Style the rendered tip via the #loadscreen_tip selector in your RCSS.
 ;#Loading Text
 ;
 ;$Name: my_tip
 ;$Text: XSTR("Your tip text. XSTR is supported.", -1)
-;+Font Class: p6
 
 ;;Named loading-screen profiles. Each profile may list multiple background CSS classes
 ;;(one is picked at random per load) and multiple $Tip: references (one picked at random).
@@ -138,17 +138,6 @@ $State: LOAD_SCREEN
 ;$Loading Bar Image: LoadingBar
 ;+Background Class: my_screen_bg1
 ;+Background Class: my_screen_bg2
-;$Tip Style:
-;	+Font Class: p6
-;	+Color: 192, 192, 255, 255
-;	+Origin: 0.03, 0.75
-;	+Offset: 0, 0
-;	+Width: 800
-;$Title Style:
-;	+Font Class: p5
-;	+Origin: 0.65, 0
-;	+Offset: 0, 20
-;	+Justify: left
 ;$Tip: my_tip
 
 ;;Map mission filenames to loading-screen profiles. Extensions are optional and stripped.

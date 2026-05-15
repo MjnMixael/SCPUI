@@ -40,8 +40,9 @@
       context.value = list[math.random(1, #list)]
     end)
 
-    --Tip text: resolve a tip name from the profile (random if multiple), then merge with the profile's TipStyle.
-    --To override from a mod, bind at a lower priority, set context.value and context.done = true.
+    --Tip text: resolve a tip name from the profile (random if multiple) and return its text.
+    --All styling is done via RCSS on the #loadscreen_tip element. To override from a mod,
+    --bind at a lower priority, set context.value and context.done = true.
     Topics.loadscreen.tip_text:bind(9999, function(message, context)
       local profile = resolveLoadScreenProfile(tostring(message or ""))
       if not profile then return end
@@ -53,23 +54,7 @@
         ba.warning("SCPUI Loading Screens: profile references unknown tip '" .. tip_name .. "'.")
         return
       end
-      local style = profile.TipStyle or {}
-      context.value = {
-        Text = tip.Text,
-        FontClass = tip.FontClass or style.FontClass,
-        Color = style.Color,
-        Origin = style.Origin,
-        Offset = style.Offset,
-        Width = style.Width,
-      }
-    end)
-
-    --Title style: return the profile's TitleStyle if any. To override from a mod, bind at a lower
-    --priority, set context.value and context.done = true.
-    Topics.loadscreen.title_style:bind(9999, function(message, context)
-      local profile = resolveLoadScreenProfile(tostring(message or ""))
-      if not profile or not profile.TitleStyle then return end
-      context.value = profile.TitleStyle
+      context.value = tip.Text
     end)
 
     --Sets the first tech room button to the technical database game state
