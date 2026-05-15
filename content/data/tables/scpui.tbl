@@ -122,6 +122,30 @@ $State: LOAD_SCREEN
 ;	+Stage Override: stage number
 ;		+Background Filename: background filename with extension
 
+;;Per-mission loading-screen tip strings. Reference these from #Loading Screens entries.
+;;Style the rendered tip via the #loadscreen_tip selector in your RCSS.
+;#Loading Text
+;
+;$Name: my_tip
+;$Text: XSTR("Your tip text. XSTR is supported.", -1)
+
+;;Named loading-screen profiles. Each profile may list multiple background CSS classes
+;;(one is picked at random per load) and multiple $Tip: references (one picked at random).
+;;Author the background classes themselves in data/interface/css/load_screen_bgs.rcss.
+;#Loading Screens
+;
+;$Name: my_screen
+;$Loading Bar Image: LoadingBar
+;+Background Class: my_screen_bg1
+;+Background Class: my_screen_bg2
+;$Tip: my_tip
+
+;;Map mission filenames to loading-screen profiles. Extensions are optional and stripped.
+;#Mission Screens
+;
+;$Filename: my_mission.fs2
+;$Loading Screen: my_screen
+
 ;;Base FS2 medal layout
 #Medal Placements
 

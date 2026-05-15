@@ -18,6 +18,8 @@
 		</div>
 		<div id=title class="p2">
 		</div>
+		<div id=loadscreen_tip>
+		</div>
 		<div id=loadingbar>
 		</div>
 	</body>

@@ -515,6 +515,25 @@
 --- @field INITIALIZED? boolean Whether or not SCPUI has been initialized
 --- @field Dialog_Constants dialog_constants The dialog constants for SCPUI
 
+--- A single tip string parsed from the #Loading Text section of scpui.tbl.
+--- @class load_screen_tip
+--- @field Text string The tip text. XSTR-aware in the table.
+
+--- A loading-screen profile parsed from the #Loading Screens section of scpui.tbl.
+--- One profile is bound to one or more missions via #Mission Screens entries.
+--- @class load_screen_profile
+--- @field LoadingBarImage? string Optional override for the loading bar animation filename.
+--- @field BackgroundClasses string[] CSS class names declared in load_screen_bgs.rcss. One is picked at random per load.
+--- @field Tips string[] Names of #Loading Text entries. One is picked at random per load.
+
+--- The container for all parsed load-screen data, stored on ScpuiSystem.data.LoadScreens.
+--- Populated by ScpuiSystem:parseLoadScreens() and consumed by the default listeners
+--- on Topics.loadscreen.* in scpui_sm_def_topics.lua.
+--- @class load_screens_data
+--- @field Tips table<string, load_screen_tip> Tips keyed by name.
+--- @field Profiles table<string, load_screen_profile> Profiles keyed by name.
+--- @field Missions table<string, string> Mission filename stems (no extension) mapped to profile names.
+
 --- SCPUI Global Documentation
 --- @class scpui_data
 --- @field Context? Context? The current context for SCPUI. Do Not Modify!
@@ -530,6 +549,7 @@
 --- @field Brief_Backgrounds_List table<string, table<string, string>> This table is used to determine which background image to display during mission briefings. The structure: Outer keys: mission names (strings), Inner keys: either "default" (string) for the default background or a tring representation of a briefing stage number (e.g., "1", "2"), Values: filenames (strings).
 --- @field Preload_Coroutines preload_coroutine[] The preload coroutines to run during SCPUI's splash screen startup.
 --- @field Medal_Info medal_info[] The medal information for SCPUI to use when displaying medals.
+--- @field LoadScreens load_screens_data Parsed load-screen profiles, tips, and per-mission mappings from scpui.tbl. Populated by parseLoadScreens.
 --- @field CurrentState? gamestate The current game state SCPUI is in
 --- @field LastState? gamestate The previous game state SCPUI was in
 --- @field Substate string The current scripting substate. "none" if not in a scripting substate

@@ -25,15 +25,33 @@ function LoadScreenController:initialize(document)
 
     self.Document = document
 
+	local mission_stem = mn.getMissionFilename():gsub('.fs2', '')
+
 	---First set a generic bg
 	self.Document:GetElementById("main_background"):SetClass("loadscreen_default", true)
 	---Then try to set it using the mission filename
-	self.Document:GetElementById("main_background"):SetClass(mn.getMissionFilename():gsub('.fs2', ''))
+	self.Document:GetElementById("main_background"):SetClass(mission_stem)
+	---Allow a Topic listener (e.g., the table-driven default) to replace it with a different class,
+	---enabling random selection from a list or other per-mission strategies.
+	local bg_class_override = Topics.loadscreen.bg_class:send(self)
+	if bg_class_override then
+		self.Document:GetElementById("main_background"):SetClass(mission_stem, false)
+		self.Document:GetElementById("main_background"):SetClass(bg_class_override, true)
+	end
 
 	---Load the desired font size from the save file
 	self.Document:GetElementById("main_background"):SetClass(("base_font" .. ScpuiSystem:getFontPixelSize()), true)
 
 	self.Document:GetElementById("title").inner_rml = mn.getMissionTitle()
+
+	---Populate the tip element if a Topic listener provides one. All styling
+	---of #loadscreen_tip (font, color, position, width) lives in RCSS.
+	local tip_text = Topics.loadscreen.tip_text:send(self)
+	if tip_text and tip_text ~= "" then
+		local tip_el = self.Document:GetElementById("loadscreen_tip")
+		tip_el.inner_rml = tip_text
+		tip_el.style.display = "block"
+	end
 
 	if not ScpuiSystem.data.memory.loading_bar.LoadProgress then
 		ScpuiSystem.data.memory.loading_bar.LoadProgress = 0

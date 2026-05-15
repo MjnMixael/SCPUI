@@ -4,6 +4,68 @@
 
 local Utils = require("lib_utils")
 
+--- Parse the load-screen tip / screen-profile / mission-screen sections of the scpui.tbl.
+--- These power the table-driven defaults bound in scpui_sm_def_topics.lua. All visual
+--- styling (font, color, position, size) is done via RCSS; the table only carries data.
+--- Modders can override the runtime behavior by binding higher-priority listeners on the
+--- Topics.loadscreen.* topics.
+--- @return nil
+function ScpuiSystem:parseLoadScreens()
+
+	--- Named tip strings referenced by load-screen profiles.
+	if parse.optionalString("#Loading Text") then
+		while parse.optionalString("$Name:") do
+			local name = parse.getString()
+
+			parse.requiredString("$Text:")
+			local text = parse.getString()
+
+			ScpuiSystem.data.LoadScreens.Tips[name] = {
+				Text = text,
+			}
+		end
+	end
+
+	--- Named load-screen profiles describing how a given screen should render.
+	if parse.optionalString("#Loading Screens") then
+		while parse.optionalString("$Name:") do
+			local name = parse.getString()
+
+			local profile = {
+				LoadingBarImage = nil,
+				BackgroundClasses = {},
+				Tips = {},
+			}
+
+			if parse.optionalString("$Loading Bar Image:") then
+				profile.LoadingBarImage = parse.getString()
+			end
+
+			while parse.optionalString("+Background Class:") do
+				profile.BackgroundClasses[#profile.BackgroundClasses+1] = parse.getString()
+			end
+
+			while parse.optionalString("$Tip:") do
+				profile.Tips[#profile.Tips+1] = parse.getString()
+			end
+
+			ScpuiSystem.data.LoadScreens.Profiles[name] = profile
+		end
+	end
+
+	--- Mission-filename → profile-name mapping.
+	if parse.optionalString("#Mission Screens") then
+		while parse.optionalString("$Filename:") do
+			local mission = Utils.strip_extension(parse.getString())
+
+			parse.requiredString("$Loading Screen:")
+			local profile = parse.getString()
+
+			ScpuiSystem.data.LoadScreens.Missions[mission] = profile
+		end
+	end
+end
+
 --- Parse the medals section of the scpui.tbl
 --- @return nil
 function ScpuiSystem:parseMedals()
@@ -276,6 +338,8 @@ function ScpuiSystem:parseScpuiTable(data)
 		end
 
 	end
+
+	ScpuiSystem:parseLoadScreens()
 
 	if parse.optionalString("#Medal Placements") then
 		ScpuiSystem:parseMedals()

@@ -1,5 +1,5 @@
 -- Version of SCPUI System
-local version = "1.1.1"
+local version = "1.1.2"
 
 local Utils = require("lib_utils")
 local Topics = require("lib_ui_topics")
@@ -39,6 +39,11 @@ ScpuiSystem.data = {
 	Brief_Backgrounds_List = {},
 	Preload_Coroutines = {},
 	Medal_Info = {},
+	LoadScreens = {
+		Tips = {},      --- [name] = { Text = string }
+		Profiles = {},  --- [name] = { LoadingBarImage, BackgroundClasses = {}, Tips = {} }
+		Missions = {},  --- [mission_stem] = profile_name
+	},
 	Substate = "none",
 	OldSubstate = "none",
 	table_flags = {
