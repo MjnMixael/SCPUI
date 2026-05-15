@@ -41,7 +41,7 @@ class name(s) from a profile.
 | Old section / field | SCPUI equivalent |
 | --- | --- |
 | `#General Settings $Scale Zoom: true` | No-op; CSS scales backgrounds automatically. |
-| `#Loading Bars $Name: ... $File: bar.ani` | `$Loading Bar Image: bar.ani` inside a `#Loading Screens` profile. |
+| `#Loading Bars $Name: ... $File: <bar>.ani` | `$Loading Bar Image: <bar>.ani` inside a `#Loading Screens` profile. |
 | `#Loading Bars $Origin: / $Offset:` | RCSS rule on `div#loadingbar` in your mod's load-screen CSS. |
 | `#Loading Text $Name: / $Text: / $Font:` | `#Loading Text $Name: / $Text:`. Font is set via RCSS on `div#loadscreen_tip` (or a class on it), not in the table. |
 | `#Loading Screens $Loading Image: random` + `+Image:` list | Multiple `+Background Class:` entries in the profile. One is picked at random per load. |
@@ -53,23 +53,26 @@ class name(s) from a profile.
 | `#Loading Screens $Loading Text: <name>` | `$Tip: <name>` (one or more; one is picked at random). |
 | `#Mission Screens $Filename: / $Loading Screen:` | Same field names, same shape. `.fs2` extensions are stripped on parse. |
 
-## Walkthrough — translating `RoR-01`
+## Walkthrough — translating a single screen
 
-Original Axem entry (excerpt):
+Suppose your mod has a mission `chapter1_mission01.fs2` that, under the old
+script, picks a random background from four images, shows a loading bar in
+the lower-right, draws a per-screen tip in pale blue at the lower-left, and
+renders the mission title in the upper-right. The old entry looks like:
 
 ```
-$Name:          Proverbs-1
-$Text:          XSTR("...''Ribos is all broken promises buried under miles of military supply chains.''...", -1)
+$Name:          tip_chapter1_01
+$Text:          XSTR("...some lore text...", -1)
 $Font:          6
 
-$Name:          RoR-01
-$Loading Bar:   MoGW-pale_blue
+$Name:          chapter1_01_screen
+$Loading Bar:   my_loading_bar
 $Loading Image: random
     +Scaling:   true
-    +Image:     nLS-RoR-01a
-    +Image:     nLS-RoR-01b
-    +Image:     nLS-RoR-01c
-    +Image:     nLS-RoR-01d
+    +Image:     chapter1_01_bg_a
+    +Image:     chapter1_01_bg_b
+    +Image:     chapter1_01_bg_c
+    +Image:     chapter1_01_bg_d
 $Text Color:    192, 192, 255, 255
 $Text Origin:   0.03, 0.75
     +Width:     800
@@ -78,10 +81,10 @@ $Draw Mission Name: true
     +Origin:    0.65, 0
     +Offset:    0, 20
     +Justify:   left
-$Loading Text:  Proverbs-1
+$Loading Text:  tip_chapter1_01
 
-$Filename:      RoR_01.fs2
-$Loading Screen: RoR-01
+$Filename:      chapter1_mission01.fs2
+$Loading Screen: chapter1_01_screen
 ```
 
 ### Step 1 — author the background CSS classes
@@ -90,10 +93,10 @@ In `data/interface/css/load_screen_bgs.rcss` (or your mod's override of it),
 add one class per background image:
 
 ```rcss
-.ror_01_bg1 { background-decorator: image; background-image: nLS-RoR-01a.png; }
-.ror_01_bg2 { background-decorator: image; background-image: nLS-RoR-01b.png; }
-.ror_01_bg3 { background-decorator: image; background-image: nLS-RoR-01c.png; }
-.ror_01_bg4 { background-decorator: image; background-image: nLS-RoR-01d.png; }
+.chapter1_01_bg_a { background-decorator: image; background-image: chapter1_01_bg_a.png; }
+.chapter1_01_bg_b { background-decorator: image; background-image: chapter1_01_bg_b.png; }
+.chapter1_01_bg_c { background-decorator: image; background-image: chapter1_01_bg_c.png; }
+.chapter1_01_bg_d { background-decorator: image; background-image: chapter1_01_bg_d.png; }
 ```
 
 ### Step 2 — add the table entries
@@ -106,23 +109,23 @@ single top-level `#End`:
 ```
 #Loading Text
 
-$Name: Proverbs-1
-$Text: XSTR("...''Ribos is all broken promises buried under miles of military supply chains.''...", -1)
+$Name: tip_chapter1_01
+$Text: XSTR("...some lore text...", -1)
 
 #Loading Screens
 
-$Name: RoR-01
-$Loading Bar Image: LB-mogw-pb.ani
-+Background Class: ror_01_bg1
-+Background Class: ror_01_bg2
-+Background Class: ror_01_bg3
-+Background Class: ror_01_bg4
-$Tip: Proverbs-1
+$Name: chapter1_01_screen
+$Loading Bar Image: my_loading_bar.ani
++Background Class: chapter1_01_bg_a
++Background Class: chapter1_01_bg_b
++Background Class: chapter1_01_bg_c
++Background Class: chapter1_01_bg_d
+$Tip: tip_chapter1_01
 
 #Mission Screens
 
-$Filename: RoR_01.fs2
-$Loading Screen: RoR-01
+$Filename: chapter1_mission01.fs2
+$Loading Screen: chapter1_01_screen
 
 #End
 ```
@@ -131,7 +134,7 @@ $Loading Screen: RoR-01
 
 All visual styling lives in your mod's load-screen CSS (add it to
 `load_screen.rcss`, `custom.rcss`, or a new RCSS file you link from
-`load_screen.rml`). The Axem entry's combined styling translates to:
+`load_screen.rml`). The old entry's combined styling translates to:
 
 ```rcss
 /* Tip text — was $Text Color / $Text Origin / +Width on the screen profile */
@@ -159,7 +162,7 @@ div#title
 	font-size: ...;
 }
 
-/* Loading bar — was #Loading Bars $Origin / $Offset (1.0, 0.5 + -26, -210) */
+/* Loading bar — anchored to the right edge, vertically centered, then nudged */
 div#loadingbar
 {
 	width: auto;
@@ -245,8 +248,8 @@ local Topics = require("lib_ui_topics")
 
 Topics.loadscreen.initialize:bind(100, function(controller, context)
 	local mission = mn.getMissionFilename():gsub('%.fs2$', '')
-	if mission:sub(1, 4) == "RoR_" then
-		controller.Document:GetElementById("loadscreen_tip"):SetClass("ror_tip", true)
+	if mission:sub(1, 8) == "chapter1" then
+		controller.Document:GetElementById("loadscreen_tip"):SetClass("chapter1_tip", true)
 	end
 end)
 ```
