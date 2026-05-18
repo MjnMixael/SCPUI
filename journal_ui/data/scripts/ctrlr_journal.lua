@@ -174,12 +174,25 @@ function JournalController:ClearEntry()
 end
 
 --- Converts the journal plain text to rml format
+--- If the text begins with an "!html" marker then the marker is,
+--- stripped and paragraph bodies are emitted verbatim so RML tags render.
+--- Otherwise, special characters are escaped so tags display as literal text.
 --- @param text string the text to convert
 --- @return string text the converted text
 function JournalController:convertTextToRml(text)
+    local rml_mode = false
+    local escape_start, escape_end = text:find("^%s*!html%s*")
+    if escape_start then
+        text = text:sub(escape_end + 1)
+        rml_mode = true
+    end
+
     local lines = Utils.split(text, "\n\n")
 
     local paragraphs = Utils.table.map(lines, function(line)
+        if rml_mode then
+            return "<p>" .. line .. "</p>"
+        end
         return "<p>" .. Utils.rml_escape(line) .. "</p>"
     end)
 
