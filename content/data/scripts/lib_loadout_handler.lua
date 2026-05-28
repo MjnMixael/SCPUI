@@ -424,7 +424,7 @@ function LoadoutHandler:generateWeaponInfo()
 				if ship.ShipClassIndex > 0 then
 					for j = 1, #ship.Weapons_List do
 						local wep_idx = ship.Weapons_List[j]
-						if ship.Amounts_List[j] > 0 then
+						if wep_idx > 0 and ship.Amounts_List[j] > 0 then
 							local wep = self:GetWeaponInfo(wep_idx)
 							if wep == nil then
 								self:AppendToWeaponInfo(wep_idx)
@@ -625,7 +625,7 @@ function LoadoutHandler:ValidateInfo()
 			if ScpuiSystem.data.Loadout.Loadout_Slots[i].ShipClassIndex > 0 then
 				for j = 1, #ScpuiSystem.data.Loadout.Loadout_Slots[i].Weapons_List, 1 do
 					local wep_idx = ScpuiSystem.data.Loadout.Loadout_Slots[i].Weapons_List[j]
-					if ScpuiSystem.data.Loadout.Loadout_Slots[i].Amounts_List[j] > 0 then
+					if wep_idx > 0 and ScpuiSystem.data.Loadout.Loadout_Slots[i].Amounts_List[j] > 0 then
 						if self:GetWeaponInfo(wep_idx) == nil then
 							self:AppendToWeaponInfo(wep_idx)
 						end
@@ -804,7 +804,7 @@ function LoadoutHandler:GetWeaponPoolAmount(idx)
 		ba.warning("Checking weapon amount for a nil weapon index! Get Mjn!")
 		return 0
 	end
-	if idx < 0 or idx > #ScpuiSystem.data.Loadout.Weapon_Pool then
+	if idx <= 0 or idx > #ScpuiSystem.data.Loadout.Weapon_Pool then
 		ba.warning("Checking invalid weapon index '" .. idx .. "' for pool amount! Returning 0! Get Mjn!")
 		return 0
 	end
