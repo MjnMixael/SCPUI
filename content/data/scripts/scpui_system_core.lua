@@ -645,7 +645,7 @@ function ScpuiSystem:dialogFrame()
 		end
 	end
 	if hv.IsDeathPopup then
-		local submit = self.data.DeathDialog.Submit
+		local submit = self.data.DeathDialog and self.data.DeathDialog.Submit
 		-- This really shouldn't happen, but just in case
 		if submit == nil and not ScpuiSystem.data.DialogDoc then
 			ba.warning("SCPUI Error: Death popup was not submitted and no dialog document is open!\n")
@@ -654,13 +654,13 @@ function ScpuiSystem:dialogFrame()
 			submit = 0
 		end
 		if submit ~= nil then
-			self.data.DeathDialog = nil
+			-- Keep re-submitting until the engine fires On Dialog Close; the value can't
+			-- change at this point (the dialog doc is gone) and hv.Submit is idempotent.
 			hv.Submit(submit)
 		end
 	else
-		if self.data.Dialog.Submit ~= nil then
-			local submit = self.data.Dialog.Submit
-			self.data.Dialog = nil
+		local submit = self.data.Dialog and self.data.Dialog.Submit
+		if submit ~= nil then
 			hv.Submit(submit)
 		end
 	end
@@ -678,12 +678,14 @@ function ScpuiSystem:dialogEnd()
 				self.data.DeathDialog.Abort.Abort()
 			end
 		end
+		self.data.DeathDialog = nil
 	else
 		if self.data.Dialog and self.data.Dialog.Abort then
 			if self.data.Dialog.Abort.Abort then
 				self.data.Dialog.Abort.Abort()
 			end
 		end
+		self.data.Dialog = nil
 	end
 
 	self:closeDialog()
