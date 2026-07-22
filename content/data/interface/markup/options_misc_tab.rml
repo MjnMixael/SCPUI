@@ -1,10 +1,23 @@
 <body>
-<div id="misc_column_1" class="options_column_25"> <!--left column button panels-->
+<div id="misc_options_wrapper">
+	<div id="misc_scroll_panel">
+		<img src="ops-panel-vert-tall-r.png"></img>
+	</div>
+	<div id="misc_scroll_panel_btm">
+		<img src="ops-panel-vert-tall-r.png"></img>
+	</div>
+	<div id="misc_options_scroll">
+		<div id="misc_column_1" class="options_column_25"> <!--left column button panels-->
+		</div>
+		<div id="misc_column_2" class="options_column_25">
+		</div> <!--middle column. Any buttons here need "horz_middle" added to their class-->
+		<div id="misc_column_3" class="options_column_25">
+		</div> <!--middle column. Any buttons here need "horz_middle" added to their class-->
+		<div id="misc_column_4" class="options_column_25">
+		</div> <!--middle column. Any buttons here need "horz_right" added to their class-->
+	</div>
+	<div id="misc_options_sizer">
+		<img src="options-window.png"></img>
+	</div>
 </div>
-<div id="misc_column_2" class="options_column_25">
-</div> <!--middle column. Any buttons here need "horz_middle" added to their class-->
-<div id="misc_column_3" class="options_column_25">
-</div> <!--middle column. Any buttons here need "horz_middle" added to their class-->
-<div id="misc_column_4" class="options_column_25">
-</div> <!--middle column. Any buttons here need "horz_right" added to their class-->
 </body>
