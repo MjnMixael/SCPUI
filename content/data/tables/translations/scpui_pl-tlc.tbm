@@ -347,6 +347,9 @@
 888575, "Wstecz"
 888576, "Zbliż do"
 
-;;Next available ID: 888577
+;;options_basic_tab.rml
+888578, "Kalibracja HDR"
+
+;;Next available ID: 888579
 
 #end

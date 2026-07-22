@@ -1,5 +1,8 @@
 <body>
 <div class="options_column_40">
+    <div id="skill_level_container">
+        <!-- Filled in by Lua -->
+    </div>
     <div class="btn_panel_large">
         <div id="large_panel_text" class="ops_left_header">
             <p>XSTR("Volume", 888162)</p>
@@ -41,10 +44,7 @@
 </div>
 <div class="options_column_20">
 </div>
-<div class="options_column_40 panel_right">
-    <div id="skill_level_container">
-        <!-- Filled in by Lua -->
-    </div>
+<div id="basic_right_column" class="options_column_40 panel_right">
     <div id=gamma_option class="btn_panel_large panel_right">
         <div id="large_panel_text" class="ops_right_header">
             <p>XSTR("Brightness", 888163)</p>
@@ -77,6 +77,78 @@
         </div>
         <img src="ops-panel-gamma.png"></img>
     </div>
+	<div id="hdr_settings_wrapper" class="btn_panel_large panel_right">
+		<div id="large_panel_text" class="ops_right_header">
+			<p>XSTR("HDR Calibration", 888578)</p>
+		</div>
+		<div id="hdr_toggle_text">
+			<p id="hdr_toggle_title"></p> <!-- Filled from the option title by Lua -->
+		</div>
+		<div id="hdr_toggle_wrapper">
+			<div id="hdr_on_entry" class="hdr_toggle_entry">
+				<div class="hdr_toggle_btn">
+					<button id="hdr_btn_2" class="round button_1">
+						<div id="round_img" class="round button_img">
+							<img src="round.png" class="psuedo_img"></img>
+						</div>
+					</button>
+				</div>
+				<p id="hdr_btn_2_text" class="hdr_toggle_label"></p> <!-- Filled from the option values by Lua -->
+			</div>
+			<div id="hdr_off_entry" class="hdr_toggle_entry">
+				<div class="hdr_toggle_btn">
+					<button id="hdr_btn_1" class="round button_1">
+						<div id="round_img" class="round button_img">
+							<img src="round.png" class="psuedo_img"></img>
+						</div>
+					</button>
+				</div>
+				<p id="hdr_btn_1_text" class="hdr_toggle_label"></p> <!-- Filled from the option values by Lua -->
+			</div>
+		</div>
+		<div id="hdr_content_wrapper">
+			<div id="hdr_paperwhite_row" class="hdr_widget_row">
+				<div class="ops_left_header">
+					<span id="hdr_paperwhite_title"></span>: <span id="hdr_paperwhite_value" class="header_text"></span>
+				</div>
+				<div class="hdr_range_wrapper">
+					<div id=range_cont>
+						<input id="hdr_paperwhite_range" type="range" min="0" max="1" step="0.01"></input>
+						<img src="ops-panel-horz.png" class="psuedo_img"></img>
+					</div>
+				</div>
+			</div>
+			<div id="hdr_peak_row" class="hdr_widget_row">
+				<div class="ops_left_header">
+					<span id="hdr_peak_title"></span>: <span id="hdr_peak_value" class="header_text"></span>
+				</div>
+				<div class="hdr_range_wrapper">
+					<div id=range_cont>
+						<input id="hdr_peak_range" type="range" min="0" max="1" step="0.01"></input>
+						<img src="ops-panel-horz.png" class="psuedo_img"></img>
+					</div>
+				</div>
+			</div>
+			<div id="hdr_ramp_row">
+				<div id="hdr_patch_1" class="hdr_patch"></div>
+				<div id="hdr_patch_2" class="hdr_patch"></div>
+				<div id="hdr_patch_3" class="hdr_patch"></div>
+				<div id="hdr_patch_4" class="hdr_patch"></div>
+				<div id="hdr_patch_5" class="hdr_patch"></div>
+				<div id="hdr_patch_6" class="hdr_patch"></div>
+				<div id="hdr_patch_7" class="hdr_patch"></div>
+				<div id="hdr_patch_8" class="hdr_patch"></div>
+				<div id="hdr_patch_9" class="hdr_patch"></div>
+			</div>
+			<div id="hdr_primaries_row">
+				<div class="hdr_patch hdr_patch_red"></div>
+				<div class="hdr_patch hdr_patch_green"></div>
+				<div class="hdr_patch hdr_patch_blue"></div>
+				<div class="hdr_patch hdr_patch_white"></div>
+			</div>
+		</div>
+		<img src="ops-panel-gen-r.png"></img>
+	</div>
 	<div id="joystick_selection_wrapper">
 		<div id="joystick_category_text">
             <p>XSTR("Joystick Selections", 888164)</p>

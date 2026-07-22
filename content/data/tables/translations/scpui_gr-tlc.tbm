@@ -347,6 +347,9 @@
 888575, "Zurück"
 888576, "Heranzoomen"
 
-;;Next available ID: 888577
+;;options_basic_tab.rml
+888578, "HDR-Kalibrierung"
+
+;;Next available ID: 888579
 
 #end

@@ -347,6 +347,9 @@
 888575, "Back"
 888576, "Zoom To"
 
-;;Next available ID: 888578
+;;options_basic_tab.rml
+888578, "HDR Calibration"
+
+;;Next available ID: 888579
 
 #end

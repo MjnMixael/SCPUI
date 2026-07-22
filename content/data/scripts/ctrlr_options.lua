@@ -60,6 +60,18 @@ function OptionsController:init()
 		"Graphics.Stars",
 	};
 
+	--Display and output related options that are kept in the first graphics
+	--column and created in this exact order
+	self.BuiltInDisplayKeys = {
+		"Graphics.Resolution",
+		"Graphics.Display",
+		"Graphics.WindowMode",
+		"Graphics.VSync",
+		"Graphics.PostProcessing",
+		"Graphics.TextureFilter",
+		"Graphics.Anisotropy",
+	};
+
 	self.FontChoice = nil --- @type string The font class to be applied to the main background element
 
     self.DataSources = {} --- @type scpui_option_data_source[] A table of data sources for the options
@@ -127,6 +139,9 @@ function OptionsController:initialize(document)
 			"Audio.Voice",
 			"Game.SkillLevel",
 			"Graphics.Gamma",
+			"Graphics.HDR",
+			"Graphics.HDRPaperWhite",
+			"Graphics.HDRPeakLuminance",
 			"Game.FontScaleFactor"
 		}
 
@@ -365,6 +380,7 @@ end
 --- @return nil
 function OptionsController:initializeBuiltInBasicOptions()
 	local builtin_font_element_created = false
+	local hdr_options_found = false
 	if ScpuiSystem.data.FontValue and not ba.isEngineVersionAtLeast(24, 3, 0) then
 		--Create the font size selector option
 		--- @type scpui_option
@@ -510,6 +526,60 @@ function OptionsController:initializeBuiltInBasicOptions()
             end)
 
 			opt_el = self.Document:GetElementById("gamma_option")
+        elseif key == "Graphics.HDR" then
+            hdr_options_found = true
+
+            local vals = option:getValidValues()
+            self.Document:GetElementById("hdr_toggle_title").inner_rml = option.Title
+            self.Document:GetElementById("hdr_btn_1_text").inner_rml = vals[1].Display
+            self.Document:GetElementById("hdr_btn_2_text").inner_rml = vals[2].Display
+
+            AbstractOptionsController.initBinaryControl(self,
+                self.Document:GetElementById("hdr_btn_1"),
+                self.Document:GetElementById("hdr_btn_2"),
+                option, vals, nil,
+                self.Document:GetElementById("hdr_toggle_wrapper"))
+
+            opt_el = self.Document:GetElementById("hdr_toggle_wrapper")
+        elseif key == "Graphics.HDRPaperWhite" then
+            hdr_options_found = true
+            self.OptionBackups[option] = option.Value
+
+            self.Document:GetElementById("hdr_paperwhite_title").inner_rml = option.Title
+            self.Document:GetElementById("hdr_paperwhite_value").inner_rml = option.Value.Display
+
+            AbstractOptionsController.initRangeControl(self,
+                self.Document:GetElementById("hdr_paperwhite_range"),
+                self.Document:GetElementById("hdr_paperwhite_value"),
+                option,
+                function(_)
+                    -- Apply changes immediately to make them visible
+                    option:persistChanges()
+                    self:updateHdrRampPatches(option)
+                end,
+                self.Document:GetElementById("hdr_paperwhite_row"))
+
+            self:updateHdrRampPatches(option)
+
+            opt_el = self.Document:GetElementById("hdr_paperwhite_row")
+        elseif key == "Graphics.HDRPeakLuminance" then
+            hdr_options_found = true
+            self.OptionBackups[option] = option.Value
+
+            self.Document:GetElementById("hdr_peak_title").inner_rml = option.Title
+            self.Document:GetElementById("hdr_peak_value").inner_rml = option.Value.Display
+
+            AbstractOptionsController.initRangeControl(self,
+                self.Document:GetElementById("hdr_peak_range"),
+                self.Document:GetElementById("hdr_peak_value"),
+                option,
+                function(_)
+                    -- Apply changes immediately to make them visible
+                    option:persistChanges()
+                end,
+                self.Document:GetElementById("hdr_peak_row"))
+
+            opt_el = self.Document:GetElementById("hdr_peak_row")
         end
 
 		assert(opt_el, "Failed to create option element for " .. key)
@@ -518,25 +588,56 @@ function OptionsController:initializeBuiltInBasicOptions()
 			self:addOptionTooltip(option, opt_el)
 		end
     end
+
+	--Hide the HDR calibration widget entirely if this engine build has no HDR options
+	if not hdr_options_found then
+		self.Document:GetElementById("hdr_settings_wrapper"):SetClass("hidden", true)
+	end
 end
 
---- Initializes the built-in graphics options
+--- Updates the HDR grayscale ramp patches relative to the current paper white value.
+--- Mirrors the engine's HDR calibration dialog: each patch targets a fixed nit level,
+--- encoded sRGB so the HDR output pass reproduces it (clamped to paper white).
+--- @param option scpui_option The Graphics.HDRPaperWhite option
+--- @return nil
+function OptionsController:updateHdrRampPatches(option)
+	local paperwhite = tonumber(option.Value.Serialized) or tonumber(option.Value.Display) or 200
+	if paperwhite < 1 then
+		paperwhite = 1
+	end
+
+	local nit_targets = {2, 5, 10, 20, 40, 80, 120, 160, 200}
+
+	for i, nits in ipairs(nit_targets) do
+		local lin = math.min(nits / paperwhite, 1.0)
+		local enc = lin ^ (1 / 2.2)
+		local c = math.floor(enc * 255 + 0.5)
+
+		local patch_el = self.Document:GetElementById("hdr_patch_" .. i)
+		if patch_el then
+			patch_el.style["background-color"] = string.format("#%02x%02x%02x", c, c, c)
+		end
+	end
+end
+
+--- Initializes the built-in graphics options. Column 1 options are created in the
+--- fixed order defined by BuiltInDisplayKeys; column 2 holds the classic detail
+--- level dropdowns; everything else alternates between columns 3 and 4.
 --- @return nil
 function OptionsController:initializeBuiltInGraphicsOptions()
     local current_column = 3
+    local column_1_options = {} --- @type table<string, scpui_option>
+
     for _, option in ipairs(self.Categorized_Options.Graphics) do
 		local opt_el = nil
 
-        if option.Key == "Graphics.Resolution" then
-            opt_el = self:createOptionElement(option, "graphics_column_1")
-        elseif option.Key == "Graphics.WindowMode" then
-            opt_el = self:createOptionElement(option, "graphics_column_1")
-        elseif option.Key == "Graphics.Display" then
-            opt_el = self:createOptionElement(option, "graphics_column_1", function(_)
-                self.DataSources["Graphics.Resolution"]:updateValues()
-            end)
+        if Utils.table.contains(self.BuiltInDisplayKeys, option.Key) then
+            --Collected here and created in display order below
+            column_1_options[option.Key] = option
         elseif Utils.table.contains(self.BuiltInGraphicsKeys, option.Key) then
             opt_el = self:createOptionElement(option, "graphics_column_2")
+
+            assert(opt_el, "Failed to create option element for " .. option.Key)
         else
             opt_el = self:createOptionElement(option, string.format("graphics_column_%d", current_column))
 
@@ -554,46 +655,79 @@ function OptionsController:initializeBuiltInGraphicsOptions()
             end
         end
 
-		assert(opt_el, "Failed to create option element for " .. option.Key)
-
-		if option.Description then
+		if opt_el and option.Description then
 			self:addOptionTooltip(option, opt_el)
 		end
+    end
+
+    --Create the first column options in the order defined by BuiltInDisplayKeys
+    for _, key in ipairs(self.BuiltInDisplayKeys) do
+        local option = column_1_options[key]
+        if option then
+            local opt_el = nil
+
+            if key == "Graphics.Display" then
+                opt_el = self:createOptionElement(option, "graphics_column_1", function(_)
+                    self.DataSources["Graphics.Resolution"]:updateValues()
+                end)
+            else
+                opt_el = self:createOptionElement(option, "graphics_column_1")
+            end
+
+            assert(opt_el, "Failed to create option element for " .. key)
+
+            if option.Description then
+                self:addOptionTooltip(option, opt_el)
+            end
+        end
     end
 
 	self:setGraphicsDefaultStatus()
 end
 
---- Initializes the built in misc options
+--- Initializes the built in misc options. All TTS options are kept together in
+--- column 2; everything else fills columns 1, 3, and 4 in registration order.
 --- @return nil
 function OptionsController:initializeBuiltInMiscOptions()
-    local current_column = 1
+    local fill_columns = {1, 3, 4}
+    local column_index = 1
 	local count = 1
 
 	--Handle built-in preferences options
 	for _, option in ipairs(self.Categorized_Options.Misc) do
-		local el = self:createOptionElement(option, string.format("misc_column_%d", current_column))
+		local el = nil
 
-		assert(el, "Failed to create option element for " .. option.Key)
+		if option.Key:match("^Speech%.") then
+			el = self:createOptionElement(option, "misc_column_2")
+
+			assert(el, "Failed to create option element for " .. option.Key)
+
+			el:SetClass("horz_middle", true)
+		else
+			local current_column = fill_columns[column_index]
+			el = self:createOptionElement(option, string.format("misc_column_%d", current_column))
+
+			assert(el, "Failed to create option element for " .. option.Key)
+
+			if current_column == 3 then
+				el:SetClass("horz_middle", true)
+			elseif current_column == 4 then
+				el:SetClass("horz_right", true)
+			end
+
+			count = count + 1
+
+			if count > 10 then
+				column_index = column_index + 1
+				if column_index > #fill_columns then
+					column_index = 1
+				end
+				count = 1
+			end
+		end
 
 		if option.Description then
 			self:addOptionTooltip(option, el)
-		end
-
-		if current_column == 2 or current_column == 3 then
-			el:SetClass("horz_middle", true)
-		elseif current_column == 4 then
-			el:SetClass("horz_right", true)
-		end
-
-		count = count + 1
-
-		if count > 10 then
-			current_column = current_column + 1
-			if current_column > 4 then
-				current_column = 1
-			end
-			count = 1
 		end
 	end
 
