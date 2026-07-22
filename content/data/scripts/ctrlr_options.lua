@@ -46,7 +46,11 @@ function OptionsController:init()
 		"option_graphics_postprocessing_element",
 		"option_graphics_lightshafts_element",
 		"option_graphics_softparticles_element",
-		"option_graphics_deferredlighting_element"
+		"option_graphics_deferredlighting_element",
+		"option_graphics_shadowrendermethod_element",
+		"option_graphics_maxrtshadowlights_element",
+		"option_graphics_rtshadowquality_element",
+		"option_graphics_maxrtshadowlocallights_element"
 	}
 
 	self.BuiltInGraphicsKeys = {
@@ -380,7 +384,24 @@ end
 --- @return nil
 function OptionsController:initializeBuiltInBasicOptions()
 	local builtin_font_element_created = false
-	local hdr_options_found = false
+
+	--The HDR widget is only shown if the engine provides the complete set of HDR options
+	local hdr_option_keys = {
+		"Graphics.HDR",
+		"Graphics.HDRPaperWhite",
+		"Graphics.HDRPeakLuminance"
+	}
+	local hdr_keys_found = 0
+	for _, option in ipairs(self.Categorized_Options.Basic) do
+		if Utils.table.contains(hdr_option_keys, option.Key) then
+			hdr_keys_found = hdr_keys_found + 1
+		end
+	end
+	local hdr_supported = hdr_keys_found == #hdr_option_keys
+
+	if not hdr_supported then
+		self.Document:GetElementById("hdr_settings_wrapper"):SetClass("hidden", true)
+	end
 	if ScpuiSystem.data.FontValue and not ba.isEngineVersionAtLeast(24, 3, 0) then
 		--Create the font size selector option
 		--- @type scpui_option
@@ -439,7 +460,11 @@ function OptionsController:initializeBuiltInBasicOptions()
     for _, option in ipairs(self.Categorized_Options.Basic) do
         local key = option.Key
 		local opt_el = nil
-        if key == "Input.Joystick2" then
+		local skipped_hdr = Utils.table.contains(hdr_option_keys, key) and not hdr_supported
+
+        if skipped_hdr then
+            --Intentionally skipped; the HDR widget is hidden when the option set is incomplete
+        elseif key == "Input.Joystick2" then
             opt_el = AbstractOptionsController.createSelectionOptionElement(self, option, option:getValidValues(), "joystick_column_1", {
                 --no_title = true
             })
@@ -527,8 +552,6 @@ function OptionsController:initializeBuiltInBasicOptions()
 
 			opt_el = self.Document:GetElementById("gamma_option")
         elseif key == "Graphics.HDR" then
-            hdr_options_found = true
-
             local vals = option:getValidValues()
             self.Document:GetElementById("hdr_toggle_title").inner_rml = option.Title
             self.Document:GetElementById("hdr_btn_1_text").inner_rml = vals[1].Display
@@ -542,7 +565,6 @@ function OptionsController:initializeBuiltInBasicOptions()
 
             opt_el = self.Document:GetElementById("hdr_toggle_wrapper")
         elseif key == "Graphics.HDRPaperWhite" then
-            hdr_options_found = true
             self.OptionBackups[option] = option.Value
 
             self.Document:GetElementById("hdr_paperwhite_title").inner_rml = option.Title
@@ -563,7 +585,6 @@ function OptionsController:initializeBuiltInBasicOptions()
 
             opt_el = self.Document:GetElementById("hdr_paperwhite_row")
         elseif key == "Graphics.HDRPeakLuminance" then
-            hdr_options_found = true
             self.OptionBackups[option] = option.Value
 
             self.Document:GetElementById("hdr_peak_title").inner_rml = option.Title
@@ -582,17 +603,14 @@ function OptionsController:initializeBuiltInBasicOptions()
             opt_el = self.Document:GetElementById("hdr_peak_row")
         end
 
-		assert(opt_el, "Failed to create option element for " .. key)
+		if not skipped_hdr then
+			assert(opt_el, "Failed to create option element for " .. key)
 
-		if option.Description then
-			self:addOptionTooltip(option, opt_el)
+			if option.Description then
+				self:addOptionTooltip(option, opt_el)
+			end
 		end
     end
-
-	--Hide the HDR calibration widget entirely if this engine build has no HDR options
-	if not hdr_options_found then
-		self.Document:GetElementById("hdr_settings_wrapper"):SetClass("hidden", true)
-	end
 end
 
 --- Updates the HDR grayscale ramp patches relative to the current paper white value.
@@ -1102,6 +1120,19 @@ function OptionsController:SetGraphicsBullet(level)
 
 end
 
+--- Sets a multi/dropdown graphics option control to the given 1-based selection
+--- index, clamped to the number of valid values. Clamping matters for the
+--- raytracing options, which collapse to a single inert value on hardware
+--- without raytracing support.
+--- @param option scpui_graphics_option_control The graphics option control
+--- @param index number The desired selection index
+--- @return nil
+function OptionsController:setGraphicsMultiOption(option, index)
+	index = math.min(index, #option.ValidValues)
+	option.CurrentValue = index
+	option.SelectEl.selection = index
+end
+
 --- Called by the RML to set the graphics level to minimum
 --- @param element Element The element that was clicked
 --- @return nil
@@ -1120,9 +1151,14 @@ function OptionsController:set_detail_minimum(element)
 					elseif option.ParentEl.id == "option_graphics_msaasamples_element" then
 						option.CurrentValue = 1
 						option.SelectEl.selection = 1
+					elseif option.ParentEl.id == "option_graphics_shadowrendermethod_element" then
+						self:setGraphicsMultiOption(option, 1)
+					elseif option.ParentEl.id == "option_graphics_maxrtshadowlights_element" then
+						self:setGraphicsMultiOption(option, 1)
+					elseif option.ParentEl.id == "option_graphics_rtshadowquality_element" then
+						self:setGraphicsMultiOption(option, 1)
 					else
-						option.CurrentValue = 1
-						option.SelectEl.selection = 1
+						self:setGraphicsMultiOption(option, 1)
 					end
 				elseif option.Type == "Binary" then
 					option.CurrentValue = option.ValidValues[1]
@@ -1163,9 +1199,14 @@ function OptionsController:set_detail_low(element)
 					elseif option.ParentEl.id == "option_graphics_msaasamples_element" then
 						option.CurrentValue = 1
 						option.SelectEl.selection = 1
+					elseif option.ParentEl.id == "option_graphics_shadowrendermethod_element" then
+						self:setGraphicsMultiOption(option, 1)
+					elseif option.ParentEl.id == "option_graphics_maxrtshadowlights_element" then
+						self:setGraphicsMultiOption(option, 2)
+					elseif option.ParentEl.id == "option_graphics_rtshadowquality_element" then
+						self:setGraphicsMultiOption(option, 1)
 					else
-						option.CurrentValue = 2
-						option.SelectEl.selection = 2
+						self:setGraphicsMultiOption(option, 2)
 					end
 				elseif option.Type == "Binary" then
 					option.CurrentValue = option.ValidValues[1]
@@ -1206,9 +1247,14 @@ function OptionsController:set_detail_medium(element)
 					elseif option.ParentEl.id == "option_graphics_msaasamples_element" then
 						option.CurrentValue = 2
 						option.SelectEl.selection = 2
+					elseif option.ParentEl.id == "option_graphics_shadowrendermethod_element" then
+						self:setGraphicsMultiOption(option, 1)
+					elseif option.ParentEl.id == "option_graphics_maxrtshadowlights_element" then
+						self:setGraphicsMultiOption(option, 4)
+					elseif option.ParentEl.id == "option_graphics_rtshadowquality_element" then
+						self:setGraphicsMultiOption(option, 1)
 					else
-						option.CurrentValue = 3
-						option.SelectEl.selection = 3
+						self:setGraphicsMultiOption(option, 3)
 					end
 				elseif option.Type == "Binary" then
 					option.CurrentValue = option.ValidValues[1]
@@ -1249,9 +1295,14 @@ function OptionsController:set_detail_high(element)
 					elseif option.ParentEl.id == "option_graphics_msaasamples_element" then
 						option.CurrentValue = 3
 						option.SelectEl.selection = 3
+					elseif option.ParentEl.id == "option_graphics_shadowrendermethod_element" then
+						self:setGraphicsMultiOption(option, 2)
+					elseif option.ParentEl.id == "option_graphics_maxrtshadowlights_element" then
+						self:setGraphicsMultiOption(option, 6)
+					elseif option.ParentEl.id == "option_graphics_rtshadowquality_element" then
+						self:setGraphicsMultiOption(option, 2)
 					else
-						option.CurrentValue = 4
-						option.SelectEl.selection = 4
+						self:setGraphicsMultiOption(option, 4)
 					end
 				elseif option.Type == "Binary" then
 					option.CurrentValue = option.ValidValues[2]
@@ -1292,9 +1343,14 @@ function OptionsController:set_detail_ultra(element)
 					elseif option.ParentEl.id == "option_graphics_msaasamples_element" then
 						option.CurrentValue = 4
 						option.SelectEl.selection = 4
+					elseif option.ParentEl.id == "option_graphics_shadowrendermethod_element" then
+						self:setGraphicsMultiOption(option, 2)
+					elseif option.ParentEl.id == "option_graphics_maxrtshadowlights_element" then
+						self:setGraphicsMultiOption(option, 8)
+					elseif option.ParentEl.id == "option_graphics_rtshadowquality_element" then
+						self:setGraphicsMultiOption(option, 2)
 					else
-						option.CurrentValue = 5
-						option.SelectEl.selection = 5
+						self:setGraphicsMultiOption(option, 5)
 					end
 				elseif option.Type == "Binary" then
 					option.CurrentValue = option.ValidValues[2]
@@ -1395,8 +1451,34 @@ function OptionsController:isGraphicsPreset(value)
 			if option.CurrentValue.Display ~= a_value then
 				return false
 			end
+		elseif option.ParentEl.id == "option_graphics_deferredlighting_element" then
+			local a_value = "On"
+			if value == 1 then a_value = "Off" end
+			if value == 2 then a_value = "Off" end
+			if value == 3 then a_value = "Off" end
+			if value == 4 then a_value = "On" end
+			if option.CurrentValue.Display ~= a_value then
+				return false
+			end
+		elseif option.ParentEl.id == "option_graphics_shadowrendermethod_element" then
+			local a_value = 1
+			if value >= 4 then a_value = 2 end
+			if option.CurrentValue ~= math.min(a_value, #option.ValidValues) then
+				return false
+			end
+		elseif option.ParentEl.id == "option_graphics_maxrtshadowlights_element" then
+			local a_values = {1, 2, 4, 6, 8}
+			if option.CurrentValue ~= math.min(a_values[value], #option.ValidValues) then
+				return false
+			end
+		elseif option.ParentEl.id == "option_graphics_rtshadowquality_element" then
+			local a_value = 1
+			if value >= 4 then a_value = 2 end
+			if option.CurrentValue ~= math.min(a_value, #option.ValidValues) then
+				return false
+			end
 		else
-			if option.CurrentValue ~= value then
+			if option.CurrentValue ~= math.min(value, #option.ValidValues) then
 				return false
 			end
 		end
