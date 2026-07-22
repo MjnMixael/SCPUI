@@ -93,6 +93,19 @@ end
 --- @param abort_cb_table table The table to store the abort functions in
 --- @return nil
 local function show_dialog(context, properties, finish_func, reject, abort_cb_table)
+    --The promise may only ever be settled once; the engine raises an error on a
+    --second resolve or reject. Guard both paths since an answered dialog still
+    --receives On Dialog Close from the engine, which triggers the abort callback.
+    local settled = false
+    local original_finish = finish_func
+    finish_func = function(val)
+        if settled then
+            return
+        end
+        settled = true
+        original_finish(val)
+    end
+
     ---@type Document
     local dialog_doc = nil
 
@@ -192,7 +205,10 @@ local function show_dialog(context, properties, finish_func, reject, abort_cb_ta
     if abort_cb_table ~= nil then
         abort_cb_table.Abort = function()
             ScpuiSystem:closeDialog()
-            reject()
+            if not settled then
+                settled = true
+                reject()
+            end
         end
     end
 
