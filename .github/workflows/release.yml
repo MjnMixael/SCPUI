@@ -1,90 +1,101 @@
-name: Automated Release Workflow
+name: Release
 
-permissions:
-  contents: write
-  pull-requests: write
+# Tags a release and publishes it to GitHub and Nebula (the public SCPUI mod).
+#
+# The version comes from `local version = "..."` in content/data/scripts/scpui_system_core.lua on
+# the source ref. Bump it and get it onto master first; this workflow never pushes a commit, only
+# the tag.
+#
+#   1.2.0      ->  tag v.1.2.0-release      GitHub release, Nebula stability "stable"
+#   1.2.0-RC1  ->  tag v.1.2.0-RC1-release  GitHub prerelease, Nebula stability "rc"
+#
+# The GitHub release is created as a draft with the download zip attached; write the notes and
+# publish it by hand. Nebula uploads are private unless the NEBULA_PRIVATE repo variable is 'false'.
+#
+# If the tag and GitHub release succeeded but the Nebula publish failed, re-run with nebula_only.
+# The version is still read from source_ref, so if master has been bumped since, pass the tag.
 
 on:
   workflow_dispatch:
     inputs:
-      release_name:
-        description: 'Name of the release (e.g., 1.0.0-RC3)'
-        required: true
-        default: ''
+      source_ref:
+        description: Branch, tag or commit to release from
+        type: string
+        default: master
+      dry_run:
+        description: Only report the version and tag; don't tag, release or publish
+        type: boolean
+        default: true
+      nebula_only:
+        description: Retry just the Nebula publish for a release whose tag already exists
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
 
 jobs:
-  create-release:
+  release:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_ref }}
+          fetch-depth: 0    # all tags, for the existing/newer checks
 
-    - name: Set up Git
-      run: |
-        git config user.name "GitHub Actions"
-        git config user.email "actions@github.com"
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
 
-    - name: Create a New Branch and Commit Changes
-      id: create_branch
-      run: |
-        # Create a new branch
-        git checkout -b release/v.${{ github.event.inputs.release_name }}
+      - name: Install dependencies
+        run: pip install requests
 
-        # Update the version in the file
-        sed -i 's/^local version = ".*"/local version = "${{ github.event.inputs.release_name }}"/' content/data/scripts/scpui_system_core.lua
+      - name: Work out version and tag
+        id: version
+        run: python .github/scripts/scpui_publish.py version --mode release ${{ inputs.nebula_only && '--resume' || '' }}
 
-        # Stage the file
-        git add content/data/scripts/scpui_system_core.lua
+      - name: Check out the release tag
+        # Build exactly what was tagged, even if the source ref has moved on since
+        if: inputs.nebula_only
+        run: git checkout "${{ steps.version.outputs.tag }}"
 
-        # Check if there are changes to commit
-        if ! git diff-index --quiet HEAD; then
-          git commit -m "Update version to ${{ github.event.inputs.release_name }}"
-          git push origin release/v.${{ github.event.inputs.release_name }}
-          echo "changes=true" >> $GITHUB_ENV
-        else
-          echo "No changes to commit. Skipping push."
-          echo "changes=false" >> $GITHUB_ENV
-        fi
+      - name: Stop here for a dry run
+        if: inputs.dry_run
+        run: |
+          echo "Dry run: would release ${{ steps.version.outputs.mod_id }} ${{ steps.version.outputs.version }}" \
+               "as ${{ steps.version.outputs.tag }} from $(git log -1 --format='%h %s')."
 
-    - name: Create Pull Request
-      if: env.changes == 'true'
-      run: |
-        gh pr create \
-          --base master \
-          --head release/v.${{ github.event.inputs.release_name }} \
-          --title "Release v.${{ github.event.inputs.release_name }}" \
-          --body "Automated release for v.${{ github.event.inputs.release_name }}."
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build packages
+        if: ${{ !inputs.dry_run }}
+        run: |
+          python .github/scripts/scpui_publish.py build --mode release \
+            --version "${{ steps.version.outputs.version }}" \
+            --stability "${{ steps.version.outputs.prerelease == 'true' && 'rc' || 'stable' }}" \
+            --private "${{ vars.NEBULA_PRIVATE }}" \
+            --zip "SCPUI-${{ steps.version.outputs.version }}.zip"
 
-    - name: Bot Review PR
-      if: env.changes == 'true'
-      run: |
-        PR_URL=$(gh pr view --json url -q '.url')
-        gh pr review $PR_URL --approve
-      env:
-        GITHUB_TOKEN: ${{ secrets.BOT_PAT }}
+      - name: Tag and create draft GitHub release
+        if: ${{ !inputs.dry_run && !inputs.nebula_only }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
+          VERSION: ${{ steps.version.outputs.version }}
+          PRERELEASE: ${{ steps.version.outputs.prerelease }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "$TAG" -m "Release v.$VERSION"
+          git push origin "refs/tags/$TAG"
 
-    - name: Merge Pull Request
-      if: env.changes == 'true'
-      run: |
-        PR_URL=$(gh pr view --json url -q '.url')
-        gh pr merge $PR_URL --squash --delete-branch --admin
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          flags=(--draft --verify-tag --title "v.$VERSION Release" --notes "")
+          if [ "$PRERELEASE" = "true" ]; then flags+=(--prerelease); fi
+          gh release create "$TAG" "dist/SCPUI-$VERSION.zip" "${flags[@]}"
 
-    - name: Create Tag and GitHub Release
-      run: |
-        git fetch origin master
-        git checkout master
-        git tag -a v.${{ github.event.inputs.release_name }}-release -m "Release v.${{ github.event.inputs.release_name }}"
-        git push origin v.${{ github.event.inputs.release_name }}-release
-
-        gh release create v.${{ github.event.inputs.release_name }}-release \
-          --title "v.${{ github.event.inputs.release_name }} Release" \
-          --notes "Automated release for v.${{ github.event.inputs.release_name }}."
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish to Nebula
+        if: ${{ !inputs.dry_run }}
+        env:
+          NEBULA_USER: ${{ secrets.NEBULA_USER }}
+          NEBULA_PASSWORD: ${{ secrets.NEBULA_PASSWORD }}
+        run: python .github/scripts/scpui_publish.py publish
