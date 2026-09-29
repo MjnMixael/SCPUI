@@ -524,12 +524,46 @@ function ScpuiSystem:stateStart()
 	ui.enableInput(self.data.Context)
 end
 
+--- Keep the libRocket context sized to the actual render target.
+--- The engine assumes a context's dimensions match gr_screen.max_w/max_h, but the context is
+--- created once at script load time and FSO can change the render resolution afterwards (the
+--- window manager reporting a different size than the one we asked for, a DPI/display scale
+--- change, or moving the window to another monitor all do it). When that happens the context
+--- keeps laying out and clipping to the stale size, so the UI renders into a sub-rectangle of
+--- the screen and mouse coordinates no longer line up.
+--- @return nil
+function ScpuiSystem:syncContextDimensions()
+	if not self.data.Context then
+		return
+	end
+
+	local screen_w = gr.getScreenWidth()
+	local screen_h = gr.getScreenHeight()
+
+	-- Graphics may not be initialized yet, in which case these are 0 and there is nothing to sync
+	if screen_w <= 0 or screen_h <= 0 then
+		return
+	end
+
+	local dims = self.data.Context.dimensions
+
+	if dims.x == screen_w and dims.y == screen_h then
+		return
+	end
+
+	ba.print("SCPUI is resizing its context from " .. dims.x .. "x" .. dims.y .. " to " .. screen_w .. "x" .. screen_h .. "\n")
+
+	self.data.Context.dimensions = Vector2i.new(screen_w, screen_h)
+end
+
 --- On each frame of a game state this function will update and render the related SCPUI document, if any exists for the state
 --- @return nil
 function ScpuiSystem:stateFrame()
 	if not self:hasOverrideForCurrentState() then
 		return
 	end
+
+	self:syncContextDimensions()
 
 	-- Add some tracing scopes here to see how long this stuff takes
 	UpdateCategory:trace(function()
@@ -628,6 +662,8 @@ end
 --- updating and rendering the dialog itself
 --- @return nil
 function ScpuiSystem:dialogFrame()
+	self:syncContextDimensions()
+
 	-- Add some tracing scopes here to see how long this stuff takes
 	UpdateCategory:trace(function()
 		if hv.Freeze ~= nil and hv.Freeze ~= true then
@@ -749,6 +785,8 @@ function ScpuiSystem:loadFrame()
 	end
 
 	ScpuiSystem.data.memory.loading_bar.LoadProgress = hv.Progress
+
+	self:syncContextDimensions()
 
 	-- Add some tracing scopes here to see how long this stuff takes
 	UpdateCategory:trace(function()
