@@ -219,7 +219,8 @@ function LoadoutHandler:getPool(pool, ship_pool)
 				ba.print("LOADOUT HANDLER: Weapon pool item " .. tb.WeaponClasses[i].Name .. " to amount " .. pool[i] .. "\n")
 			end
 		end
-		data[i] = pool[i]
+		--FSO reports classes absent from the mission's loadout as -1; treat them as 0 here
+		data[i] = math.max(pool[i], 0)
 	end
 	return data
 end
@@ -825,7 +826,7 @@ function LoadoutHandler:GetShipPoolAmount(idx)
 		ba.warning("Checking ship amount for a nil ship index! Get Mjn!")
 		return 0
 	end
-	if idx < 0 or idx > #ScpuiSystem.data.Loadout.Ship_Pool then
+	if idx <= 0 or idx > #ScpuiSystem.data.Loadout.Ship_Pool then
 		ba.warning("Checking invalid ship index '" .. idx .. "' for pool amount! Returning 0! Get Mjn!")
 		return 0
 	end
