@@ -30,7 +30,7 @@ function LoadScreenController:initialize(document)
 	---First set a generic bg
 	self.Document:GetElementById("main_background"):SetClass("loadscreen_default", true)
 	---Then try to set it using the mission filename
-	self.Document:GetElementById("main_background"):SetClass(mission_stem)
+	self.Document:GetElementById("main_background"):SetClass(mission_stem, true)
 	---Allow a Topic listener (e.g., the table-driven default) to replace it with a different class,
 	---enabling random selection from a list or other per-mission strategies.
 	local bg_class_override = Topics.loadscreen.bg_class:send(self)
