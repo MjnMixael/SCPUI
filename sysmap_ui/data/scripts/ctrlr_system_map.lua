@@ -952,9 +952,18 @@ function SystemMapController:global_keydown(element, event)
 				self:exit()
 			end
 		elseif keys.UP then
-			self:scrollUp()
+			--The closeup covers the map, so arrows scroll the description text instead
+			if self.CloseupActive == true then
+				ScpuiSystem:scrollUp(self.Document:GetElementById("desc_text_wrapper"))
+			else
+				self:scrollUp()
+			end
 		elseif keys.DOWN then
-			self:scrollDown()
+			if self.CloseupActive == true then
+				ScpuiSystem:scrollDown(self.Document:GetElementById("desc_text_wrapper"))
+			else
+				self:scrollDown()
+			end
 		elseif keys.LEFT then
 			self:scrollLeft()
 		elseif keys.RIGHT then

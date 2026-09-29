@@ -234,6 +234,7 @@ div#bottom_panel_wrapper
 	position: absolute;
 	bottom: 0;
 	right: 0;
+	z-index: 10;
 }
 
 div#bottom_panel_a
