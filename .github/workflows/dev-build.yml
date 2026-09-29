@@ -1,0 +1,66 @@
+name: Development Build
+
+# Publishes the development branch to the SCPUIDEV mod on Nebula. Nothing is tagged or pushed.
+#
+# The version is the one in content/data/scripts/scpui_system_core.lua plus today's UTC date as
+# YYYYMMDD (e.g. 1.1.3-20261015), so later builds always sort higher. The metadata and packages
+# come straight from the repo's mod.json.
+#
+# Nebula uploads are private unless the NEBULA_PRIVATE repo variable is 'false'.
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_ref:
+        description: Branch, tag or commit to publish
+        type: string
+        default: development
+      dry_run:
+        description: Only report the version; don't publish
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  dev-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_ref }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Work out version
+        id: version
+        run: python .github/scripts/scpui_publish.py version --mode dev
+
+      - name: Stop here for a dry run
+        if: inputs.dry_run
+        run: |
+          echo "Dry run: would publish ${{ steps.version.outputs.mod_id }} ${{ steps.version.outputs.version }}" \
+               "from $(git log -1 --format='%h %s')."
+
+      - name: Build packages
+        if: ${{ !inputs.dry_run }}
+        run: |
+          python .github/scripts/scpui_publish.py build --mode dev \
+            --version "${{ steps.version.outputs.version }}" \
+            --stability nightly \
+            --private "${{ vars.NEBULA_PRIVATE }}"
+
+      - name: Publish to Nebula
+        if: ${{ !inputs.dry_run }}
+        env:
+          NEBULA_USER: ${{ secrets.NEBULA_USER }}
+          NEBULA_PASSWORD: ${{ secrets.NEBULA_PASSWORD }}
+        run: python .github/scripts/scpui_publish.py publish

@@ -1,0 +1,14 @@
+{
+  "_comment": "Identity of the public SCPUI mod on Nebula. Packages and their dependencies come from the repo's mod.json; these fields replace the development mod's. tile and banner are sha256 checksums of images already on Nebula.",
+  "id": "SCPUI",
+  "title": "SCPUI",
+  "description": "SCPUI is a fully customizable user-interface replacement for the FreespaceOpen Engine. Information on how to customize SCPUI is available on the hard-light Wiki.\n\n[url]https://wiki.hard-light.net/index.php/Scpui[/url]\r\n\r\nSource code is available here:\r\n[url]https://github.com/MjnMixael/SCPUI[/url]",
+  "release_thread": "https://wiki.hard-light.net/index.php/Scpui",
+  "first_release": "2022-10-10",
+  "cmdline": "",
+  "mod_flag": ["SCPUI"],
+  "tile": "1b80173f3bbab301d997f8d877229fa38239d1ecf91bf5541e42934d14b60171",
+  "banner": "260d8bb04e4f5576c774920c67b1cf76c0f01a0ae00858b20788046b31b2f745",
+  "exclude_packages": ["development_branch"],
+  "rename_packages": {"Content": "content"}
+}
