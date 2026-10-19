@@ -46,6 +46,35 @@ function ScpuiSystem:getKeyInfo(event)
 	return keys
 end
 
+--- Maps the retail B, S and W hotkeys to the pre-mission state they switch to, using the calling
+--- controller's own state enums. Keys typed into a text input (such as multiplayer chat) or pressed
+--- with a modifier are ignored.
+--- @param keys scpui_keypress The key info from getKeyInfo
+--- @param event Event The keydown event
+--- @param briefing_state number The caller's enum for the briefing state
+--- @param ship_state number The caller's enum for the ship select state
+--- @param weapon_state number The caller's enum for the weapon select state
+--- @return number? state The state to switch to, or nil if this isn't one of the hotkeys
+function ScpuiSystem:getLoadoutStateHotkey(keys, event, briefing_state, ship_state, weapon_state)
+	if keys.Ctrl or keys.Alt or keys.Shift or keys.Meta then
+		return nil
+	end
+
+	local target = event.target_element
+	if target ~= nil and (target.tag_name == "input" or target.tag_name == "textarea") then
+		return nil
+	end
+
+	if keys.B then
+		return briefing_state
+	elseif keys.S then
+		return ship_state
+	elseif keys.W then
+		return weapon_state
+	end
+	return nil
+end
+
 --- Helper function to parse a table
 --- @param parser_object table The context/target object that owns the `parseFunction`.
 --- @param parseFunction function The function to call to parse the table.

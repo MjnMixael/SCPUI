@@ -1041,6 +1041,11 @@ function ShipSelectController:global_keydown(element, event)
 	--	self:change_tech_state(3)
 	--elseif keys.DOWN and keys.Ctrl == 1 then
 	--	self:change_tech_state(1)
+	else
+		local state = ScpuiSystem:getLoadoutStateHotkey(keys, event, self.STATE_BRIEFING, self.STATE_SHIP_SELECT, self.STATE_WEAPON_SELECT)
+		if state then
+			self:change_brief_state(state)
+		end
 	end
 end
 

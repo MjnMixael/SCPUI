@@ -1551,6 +1551,11 @@ function WeaponSelectController:global_keydown(element, event)
         event:StopPropagation()
 
 		ba.postGameEvent(ba.GameEvents["GS_EVENT_START_BRIEFING"])
+	else
+		local state = ScpuiSystem:getLoadoutStateHotkey(keys, event, self.STATE_BRIEFING, self.STATE_SHIP_SELECT, self.STATE_WEAPON_SELECT)
+		if state then
+			self:change_brief_state(state)
+		end
 	end
 end
 
