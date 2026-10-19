@@ -132,13 +132,14 @@ end
 --- Scroll the text up by 10 pixels
 --- @return nil
 function AbstractBriefingController:scrollUp()
-	ScpuiSystem:scrollUp(self.Document:GetElementById(self.Element_Names.TextEl))
+	--The scrolling text element grows to fit its text; its parent is the one that overflows and scrolls
+	ScpuiSystem:scrollUp(self.Document:GetElementById(self.Element_Names.TextEl).parent_node)
 end
 
 --- Scroll the text down by 10 pixels
 --- @return nil
 function AbstractBriefingController:scrollDown()
-	ScpuiSystem:scrollDown(self.Document:GetElementById(self.Element_Names.TextEl))
+	ScpuiSystem:scrollDown(self.Document:GetElementById(self.Element_Names.TextEl).parent_node)
 end
 
 --- Advance to the next briefing stage, if possible
