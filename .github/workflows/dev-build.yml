@@ -6,7 +6,7 @@ name: Development Build
 # YYYYMMDD (e.g. 1.1.3-20261015), so later builds always sort higher. The metadata and packages
 # come straight from the repo's mod.json.
 #
-# Nebula uploads are private unless the NEBULA_PRIVATE repo variable is 'false'.
+# The Nebula upload is public.
 
 on:
   workflow_dispatch:
@@ -55,8 +55,7 @@ jobs:
         run: |
           python .github/scripts/scpui_publish.py build --mode dev \
             --version "${{ steps.version.outputs.version }}" \
-            --stability nightly \
-            --private "${{ vars.NEBULA_PRIVATE }}"
+            --stability nightly
 
       - name: Publish to Nebula
         if: ${{ !inputs.dry_run }}
