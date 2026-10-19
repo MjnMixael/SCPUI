@@ -3,9 +3,29 @@ body
 	z-index:-1;
 }
 
+/*Button labels hang below their button without taking part in layout. Their text height is fixed
+  in pixels while everything else scales with the window, so an in-flow label would push the icons
+  around differently at every resolution.
+
+  Vertical offsets on this screen use padding, never margin: libRocket resolves vertical margin
+  percentages against the containing block's height (which here depends on text size), but padding
+  percentages against its width, so padding scales with the art. Here they're % of the button width.*/
 .below p
 {
-	padding-top:8%;
+	display: block;
+	position: absolute;
+	width: 300%;
+	margin-left: -100%;
+}
+
+#player_control .below p
+{
+	padding-top: 42%;
+}
+
+#player_select .below p
+{
+	padding-top: 26%;
 }
 
 div#logo_wide
@@ -103,10 +123,18 @@ div#pilot_select img
 	margin-left: 4%;
 }
 
+/*Each bottom button row is anchored to the bottom of the window art (1911x737) and given exactly
+  the footprint of its panel, so the % values inside resolve against a known width rather than a
+  shrink-to-fit one, and the rows don't overlap each other's buttons. Each button's padding-bottom
+  lifts it into place.*/
+
+/*Right panel: art x 1435-1911*/
 div#player_select
 {
 	position: absolute;
 	bottom: 0;
+	left: 75.1%;
+	width: 24.9%;
 }
 
 div#player_type_select
@@ -115,16 +143,19 @@ div#player_type_select
 	top: 0;
 }
 
+/*Left panel: art x 0-810*/
 div#player_control
 {
 	position: absolute;
 	bottom: 0;
+	left: 0;
+	width: 42.4%;
 }
-
 
 div#player_control_wrapper
 {
-	margin-bottom: 4%;
+	width: 100%;
+	margin-left: -2.2%;
 }
 
 /*Arrow Buttons*/
@@ -132,11 +163,12 @@ div#player_control_wrapper
 div#arrow_cont
 {
 	float: right;
-	width: 5%;
+	width: 15.3%;
 	height: auto;
-	margin-right: 1%;
-	margin-bottom: 1%;
-	margin-top: 7%;
+	margin-right: 9.2%;
+	/*Floats line up along the top of the row, which the taller Select button sets, so the arrows are
+	  placed from the top*/
+	padding-top: 6.5%;
 }
 
 .arrowbuttons
@@ -188,11 +220,11 @@ button#playernext_btn:active #playernext_img
 div#player_commit_cont
 {
 	float: right;
-	width: 9%;
+	position: relative; /*containing block for its label*/
+	width: 30.5%;
 	height: auto;
-	margin-right: 1%;
-	top: 0;
-	margin-bottom: -8%;
+	margin-right: 7.4%;
+	padding-bottom: 6.2%;
 }
 
 .playercommit
@@ -304,12 +336,11 @@ button#multiplayer_btn:checked #multiplayer_img
 div#player_control_cont
 {
 	float: left;
-	width: 6%;
+	position: relative; /*containing block for its label*/
+	width: 14%;
 	height: auto;
-	margin-right: 1%;
-	margin-left: 5%;
-	top: 0;
-	margin-bottom: -8%;
+	margin-left: 14.1%;
+	padding-bottom: 4.8%;
 	z-index: 1;
 }
 
