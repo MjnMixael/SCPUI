@@ -10,7 +10,7 @@ name: Release
 #   1.2.0-RC1  ->  tag v.1.2.0-RC1-release  GitHub prerelease, Nebula stability "rc"
 #
 # The GitHub release is created as a draft with the download zip attached; write the notes and
-# publish it by hand. Nebula uploads are private unless the NEBULA_PRIVATE repo variable is 'false'.
+# publish it by hand. The Nebula upload is public.
 #
 # If the tag and GitHub release succeeded but the Nebula publish failed, re-run with nebula_only.
 # The version is still read from source_ref, so if master has been bumped since, pass the tag.
@@ -73,7 +73,6 @@ jobs:
           python .github/scripts/scpui_publish.py build --mode release \
             --version "${{ steps.version.outputs.version }}" \
             --stability "${{ steps.version.outputs.prerelease == 'true' && 'rc' || 'stable' }}" \
-            --private "${{ vars.NEBULA_PRIVATE }}" \
             --zip "SCPUI-${{ steps.version.outputs.version }}.zip"
 
       - name: Tag and create draft GitHub release

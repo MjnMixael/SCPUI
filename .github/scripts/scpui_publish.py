@@ -217,7 +217,7 @@ def cmd_build(args):
         'screenshots': [],
         'videos': [],
         'attachments': [],
-        'private': args.private,
+        'private': False,
         'packages': [],
     }
     for key in ('id', 'title', 'description', 'release_thread', 'first_release', 'cmdline',
@@ -409,8 +409,6 @@ def main():
     p.add_argument('--mode', choices=('release', 'dev'), required=True)
     p.add_argument('--version', required=True)
     p.add_argument('--stability', required=True)
-    p.add_argument('--private', type=lambda s: s.lower() != 'false', default=True,
-                   help="'false' publishes publicly; anything else is private")
     p.add_argument('--out', default='dist')
     p.add_argument('--zip', help='Also write the GitHub download zip under this name')
     p.add_argument('--sevenzip', default='7z')
