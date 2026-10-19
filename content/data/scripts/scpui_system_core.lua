@@ -1,5 +1,5 @@
 -- Version of SCPUI System
-local version = "1.1.2"
+local version = "1.1.3"
 
 local Utils = require("lib_utils")
 local Topics = require("lib_ui_topics")
