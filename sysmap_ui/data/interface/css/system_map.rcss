@@ -102,6 +102,15 @@ div#desc_panel
 	left: 0;
 }
 
+/*In-flow and relatively positioned so the text wrapper's % height resolves against the window art.
+  libRocket can't resolve it against an absolutely positioned parent with an auto height (desc_panel),
+  which left the wrapper as tall as its text: its scrollbar had nothing to scroll and the panel did
+  the clipping instead.*/
+div#desc_panel_inner
+{
+	position: relative;
+}
+
 div#desc_panel img
 {
 	display: block;

@@ -11,6 +11,10 @@ local Class = require("lib_class")
 
 local SystemMapController = Class()
 
+SystemMapController.DESC_ARROW_STEP = 20 --- @type number How far one step of the description scroll arrows moves the text, in pixels
+SystemMapController.DESC_ARROW_REPEAT_DELAY = 0.5 --- @type number Seconds a description scroll arrow must be held before it starts repeating
+SystemMapController.DESC_ARROW_REPEAT_PERIOD = 0.1 --- @type number Seconds between repeated steps while a description scroll arrow is held
+
 --- @type SysmapUi
 local SysmapUi = ScpuiSystem.extensions.SysmapUi
 
@@ -47,6 +51,11 @@ function SystemMapController:init()
 	self.ObjectDescriptionElement = nil ---@type Element the description element
 	self.BackgroundTexture = nil ---@type texture the texture
 
+	self.DescArrow = {
+		StartTop = nil, ---@type number? the description's scroll position before libRocket handled an arrow click
+		RepeatToken = nil ---@type table? identifies the active hold-to-repeat loop; cleared to stop it
+	}
+
 end
 
 --- Called by the RML document
@@ -62,6 +71,8 @@ function SystemMapController:initialize(document)
 	self.BackButtonElement = self.Document:GetElementById("top_panel_wrapper")
 
 	self.Document:GetElementById("closeup_container").style.ultrawide = "false"
+
+	self:hookDescArrows()
 
 	self:doInitialLoad()
 
@@ -698,6 +709,8 @@ end
 --- @return nil
 function SystemMapController:closeObjectInfo()
 
+	self:stopDescArrowRepeat()
+
 	if self.CloseupActive == false then
 		return
 	end
@@ -916,6 +929,94 @@ end
 --- @return nil
 function SystemMapController:mouse_up(element, event)
 	self.Drag = nil
+	self:stopDescArrowRepeat()
+end
+
+--- libRocket's own arrows on the description scrollbar never scroll this text box. The cause is inside
+--- libRocket's slider (the tech database's equivalent arrows work), so the controller scrolls it instead.
+--- A capture-phase listener records the scroll position before libRocket handles the click and a bubble-phase
+--- listener scrolls only if libRocket left it unchanged, so the text can never scroll twice.
+--- @return nil
+function SystemMapController:hookDescArrows()
+	local desc_el = self.Document:GetElementById("desc_text_wrapper")
+	--A mod's own system_map.rml may not have this element; don't let that stop the map from loading
+	if desc_el == nil then
+		return
+	end
+
+	desc_el:AddEventListener("mousedown", function(event, _, _)
+		if self:getDescArrowDirection(event) then
+			self.DescArrow.StartTop = desc_el.scroll_top
+		end
+	end, true)
+
+	desc_el:AddEventListener("mousedown", function(event, _, _)
+		local direction = self:getDescArrowDirection(event)
+		if direction == nil or self.DescArrow.StartTop == nil then
+			return
+		end
+
+		if desc_el.scroll_top == self.DescArrow.StartTop then
+			self:scrollDescription(direction)
+			self:startDescArrowRepeat(direction)
+		end
+		self.DescArrow.StartTop = nil
+	end)
+
+	desc_el:AddEventListener("mouseout", function(event, _, _)
+		if self:getDescArrowDirection(event) then
+			self:stopDescArrowRepeat()
+		end
+	end)
+end
+
+--- Returns which way a mouse event on the description's scrollbar arrows should scroll
+--- @param event Event the mouse event
+--- @return number? direction -1 for the up arrow, 1 for the down arrow, or nil if the event isn't on either
+function SystemMapController:getDescArrowDirection(event)
+	local target = event.target_element
+	if target == nil or target.parent_node == nil or target.parent_node.tag_name ~= "scrollbarvertical" then
+		return nil
+	end
+
+	if target.tag_name == "sliderarrowdec" then
+		return -1
+	elseif target.tag_name == "sliderarrowinc" then
+		return 1
+	end
+	return nil
+end
+
+--- Scrolls the description text one arrow step
+--- @param direction number -1 to scroll up, 1 to scroll down
+--- @return nil
+function SystemMapController:scrollDescription(direction)
+	local desc_el = self.Document and self.Document:GetElementById("desc_text_wrapper")
+	if desc_el then
+		desc_el.scroll_top = desc_el.scroll_top + direction * self.DESC_ARROW_STEP
+	end
+end
+
+--- Keeps scrolling the description while an arrow is held, after a short delay
+--- @param direction number -1 to scroll up, 1 to scroll down
+--- @return nil
+function SystemMapController:startDescArrowRepeat(direction)
+	local token = {}
+	self.DescArrow.RepeatToken = token
+
+	async.run(function()
+		async.await(AsyncUtil.wait_for(self.DESC_ARROW_REPEAT_DELAY))
+		while self.DescArrow.RepeatToken == token do
+			self:scrollDescription(direction)
+			async.await(AsyncUtil.wait_for(self.DESC_ARROW_REPEAT_PERIOD))
+		end
+	end, async.OnFrameExecutor)
+end
+
+--- Stops any hold-to-repeat scrolling of the description
+--- @return nil
+function SystemMapController:stopDescArrowRepeat()
+	self.DescArrow.RepeatToken = nil
 end
 
 --- Exit the system map and cleanup
@@ -1040,6 +1141,7 @@ end
 --- Run all the frame functions
 --- @return nil
 function SystemMapController:unload()
+	self:stopDescArrowRepeat()
 	ScpuiSystem.SystemMapContext = nil
 	ScpuiSystem.SysMap = nil
 	ScpuiSystem:freeAllModels()

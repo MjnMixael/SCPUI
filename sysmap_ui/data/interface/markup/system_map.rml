@@ -22,9 +22,11 @@
 			<div id=object_view>
 			</div>
 			<div id=desc_panel>
-				<div id=desc_text_wrapper>
+				<div id=desc_panel_inner>
+					<div id=desc_text_wrapper>
+					</div>
+					<img src="campaign-text-window.png"></img>
 				</div>
-				<img src="campaign-text-window.png"></img>
 			</div>
 			<div id=close_panel>
 				<div id=close_button_wrapper>
