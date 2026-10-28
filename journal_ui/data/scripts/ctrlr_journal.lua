@@ -242,7 +242,7 @@ function JournalController:selectEntry(key)
                 local saved_data = self.SaveData[self.SelectedSection][index]
 
                 if saved_data.Unread then
-                    this_entry.inner_rml = self.Data.Entry_List[self.SelectedSection][index].Name
+                    this_entry.inner_rml = ScpuiSystem:createListItemHeader(self.Data.Entry_List[self.SelectedSection][index].Display, false)
                     saved_data.Unread = false
                     JournalUi:saveDataToFile(self.SaveData)
                 end
