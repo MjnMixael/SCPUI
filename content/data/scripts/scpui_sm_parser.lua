@@ -329,7 +329,7 @@ function ScpuiSystem:parseScpuiTable(data)
 				local file = parse.getString()
 
 				if not Utils.hasExtension(file) then
-					ba.warning("SCPUI parsed background file, " .. default_file .. ", that does not include an extension!")
+					ba.warning("SCPUI parsed background file, " .. file .. ", that does not include an extension!")
 				end
 
 				ScpuiSystem.data.Brief_Backgrounds_List[mission][stage] = file
