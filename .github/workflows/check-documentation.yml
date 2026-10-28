@@ -1,0 +1,45 @@
+name: Check documentation
+
+# A PR has to document itself in wiki/ before it can merge, or carry the
+# no-docs label when there is nothing to document (a maintainer adds it).
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+permissions:
+  pull-requests: read
+
+jobs:
+  documentation:
+    name: Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for wiki changes or the no-docs label
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+          NO_DOCS: ${{ contains(github.event.pull_request.labels.*.name, 'no-docs') }}
+        run: |
+          if [ "$NO_DOCS" = "true" ]; then
+            echo "Labeled no-docs: no documentation needed."
+            exit 0
+          fi
+
+          wiki_files=$(gh api --paginate "repos/$REPO/pulls/$PR/files" --jq '.[].filename | select(startswith("wiki/"))')
+          if [ -n "$wiki_files" ]; then
+            echo "Documentation changes:"
+            echo "$wiki_files"
+            exit 0
+          fi
+
+          echo "::error::This PR doesn't change anything under wiki/. Document the change there (see CONTRIBUTING.md), or ask a maintainer for the no-docs label if there is nothing to document."
+          exit 1
+
+      - uses: actions/checkout@v4
+        name: Checkout
+
+      # The field index on each table page is generated from the page's headings; it must be
+      # regenerated whenever a table page's fields change.
+      - name: Check the table pages' field indexes are up to date
+        run: node .github/scripts/wiki-field-index.js --check
