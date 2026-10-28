@@ -2,6 +2,8 @@
 
 Open pull requests against `development`. `master` only receives releases.
 
+Issues and PRs follow the [AI Usage Policy](AI_POLICY.md): write your own posts and PR descriptions, disclose any AI-written code, and don't submit large AI-written PRs.
+
 ### Documenting your change
 
 The [SCPUI wiki](https://github.com/MjnMixael/SCPUI/wiki) is published from the `wiki/` folder on `development`: each `.md` file there is one wiki page, and every push to `development` that changes `wiki/` updates the wiki. Edit `wiki/`, not the wiki itself; edits made on the wiki are overwritten.

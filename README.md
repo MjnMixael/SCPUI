@@ -35,4 +35,4 @@ For more details, refer to the style guide file directly.
 
 ---
 
-Contributions and feedback are welcome
+Contributions and feedback are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md), and if you use AI tools, the [AI Usage Policy](AI_POLICY.md) before opening an issue or PR.
