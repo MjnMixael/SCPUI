@@ -1,0 +1,34 @@
+name: Check master drift
+
+# master only takes development's work, merged in for a release. Fail when master has a commit that
+# development doesn't (a fix made on master and never merged back), so it can't be lost from the
+# next release. Cherry-picks count as present.
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  drift:
+    name: Master drift
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        name: Checkout
+        with:
+          ref: master
+          fetch-depth: 0
+
+      - name: Check master has nothing development lacks
+        run: |
+          missing=$(git log --cherry-pick --right-only --no-merges --format='%h %s' origin/development...origin/master)
+          if [ -n "$missing" ]; then
+            echo "::error::These master commits aren't on development. Merge or cherry-pick them into development:"
+            echo "$missing"
+            exit 1
+          fi
+          echo "master has nothing development lacks."

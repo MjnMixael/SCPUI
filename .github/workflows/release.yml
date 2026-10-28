@@ -44,6 +44,19 @@ jobs:
           ref: ${{ inputs.source_ref }}
           fetch-depth: 0    # all tags, for the existing/newer checks
 
+      - name: Check the source ref has nothing development lacks
+        # Releases ship from master, which only ever takes development's work. A commit that landed on
+        # master alone (a hotfix never merged back) would ship here and then vanish from the next release.
+        if: ${{ !inputs.nebula_only }}
+        run: |
+          git fetch origin development
+          missing=$(git log --cherry-pick --right-only --no-merges --format='%h %s' origin/development...HEAD)
+          if [ -n "$missing" ]; then
+            echo "::error::These commits aren't on development. Merge or cherry-pick them into development first:"
+            echo "$missing"
+            exit 1
+          fi
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
