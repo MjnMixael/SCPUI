@@ -1,0 +1,56 @@
+name: Publish wiki
+
+# wiki/ on development is the source of the GitHub wiki. Every push to
+# development that changes it replaces the wiki's pages with wiki/, so edits
+# made on the wiki itself are lost. master isn't published: it only takes
+# development's work, so it never has docs development lacks. Version badges
+# tell readers on the stable release what isn't out yet.
+on:
+  push:
+    branches:
+      - development
+    paths:
+      - 'wiki/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-wiki
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        name: Checkout
+        with:
+          ref: development
+          sparse-checkout: wiki
+
+      - uses: actions/checkout@v4
+        name: Checkout the wiki
+        with:
+          repository: ${{ github.repository }}.wiki
+          path: wiki-repo
+
+      - name: Copy wiki/ over the wiki's pages
+        run: |
+          find wiki-repo -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -r wiki/. wiki-repo/
+
+      - name: Commit and push
+        working-directory: wiki-repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "The wiki is already up to date."
+            exit 0
+          fi
+          git commit -m "Publish wiki from development $(git -C "$GITHUB_WORKSPACE" rev-parse --short=9 HEAD)"
+          git push
