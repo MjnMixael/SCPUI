@@ -126,19 +126,26 @@ function AbstractBriefingController:global_keydown(element, event)
 		self:goToNextStage(element)
 	elseif self.BriefState == self.CONTROLLER_FICTION_VIEWER and keys.RETURN then
 		self:acceptPressed()
+	elseif self.BriefState == self.CONTROLLER_BRIEFING then
+		--Only the mission briefing sits alongside ship and weapon select, so self is a BriefingController here
+		local state = ScpuiSystem:getLoadoutStateHotkey(keys, event, self.STATE_BRIEFING, self.STATE_SHIP_SELECTION, self.STATE_WEAPON_SELECTION)
+		if state then
+			self:change_brief_state(state)
+		end
     end
 end
 
 --- Scroll the text up by 10 pixels
 --- @return nil
 function AbstractBriefingController:scrollUp()
-	ScpuiSystem:scrollUp(self.Document:GetElementById(self.Element_Names.TextEl))
+	--The scrolling text element grows to fit its text; its parent is the one that overflows and scrolls
+	ScpuiSystem:scrollUp(self.Document:GetElementById(self.Element_Names.TextEl).parent_node)
 end
 
 --- Scroll the text down by 10 pixels
 --- @return nil
 function AbstractBriefingController:scrollDown()
-	ScpuiSystem:scrollDown(self.Document:GetElementById(self.Element_Names.TextEl))
+	ScpuiSystem:scrollDown(self.Document:GetElementById(self.Element_Names.TextEl).parent_node)
 end
 
 --- Advance to the next briefing stage, if possible
@@ -298,6 +305,8 @@ function AbstractBriefingController:acceptPressed()
 		end
 	elseif self.BriefState == self.CONTROLLER_FICTION_VIEWER then
 		if Topics.fictionviewer.accept:send(self) then
+			ScpuiSystem:stopMusic()
+			ScpuiSystem.data.memory.CurrentMusicFile = nil
 			ScpuiSystem.data.memory.CutscenePlayed = nil
 			if mn.hasCommandBriefing() then
 				ba.postGameEvent(ba.GameEvents["GS_EVENT_CMD_BRIEF"])

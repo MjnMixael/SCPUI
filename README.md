@@ -17,6 +17,9 @@ SCPUI provides a powerful, flexible platform to reimagine the UI in FreespaceOpe
 Main documentation is available at:
 [https://wiki.hard-light.net/index.php/Scpui](https://wiki.hard-light.net/index.php/Scpui)
 
+In-repo guides:
+- [Migrating from Axem's Extended Loading Screen Script](docs/loadscreen_migration.md)
+
 ## Developer Tools
 
 In FreespaceOpen, when an SCPUI document is active, you can use the following controls:
@@ -32,4 +35,4 @@ For more details, refer to the style guide file directly.
 
 ---
 
-Contributions and feedback are welcome
+Contributions and feedback are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md), and if you use AI tools, the [AI Usage Policy](AI_POLICY.md) before opening an issue or PR.

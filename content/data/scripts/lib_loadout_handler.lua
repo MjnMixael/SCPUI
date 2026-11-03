@@ -219,7 +219,8 @@ function LoadoutHandler:getPool(pool, ship_pool)
 				ba.print("LOADOUT HANDLER: Weapon pool item " .. tb.WeaponClasses[i].Name .. " to amount " .. pool[i] .. "\n")
 			end
 		end
-		data[i] = pool[i]
+		--FSO reports classes absent from the mission's loadout as -1; treat them as 0 here
+		data[i] = math.max(pool[i], 0)
 	end
 	return data
 end
@@ -366,6 +367,7 @@ function LoadoutHandler:AppendToShipInfo(ship_idx)
 	local i = #ScpuiSystem.data.Loadout.Ship_Info + 1
 	ScpuiSystem.data.Loadout.Ship_Info[i] = {
 		Index = tb.ShipClasses[ship_idx]:getShipClassIndex(),
+		ListPriority = -1,
 		Amount = self:GetShipPoolAmount(ship_idx),
 		Icon = tb.ShipClasses[ship_idx].SelectIconFilename,
 		Anim = tb.ShipClasses[ship_idx].SelectAnimFilename,
@@ -387,6 +389,13 @@ function LoadoutHandler:AppendToShipInfo(ship_idx)
 		GeneratedIcon = ScpuiSystem.data.Generated_Icons[tb.ShipClasses[ship_idx].Name].Icon,
 		Overhead = tb.ShipClasses[ship_idx].SelectOverheadFilename
 	}
+
+	if tb.ShipClasses[ship_idx]:hasCustomData() then
+		local c_data = tb.ShipClasses[ship_idx].CustomData
+		if c_data and c_data["LoadoutListPriority"] then
+			ScpuiSystem.data.Loadout.Ship_Info[i].ListPriority = tonumber(c_data["LoadoutListPriority"]) or -1
+		end
+	end
 
 	Topics.loadouts.initShipInfo:send(ScpuiSystem.data.Loadout.Ship_Info[i])
 
@@ -416,7 +425,7 @@ function LoadoutHandler:generateWeaponInfo()
 				if ship.ShipClassIndex > 0 then
 					for j = 1, #ship.Weapons_List do
 						local wep_idx = ship.Weapons_List[j]
-						if ship.Amounts_List[j] > 0 then
+						if wep_idx > 0 and ship.Amounts_List[j] > 0 then
 							local wep = self:GetWeaponInfo(wep_idx)
 							if wep == nil then
 								self:AppendToWeaponInfo(wep_idx)
@@ -450,6 +459,7 @@ function LoadoutHandler:AppendToWeaponInfo(wep_idx)
 	local weapon_class = tb.WeaponClasses[wep_idx]
 	local data = Topics.weapons.stats:send(weapon_class)
 	data.Index = wep_idx
+	data.ListPriority = -1
 	data.Amount = self:GetWeaponPoolAmount(wep_idx)
 	data.Icon = weapon_class.SelectIconFilename
 	data.Anim = weapon_class.SelectAnimFilename
@@ -462,6 +472,14 @@ function LoadoutHandler:AppendToWeaponInfo(wep_idx)
 	data.GeneratedWidth = ScpuiSystem.data.Generated_Icons[weapon_class.Name].Width
 	data.GeneratedHeight = ScpuiSystem.data.Generated_Icons[weapon_class.Name].Height
 	data.GeneratedIcon = ScpuiSystem.data.Generated_Icons[weapon_class.Name].Icon
+
+	if tb.WeaponClasses[wep_idx]:hasCustomData() then
+		local c_data = tb.WeaponClasses[wep_idx].CustomData
+		if c_data and c_data["LoadoutListPriority"] then
+			data.ListPriority = tonumber(c_data["LoadoutListPriority"]) or -1
+		end
+	end
+
 	Topics.loadouts.initWeaponInfo:send(data)
 
 	if weapon_class:isPrimary() then
@@ -608,7 +626,7 @@ function LoadoutHandler:ValidateInfo()
 			if ScpuiSystem.data.Loadout.Loadout_Slots[i].ShipClassIndex > 0 then
 				for j = 1, #ScpuiSystem.data.Loadout.Loadout_Slots[i].Weapons_List, 1 do
 					local wep_idx = ScpuiSystem.data.Loadout.Loadout_Slots[i].Weapons_List[j]
-					if ScpuiSystem.data.Loadout.Loadout_Slots[i].Amounts_List[j] > 0 then
+					if wep_idx > 0 and ScpuiSystem.data.Loadout.Loadout_Slots[i].Amounts_List[j] > 0 then
 						if self:GetWeaponInfo(wep_idx) == nil then
 							self:AppendToWeaponInfo(wep_idx)
 						end
@@ -618,10 +636,25 @@ function LoadoutHandler:ValidateInfo()
 		end
 	end
 
-	--Sort the tables by index
-	table.sort(ScpuiSystem.data.Loadout.Ship_Info, function(a,b) return a.Index < b.Index end)
-	table.sort(ScpuiSystem.data.Loadout.Primary_Info, function(a,b) return a.Index < b.Index end)
-	table.sort(ScpuiSystem.data.Loadout.Secondary_Info, function(a,b) return a.Index < b.Index end)
+	-- Shared sorting logic
+	--- @param a weapon_loadout_info|ship_loadout_info The first item to compare
+	--- @param b weapon_loadout_info|ship_loadout_info The second item to compare
+	--- @return boolean True if a should come before b, false otherwise
+	local function sortByPriorityThenIndex(a, b)
+		local pa = (a.ListPriority and a.ListPriority >= 0) and a.ListPriority or math.huge
+		local pb = (b.ListPriority and b.ListPriority >= 0) and b.ListPriority or math.huge
+
+		if pa ~= pb then
+			return pa < pb
+		end
+
+		return a.Index < b.Index
+	end
+
+	-- Sort the tables by ListPriority, then Index
+	table.sort(ScpuiSystem.data.Loadout.Ship_Info, sortByPriorityThenIndex)
+	table.sort(ScpuiSystem.data.Loadout.Primary_Info, sortByPriorityThenIndex)
+	table.sort(ScpuiSystem.data.Loadout.Secondary_Info, sortByPriorityThenIndex)
 
 end
 
@@ -772,7 +805,7 @@ function LoadoutHandler:GetWeaponPoolAmount(idx)
 		ba.warning("Checking weapon amount for a nil weapon index! Get Mjn!")
 		return 0
 	end
-	if idx < 0 or idx > #ScpuiSystem.data.Loadout.Weapon_Pool then
+	if idx <= 0 or idx > #ScpuiSystem.data.Loadout.Weapon_Pool then
 		ba.warning("Checking invalid weapon index '" .. idx .. "' for pool amount! Returning 0! Get Mjn!")
 		return 0
 	end
@@ -793,7 +826,7 @@ function LoadoutHandler:GetShipPoolAmount(idx)
 		ba.warning("Checking ship amount for a nil ship index! Get Mjn!")
 		return 0
 	end
-	if idx < 0 or idx > #ScpuiSystem.data.Loadout.Ship_Pool then
+	if idx <= 0 or idx > #ScpuiSystem.data.Loadout.Ship_Pool then
 		ba.warning("Checking invalid ship index '" .. idx .. "' for pool amount! Returning 0! Get Mjn!")
 		return 0
 	end

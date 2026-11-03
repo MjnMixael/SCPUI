@@ -121,6 +121,204 @@ div#bottom_panel_c img
 	float: left;
 }
 
+/*Tab Scroll Areas (Misc, Graphics, Settings)*/
+
+panel#misc_panel,
+panel#graphics_panel,
+panel#custom_panel
+{
+	padding: 0;
+}
+
+div#misc_options_wrapper,
+div#graphics_options_wrapper,
+div#custom_options_wrapper
+{
+	position: relative;
+	width: 100%;
+	height: auto;
+}
+
+div#misc_options_sizer,
+div#graphics_options_sizer,
+div#custom_options_sizer
+{
+	visibility: hidden;
+}
+
+div#misc_options_sizer img,
+div#graphics_options_sizer img,
+div#custom_options_sizer img
+{
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+div#misc_scroll_panel,
+div#misc_scroll_panel_btm,
+div#graphics_scroll_panel,
+div#graphics_scroll_panel_btm,
+div#custom_scroll_panel,
+div#custom_scroll_panel_btm
+{
+	position: absolute;
+	right: -0.5%;
+	width: 3%;
+	height: auto;
+}
+
+div#misc_scroll_panel,
+div#graphics_scroll_panel,
+div#custom_scroll_panel
+{
+	top: 1%;
+}
+
+div#misc_scroll_panel_btm,
+div#graphics_scroll_panel_btm,
+div#custom_scroll_panel_btm
+{
+	bottom: 14%;
+}
+
+div#misc_scroll_panel img,
+div#misc_scroll_panel_btm img,
+div#graphics_scroll_panel img,
+div#graphics_scroll_panel_btm img,
+div#custom_scroll_panel img,
+div#custom_scroll_panel_btm img
+{
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+div#misc_options_scroll
+{
+	position: absolute;
+	top: 1%;
+	left: 4.5%;
+	width: 90%;
+	height: 85%;
+	overflow: scroll;
+}
+
+div#graphics_column_1,
+div#custom_column_1
+{
+	position: absolute;
+	top: 1%;
+	left: 1.65%;
+	width: 24%;
+}
+
+div#graphics_options_scroll,
+div#custom_options_scroll
+{
+	position: absolute;
+	top: 1%;
+	left: 28.5%;
+	width: 66%;
+	height: 85%;
+	overflow: scroll;
+}
+
+#graphics_options_scroll .options_column_25,
+#custom_options_scroll .options_column_25
+{
+	width: 32.5%;
+}
+
+#misc_options_scroll scrollbarhorizontal,
+#graphics_options_scroll scrollbarhorizontal,
+#custom_options_scroll scrollbarhorizontal
+{
+	display: none;
+}
+
+#misc_options_scroll scrollbarvertical
+{
+	scrollchange-sound: 9;
+	width: 3.33%;
+	position: absolute;
+	left: 103.3%;
+	z-index: 5;
+}
+
+#graphics_options_scroll scrollbarvertical,
+#custom_options_scroll scrollbarvertical
+{
+	scrollchange-sound: 9;
+	width: 4.55%;
+	position: absolute;
+	left: 104.5%;
+	margin-top: -1.36%;
+	margin-bottom: -1.36%;
+	z-index: 5;
+}
+
+#misc_options_scroll scrollbarvertical sliderbar,
+#graphics_options_scroll scrollbarvertical sliderbar,
+#custom_options_scroll scrollbarvertical sliderbar
+{
+	height: 4.3%;
+}
+
+#misc_options_scroll scrollbarvertical sliderarrowdec,
+#graphics_options_scroll scrollbarvertical sliderarrowdec,
+#custom_options_scroll scrollbarvertical sliderarrowdec
+{
+	width: 100%;
+	height: 13%;
+	margin-top: 4%;
+	mouseover-sound: 17;
+	click-sound: 0;
+	icon-decorator: image;
+	icon-image: arrow-dbl-up.png;
+}
+
+#misc_options_scroll scrollbarvertical sliderarrowinc,
+#graphics_options_scroll scrollbarvertical sliderarrowinc,
+#custom_options_scroll scrollbarvertical sliderarrowinc
+{
+	width: 100%;
+	height: 13%;
+	margin-bottom: 4%;
+	mouseover-sound: 17;
+	click-sound: 0;
+	icon-decorator: image;
+	icon-image: arrow-dbl-down.png;
+}
+
+#misc_options_scroll scrollbarvertical sliderarrowdec:hover,
+#graphics_options_scroll scrollbarvertical sliderarrowdec:hover,
+#custom_options_scroll scrollbarvertical sliderarrowdec:hover
+{
+	icon-image: arrow-dbl-up-h.png;
+}
+
+#misc_options_scroll scrollbarvertical sliderarrowinc:hover,
+#graphics_options_scroll scrollbarvertical sliderarrowinc:hover,
+#custom_options_scroll scrollbarvertical sliderarrowinc:hover
+{
+	icon-image: arrow-dbl-down-h.png;
+}
+
+#misc_options_scroll scrollbarvertical sliderarrowdec:active,
+#graphics_options_scroll scrollbarvertical sliderarrowdec:active,
+#custom_options_scroll scrollbarvertical sliderarrowdec:active
+{
+	icon-image: arrow-dbl-up-o.png;
+}
+
+#misc_options_scroll scrollbarvertical sliderarrowinc:active,
+#graphics_options_scroll scrollbarvertical sliderarrowinc:active,
+#custom_options_scroll scrollbarvertical sliderarrowinc:active
+{
+	icon-image: arrow-dbl-down-o.png;
+}
+
 /*Options Selection Buttons*/
 
 #ops_tabs_cont
@@ -713,6 +911,173 @@ div#horz_wide_panel_wrapper
 	position: absolute;
 	bottom: 0;
 	padding-left: 1%;
+}
+
+/*Basic Tab Right Column / HDR Calibration*/
+
+div#basic_right_column
+{
+	margin-top: -7.5%;
+}
+
+/*Skill level lives in the left column now, so left-align its title*/
+#skill_level_container .ops_right_header
+{
+	margin-right: 0;
+	margin-left: 7%;
+	text-align: left;
+}
+
+/*Left-justify the right column panel titles to match the joystick headers*/
+#gamma_option .ops_right_header,
+#hdr_settings_wrapper .ops_right_header
+{
+	margin-right: 0;
+	margin-left: 0;
+	text-align: left;
+}
+
+div#hdr_content_wrapper
+{
+	position: absolute;
+	top: 13.5%;
+	left: 4%;
+	width: 84%;
+	height: 74%;
+	z-index: 8;
+}
+
+.hdr_widget_row
+{
+	position: relative;
+	width: 100%;
+	height: 20%;
+	margin-top: 2%;
+}
+
+div#hdr_paperwhite_row,
+div#hdr_peak_row
+{
+	height: 26%;
+}
+
+div#hdr_toggle_text
+{
+	position: absolute;
+	top: 15%;
+	right: 15%;
+	width: 30%;
+	text-align: right;
+	z-index: 8;
+}
+
+div#hdr_toggle_wrapper
+{
+	position: absolute;
+	top: 4%;
+	right: 0.5%;
+	width: 12.5%;
+	height: 40%;
+	z-index: 8;
+}
+
+.hdr_toggle_entry
+{
+	width: 100%;
+	clear: both;
+}
+
+div#hdr_on_entry
+{
+	margin-top: 21.5%;
+}
+
+div#hdr_off_entry
+{
+	margin-top: 2.5%;
+}
+
+.hdr_toggle_btn
+{
+	width: 44%;
+	float: left;
+	margin-left: 2%;
+}
+
+.hdr_toggle_label
+{
+	float: left;
+	width: 50%;
+	margin-left: 3%;
+	margin-top: 8%;
+}
+
+.hdr_range_wrapper
+{
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 73%;
+}
+
+#hdr_content_wrapper input.range slidertrack
+{
+	height: 1%;
+	margin-top: 10%;
+}
+
+button#hdr_btn_1:hover #round_img,
+button#hdr_btn_2:hover #round_img
+{
+	background-decorator: image;
+	background-image: round-h.png;
+}
+
+button#hdr_btn_1:active #round_img,
+button#hdr_btn_1:checked #round_img,
+button#hdr_btn_2:active #round_img,
+button#hdr_btn_2:checked #round_img
+{
+	background-decorator: image;
+	background-image: round-o.png;
+}
+
+div#hdr_ramp_row,
+div#hdr_primaries_row
+{
+	width: 98%;
+	height: 18%;
+	margin-top: 2%;
+	margin-left: 2%;
+}
+
+.hdr_patch
+{
+	display: inline-block;
+	width: 10%;
+	height: 100%;
+	margin-right: 0.5%;
+	background-color: #000000;
+}
+
+.hdr_patch_red
+{
+	background-color: #ff0000;
+}
+
+.hdr_patch_green
+{
+	background-color: #00ff00;
+}
+
+.hdr_patch_blue
+{
+	background-color: #0000ff;
+}
+
+.hdr_patch_white
+{
+	background-color: #ffffff;
 }
 
 /*Gamma Panel*/
@@ -1657,18 +2022,33 @@ input.range sliderarrowinc:active
 
 .mouse_settings
 {
-	margin-top: 20%;
+	margin-top: 14%;
+}
+
+#mouse_options_container .btn_panel_horz
+{
+	width: 37.5%;
+}
+
+#mouse_options_container .btn_panel_horz .ops_left_header
+{
+	margin-left: 15%;
+}
+
+#mouse_options_container .ten_dot_slider #ten_dot_text
+{
+	margin-left: 66%;
 }
 
 #option_input_mousesensitivity_element
 {
-	margin-top: 25px;
+	margin-top: 35px;
 }
 
 #joystick_values_wrapper
 {
 	position:relative;
-	margin-top: 2%;
+	margin-top: 4%;
 }
 
 #joystick_selection_wrapper
@@ -1704,22 +2084,22 @@ input.range sliderarrowinc:active
 #option_input_joystick_element
 {
 	margin: 5px;
-	width: 100%;
+	width: 90%;
 }
 #option_input_joystick1_element
 {
 	margin: 5px;
-	width: 100%;
+	width: 90%;
 }
 #option_input_joystick2_element
 {
 	margin: 5px;
-	width: 100%;
+	width: 90%;
 }
 #option_input_joystick3_element
 {
 	margin: 5px;
-	width: 100%;
+	width: 90%;
 }
 
 /* Optional: per-slider overrides */

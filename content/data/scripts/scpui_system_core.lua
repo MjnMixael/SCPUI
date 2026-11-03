@@ -1,5 +1,5 @@
 -- Version of SCPUI System
-local version = "1.1.2"
+local version = "1.1.4"
 
 local Utils = require("lib_utils")
 local Topics = require("lib_ui_topics")
@@ -39,6 +39,11 @@ ScpuiSystem.data = {
 	Brief_Backgrounds_List = {},
 	Preload_Coroutines = {},
 	Medal_Info = {},
+	LoadScreens = {
+		Tips = {},      --- [name] = { Text = string }
+		Profiles = {},  --- [name] = { LoadingBarImage, BackgroundClasses = {}, Tips = {} }
+		Missions = {},  --- [mission_stem] = profile_name
+	},
 	Substate = "none",
 	OldSubstate = "none",
 	table_flags = {
@@ -64,6 +69,7 @@ ScpuiSystem.data = {
 		FadeSplashImages = true,
 		DrawSplashImages = true,
 		DrawSplashText = true,
+		AlwaysAllowShowAll = false,
 	},
 	state_init_status = {
 		Debrief = false,
@@ -120,7 +126,9 @@ function ScpuiSystem:init()
 	ba.print("SCPUI Core (v" .. ScpuiSystem.constants.VERSION .. ") is initializing. Standby...\n")
 
 	if (ba.isEngineVersionAtLeast(25, 0, 0) and not opt.isInGameOptionsEnabled()) then
-		ba.error("SCPUI requires in-game options to be enabled! Please enable them in your game settings table.\n")
+		if not cf.fileExists("scpui_override.cfg") then
+			ba.error("SCPUI requires in-game options to be enabled! Please enable them in your game settings table.")
+		end
 	end
 
 	self:loadSubmodules()
@@ -516,12 +524,46 @@ function ScpuiSystem:stateStart()
 	ui.enableInput(self.data.Context)
 end
 
+--- Keep the libRocket context sized to the actual render target.
+--- The engine assumes a context's dimensions match gr_screen.max_w/max_h, but the context is
+--- created once at script load time and FSO can change the render resolution afterwards (the
+--- window manager reporting a different size than the one we asked for, a DPI/display scale
+--- change, or moving the window to another monitor all do it). When that happens the context
+--- keeps laying out and clipping to the stale size, so the UI renders into a sub-rectangle of
+--- the screen and mouse coordinates no longer line up.
+--- @return nil
+function ScpuiSystem:syncContextDimensions()
+	if not self.data.Context then
+		return
+	end
+
+	local screen_w = gr.getScreenWidth()
+	local screen_h = gr.getScreenHeight()
+
+	-- Graphics may not be initialized yet, in which case these are 0 and there is nothing to sync
+	if screen_w <= 0 or screen_h <= 0 then
+		return
+	end
+
+	local dims = self.data.Context.dimensions
+
+	if dims.x == screen_w and dims.y == screen_h then
+		return
+	end
+
+	ba.print("SCPUI is resizing its context from " .. dims.x .. "x" .. dims.y .. " to " .. screen_w .. "x" .. screen_h .. "\n")
+
+	self.data.Context.dimensions = Vector2i.new(screen_w, screen_h)
+end
+
 --- On each frame of a game state this function will update and render the related SCPUI document, if any exists for the state
 --- @return nil
 function ScpuiSystem:stateFrame()
 	if not self:hasOverrideForCurrentState() then
 		return
 	end
+
+	self:syncContextDimensions()
 
 	-- Add some tracing scopes here to see how long this stuff takes
 	UpdateCategory:trace(function()
@@ -620,6 +662,8 @@ end
 --- updating and rendering the dialog itself
 --- @return nil
 function ScpuiSystem:dialogFrame()
+	self:syncContextDimensions()
+
 	-- Add some tracing scopes here to see how long this stuff takes
 	UpdateCategory:trace(function()
 		if hv.Freeze ~= nil and hv.Freeze ~= true then
@@ -637,7 +681,7 @@ function ScpuiSystem:dialogFrame()
 		end
 	end
 	if hv.IsDeathPopup then
-		local submit = self.data.DeathDialog.Submit
+		local submit = self.data.DeathDialog and self.data.DeathDialog.Submit
 		-- This really shouldn't happen, but just in case
 		if submit == nil and not ScpuiSystem.data.DialogDoc then
 			ba.warning("SCPUI Error: Death popup was not submitted and no dialog document is open!\n")
@@ -646,13 +690,13 @@ function ScpuiSystem:dialogFrame()
 			submit = 0
 		end
 		if submit ~= nil then
-			self.data.DeathDialog = nil
+			-- Keep re-submitting until the engine fires On Dialog Close; the value can't
+			-- change at this point (the dialog doc is gone) and hv.Submit is idempotent.
 			hv.Submit(submit)
 		end
 	else
-		if self.data.Dialog.Submit ~= nil then
-			local submit = self.data.Dialog.Submit
-			self.data.Dialog = nil
+		local submit = self.data.Dialog and self.data.Dialog.Submit
+		if submit ~= nil then
 			hv.Submit(submit)
 		end
 	end
@@ -670,12 +714,14 @@ function ScpuiSystem:dialogEnd()
 				self.data.DeathDialog.Abort.Abort()
 			end
 		end
+		self.data.DeathDialog = nil
 	else
 		if self.data.Dialog and self.data.Dialog.Abort then
 			if self.data.Dialog.Abort.Abort then
 				self.data.Dialog.Abort.Abort()
 			end
 		end
+		self.data.Dialog = nil
 	end
 
 	self:closeDialog()
@@ -739,6 +785,8 @@ function ScpuiSystem:loadFrame()
 	end
 
 	ScpuiSystem.data.memory.loading_bar.LoadProgress = hv.Progress
+
+	self:syncContextDimensions()
 
 	-- Add some tracing scopes here to see how long this stuff takes
 	UpdateCategory:trace(function()

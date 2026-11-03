@@ -20,6 +20,7 @@ function JournalController:init()
     self.SaveData = {} --- @type table<number, scpui_journal_save_data[]> the journal save data
     self.SelectedEntry = nil --- @type string the selected entry
     self.SelectedSection = nil --- @type number the selected section
+    self.ShowAll = false --- @type boolean Whether to show all entries
 end
 
 --- Called by the RML document
@@ -43,10 +44,48 @@ function JournalController:initialize(document)
 
     self.SelectedEntry = nil
 
-    for i=1, #self.Data.Section_List do
+    local panel = self.Document:GetElementById("top_b_panel_wrapper")
+
+    for i=1, JournalUi.MAX_SECTIONS do
+        local cont_el = self.Document:CreateElement("div")
+        cont_el.id = "bullet_cont"
+
+        local button_el = self.Document:CreateElement("button")
+        button_el.id = "btn_"..i
+        button_el:SetClass("bullet", true)
+        button_el:SetClass("button_1", true)
+
+        local img_span = self.Document:CreateElement("span")
+        img_span.id = "bullet_img"
+        img_span:SetClass("bullet", true)
+        img_span:SetClass("button_img", true)
+
+        local img_el = self.Document:CreateElement("img")
+        img_el:SetAttribute("src", "bullet-r.png")
+        img_el:SetClass("psuedo_img", true)
+
+        img_span:AppendChild(img_el)
+        button_el:AppendChild(img_span)
+
+        local label_span = self.Document:CreateElement("span")
+        label_span.id = "label_"..i
+        label_span:SetClass("pos", true)
+        label_span:SetClass("button_text_right", true)
+
         if self.Data.Section_List[i] then
-            self.Document:GetElementById("label_"..i).inner_rml = "<p>" .. self.Data.Section_List[i].Display .. "</p>"
+            label_span.inner_rml = "<p>" .. self.Data.Section_List[i].Display .. "</p>"
+
+            local section_index = i
+            button_el:AddEventListener("click", function(_, _, _)
+                self:change_section(section_index)
+            end)
+        else
+            cont_el.style.visibility = "hidden"
         end
+
+        button_el:AppendChild(label_span)
+        cont_el:AppendChild(button_el)
+        panel:AppendChild(cont_el)
     end
 
     Topics.journal.initialize:send(self)
@@ -73,6 +112,7 @@ function JournalController:change_section(section)
             oldbullet:SetPseudoClass("checked", false)
         end
 
+        self.ShowAll = false
         self.SelectedSection = section
         self:createJournalEntries(self.SelectedSection)
         local newbullet = self.Document:GetElementById("btn_"..self.SelectedSection)
@@ -112,11 +152,11 @@ function JournalController:createJournalEntries(section)
     ScpuiSystem:clearEntries(list_el)
     self.Data.Visible_List = {}
 
-    for i, v in ipairs(self.Data.Entry_List[section]) do
+    for i, v in ipairs(self.Data.Entry_List[section] or {}) do
         ---@cast v scpui_journal_entry
 
         local saved_data = (self.SaveData[section] or {})[i]
-        if (saved_data and saved_data.Visible) then
+        if (saved_data and (saved_data.Visible or self.ShowAll)) then
             -- Add all the elements
             ba.print("Adding entry " .. i .. ": " .. v.Name .. "\n" )
             list_el:AppendChild(self:createJournalListItemElement(v,saved_data.Unread))
@@ -134,12 +174,25 @@ function JournalController:ClearEntry()
 end
 
 --- Converts the journal plain text to rml format
+--- If the text begins with an "!html" marker then the marker is,
+--- stripped and paragraph bodies are emitted verbatim so RML tags render.
+--- Otherwise, special characters are escaped so tags display as literal text.
 --- @param text string the text to convert
 --- @return string text the converted text
 function JournalController:convertTextToRml(text)
+    local rml_mode = false
+    local escape_start, escape_end = text:find("^%s*!html%s*")
+    if escape_start then
+        text = text:sub(escape_end + 1)
+        rml_mode = true
+    end
+
     local lines = Utils.split(text, "\n\n")
 
     local paragraphs = Utils.table.map(lines, function(line)
+        if rml_mode then
+            return "<p>" .. line .. "</p>"
+        end
         return "<p>" .. Utils.rml_escape(line) .. "</p>"
     end)
 
@@ -189,7 +242,7 @@ function JournalController:selectEntry(key)
                 local saved_data = self.SaveData[self.SelectedSection][index]
 
                 if saved_data.Unread then
-                    this_entry.inner_rml = self.Data.Entry_List[self.SelectedSection][index].Name
+                    this_entry.inner_rml = ScpuiSystem:createListItemHeader(self.Data.Entry_List[self.SelectedSection][index].Display, false)
                     saved_data.Unread = false
                     JournalUi:saveDataToFile(self.SaveData)
                 end
@@ -205,7 +258,7 @@ end
 --- @param section number the section to search in
 --- @return number? index the index of the key
 function JournalController:getIndexFromKey(key, section)
-    for i,v in ipairs(self.Data.Entry_List[section]) do
+    for i,v in ipairs(self.Data.Entry_List[section] or {}) do
         if v.Key == key then return i end
     end
 
@@ -262,6 +315,9 @@ function JournalController:global_keydown(element, event)
         event:StopPropagation()
         self.Document:Close()
         ScpuiSystem:returnToState(ScpuiSystem.data.LastState)
+    elseif keys.S and keys.Ctrl and keys.Shift and (ba.inDebug() or ScpuiSystem.data.table_flags.AlwaysAllowShowAll) then
+        self.ShowAll = not self.ShowAll
+        self:createJournalEntries(self.SelectedSection)
     end
 end
 

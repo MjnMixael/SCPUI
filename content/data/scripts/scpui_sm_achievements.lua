@@ -227,7 +227,7 @@ function ScpuiSystem:parseCriteria()
         criteria.Threshold = parse.getFloat()
 
         if criteria.Threshold <= 0 then
-            parse.displayMessage("Threshold must be greater than or equal to 0", true)
+            parse.displayMessage("Threshold must be greater than 0", true)
         end
     end
 

@@ -51,6 +51,7 @@ local JournalUi = {
 	Key = "JournalUi"
 }
 
+JournalUi.MAX_SECTIONS = 3 --- @type number the maximum number of journal sections supported
 JournalUi.LoadedCampaign = nil --- @type string? the currently loaded campaign filename
 JournalUi.SectionEnum = nil --- @type LuaEnum the enum for a journal section in the sexp operators
 JournalUi.Enum_Lists = {} --- @type LuaEnum[] the enums for the journal entries in the sexp operators
@@ -104,7 +105,7 @@ function JournalUi:init()
 			end
 
 			for i = 1, #data.Entry_List do
-				for _, entry in ipairs(data.Entry_List[i]) do
+				for _, entry in ipairs(data.Entry_List[i] or {}) do
 					self.Enum_Lists[i]:addEnumItem(entry.Key)
 				end
 			end
@@ -132,7 +133,7 @@ function JournalUi:getGroupIndex(section_name, sections)
 		end
 	end
 
-	ba.error("Journal: Undefined group defined! Could not find " .. section_name .. " group! Add or check spelling!")
+	ba.warning("Journal: Undefined group defined! Could not find " .. section_name .. " group! Add or check spelling!")
 
 	return nil
 
@@ -165,7 +166,7 @@ function JournalUi:parseJournalTable(file, entries_only)
 
 	 if (not entries_only) and parse.optionalString("#Journal Sections") then
 
-		while parse.optionalString("$Name:") and (#new_data.Section_List < 3) do
+		while parse.optionalString("$Name:") do
 
 			local t = {}
 
@@ -175,7 +176,11 @@ function JournalUi:parseJournalTable(file, entries_only)
 				t.Display = ba.XSTR(t.Name, parse.getInt())
 			end
 
-		new_data.Section_List[#new_data.Section_List+1] = t
+			if #new_data.Section_List < self.MAX_SECTIONS then
+				new_data.Section_List[#new_data.Section_List+1] = t
+			else
+				ba.warning("Journal: Maximum of " .. self.MAX_SECTIONS .. " sections supported! Skipping additional section " .. t.Name)
+			end
 
 		end
 
@@ -238,16 +243,20 @@ function JournalUi:parseJournalTable(file, entries_only)
 				end
 			end
 
-			if not new_data.Entry_List[t.GroupIndex] then new_data.Entry_List[t.GroupIndex] = {} end
+			if t.GroupIndex then
+				if not new_data.Entry_List[t.GroupIndex] then new_data.Entry_List[t.GroupIndex] = {} end
 
-			new_index = #new_data.Entry_List[t.GroupIndex] + 1
+				new_index = #new_data.Entry_List[t.GroupIndex] + 1
 
-			--- Ensure key is not empty in rare edge cases
-			if t.Key == "" then
-				t.Key = "entry_" .. tostring(new_index)
+				--- Ensure key is not empty in rare edge cases
+				if t.Key == "" then
+					t.Key = "entry_" .. tostring(new_index)
+				end
+
+				new_data.Entry_List[t.GroupIndex][new_index] = t
+			else
+				ba.warning("Journal: Entry " .. t.Name .. " does not have a valid group! Skipping entry.")
 			end
-
-			new_data.Entry_List[t.GroupIndex][new_index] = t
 
 		end
 
@@ -419,10 +428,11 @@ function JournalUi:createSaveData()
 
 	local t = {}
 
-	for i, section in ipairs(self.Data.Entry_List) do
+	for i = 1, #self.Data.Section_List do
 
 		if not t[i] then t[i] = {} end
 		local save_section = t[i]
+		local section = self.Data.Entry_List[i] or {}
 
 		for j, entry in ipairs(section) do
 
@@ -459,7 +469,8 @@ function JournalUi:reconcileSaveData(config)
 
   local changed = false
 
-  for section_index, section_entries in ipairs(self.Data.Entry_List) do
+  for section_index = 1, #self.Data.Section_List do
+    local section_entries = self.Data.Entry_List[section_index] or {}
     if config[section_index] == nil then
       config[section_index] = {}
       changed = true

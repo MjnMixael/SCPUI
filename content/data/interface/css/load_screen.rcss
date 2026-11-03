@@ -32,6 +32,12 @@ div#title
 	text-align: center;
 }
 
+div#loadscreen_tip
+{
+	display: none;
+	position: absolute;
+}
+
 div#loadingbar
 {
 	width: 50%;

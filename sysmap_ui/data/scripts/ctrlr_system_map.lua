@@ -11,6 +11,10 @@ local Class = require("lib_class")
 
 local SystemMapController = Class()
 
+SystemMapController.DESC_ARROW_STEP = 20 --- @type number How far one step of the description scroll arrows moves the text, in pixels
+SystemMapController.DESC_ARROW_REPEAT_DELAY = 0.5 --- @type number Seconds a description scroll arrow must be held before it starts repeating
+SystemMapController.DESC_ARROW_REPEAT_PERIOD = 0.1 --- @type number Seconds between repeated steps while a description scroll arrow is held
+
 --- @type SysmapUi
 local SysmapUi = ScpuiSystem.extensions.SysmapUi
 
@@ -47,6 +51,11 @@ function SystemMapController:init()
 	self.ObjectDescriptionElement = nil ---@type Element the description element
 	self.BackgroundTexture = nil ---@type texture the texture
 
+	self.DescArrow = {
+		StartTop = nil, ---@type number? the description's scroll position before libRocket handled an arrow click
+		RepeatToken = nil ---@type table? identifies the active hold-to-repeat loop; cleared to stop it
+	}
+
 end
 
 --- Called by the RML document
@@ -62,6 +71,8 @@ function SystemMapController:initialize(document)
 	self.BackButtonElement = self.Document:GetElementById("top_panel_wrapper")
 
 	self.Document:GetElementById("closeup_container").style.ultrawide = "false"
+
+	self:hookDescArrows()
 
 	self:doInitialLoad()
 
@@ -250,10 +261,13 @@ end
 --- @param iconTable sysmap_element[] the table of objects to initialize
 --- @return nil
 function SystemMapController:initializeObjectData(iconTable)
+	--Load the save data once for all icons rather than once per icon
+	local save_data = SysMapUtils:loadSaveData()
+
 	for _, value in pairs(iconTable) do
 
 		--Do we have any visibility override data?
-		local vis = SysMapUtils:getIconVisibility(value.ObjectName)
+		local vis = SysMapUtils:getIconVisibility(value.ObjectName, save_data)
 
 		if vis ~= nil then
 			value.Visible = vis
@@ -263,7 +277,7 @@ function SystemMapController:initializeObjectData(iconTable)
 			value.Seen = not SysMapUtils:checkNew(value.ZoomTo)
 		else
 			if value.ShowNew == true or value.ShowNewPersist == true then
-				value.Seen = SysMapUtils:getIconSeen(self.CurrentSystem.Key, value)
+				value.Seen = SysMapUtils:getIconSeen(self.CurrentSystem.Key, value, save_data)
 			else
 				value.Seen = true
 			end
@@ -279,6 +293,7 @@ function SystemMapController:initializeObjectData(iconTable)
 					value.Bitmap = obj.Bitmap
 					value.LargeBitmap = obj.LargeBitmap
 					value.ShipClass = obj.ShipClass
+					value.PropClass = obj.PropClass
 					value.Description = obj.Description
 					value.UseTechDescription = obj.UseTechDescription
 				end
@@ -480,6 +495,9 @@ function SystemMapController:GenerateIconButtons(iconTable)
 
 	local parent_el = self.MainMapElement
 
+	--Non-selectable icons are marked seen as soon as they're displayed. Collect them and save once after the loop
+	local newly_seen = {}
+
 	for key, value in pairs(iconTable) do
 
 		if value.Visible then
@@ -555,8 +573,8 @@ function SystemMapController:GenerateIconButtons(iconTable)
 
 			else
 				button_el:SetClass("noselect", true)
-				if value.ShowNew == true or value.ShowNewPersist == true then
-					SysMapUtils:setIconSeen(self.CurrentSystem.Key, value, true)
+				if (value.ShowNew == true or value.ShowNewPersist == true) and value.Seen == false then
+					table.insert(newly_seen, value)
 				end
 			end
 
@@ -577,6 +595,8 @@ function SystemMapController:GenerateIconButtons(iconTable)
 			button_el.style.width = math.floor(gr.getImageWidth(value.Bitmap) * self.Scale) .. "px"
 		end
 	end
+
+	SysMapUtils:setIconsSeen(self.CurrentSystem.Key, newly_seen, true)
 
 end
 
@@ -602,10 +622,11 @@ function SystemMapController:displayObjectInfo(object)
 		local img_el = self.Document:CreateElement("img")
 		img_el:SetAttribute("src", object.LargeBitmap)
 		object_el:AppendChild(img_el)
-	elseif object.ShipClass then
+	elseif object.ShipClass or object.PropClass then
 		ScpuiSystem.SysMap = {}
 
 		ScpuiSystem.SysMap.Ship = object.ShipClass
+		ScpuiSystem.SysMap.Prop = object.PropClass
 
 		if object.ModelOrientation then
 			ScpuiSystem.SysMap.TechModelOri = ba.createOrientation(math.rad(object.ModelOrientation[1]),math.rad(object.ModelOrientation[2]), math.rad(object.ModelOrientation[3]))
@@ -626,6 +647,7 @@ function SystemMapController:displayObjectInfo(object)
 		end
 
 		ScpuiSystem.SysMap.ObjectElement = object_el
+		self:setupCloseupModelRenderTexture()
 	end
 
 
@@ -660,9 +682,42 @@ function SystemMapController:displayObjectInfo(object)
 
 end
 
+--- Initializes or resizes the closeup model render texture and links it to the object view
+--- @return nil
+function SystemMapController:setupCloseupModelRenderTexture()
+	if not ScpuiSystem.SysMap then
+		return
+	end
+
+	local object_el = ScpuiSystem.SysMap.ObjectElement
+	if not object_el then
+		object_el = self.Document:GetElementById("object_view")
+	end
+	if not object_el then
+		return
+	end
+
+	local slot = ScpuiSystem:ensureRenderSlot(
+		"system_map_closeup",
+		object_el,
+		self.Document,
+		nil
+	)
+	if not slot then
+		return
+	end
+
+	ScpuiSystem.SysMap.Texture = slot.Texture
+	ScpuiSystem.SysMap.Url = slot.Url
+	ScpuiSystem.SysMap.RenderWidth = slot.Width
+	ScpuiSystem.SysMap.RenderHeight = slot.Height
+end
+
 --- Close the object info
 --- @return nil
 function SystemMapController:closeObjectInfo()
+
+	self:stopDescArrowRepeat()
 
 	if self.CloseupActive == false then
 		return
@@ -882,6 +937,94 @@ end
 --- @return nil
 function SystemMapController:mouse_up(element, event)
 	self.Drag = nil
+	self:stopDescArrowRepeat()
+end
+
+--- libRocket's own arrows on the description scrollbar never scroll this text box. The cause is inside
+--- libRocket's slider (the tech database's equivalent arrows work), so the controller scrolls it instead.
+--- A capture-phase listener records the scroll position before libRocket handles the click and a bubble-phase
+--- listener scrolls only if libRocket left it unchanged, so the text can never scroll twice.
+--- @return nil
+function SystemMapController:hookDescArrows()
+	local desc_el = self.Document:GetElementById("desc_text_wrapper")
+	--A mod's own system_map.rml may not have this element; don't let that stop the map from loading
+	if desc_el == nil then
+		return
+	end
+
+	desc_el:AddEventListener("mousedown", function(event, _, _)
+		if self:getDescArrowDirection(event) then
+			self.DescArrow.StartTop = desc_el.scroll_top
+		end
+	end, true)
+
+	desc_el:AddEventListener("mousedown", function(event, _, _)
+		local direction = self:getDescArrowDirection(event)
+		if direction == nil or self.DescArrow.StartTop == nil then
+			return
+		end
+
+		if desc_el.scroll_top == self.DescArrow.StartTop then
+			self:scrollDescription(direction)
+			self:startDescArrowRepeat(direction)
+		end
+		self.DescArrow.StartTop = nil
+	end)
+
+	desc_el:AddEventListener("mouseout", function(event, _, _)
+		if self:getDescArrowDirection(event) then
+			self:stopDescArrowRepeat()
+		end
+	end)
+end
+
+--- Returns which way a mouse event on the description's scrollbar arrows should scroll
+--- @param event Event the mouse event
+--- @return number? direction -1 for the up arrow, 1 for the down arrow, or nil if the event isn't on either
+function SystemMapController:getDescArrowDirection(event)
+	local target = event.target_element
+	if target == nil or target.parent_node == nil or target.parent_node.tag_name ~= "scrollbarvertical" then
+		return nil
+	end
+
+	if target.tag_name == "sliderarrowdec" then
+		return -1
+	elseif target.tag_name == "sliderarrowinc" then
+		return 1
+	end
+	return nil
+end
+
+--- Scrolls the description text one arrow step
+--- @param direction number -1 to scroll up, 1 to scroll down
+--- @return nil
+function SystemMapController:scrollDescription(direction)
+	local desc_el = self.Document and self.Document:GetElementById("desc_text_wrapper")
+	if desc_el then
+		desc_el.scroll_top = desc_el.scroll_top + direction * self.DESC_ARROW_STEP
+	end
+end
+
+--- Keeps scrolling the description while an arrow is held, after a short delay
+--- @param direction number -1 to scroll up, 1 to scroll down
+--- @return nil
+function SystemMapController:startDescArrowRepeat(direction)
+	local token = {}
+	self.DescArrow.RepeatToken = token
+
+	async.run(function()
+		async.await(AsyncUtil.wait_for(self.DESC_ARROW_REPEAT_DELAY))
+		while self.DescArrow.RepeatToken == token do
+			self:scrollDescription(direction)
+			async.await(AsyncUtil.wait_for(self.DESC_ARROW_REPEAT_PERIOD))
+		end
+	end, async.OnFrameExecutor)
+end
+
+--- Stops any hold-to-repeat scrolling of the description
+--- @return nil
+function SystemMapController:stopDescArrowRepeat()
+	self.DescArrow.RepeatToken = nil
 end
 
 --- Exit the system map and cleanup
@@ -918,9 +1061,18 @@ function SystemMapController:global_keydown(element, event)
 				self:exit()
 			end
 		elseif keys.UP then
-			self:scrollUp()
+			--The closeup covers the map, so arrows scroll the description text instead
+			if self.CloseupActive == true then
+				ScpuiSystem:scrollUp(self.Document:GetElementById("desc_text_wrapper"))
+			else
+				self:scrollUp()
+			end
 		elseif keys.DOWN then
-			self:scrollDown()
+			if self.CloseupActive == true then
+				ScpuiSystem:scrollDown(self.Document:GetElementById("desc_text_wrapper"))
+			else
+				self:scrollDown()
+			end
 		elseif keys.LEFT then
 			self:scrollLeft()
 		elseif keys.RIGHT then
@@ -954,19 +1106,35 @@ end
 function SystemMapController:drawModel()
 
 	if ScpuiSystem.SysMap ~= nil then
-		local thisShipClass = tb.ShipClasses[ScpuiSystem.SysMap.Ship]
+		if ScpuiSystem.SysMap.Ship == nil and ScpuiSystem.SysMap.Prop == nil then
+			return
+		end
+
+		local thisObjectClass
+		if ScpuiSystem.SysMap.Ship then
+			thisObjectClass = tb.ShipClasses[ScpuiSystem.SysMap.Ship]
+		else
+			thisObjectClass = tb.PropClasses[ScpuiSystem.SysMap.Prop]
+		end
 
 		ScpuiSystem.SysMap.TechModelOri = SystemMapController:changeTechModelOrientation(ScpuiSystem.SysMap.TechModelOri)
 
-		local object_el = ScpuiSystem.SysMap.ObjectElement
+			local object_el = ScpuiSystem.SysMap.ObjectElement
 
-		local x = ScpuiSystem:getAbsoluteLeft(object_el)
-		local y = ScpuiSystem:getAbsoluteTop(object_el)
-		local w = object_el.offset_width
-		local h = object_el.offset_height
+			self:setupCloseupModelRenderTexture()
+			local w = ScpuiSystem.SysMap.RenderWidth or object_el.offset_width
+			local h = ScpuiSystem.SysMap.RenderHeight or object_el.offset_height
+			if w <= 0 or h <= 0 then
+				return
+			end
 
-		thisShipClass:renderTechModel2(x, y, x + w, y + h, ScpuiSystem.SysMap.TechModelOri, ScpuiSystem.SysMap.z)
-	end
+			if not ScpuiSystem:beginRenderSlot("system_map_closeup") then
+				return
+			end
+			gr.clearScreen(0, 0, 0, 0)
+			thisObjectClass:renderTechModel2(0, 0, w, h, ScpuiSystem.SysMap.TechModelOri, ScpuiSystem.SysMap.z)
+			ScpuiSystem:endRenderSlot()
+		end
 end
 
 --- And here's where we change the rotation
@@ -981,6 +1149,7 @@ end
 --- Run all the frame functions
 --- @return nil
 function SystemMapController:unload()
+	self:stopDescArrowRepeat()
 	ScpuiSystem.SystemMapContext = nil
 	ScpuiSystem.SysMap = nil
 	ScpuiSystem:freeAllModels()

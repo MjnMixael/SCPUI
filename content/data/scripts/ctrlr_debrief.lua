@@ -268,7 +268,8 @@ function DebriefingController:buildText()
         local color_text = ScpuiSystem:setBriefingText(paragraph, self.Stages[i].Text)
         if self.Stages[i].Recommendation ~= "" then
             local recommendation = self.Document:CreateElement("p")
-            self.RecommendationElements[i] = recommendation
+            --Append rather than index by stage; stages without a recommendation would leave nil gaps in the list
+            table.insert(self.RecommendationElements, recommendation)
             text_el:AppendChild(recommendation)
             recommendation.inner_rml = self.Stages[i].Recommendation
             recommendation:SetClass("hidden", true)

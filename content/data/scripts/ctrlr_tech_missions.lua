@@ -450,7 +450,7 @@ function TechMissionsController:global_keydown(element, event)
         event:StopPropagation()
 
         ba.postGameEvent(ba.GameEvents["GS_EVENT_MAIN_MENU"])
-    elseif keys.S and keys.Ctrl and keys.Shift then
+    elseif keys.S and keys.Ctrl and keys.Shift and (ba.inDebug() or ScpuiSystem.data.table_flags.AlwaysAllowShowAll) then
 		self.ShowAll = not self.ShowAll
 		self:reloadList()
 	elseif keys.UP and keys.Ctrl then

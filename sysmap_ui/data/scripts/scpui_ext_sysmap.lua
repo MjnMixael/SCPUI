@@ -28,6 +28,7 @@
 ---@field Name? string The name of the entry as a string. Added from the object reference during rendering.
 ---@field Bitmap? string The filename of the bitmap representing the object on the system map. Added from the object reference during rendering.
 ---@field ShipClass? string The class or type of ship/station/object associated with the entry. Added from the object reference during rendering.
+---@field PropClass? string The class or type of prop associated with the entry. Added from the object reference during rendering.
 ---@field Description? string A table containing the description text of the entry as a string and its XSTR ID as a number. Added from the object reference during rendering.
 ---@field LargeBitmap? string The filename of a larger bitmap for the entry (e.g., for detailed views). Added from the object reference during rendering.
 ---@field UseTechDescription? boolean Whether to use the tech description for the entry. Added from the object reference during rendering.
@@ -57,6 +58,7 @@
 ---@field DisplayName string The display name of the object.
 ---@field Bitmap string The filename of the bitmap representing the object on the system map.
 ---@field ShipClass? string (Optional) The class or type of ship/station/object associated with the entry.
+---@field PropClass? string (Optional) The class or type of prop associated with the entry.
 ---@field Description? string (Optional) A table containing the description text of the entry as a string and its XSTR ID as a number.
 ---@field LargeBitmap? string (Optional) The filename of a larger bitmap for the entry (e.g., for detailed views).
 ---@field UseTechDescription? boolean (Optional) Whether to use the tech description for the entry.
@@ -213,6 +215,7 @@ function SysmapUi:parseTable(data)
                 if result.Objects[object.Name] then
                     ba.warning("Duplicate SystemMap object '" .. object.Name .. "' found in " .. data .. ". Data will be overwritten!")
                 end
+                ba.print("SCPUI found SystemMap object '" .. object.Name .. "' in " .. data .. "\n")
                 result.Objects[object.Name] = object
             end
         end
@@ -285,6 +288,15 @@ function SysmapUi:parseSystemMapObject()
         ba.warning("SystemMap object '" .. obj.Name .. "' has invalid ship class defined!")
     end
 
+    -- Optional: PropClass
+    if parse.optionalString("$Prop Class:") then
+        obj.PropClass = parse.getString()
+    end
+
+    if obj.PropClass and tb.PropClasses[obj.PropClass] == nil then
+        ba.warning("SystemMap object '" .. obj.Name .. "' has invalid prop class defined!")
+    end
+
     -- Required: Description (as xstr pair)
     if parse.optionalString("$Description:") then
         obj.Description = parse.getString()
@@ -293,6 +305,11 @@ function SysmapUi:parseSystemMapObject()
     -- Optional: UseTechDescription
     if parse.optionalString("$Use Tech Description:") then
         obj.UseTechDescription = parse.getBoolean()
+
+        if obj.ShipClass == nil and obj.UseTechDescription then
+            ba.warning("SystemMap object '" .. obj.Name .. "' has UseTechDescription set to true but no ShipClass defined!")
+            obj.UseTechDescription = false
+        end
     else
         obj.UseTechDescription = false
     end

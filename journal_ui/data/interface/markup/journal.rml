@@ -15,24 +15,6 @@
 		<div id=top_panel_wrapper>
 			<div id=top_panel_b>
 				<div id=top_b_panel_wrapper>
-					<div id=bullet_cont>
-						<button id="btn_1" class="bullet button_1" onclick="controller:change_section(1)">
-							<span id="bullet_img" class="bullet button_img">
-								<img src="bullet-r.png" class="psuedo_img"></img>
-							</span>
-							<span class="pos button_text_right" id=label_1>
-							</span>
-						</button>
-					</div>
-					<div id=bullet_cont>
-						<button id="btn_2" class="bullet button_1" onclick="controller:change_section(2)">
-							<span id="bullet_img" class="bullet button_img">
-								<img src="bullet-r.png" class="psuedo_img"></img>
-							</span>
-							<span class="pos button_text_right" id=label_2>
-							</span>
-						</button>
-					</div>
 				</div>
 				<img src="ops-panel-vert-tall-l.png"></img>
 			</div>

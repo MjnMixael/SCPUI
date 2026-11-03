@@ -36,7 +36,7 @@
 						<p>XSTR("Misc", 888040)</p>
 					</span>
 				</tab>
-					<panel class="options_panel">
+					<panel id="misc_panel" class="options_panel">
 						<include src="options_misc_tab.rml"/>
 					</panel>
 				<tab id="graphics_btn" class="button_1 tab">
@@ -47,7 +47,7 @@
 						<p>XSTR("Graphics", 888155)</p>
 					</span>
 				</tab>
-					<panel class="options_panel">
+					<panel id="graphics_panel" class="options_panel">
 						<include src="options_graphics_tab.rml"/>
 					</panel>
 				<tab id="settings_btn" class="button_1 tab">
@@ -58,7 +58,7 @@
 						<p>XSTR("Settings", 888156)</p>
 					</span>
 				</tab>
-					<panel class="options_panel">
+					<panel id="custom_panel" class="options_panel">
 						<include src="options_custom_tab.rml"/>
 					</panel>
 				<tab id="multi_btn" class="button_1 tab">

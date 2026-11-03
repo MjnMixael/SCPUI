@@ -124,6 +124,7 @@
 --- @field FadeSplashImages boolean True if SCPUI should fade the splash images, false otherwise
 --- @field DrawSplashImages boolean True if SCPUI should draw the splash images, false otherwise
 --- @field DrawSplashText boolean True if SCPUI should draw the splash text, false otherwise
+--- @field AlwaysAllowShowAll boolean True if Ctrl+Shift+S show all entries should be allowed outside of debug mode, false otherwise
 
 --- SCPUI Loadout Icon
 --- @class loadout_icon
@@ -134,6 +135,7 @@
 --- SCPUI Ship Loadout Info Struct
 --- @class ship_loadout_info
 --- @field Index integer The index of the ship in the ship in Ship Classes
+--- @field ListPriority integer The priority of the ship in the loadout list used to sort the ships in the UI
 --- @field Amount integer The amount of the ship available in the loadout
 --- @field Icon string The icon filename for the ship class
 --- @field Overhead string The overhead filename for the ship class
@@ -158,6 +160,7 @@
 --- SCPUI Weapon Loadout Info Struct
 --- @class weapon_loadout_info
 --- @field Index integer The index of the weapon in the weapon in Weapon Classes
+--- @field ListPriority integer The priority of the weapon in the loadout list used to sort the weapons in the UI
 --- @field Amount integer The amount of the weapon available in the loadout
 --- @field Icon string The icon filename for the weapon class
 --- @field Anim string The animation filename for the weapon class
@@ -335,6 +338,10 @@
 --- @field Angle? number The angle of the model
 --- @field Speed? number The speed multipler of the model rotation
 --- @field ClickOrientation? orientation The orientation of the model when clicked
+--- @field Texture? texture The render texture used for model draw-to-texture paths
+--- @field Url? string The string url for Texture that can be assigned to librocket elements
+--- @field RenderWidth? integer The width of the current model render texture
+--- @field RenderHeight? integer The height of the current model render texture
 --- @field Weapons_List? integer[] The selected weapons table
 --- @field Bank_Elements_List? Element[] The weapon bank elements
 --- @field OverheadClass? integer The overhead class index
@@ -508,6 +515,25 @@
 --- @field INITIALIZED? boolean Whether or not SCPUI has been initialized
 --- @field Dialog_Constants dialog_constants The dialog constants for SCPUI
 
+--- A single tip string parsed from the #Loading Text section of scpui.tbl.
+--- @class load_screen_tip
+--- @field Text string The tip text. XSTR-aware in the table.
+
+--- A loading-screen profile parsed from the #Loading Screens section of scpui.tbl.
+--- One profile is bound to one or more missions via #Mission Screens entries.
+--- @class load_screen_profile
+--- @field LoadingBarImage? string Optional override for the loading bar animation filename.
+--- @field BackgroundClasses string[] CSS class names declared in load_screen_bgs.rcss. One is picked at random per load.
+--- @field Tips string[] Names of #Loading Text entries. One is picked at random per load.
+
+--- The container for all parsed load-screen data, stored on ScpuiSystem.data.LoadScreens.
+--- Populated by ScpuiSystem:parseLoadScreens() and consumed by the default listeners
+--- on Topics.loadscreen.* in scpui_sm_def_topics.lua.
+--- @class load_screens_data
+--- @field Tips table<string, load_screen_tip> Tips keyed by name.
+--- @field Profiles table<string, load_screen_profile> Profiles keyed by name.
+--- @field Missions table<string, string> Mission filename stems (no extension) mapped to profile names.
+
 --- SCPUI Global Documentation
 --- @class scpui_data
 --- @field Context? Context? The current context for SCPUI. Do Not Modify!
@@ -523,6 +549,7 @@
 --- @field Brief_Backgrounds_List table<string, table<string, string>> This table is used to determine which background image to display during mission briefings. The structure: Outer keys: mission names (strings), Inner keys: either "default" (string) for the default background or a tring representation of a briefing stage number (e.g., "1", "2"), Values: filenames (strings).
 --- @field Preload_Coroutines preload_coroutine[] The preload coroutines to run during SCPUI's splash screen startup.
 --- @field Medal_Info medal_info[] The medal information for SCPUI to use when displaying medals.
+--- @field LoadScreens load_screens_data Parsed load-screen profiles, tips, and per-mission mappings from scpui.tbl. Populated by parseLoadScreens.
 --- @field CurrentState? gamestate The current game state SCPUI is in
 --- @field LastState? gamestate The previous game state SCPUI was in
 --- @field Substate string The current scripting substate. "none" if not in a scripting substate

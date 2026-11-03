@@ -34,7 +34,7 @@
       "dependencies": [
         {
           "id": "FSO",
-          "version": "25.0.0",
+          "version": ">=25.1.0-20260317",
           "packages": []
         }
       ],
@@ -82,6 +82,20 @@
       "dependencies": null,
       "environment": null,
       "folder": "sysmap_ui",
+      "is_vp": false,
+      "files": null,
+      "filelist": null,
+      "executables": [],
+      "check_notes": null,
+      "isEnabled": true
+    },
+    {
+      "name": "development_branch",
+      "notes": "Marks this install as the SCPUI development branch",
+      "status": "required",
+      "dependencies": null,
+      "environment": null,
+      "folder": "development_branch",
       "is_vp": false,
       "files": null,
       "filelist": null,

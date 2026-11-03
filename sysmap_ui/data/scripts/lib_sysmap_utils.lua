@@ -219,6 +219,19 @@ end
 --- @param seen boolean whether the icon is seen
 --- @return nil
 function SysMapUtils:setIconSeen(map, icon, seen)
+	SysMapUtils:setIconsSeen(map, {icon}, seen)
+end
+
+--- Set multiple icons as seen or unseen with a single load and save. Only writes to disk if something changed
+--- @param map string the map name
+--- @param icons sysmap_element[] the icons to set
+--- @param seen boolean whether the icons are seen
+--- @return nil
+function SysMapUtils:setIconsSeen(map, icons, seen)
+	if #icons == 0 then
+		return
+	end
+
 	local data = SysMapUtils:loadSaveData()
 
 	if data.Maps[map] == nil then
@@ -234,21 +247,31 @@ function SysMapUtils:setIconSeen(map, icon, seen)
 		seen = false
 	end
 
-	if icon.ShowNewPersist == true then
-		data.Persistent[icon.ObjectName] = seen
-	else
-		data.Maps[map][icon.ObjectName] = seen
+	local changed = false
+	for _, icon in ipairs(icons) do
+		local target = data.Maps[map]
+		if icon.ShowNewPersist == true then
+			target = data.Persistent
+		end
+
+		if target[icon.ObjectName] ~= seen then
+			target[icon.ObjectName] = seen
+			changed = true
+		end
 	end
 
-	SysMapUtils:saveData(data)
+	if changed then
+		SysMapUtils:saveData(data)
+	end
 end
 
 --- Get the seen status of an icon
 --- @param map string the map name
 --- @param icon sysmap_element the icon to check
+--- @param data? sysmap_save_data already loaded save data to use instead of loading it from disk
 --- @return boolean val whether the icon is seen
-function SysMapUtils:getIconSeen(map, icon)
-	local data = SysMapUtils:loadSaveData()
+function SysMapUtils:getIconSeen(map, icon, data)
+	data = data or SysMapUtils:loadSaveData()
 
 	if data.Maps[map] == nil then
 		data.Maps[map] = {}
@@ -287,9 +310,10 @@ end
 
 --- Get the visibility status of an icon
 --- @param icon string the icon name
+--- @param data? sysmap_save_data already loaded save data to use instead of loading it from disk
 --- @return boolean | nil whether the icon is visible
-function SysMapUtils:getIconVisibility(icon)
-	local data = SysMapUtils:loadSaveData()
+function SysMapUtils:getIconVisibility(icon, data)
+	data = data or SysMapUtils:loadSaveData()
 
 	if data.Visbility[icon] ~= nil then
 		return data.Visbility[icon]
