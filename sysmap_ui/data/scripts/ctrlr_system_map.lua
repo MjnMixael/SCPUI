@@ -261,10 +261,13 @@ end
 --- @param iconTable sysmap_element[] the table of objects to initialize
 --- @return nil
 function SystemMapController:initializeObjectData(iconTable)
+	--Load the save data once for all icons rather than once per icon
+	local save_data = SysMapUtils:loadSaveData()
+
 	for _, value in pairs(iconTable) do
 
 		--Do we have any visibility override data?
-		local vis = SysMapUtils:getIconVisibility(value.ObjectName)
+		local vis = SysMapUtils:getIconVisibility(value.ObjectName, save_data)
 
 		if vis ~= nil then
 			value.Visible = vis
@@ -274,7 +277,7 @@ function SystemMapController:initializeObjectData(iconTable)
 			value.Seen = not SysMapUtils:checkNew(value.ZoomTo)
 		else
 			if value.ShowNew == true or value.ShowNewPersist == true then
-				value.Seen = SysMapUtils:getIconSeen(self.CurrentSystem.Key, value)
+				value.Seen = SysMapUtils:getIconSeen(self.CurrentSystem.Key, value, save_data)
 			else
 				value.Seen = true
 			end
@@ -492,6 +495,9 @@ function SystemMapController:GenerateIconButtons(iconTable)
 
 	local parent_el = self.MainMapElement
 
+	--Non-selectable icons are marked seen as soon as they're displayed. Collect them and save once after the loop
+	local newly_seen = {}
+
 	for key, value in pairs(iconTable) do
 
 		if value.Visible then
@@ -567,8 +573,8 @@ function SystemMapController:GenerateIconButtons(iconTable)
 
 			else
 				button_el:SetClass("noselect", true)
-				if value.ShowNew == true or value.ShowNewPersist == true then
-					SysMapUtils:setIconSeen(self.CurrentSystem.Key, value, true)
+				if (value.ShowNew == true or value.ShowNewPersist == true) and value.Seen == false then
+					table.insert(newly_seen, value)
 				end
 			end
 
@@ -589,6 +595,8 @@ function SystemMapController:GenerateIconButtons(iconTable)
 			button_el.style.width = math.floor(gr.getImageWidth(value.Bitmap) * self.Scale) .. "px"
 		end
 	end
+
+	SysMapUtils:setIconsSeen(self.CurrentSystem.Key, newly_seen, true)
 
 end
 
