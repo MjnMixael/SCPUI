@@ -113,7 +113,7 @@ Badges show the SCPUI version a field or behavior was added in. Fields without a
 
 #### $Prop Class:
 
-![Development](https://raw.githubusercontent.com/wiki/MjnMixael/SCPUI/images/badges/scpui-development.svg)
+![SCPUI 1.1.4](https://raw.githubusercontent.com/wiki/MjnMixael/SCPUI/images/badges/scpui-1.1.4.svg)
 
 - Optional. If defined, the closeup view of the object will show this prop model.
 - Ignored if Large Bitmap or Ship Class is defined.

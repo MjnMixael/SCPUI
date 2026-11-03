@@ -296,7 +296,7 @@ Badges show the SCPUI version a field or behavior was added in. Fields without a
 
 ### $Always Allow Show All:
 
-![Development](https://raw.githubusercontent.com/wiki/MjnMixael/SCPUI/images/badges/scpui-development.svg)
+![SCPUI 1.1.4](https://raw.githubusercontent.com/wiki/MjnMixael/SCPUI/images/badges/scpui-1.1.4.svg)
 
 - Optional. Allows the Ctrl-Shift-S "show all" feature used in the tech room and other UIs to be used in release builds.
 - Syntax: **Boolean**
@@ -352,7 +352,7 @@ Badges show the SCPUI version a field or behavior was added in. Fields without a
 
 ### $Mainhall Background:
 
-![Development](https://raw.githubusercontent.com/wiki/MjnMixael/SCPUI/images/badges/scpui-development.svg)
+![SCPUI 1.1.4](https://raw.githubusercontent.com/wiki/MjnMixael/SCPUI/images/badges/scpui-1.1.4.svg)
 
 - SCPUI 1.1.0 to 1.1.2 read this in **#Settings** instead, with the same fields.
 - Designates that a new define will follow
@@ -406,7 +406,7 @@ Badges show the SCPUI version a field or behavior was added in. Fields without a
 
 ## #Loading Text
 
-![Development](https://raw.githubusercontent.com/wiki/MjnMixael/SCPUI/images/badges/scpui-development.svg)
+![SCPUI 1.1.4](https://raw.githubusercontent.com/wiki/MjnMixael/SCPUI/images/badges/scpui-1.1.4.svg)
 
 - Defines named tip strings that loading screen profiles can display. Reference them from [#Loading Screens](#loading-screens) with `$Tip:`.
 - The tip is drawn in the `div#loadscreen_tip` element. All styling is done in RCSS.
@@ -424,7 +424,7 @@ Badges show the SCPUI version a field or behavior was added in. Fields without a
 
 ## #Loading Screens
 
-![Development](https://raw.githubusercontent.com/wiki/MjnMixael/SCPUI/images/badges/scpui-development.svg)
+![SCPUI 1.1.4](https://raw.githubusercontent.com/wiki/MjnMixael/SCPUI/images/badges/scpui-1.1.4.svg)
 
 - Defines named loading screen profiles. Assign them to missions in [#Mission Screens](#mission-screens).
 - The table only carries data. Fonts, colors, positions and sizes are set in RCSS.
@@ -454,7 +454,7 @@ Badges show the SCPUI version a field or behavior was added in. Fields without a
 
 ## #Mission Screens
 
-![Development](https://raw.githubusercontent.com/wiki/MjnMixael/SCPUI/images/badges/scpui-development.svg)
+![SCPUI 1.1.4](https://raw.githubusercontent.com/wiki/MjnMixael/SCPUI/images/badges/scpui-1.1.4.svg)
 
 - Assigns a loading screen profile to a mission.
 

@@ -78,7 +78,7 @@ Loading screen backgrounds are handled a little differently than in base Freespa
 
 Mission `bta1_m1_01.fs2` will now have the image `3_Load_1M1_01.png` used as its background. Every loading screen also gets the `loadscreen_default` class, which is the background used when no mission class matches.
 
-![Development](https://raw.githubusercontent.com/wiki/MjnMixael/SCPUI/images/badges/scpui-development.svg) Backgrounds can also be assigned through [scpui.tbl](scpui.tbl#loading-screens) instead of naming classes after missions. A `#Loading Screens` profile lists one or more `+Background Class:` entries (one is picked at random each load), an optional `$Loading Bar Image:`, and optional `$Tip:` references to `#Loading Text` entries; `#Mission Screens` then maps mission filenames to profiles. The background classes themselves are still defined in `load_screen_bgs.rcss`, and tips are styled with the `#loadscreen_tip` selector.
+![SCPUI 1.1.4](https://raw.githubusercontent.com/wiki/MjnMixael/SCPUI/images/badges/scpui-1.1.4.svg) Backgrounds can also be assigned through [scpui.tbl](scpui.tbl#loading-screens) instead of naming classes after missions. A `#Loading Screens` profile lists one or more `+Background Class:` entries (one is picked at random each load), an optional `$Loading Bar Image:`, and optional `$Tip:` references to `#Loading Text` entries; `#Mission Screens` then maps mission filenames to profiles. The background classes themselves are still defined in `load_screen_bgs.rcss`, and tips are styled with the `#loadscreen_tip` selector.
 
 To modify the loading bar, background class, or tip text from a script see [UI Topics.](#ui-topics)
 
@@ -119,7 +119,7 @@ SCPUI often uses special [Custom Data](https://wiki.hard-light.net/index.php/Shi
 | Key | Value Type | Supported Tables | Description |
 |---|---|---|---|
 | `HideInTechRoom` | Boolean (default: false) | ships.tbl, weapons.tbl | If `true` (must be written exactly that way), the object is always hidden from the tech room database, including when using Ctrl+Shift+S to show all entries. |
-| ![Development](https://raw.githubusercontent.com/wiki/MjnMixael/SCPUI/images/badges/scpui-development.svg) `LoadoutListPriority` | Integer (default: -1) | ships.tbl, weapons.tbl | Controls sorting in ship and weapon loadout UIs. Lower numbers are listed first; a negative or non-numeric value means no priority, and those entries are listed after all prioritized entries in table order. |
+| ![SCPUI 1.1.4](https://raw.githubusercontent.com/wiki/MjnMixael/SCPUI/images/badges/scpui-1.1.4.svg) `LoadoutListPriority` | Integer (default: -1) | ships.tbl, weapons.tbl | Controls sorting in ship and weapon loadout UIs. Lower numbers are listed first; a negative or non-numeric value means no priority, and those entries are listed after all prioritized entries in table order. |
 
 ## Briefing Color Tags
 ![SCPUI 0.6.0](https://raw.githubusercontent.com/wiki/MjnMixael/SCPUI/images/badges/scpui-0.6.0.svg)
