@@ -125,6 +125,9 @@ function ScpuiSystem:init()
 
 	ba.print("SCPUI Core (v" .. ScpuiSystem.constants.VERSION .. ") is initializing. Standby...\n")
 
+	-- Work out the engine fork once, before anything else loads, so every later check is a cached lookup
+	ScpuiSystem.data.IsOfpBuild = ba.getVersionString():find("(OFP)", 1, true) ~= nil
+
 	if (ba.isEngineVersionAtLeast(25, 0, 0) and not opt.isInGameOptionsEnabled()) then
 		if not cf.fileExists("scpui_override.cfg") then
 			ba.error("SCPUI requires in-game options to be enabled! Please enable them in your game settings table.")
@@ -893,8 +896,10 @@ end
 
 --- Checks whether the engine is an OFP (Open FreeSpace Project) build. OFP adds "(OFP)" to the engine's
 --- version string, which every FSO build has, so this is safe on stock FSO. Use it to gate OFP-only API.
+--- ScpuiSystem:init() works this out at startup, so this is just a cached lookup.
 --- @return boolean is_ofp True if the engine is an OFP build
 function ScpuiSystem:isOfpBuild()
+	-- only for a caller that runs before init()
 	if ScpuiSystem.data.IsOfpBuild == nil then
 		ScpuiSystem.data.IsOfpBuild = ba.getVersionString():find("(OFP)", 1, true) ~= nil
 	end

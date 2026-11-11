@@ -572,7 +572,7 @@
 --- @field Generated_Icons? loadout_icon[] The rocket UI icons for SCPUI loadout screens
 --- @field ScpuiOptionValues custom_option_data The values for the built-in SCPUI options
 --- @field Reset? boolean True if SCPUI should regen the icons, false otherwise
---- @field IsOfpBuild? boolean Cached result of ScpuiSystem:isOfpBuild(); nil until first checked
+--- @field IsOfpBuild? boolean True if the engine is an OFP build. Set at the start of ScpuiSystem:init(); read it through ScpuiSystem:isOfpBuild()
 
 --- SCPUI Dialog Button
 --- @class dialog_button
