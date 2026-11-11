@@ -239,11 +239,12 @@
 --- @field My? number The y position of the mouse
 --- @field Bx? number The x position of the model ship box
 --- @field By? number The y position of the model ship box
---- @field Pof? string The pof file to render in the model ship box
+--- @field Pof? string The ship class, prop class (OFP builds only) or pof file to render in the model ship box
 --- @field CloseupZoom? number The zoom level for the model ship box
 --- @field CloseupPos? vector The position of the model in the model ship box
 --- @field Label? string The label to display in the model ship box
 --- @field IconIdentifier? number The icon ID of the model ship box
+--- @field CloseupKind? enumeration OFP builds only: BRIEF_CLOSEUP_SHIP, BRIEF_CLOSEUP_PROP or BRIEF_CLOSEUP_POF, saying what Pof names. Always nil on stock FSO
 
 --- SCPUI HUD Drawing Memory
 --- @class hud_draw_memory
@@ -571,6 +572,7 @@
 --- @field Generated_Icons? loadout_icon[] The rocket UI icons for SCPUI loadout screens
 --- @field ScpuiOptionValues custom_option_data The values for the built-in SCPUI options
 --- @field Reset? boolean True if SCPUI should regen the icons, false otherwise
+--- @field IsOfpBuild? boolean Cached result of ScpuiSystem:isOfpBuild(); nil until first checked
 
 --- SCPUI Dialog Button
 --- @class dialog_button

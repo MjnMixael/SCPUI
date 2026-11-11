@@ -891,6 +891,17 @@ function ScpuiSystem:getModId()
 	return baseID
 end
 
+--- Checks whether the engine is an OFP (Open FreeSpace Project) build. OFP adds "(OFP)" to the engine's
+--- version string, which every FSO build has, so this is safe on stock FSO. Use it to gate OFP-only API.
+--- @return boolean is_ofp True if the engine is an OFP build
+function ScpuiSystem:isOfpBuild()
+	if ScpuiSystem.data.IsOfpBuild == nil then
+		ScpuiSystem.data.IsOfpBuild = ba.getVersionString():find("(OFP)", 1, true) ~= nil
+	end
+
+	return ScpuiSystem.data.IsOfpBuild
+end
+
 --- Adds a preload coroutine to the SCPUI system that will be run during the splash screens
 --- @param message string The debug message to print
 --- @param text string The debug string to display

@@ -382,31 +382,44 @@ function BriefingController:drawBriefingMap()
 		gr.drawLine(bx2, by2, bx1, by2)
 		gr.drawLine(bx2, by2, bx2, by1)
 
-		local ship = tb.ShipClasses[ScpuiSystem.data.memory.briefing_map.Pof]
-		if ship.Name == "" then
-			local jumpnode = false
-			if ScpuiSystem.data.memory.briefing_map.Pof == "subspacenode.pof" then
-				jumpnode = true
-			end
-			ui.Briefing.renderBriefingModel(ScpuiSystem.data.memory.briefing_map.Pof, ScpuiSystem.data.memory.briefing_map.CloseupZoom, ScpuiSystem.data.memory.briefing_map.CloseupPos, bx1+1, by1+1, bx2-1, by2-1, ScpuiSystem.data.memory.briefing_map.RotationSpeed, -15, 0, 1.1, true, jumpnode)
+		-- OFP builds can put props in briefing icons, and checkStageIcons then returns a prop class name with a
+		-- sixth value saying so. Stock FSO has neither that value nor the enum, and nil == nil would match, so
+		-- only look for it on OFP builds that have the enum
+		local is_prop = false
+		if ScpuiSystem:isOfpBuild() then
+			local prop_kind = rawget(_G, "BRIEF_CLOSEUP_PROP")
+			is_prop = prop_kind ~= nil and ScpuiSystem.data.memory.briefing_map.CloseupKind == prop_kind
+		end
+
+		if is_prop then
+			tb.PropClasses[ScpuiSystem.data.memory.briefing_map.Pof]:renderTechModel(bx1+1, by1+1, bx2-1, by2-1, ScpuiSystem.data.memory.briefing_map.RotationSpeed, -15, 0, 1.1, true)
 		else
-			local team_name = Topics.briefing.modelTeamColor:send({
-				mn.getMissionFilename(),
-				ship,
-				ScpuiSystem.data.memory.briefing_map.IconIdentifier
-			})
-
-			---@type teamcolor?
-			local team
-
-			if team_name then
-				team = tb.TeamColors[team_name]
-				if not team:isValid() then
-					team = nil
+			local ship = tb.ShipClasses[ScpuiSystem.data.memory.briefing_map.Pof]
+			if ship.Name == "" then
+				local jumpnode = false
+				if ScpuiSystem.data.memory.briefing_map.Pof == "subspacenode.pof" then
+					jumpnode = true
 				end
-			end
+				ui.Briefing.renderBriefingModel(ScpuiSystem.data.memory.briefing_map.Pof, ScpuiSystem.data.memory.briefing_map.CloseupZoom, ScpuiSystem.data.memory.briefing_map.CloseupPos, bx1+1, by1+1, bx2-1, by2-1, ScpuiSystem.data.memory.briefing_map.RotationSpeed, -15, 0, 1.1, true, jumpnode)
+			else
+				local team_name = Topics.briefing.modelTeamColor:send({
+					mn.getMissionFilename(),
+					ship,
+					ScpuiSystem.data.memory.briefing_map.IconIdentifier
+				})
 
-			ship:renderTechModel(bx1+1, by1+1, bx2-1, by2-1, ScpuiSystem.data.memory.briefing_map.RotationSpeed, -15, 0, 1.1, true, team)
+				---@type teamcolor?
+				local team
+
+				if team_name then
+					team = tb.TeamColors[team_name]
+					if not team:isValid() then
+						team = nil
+					end
+				end
+
+				ship:renderTechModel(bx1+1, by1+1, bx2-1, by2-1, ScpuiSystem.data.memory.briefing_map.RotationSpeed, -15, 0, 1.1, true, team)
+			end
 		end
 
 		--set the current color to light grey
@@ -467,7 +480,7 @@ function BriefingController:mouse_move(element, event)
 		end
 
 		if ((ScpuiSystem.data.memory.briefing_map.Mx ~= nil) and (ScpuiSystem.data.memory.briefing_map.My ~= nil)) then
-			ScpuiSystem.data.memory.briefing_map.Pof, ScpuiSystem.data.memory.briefing_map.CloseupZoom, ScpuiSystem.data.memory.briefing_map.CloseupPos, ScpuiSystem.data.memory.briefing_map.Label, ScpuiSystem.data.memory.briefing_map.IconIdentifier = ui.Briefing.checkStageIcons(ScpuiSystem.data.memory.briefing_map.Mx, ScpuiSystem.data.memory.briefing_map.My)
+			ScpuiSystem.data.memory.briefing_map.Pof, ScpuiSystem.data.memory.briefing_map.CloseupZoom, ScpuiSystem.data.memory.briefing_map.CloseupPos, ScpuiSystem.data.memory.briefing_map.Label, ScpuiSystem.data.memory.briefing_map.IconIdentifier, ScpuiSystem.data.memory.briefing_map.CloseupKind = ui.Briefing.checkStageIcons(ScpuiSystem.data.memory.briefing_map.Mx, ScpuiSystem.data.memory.briefing_map.My)
 		end
 
 		--double check we're still inside the map X coords
