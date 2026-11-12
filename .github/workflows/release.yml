@@ -57,6 +57,24 @@ jobs:
             exit 1
           fi
 
+      - name: Check the FSO requirement is a stable build
+        # Releases should require the latest stable FSO. A nightly or RC requirement (anything with a
+        # "-" suffix, like >=25.1.0-20260317) means mod.json wasn't updated for the release.
+        if: ${{ !inputs.nebula_only }}
+        run: |
+          python3 - <<'EOF'
+          import json, re, sys
+          mod = json.load(open('mod.json', encoding='utf-8'))
+          bad = [f"{pkg['name']}: {dep.get('version')}"
+                 for pkg in mod.get('packages', [])
+                 for dep in pkg.get('dependencies') or []
+                 if dep.get('id') == 'FSO' and re.search(r'\d-', dep.get('version') or '')]
+          if bad:
+              print("::error::mod.json requires a non-stable FSO build. Set it to the latest stable FSO release first:")
+              print("\n".join(bad))
+              sys.exit(1)
+          EOF
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
