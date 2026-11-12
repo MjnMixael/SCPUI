@@ -8,13 +8,13 @@ Issues and PRs follow the [AI Usage Policy](AI_POLICY.md): write your own posts 
 
 The [SCPUI wiki](https://github.com/MjnMixael/SCPUI/wiki) is published from the `wiki/` folder on `development`: each `.md` file there is one wiki page, and every push to `development` that changes `wiki/` updates the wiki. Edit `wiki/`, not the wiki itself; edits made on the wiki are overwritten.
 
-The wiki documents `development`, so it can describe things the latest release doesn't have yet. Mark anything new with the Development badge, on its own line under the field or section heading (never inside a heading), or at the start of a list item:
+The wiki documents `development`, so it can describe things the latest release doesn't have yet. Mark anything new with the badge for the version `development` is working toward: the `local version` in `content/data/scripts/scpui_system_core.lua` (an RC's features get the badge of the release it leads to). Put it on its own line under the field or section heading (never inside a heading), or at the start of a list item. Run `node .github/scripts/wiki-badges.js` to create that version's badge if it doesn't exist yet, add it to the legend in `wiki/Tables.md`, and print the markdown, which looks like:
 
 ```markdown
-![Development](https://raw.githubusercontent.com/wiki/MjnMixael/SCPUI/images/badges/scpui-development.svg)
+![SCPUI 1.2.0](https://raw.githubusercontent.com/wiki/MjnMixael/SCPUI/images/badges/scpui-1.2.0.svg)
 ```
 
-When a release ships, its Development badges become that version's badge (`scpui-X.Y.Z.svg` in `wiki/images/badges/`; copy an existing one and change the text, width and file name).
+If a planned version number changes before release, rename its badges along with it.
 
 - **New or changed features, settings or extensions:** update the matching section of `wiki/Home.md`.
 - **New or changed tables:** update the table's page in `wiki/tables/`, following the layout of the existing pages. After changing a table page's fields, run `node .github/scripts/wiki-field-index.js` to update the page's Field index; the **Documentation** check fails if it is out of date. A new table also needs a row in `wiki/Tables.md`.
