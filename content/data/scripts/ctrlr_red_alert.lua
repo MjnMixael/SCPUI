@@ -90,6 +90,8 @@ function RedAlertController:commit_pressed()
 		return
 	end
 	LoadoutHandler:unloadAll(true)
+	ScpuiSystem:stopMusic()
+	ScpuiSystem.data.memory.CurrentMusicFile = nil
 	Topics.redalert.commit:send(self)
 	ba.postGameEvent(ba.GameEvents["GS_EVENT_ENTER_GAME"])
 end
