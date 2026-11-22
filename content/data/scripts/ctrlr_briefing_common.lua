@@ -469,7 +469,7 @@ end
 --- @return nil
 function AbstractBriefingController:stopCurrentVoicePlayback()
     if self.CurrentVoiceHandle ~= nil and self.CurrentVoiceHandle:isValid() then
-        self.CurrentVoiceHandle:stop()
+        self.CurrentVoiceHandle:close(false)
         self.CurrentVoiceHandle = nil
     end
 end
